@@ -203,9 +203,11 @@ public class Main {
 				if(tmp > max){
 					max = tmp;
 				}
-				avg = (avg * (double)n + (double)tmp) / ((double)n + 1.0D);
-				n++;
-				System.out.println(tmp);
+				if(tmp != 0){
+					avg = (avg * (double)n + (double)tmp) / ((double)n + 1.0D);
+					n++;
+					System.out.println(tmp);
+				}
 				prev = tmp;
 				tmp = 0;
 			}
