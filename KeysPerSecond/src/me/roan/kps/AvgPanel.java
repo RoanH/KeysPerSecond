@@ -18,6 +18,6 @@ public final class AvgPanel extends BasePanel {
 
 	@Override
 	protected String getValue() {
-		return String.valueOf(((int) (Main.avg * 10.0D)) / 10.0D);
+		return String.valueOf((int)Main.avg);
 	}
 }
