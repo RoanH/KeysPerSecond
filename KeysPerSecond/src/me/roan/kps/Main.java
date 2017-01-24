@@ -4,12 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
@@ -43,25 +40,84 @@ public class Main {
 	private static long last = System.currentTimeMillis();
 	private static long n = 0;
 	private static int tmp = 0;
-	private static double avg;
-	private static int max;
-	private static int prev;
-	private static Image pressed;
-	private static Image unpressed;
+	protected static double avg;
+	protected static int max;
+	protected static int prev;
+	protected static Image pressed;
+	protected static Image unpressed;
 	private static ArrayList<Key> keys = new ArrayList<Key>();
 	private static GlobalKeyEvent lastevent;
 	private static String addedkeys = "";
 	private static List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
+	private static JPanel content = new JPanel(new GridLayout(1, 0, 2, 0));
 
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
 		}
 		
+		//Initialize native library and register event handlers
+		setupKeyboardHook();
+		
+		//Get a configuration for the keys
+		boolean[] fields = configure();
+		
+		//Register the keys to monitor
+		for(KeyInformation i : keyinfo){
+			keys.add(new Key(i.keycode, i.name));
+		}
+		
+		//Build GUI
+		try {
+			buildGUI(fields[0], fields[1], fields[2]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//Enter the main loop
+		mainLoop();
+	}
+	
+	/**
+	 * Main loop of the program
+	 * this loop updates the
+	 * average, current and 
+	 * maximum keys per second
+	 */
+	private static final void mainLoop(){
+		while(true){
+			if(System.currentTimeMillis() - last >= 1000){
+				last = System.currentTimeMillis();
+				if(tmp > max){
+					max = tmp;
+				}
+				if(tmp != 0){
+					avg = (avg * (double)n + (double)tmp) / ((double)n + 1.0D);
+					n++;
+					System.out.println(tmp);
+				}
+				prev = tmp;
+				tmp = 0;
+			}
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			content.repaint();
+		}
+	}
+	
+	/**
+	 * Registers the native libraries and
+	 * registers event handlers for key
+	 * press events
+	 */
+	private static final void setupKeyboardHook(){
 		GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook();
 		keyboardHook.addKeyListener(new GlobalKeyAdapter() {
+			
 			@Override 
 			public void keyPressed(GlobalKeyEvent event) {
 				lastevent = event;
@@ -80,6 +136,7 @@ public class Main {
 					System.exit(0);
 				}
 			}
+			
 			@Override
 			public void keyReleased(GlobalKeyEvent event){
 				for(Key k : keys){
@@ -87,6 +144,23 @@ public class Main {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Asks the user for a configuration
+	 * though a series of dialogs
+	 * These dialogs also provide the
+	 * option of saving or loading an
+	 * existing configuration
+	 * @return An array consisting of 3 boolean
+	 *         values. The values represent (in
+	 *         the following order) whether or not
+	 *         to display: the maximum keys per second,
+	 *         the average keys per second, the current
+	 *         keys per second
+	 */
+	@SuppressWarnings("unchecked")
+	private static final boolean[] configure(){
 		JPanel form = new JPanel(new BorderLayout());
 		JPanel boxes = new JPanel(new GridLayout(3, 0));
 		JPanel labels = new JPanel(new GridLayout(3, 0));
@@ -183,45 +257,18 @@ public class Main {
 				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		
 		JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
-		
-		for(KeyInformation i : keyinfo){
-			keys.add(new Key(i.keycode, i.name));
-		}
-		
-		try {
-			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		while(true){
-			if(System.currentTimeMillis() - last >= 1000){
-				last = System.currentTimeMillis();
-				if(tmp > max){
-					max = tmp;
-				}
-				if(tmp != 0){
-					avg = (avg * (double)n + (double)tmp) / ((double)n + 1.0D);
-					n++;
-					System.out.println(tmp);
-				}
-				prev = tmp;
-				tmp = 0;
-			}
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			content.repaint();
-		}
+		return new boolean[]{cmax.isSelected(), cavg.isSelected(), ccur.isSelected()};
 	}
-
-	private static JPanel content = new JPanel(new GridLayout(1, 0, 2, 0));
-
+	
+	/**
+	 * Builds the main GUI of the program
+	 * @param max Whether or not to display the maximum keys per second
+	 * @param avg Whether or not to display the average keys per second
+	 * @param cur Whether or not to display the current keys per second
+	 * @throws IOException When an IO Exception occurs, this can be thrown
+	 *         when the program fails the load its resources
+	 */
 	private static final void buildGUI(boolean max, boolean avg, boolean cur) throws IOException {
 		pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 		unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
@@ -251,7 +298,9 @@ public class Main {
 		frame.add(content);
 		frame.setUndecorated(true);
 		frame.addMouseMotionListener(new MouseMotionListener(){
-
+			/**
+			 * Previous location of the mouse on the screen
+			 */
 			private Point from = null;
 			
 			@Override
@@ -279,23 +328,66 @@ public class Main {
 //================== NESTED CLASSES ===============================================================
 //=================================================================================================
 
-	private static final class Key {
-
-		private int key;
-		private boolean down = false;
-		private int count = 0;
+	/**
+	 * This class is used to keep track
+	 * of how many times a specific key
+	 * is pressed
+	 * @author Roan
+	 */
+	protected static final class Key {
+		/**
+		 * The virtual key code of the
+		 * key tracked by this object
+		 */
+		private final int key;
+		/**
+		 * Whether or not this key is currently pressed
+		 */
+		protected boolean down = false;
+		/**
+		 * The total number of times this key has been pressed
+		 */
+		protected int count = 0;
+		/**
+		 * The {@link KeyPanel} responsible for
+		 * displaying information about the tracked key
+		 */
 		private KeyPanel kp;
-		private String name;
+		/**
+		 * The key in string form<br>
+		 * For example: X
+		 */
+		protected final String name;
 
+		/**
+		 * Constructs a new Key object
+		 * for the key with the given
+		 * virtual code and name
+		 * @param key The virtual code of the key
+		 * @param name The name of the key
+		 * @see #key
+		 * @see #name
+		 */
 		private Key(int key, String name) {
 			this.key = key;
 			this.name = name;
 		}
 
+		/**
+		 * Creates a new KeyPanel with this
+		 * objects as its data source
+		 * @return A new KeyPanel
+		 */
 		private KeyPanel getPanel() {
 			return kp = new KeyPanel(this);
 		}
 
+		/**
+		 * Called when a key is pressed
+		 * @param event The event that occurred
+		 * @return Whether or not this was a key press
+		 *         to register
+		 */
 		public boolean keyPressed(GlobalKeyEvent event) {
 			if (key == event.getVirtualKeyCode() && !down) {
 				count++;
@@ -308,125 +400,50 @@ public class Main {
 			return false;
 		}
 
+		/**
+		 * Called when a key is released
+		 * @param event The event that occurred
+		 */
 		public void keyReleased(GlobalKeyEvent event) {
 			if (key == event.getVirtualKeyCode()) {
 				down = false;
 			}
 		}
-
-		private static final class KeyPanel extends JPanel {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 8816524158873355997L;
-			private Key key;
-			private Font font1 = new Font("Dialog", Font.BOLD, 24);
-			private Font font2 = new Font("Dialog", Font.PLAIN, 18);
-
-			private KeyPanel(Key key) {
-				this.key = key;
-			}
-
-			@Override
-			public void paintComponent(Graphics g1) {
-				Graphics2D g = (Graphics2D) g1;
-				g.setColor(Color.BLACK);
-				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-				g.drawImage(unpressed, 2, 2, null);
-				if (key.down) {
-					g.drawImage(pressed, 2, 2, null);
-				}
-				g.setColor(Color.CYAN);
-				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				g.setFont(font1);
-				g.drawString(key.name, (this.getWidth() - g.getFontMetrics().stringWidth(key.name)) / 2, 30);
-				g.setFont(font2);
-				String str = String.valueOf(key.count);
-				g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
-			}
-		}
 	}
 
-	private static final class MaxPanel extends JPanel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 8816524158873355997L;
-		private Font font1 = new Font("Dialog", Font.BOLD, 15);
-		private Font font2 = new Font("Dialog", Font.PLAIN, 18);
-
-		@Override
-		public void paintComponent(Graphics g1) {
-			Graphics2D g = (Graphics2D) g1;
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			g.drawImage(unpressed, 2, 2, null);
-			g.setColor(Color.CYAN);
-			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			g.setFont(font1);
-			g.drawString("MAX", (this.getWidth() - g.getFontMetrics().stringWidth("MAX")) / 2, 30);
-			g.setFont(font2);
-			String str = String.valueOf(max);
-			g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
-		}
-	}
-
-	private static final class AvgPanel extends JPanel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 8816524158873355997L;
-		private Font font1 = new Font("Dialog", Font.BOLD, 15);
-		private Font font2 = new Font("Dialog", Font.PLAIN, 18);
-
-		@Override
-		public void paintComponent(Graphics g1) {
-			Graphics2D g = (Graphics2D) g1;
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			g.drawImage(unpressed, 2, 2, null);
-			g.setColor(Color.CYAN);
-			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			g.setFont(font1);
-			g.drawString("AVG", (this.getWidth() - g.getFontMetrics().stringWidth("AVG")) / 2, 30);
-			g.setFont(font2);
-			String str = String.valueOf(((int) (avg * 10)) / 10);
-			g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
-		}
-	}
-
-	private static final class NowPanel extends JPanel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 8816524158873355997L;
-		private Font font1 = new Font("Dialog", Font.BOLD, 15);
-		private Font font2 = new Font("Dialog", Font.PLAIN, 18);
-
-		@Override
-		public void paintComponent(Graphics g1) {
-			Graphics2D g = (Graphics2D) g1;
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			g.drawImage(unpressed, 2, 2, null);
-			g.setColor(Color.CYAN);
-			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			g.setFont(font1);
-			g.drawString("CUR", (this.getWidth() - g.getFontMetrics().stringWidth("CUR")) / 2, 30);
-			g.setFont(font2);
-			String str = String.valueOf(prev);
-			g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
-		}
-	}
-	
+	/**
+	 * Simple class that holds all
+	 * the essential information 
+	 * about a key<br>This class
+	 * is mainly used for serialization
+	 * which allows for easy saving and
+	 * loading of configurations
+	 * @author Roan
+	 */
 	private static final class KeyInformation implements Serializable{
 		/**
-		 * 
+		 * Serial ID
 		 */
 		private static final long serialVersionUID = -3752409253121094171L;
+		/**
+		 * The name of this key
+		 * @see Key#name
+		 */
 		private String name;
+		/**
+		 * The virtual key code of this key
+		 * @see Key#key
+		 */
 		private int keycode;
 		
+		/**
+		 * Constructs a new KeyInformation
+		 * object with the given information
+		 * @param name The name of the key
+		 * @param code The virtual key code of the key
+		 * @see #name
+		 * @see #keycode
+		 */
 		private KeyInformation(char name, int code){
 			this.name = String.valueOf(name).toUpperCase();
 			this.keycode = code;
