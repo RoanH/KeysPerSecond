@@ -22,16 +22,18 @@
 package lc.kra.system;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 public class LibraryLoader {
+	
+	private static Path tempdir;
+	
 	/**
 	 * Tries to laod the library with the given name
 	 * 
@@ -39,55 +41,33 @@ public class LibraryLoader {
 	 * @throws UnsatisfiedLinkError Thrown in case loading the library fails
 	 */
 	public static void loadLibrary(String name) throws UnsatisfiedLinkError {
-		String libName = System.getProperty(name+".lib.name", System.mapLibraryName(name).replaceAll("\\.jnilib$", "\\.dylib")),
-			libPath = System.getProperty(name+".lib.path");
-		if(libPath==null){
-			return;
-		}
-		try {
-			if(libPath==null)
-			     System.loadLibrary(libName);
-			else System.load(new File(libPath, libName).getAbsolutePath());
-			return;
-		} catch(UnsatisfiedLinkError e) { /* do nothing, try next */ }
-		
-		libName = System.mapLibraryName(name+'-'+getOperatingSystemName()+'-'+getOperatingSystemArchitecture())
-			.replaceAll("\\.jnilib$", "\\.dylib"); // for JDK < 1.7
-		String libNameExtension = libName.substring(libName.lastIndexOf('.')),
-			libResourcePath = LibraryLoader.class.getPackage().getName().replace('.', '/')+"/lib/"+libName;
-		
-		InputStream inputStream = null; OutputStream outputStream = null;
-		try {
-			if((inputStream=LibraryLoader.class.getClassLoader().getResourceAsStream(libResourcePath))==null)
-				throw new FileNotFoundException("lib: "+libName+" not found in lib directory");
-			File tempFile = File.createTempFile(name+"-", libNameExtension);
-			
-			Checksum checksum = new CRC32();
-			outputStream = new FileOutputStream(tempFile);
-			int read; byte[] buffer = new byte[1024];
-			while((read=inputStream.read(buffer))!=-1) {
-				outputStream.write(buffer, 0, read);
-				checksum.update(buffer, 0, read);
+		try{
+			String os = getOperatingSystemName();
+			String arch = getOperatingSystemArchitecture();
+			if(!os.equals("windows") || !(arch.equals("amd64") || arch.equals("x86"))){
+				System.out.println("Unsupported operating system or architecture >.<");
+				System.exit(0);
 			}
-			outputStream.close();
-			
-			File libFile = new File(tempFile.getParentFile(), name+"+"+checksum.getValue()+libNameExtension);
-			if(!libFile.exists())
-			     tempFile.renameTo(libFile);
-			else tempFile.delete();
-			
-			System.load(libFile.getAbsolutePath());
-		} catch(IOException e) {
-			throw new UnsatisfiedLinkError(e.getMessage());
-		} finally {
-			if(inputStream!=null) {
-				try { inputStream.close(); }
-				catch (IOException e) { /* nothing to do here */ }
+			if(tempdir == null){
+				tempdir = Files.createTempDirectory("kps");
+				tempdir.toFile().deleteOnExit();
 			}
-			if(outputStream!=null) {
-				try { outputStream.close(); }
-				catch (IOException e) { /* nothing to do here */ }
+			String libname = name + "-" + os + "-" + arch + ".dll";
+			File lib = new File(tempdir.toFile(), libname);
+			InputStream in = ClassLoader.getSystemResourceAsStream(libname);
+			OutputStream out = new FileOutputStream(lib);
+			byte[] buffer = new byte[1024];
+			int len = 0;
+			while((len = in.read(buffer)) != -1){
+				out.write(buffer, 0, len);
 			}
+			out.flush();
+			out.close();
+			System.load(lib.getAbsolutePath());
+		}catch(IOException | NullPointerException e){
+			System.out.println("Failed to load native library!");
+			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 	

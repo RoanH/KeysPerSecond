@@ -16,7 +16,7 @@ public class Main {
 
 	public static void main(String[] args) {
         // might throw a UnsatisfiedLinkError if the native library fails to load or a RuntimeException if hooking fails 
-		System.load(new File("keyboardhook-windows-amd64.dll").getAbsolutePath());
+		//System.load(new File("keyboardhook-windows-amd64.dll").getAbsolutePath());
 		
 		GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook();
 		
