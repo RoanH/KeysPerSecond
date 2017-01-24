@@ -17,7 +17,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -35,22 +37,97 @@ import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
+/**
+ * This program can be used to display
+ * information about how many times
+ * certain keys are pressed and what
+ * average, maximum and current
+ * amount of keys pressed per second is
+ * <pre>
+ * Besides the tracking of the assigned keys
+ * this program responds to 3 key events these are:
+ * <ol><li><b>Ctrl + P</b>: Causes the program to reset the average and maximum value
+ * And to print the statistics to standard output
+ * </li><li><b>Ctrl + O</b>: Terminates the program
+ * </li><li><b>Ctrl + I</b>: Causes the program to reset the amount of times a key is pressed
+ * And to print the statistics to standard output</li></ol></pre>
+ * The program also constantly prints the current keys per second to
+ * the standard output.<br>
+ * And key is only counted as being pressed if the key has been released before
+ * this deals with the issue of holding a key firing multiple key press events<br>
+ * This program also has support for saving and loading configurations
+ * @author Roan
+ */
 public class Main {
-
+	/**
+	 * Last main loop update
+	 */
 	private static long last = System.currentTimeMillis();
+	/**
+	 * The number of seconds the average has
+	 * been calculated for
+	 */
 	private static long n = 0;
+	/**
+	 * The number of keys pressed in the
+	 * ongoing second
+	 */
 	private static int tmp = 0;
+	/**
+	 * The average keys per second
+	 */
 	protected static double avg;
+	/**
+	 * The maximum keys per second value reached so far
+	 */
 	protected static int max;
+	/**
+	 * The keys per second of the previous second
+	 * used for displaying the current keys per second value
+	 */
 	protected static int prev;
+	/**
+	 * Image for a pressed key
+	 * Image taken from osu!lazer
+	 * https://cloud.githubusercontent.com/assets/191335/16511435/17acd2f2-3f8b-11e6-8b50-5fccba819ce5.png
+	 */
 	protected static Image pressed;
+	/**
+	 * Image for an unpressed key<br>
+	 * Image taken from osu!lazer
+	 * https://cloud.githubusercontent.com/assets/191335/16511432/17ac5232-3f8b-11e6-95b7-33f9a4df0b7c.png
+	 */
 	protected static Image unpressed;
-	private static ArrayList<Key> keys = new ArrayList<Key>();
+	/**
+	 * HashMap containing all the tracked keys and their
+	 * virtual codes<br>Used to increment the count for the
+	 * keys
+	 */
+	private static Map<Integer, Key> keys = new HashMap<Integer, Key>();
+	/**
+	 * The most recent key event, only
+	 * used during the initial setup
+	 */
 	private static GlobalKeyEvent lastevent;
+	/**
+	 * String containing all the tracked keys
+	 * only used during the initial setup
+	 */
 	private static String addedkeys = "";
+	/**
+	 * Key configuration data, can be serialized
+	 */
 	private static List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
+	/**
+	 * Main panel used for showing all the sub panels that
+	 * display all the information
+	 */
 	private static JPanel content = new JPanel(new GridLayout(1, 0, 2, 0));
 
+	/**
+	 * Main method
+	 * @param args - No valid command line arguments for this program
+	 */
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -65,7 +142,7 @@ public class Main {
 		
 		//Register the keys to monitor
 		for(KeyInformation i : keyinfo){
-			keys.add(new Key(i.keycode, i.name));
+			keys.put(i.keycode, new Key(i.name));
 		}
 		
 		//Build GUI
@@ -121,11 +198,7 @@ public class Main {
 			@Override 
 			public void keyPressed(GlobalKeyEvent event) {
 				lastevent = event;
-				for(Key k : keys){
-					if(k.keyPressed(event)){
-						tmp++;
-					}
-				}
+				keys.get(event.getVirtualKeyCode()).keyPressed();	
 				if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_P && event.isControlPressed()){
 					System.out.println("max: " + max + " avg: " + avg);
 					n = 0;
@@ -134,14 +207,19 @@ public class Main {
 					tmp = 0;
 				}else if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_O && event.isControlPressed()){
 					System.exit(0);
+				}else if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_I && event.isControlPressed()){
+					System.out.print("Reset key counts | ");
+					for(Key k : keys.values()){
+						System.out.print(k.name + ":" + k.count + " ");
+						k.count = 0;
+					}
+					System.out.println();
 				}
 			}
 			
 			@Override
 			public void keyReleased(GlobalKeyEvent event){
-				for(Key k : keys){
-					k.keyReleased(event);
-				}
+				keys.get(event.getVirtualKeyCode()).keyReleased();
 			}
 		});
 	}
@@ -275,7 +353,7 @@ public class Main {
 		JFrame frame = new JFrame();
 
 		content.setBackground(Color.BLACK);
-		for (Key k : keys) {
+		for (Key k : keys.values()) {
 			content.add(k.getPanel());
 		}
 		int extra = 0;
@@ -336,11 +414,6 @@ public class Main {
 	 */
 	protected static final class Key {
 		/**
-		 * The virtual key code of the
-		 * key tracked by this object
-		 */
-		private final int key;
-		/**
 		 * Whether or not this key is currently pressed
 		 */
 		protected boolean down = false;
@@ -362,14 +435,11 @@ public class Main {
 		/**
 		 * Constructs a new Key object
 		 * for the key with the given
-		 * virtual code and name
-		 * @param key The virtual code of the key
+		 * name
 		 * @param name The name of the key
-		 * @see #key
 		 * @see #name
 		 */
-		private Key(int key, String name) {
-			this.key = key;
+		private Key(String name) {
 			this.name = name;
 		}
 
@@ -384,30 +454,25 @@ public class Main {
 
 		/**
 		 * Called when a key is pressed
-		 * @param event The event that occurred
 		 * @return Whether or not this was a key press
 		 *         to register
 		 */
-		public boolean keyPressed(GlobalKeyEvent event) {
-			if (key == event.getVirtualKeyCode() && !down) {
+		private void keyPressed() {
+			if (!down) {
 				count++;
 				down = true;
 				if (count >= 1000) {
 					kp.font2 = new Font("Dialog", Font.PLAIN, 14);
 				}
-				return true;
+				tmp++;
 			}
-			return false;
 		}
 
 		/**
 		 * Called when a key is released
-		 * @param event The event that occurred
 		 */
-		public void keyReleased(GlobalKeyEvent event) {
-			if (key == event.getVirtualKeyCode()) {
-				down = false;
-			}
+		private void keyReleased() {
+			down = false;
 		}
 	}
 
@@ -431,8 +496,8 @@ public class Main {
 		 */
 		private String name;
 		/**
-		 * The virtual key code of this key
-		 * @see Key#key
+		 * The virtual key code of this key<br>
+		 * This code represents the key
 		 */
 		private int keycode;
 		
