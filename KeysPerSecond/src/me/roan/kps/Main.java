@@ -350,7 +350,7 @@ public class Main {
 	private static final void buildGUI(boolean max, boolean avg, boolean cur) throws IOException {
 		pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 		unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
-		JFrame frame = new JFrame();
+		JFrame frame = new JFrame("Keys per second");
 
 		content.setBackground(Color.BLACK);
 		for (Key k : keys.values()) {
