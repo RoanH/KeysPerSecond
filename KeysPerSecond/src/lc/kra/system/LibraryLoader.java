@@ -50,7 +50,16 @@ public class LibraryLoader {
 			}
 			if(tempdir == null){
 				tempdir = Files.createTempDirectory("kps");
-				tempdir.toFile().deleteOnExit();
+				Runtime.getRuntime().addShutdownHook(new Thread(){
+					@Override
+					public void run(){
+						System.out.println("Cleaning up");
+						for(File file : tempdir.toFile().listFiles()){
+							file.delete();
+						}
+						tempdir.toFile().delete();						
+					}
+				});
 			}
 			String libname = name + "-" + os + "-" + arch + ".dll";
 			File lib = new File(tempdir.toFile(), libname);
@@ -83,6 +92,7 @@ public class LibraryLoader {
 			return "solaris";
 		else return osName;
 	}
+	
 	private static String getOperatingSystemArchitecture() {
 		String osArch = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
 		if((osArch.startsWith("i")||osArch.startsWith("x"))&&osArch.endsWith("86"))
