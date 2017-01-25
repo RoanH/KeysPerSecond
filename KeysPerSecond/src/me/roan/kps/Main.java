@@ -60,6 +60,10 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
  */
 public class Main {
 	/**
+	 * The directory this jar is in
+	 */
+	public static String dir;
+	/**
 	 * Last main loop update
 	 */
 	private static long last = System.currentTimeMillis();
@@ -129,6 +133,7 @@ public class Main {
 	 * @param args - No valid command line arguments for this program
 	 */
 	public static void main(String[] args) {		
+		dir = args[0];
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + O: Terminates the program");

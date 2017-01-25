@@ -24,7 +24,8 @@ public class Launcher{
 			
 			String javaexe = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
 			ProcessBuilder proc = new ProcessBuilder();
-			proc.command(javaexe, "-Djava.library.path=" + tmp.toAbsolutePath().toString(), "-jar", new File(tmp.toFile(), "KPSCore.jar").toPath().toAbsolutePath().toString());
+			proc.command(javaexe, "-Djava.library.path=" + tmp.toAbsolutePath().toString(), "-jar", new File(tmp.toFile(), "KPSCore.jar").toPath().toAbsolutePath().toString(), tmp.toAbsolutePath().toString());
+			proc.environment().put("Path", tmp.toAbsolutePath().toString());
 			Process p = proc.start();
 			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			while(p.isAlive()){
@@ -32,7 +33,7 @@ public class Launcher{
 					System.out.println(in.readLine());
 				}
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100000);
 				} catch (InterruptedException e) {
 				}
 			}

@@ -21,7 +21,10 @@
  */
 package lc.kra.system;
 
+import java.io.File;
 import java.util.Locale;
+
+import me.roan.kps.Main;
 
 public class LibraryLoader {
 		
@@ -32,7 +35,7 @@ public class LibraryLoader {
 	 * @throws UnsatisfiedLinkError Thrown in case loading the library fails
 	 */
 	public static void loadLibrary(String name) throws UnsatisfiedLinkError {
-		System.loadLibrary(name + "-" + getOperatingSystemName() + "-" + getOperatingSystemArchitecture());
+		System.load(Main.dir + File.separator + name + "-" + getOperatingSystemName() + "-" + getOperatingSystemArchitecture() + ".dll");
 	}
 	
 	private static String getOperatingSystemName() {
