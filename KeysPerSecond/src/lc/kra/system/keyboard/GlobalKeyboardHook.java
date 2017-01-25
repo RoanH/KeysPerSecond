@@ -38,6 +38,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javax.swing.JOptionPane;
+
 import lc.kra.system.LibraryLoader;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 import lc.kra.system.keyboard.event.GlobalKeyListener;
@@ -171,7 +173,13 @@ public class GlobalKeyboardHook {
 		}
 		
 		@Override public void run() {
-			status = registerHook();
+			try{	
+				status = registerHook();
+			}catch(UnsatisfiedLinkError e){
+				JOptionPane.showMessageDialog(null, "Failed to load native library >.<", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+				System.exit(0);
+			}
 			synchronized(this) {
 				notifyAll(); }
 		}

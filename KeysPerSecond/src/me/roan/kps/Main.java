@@ -115,7 +115,7 @@ public class Main {
 	 */
 	private static String addedkeys = "";
 	/**
-	 * Key configuration data, can be serialized
+	 * Key configuration data, can be serialised
 	 */
 	private static List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
 	/**
@@ -128,13 +128,17 @@ public class Main {
 	 * Main method
 	 * @param args - No valid command line arguments for this program
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
+		System.out.println("Control keys:");
+		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
+		System.out.println("Ctrl + O: Terminates the program");
+		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
 		}
 		
-		//Initialize native library and register event handlers
+		//Initialise native library and register event handlers
 		setupKeyboardHook();
 		
 		//Get a configuration for the keys
@@ -172,7 +176,7 @@ public class Main {
 				if(tmp != 0){
 					avg = (avg * (double)n + (double)tmp) / ((double)n + 1.0D);
 					n++;
-					System.out.println(tmp);
+					System.out.println("Current keys per second: " + tmp);
 				}
 				prev = tmp;
 				tmp = 0;
@@ -198,9 +202,11 @@ public class Main {
 			@Override 
 			public void keyPressed(GlobalKeyEvent event) {
 				lastevent = event;
-				keys.get(event.getVirtualKeyCode()).keyPressed();	
+				if(keys.containsKey(event.getVirtualKeyCode())){
+					keys.get(event.getVirtualKeyCode()).keyPressed();	
+				}
 				if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_P && event.isControlPressed()){
-					System.out.println("max: " + max + " avg: " + avg);
+					System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
 					n = 0;
 					avg = 0;
 					max = 0;
@@ -219,7 +225,9 @@ public class Main {
 			
 			@Override
 			public void keyReleased(GlobalKeyEvent event){
-				keys.get(event.getVirtualKeyCode()).keyReleased();
+				if(keys.containsKey(event.getVirtualKeyCode())){
+					keys.get(event.getVirtualKeyCode()).keyReleased();
+				}
 			}
 		});
 	}
@@ -480,7 +488,7 @@ public class Main {
 	 * Simple class that holds all
 	 * the essential information 
 	 * about a key<br>This class
-	 * is mainly used for serialization
+	 * is mainly used for serialisation
 	 * which allows for easy saving and
 	 * loading of configurations
 	 * @author Roan

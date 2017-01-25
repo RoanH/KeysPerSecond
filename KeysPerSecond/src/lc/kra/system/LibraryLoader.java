@@ -21,90 +21,47 @@
  */
 package lc.kra.system;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Locale;
 
 public class LibraryLoader {
-	
-	private static Path tempdir;
-	
+		
 	/**
-	 * Tries to laod the library with the given name
+	 * Tries to load the library with the given name
 	 * 
 	 * @param name The name of the library to load
 	 * @throws UnsatisfiedLinkError Thrown in case loading the library fails
 	 */
 	public static void loadLibrary(String name) throws UnsatisfiedLinkError {
-		try{
-			String os = getOperatingSystemName();
-			String arch = getOperatingSystemArchitecture();
-			if(!os.equals("windows") || !(arch.equals("amd64") || arch.equals("x86"))){
-				System.out.println("Unsupported operating system or architecture >.<");
-				System.exit(0);
-			}
-			if(tempdir == null){
-				tempdir = Files.createTempDirectory("kps");
-				Runtime.getRuntime().addShutdownHook(new Thread(){
-					@Override
-					public void run(){
-						System.out.println("Cleaning up");
-						for(File file : tempdir.toFile().listFiles()){
-							file.delete();
-						}
-						tempdir.toFile().delete();						
-					}
-				});
-			}
-			String libname = name + "-" + os + "-" + arch + ".dll";
-			File lib = new File(tempdir.toFile(), libname);
-			InputStream in = ClassLoader.getSystemResourceAsStream(libname);
-			OutputStream out = new FileOutputStream(lib);
-			byte[] buffer = new byte[1024];
-			int len = 0;
-			while((len = in.read(buffer)) != -1){
-				out.write(buffer, 0, len);
-			}
-			out.flush();
-			out.close();
-			System.load(lib.getAbsolutePath());
-		}catch(IOException | NullPointerException e){
-			System.out.println("Failed to load native library!");
-			e.printStackTrace();
-			System.exit(0);
-		}
+		System.loadLibrary(name + "-" + getOperatingSystemName() + "-" + getOperatingSystemArchitecture());
 	}
 	
 	private static String getOperatingSystemName() {
 		String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
-		if(osName.startsWith("windows"))
+		if(osName.startsWith("windows")){
 			return "windows";
-		else if(osName.startsWith("linux"))
+		}else if(osName.startsWith("linux")){
 			return "linux";
-		else if(osName.startsWith("mac os"))
+		}else if(osName.startsWith("mac os")){
 			return "darwin";
-		else if(osName.startsWith("sunos")||osName.startsWith("solaris"))
+		}else if(osName.startsWith("sunos") || osName.startsWith("solaris")){
 			return "solaris";
-		else return osName;
+		}else{
+			return osName;
+		}
 	}
-	
+
 	private static String getOperatingSystemArchitecture() {
 		String osArch = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
-		if((osArch.startsWith("i")||osArch.startsWith("x"))&&osArch.endsWith("86"))
+		if((osArch.startsWith("i") || osArch.startsWith("x")) && osArch.endsWith("86")){
 			return "x86";
-		else if((osArch.equals("i86")||osArch.startsWith("amd"))&&osArch.endsWith("64"))
+		}else if((osArch.equals("i86") || osArch.startsWith("amd")) && osArch.endsWith("64")){
 			return "amd64";
-		else if(osArch.startsWith("arm"))
+		}else if(osArch.startsWith("arm")){
 			return "arm";
-		else if(osArch.startsWith("sparc"))
-			return !osArch.endsWith("64")?"sparc":"sparc64";
-		else if(osArch.startsWith("ppc"))
-			return !osArch.endsWith("64")?"ppc":"ppc64";
-		else return osArch;
+		}else if(osArch.startsWith("sparc")){
+			return !osArch.endsWith("64") ? "sparc" : "sparc64";
+		}else if(osArch.startsWith("ppc")){
+			return !osArch.endsWith("64") ? "ppc" : "ppc64";
+		}else return osArch;
 	}
 }
