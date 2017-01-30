@@ -17,18 +17,22 @@ public class Launcher{
 	public static void main(String[] args){
 		try {
 			//no support for mouse keys for now
-			String libname = "keyboardhook" + "-" + getOperatingSystemName() + "-" + getOperatingSystemArchitecture() + ".dll";
+			String libname = "keyboardhook" + "-" + getOperatingSystemName() + "-" + osArch() + ".dll";
 			Path tmp = Files.createTempDirectory("kps");
 			copyResource(tmp, libname, ClassLoader.getSystemResourceAsStream(libname));
 			copyResource(tmp, "KPSCore.jar", ClassLoader.getSystemResourceAsStream("KPSCore.jar"));
 			
 			String javaexe = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
 			ProcessBuilder proc = new ProcessBuilder();
-			proc.command(javaexe, "-Djava.library.path=" + tmp.toAbsolutePath().toString(), "-jar", new File(tmp.toFile(), "KPSCore.jar").toPath().toAbsolutePath().toString(), tmp.toAbsolutePath().toString());
+			proc.command(javaexe, "-Djava.library.path=" + tmp.toAbsolutePath().toString(), "-jar", new File(tmp.toFile(), "KPSCore.jar").toPath().toAbsolutePath().toString(), new File(tmp.toFile(), libname).getAbsolutePath());
 			proc.environment().put("Path", tmp.toAbsolutePath().toString());
 			Process p = proc.start();
 			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 			while(p.isAlive()){
+				while(err.ready()){
+					System.err.print(err.readLine());
+				}
 				while(in.ready()){
 					System.out.println(in.readLine());
 				}
@@ -77,9 +81,20 @@ public class Launcher{
 			return osName;
 		}
 	}
+	
+	private static String osArch(){
+		boolean is64bit = false;
+		if (System.getProperty("os.name").contains("Windows")) {
+		    is64bit = (System.getenv("ProgramFiles(x86)") != null);
+		} else {
+		    is64bit = (System.getProperty("os.arch").indexOf("64") != -1);
+		}
+		return is64bit ? "amd64" : "x86";
+	}
 
 	private static String getOperatingSystemArchitecture() {
 		String osArch = System.getProperty("os.arch").toLowerCase(Locale.ROOT);
+		System.out.println("arch: " + System.getProperty("os.arch"));
 		if((osArch.startsWith("i") || osArch.startsWith("x")) && osArch.endsWith("86")){
 			return "x86";
 		}else if((osArch.equals("i86") || osArch.startsWith("amd")) && osArch.endsWith("64")){
