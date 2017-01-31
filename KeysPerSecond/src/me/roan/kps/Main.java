@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -33,9 +35,10 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import lc.kra.system.keyboard.GlobalKeyboardHook;
-import lc.kra.system.keyboard.event.GlobalKeyAdapter;
-import lc.kra.system.keyboard.event.GlobalKeyEvent;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
  * This program can be used to display
@@ -59,10 +62,6 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
  * @author Roan
  */
 public class Main {
-	/**
-	 * The directory this jar is in
-	 */
-	public static String dir = "";
 	/**
 	 * Last main loop update
 	 */
@@ -112,7 +111,7 @@ public class Main {
 	 * The most recent key event, only
 	 * used during the initial setup
 	 */
-	private static GlobalKeyEvent lastevent;
+	private static NativeKeyEvent lastevent;
 	/**
 	 * String containing all the tracked keys
 	 * only used during the initial setup
@@ -133,10 +132,6 @@ public class Main {
 	 * @param args - No valid command line arguments for this program
 	 */
 	public static void main(String[] args) {		
-		if(args.length == 1){
-			dir = args[0];
-			Runtime.getRuntime().load(args[0]);
-		}
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + O: Terminates the program");
@@ -204,24 +199,39 @@ public class Main {
 	 * press events
 	 */
 	private static final void setupKeyboardHook(){
-		GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook();
-		keyboardHook.addKeyListener(new GlobalKeyAdapter() {
-			
-			@Override 
-			public void keyPressed(GlobalKeyEvent event) {
+		try {
+        	Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+        	logger.setLevel(Level.WARNING);
+        	logger.setUseParentHandlers(false);
+            GlobalScreen.registerNativeHook();
+        }
+        catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+            System.exit(1);
+        }
+		GlobalScreen.addNativeKeyListener(new NativeKeyListener(){
+
+			@Override
+			public void nativeKeyPressed(NativeKeyEvent event) {
 				lastevent = event;
-				if(keys.containsKey(event.getVirtualKeyCode())){
-					keys.get(event.getVirtualKeyCode()).keyPressed();	
+				if(keys.containsKey(event.getKeyCode())){
+					keys.get(event.getKeyCode()).keyPressed();	
 				}
-				if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_P && event.isControlPressed()){
+				if(event.getKeyCode() == NativeKeyEvent.VC_P && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
 					System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
 					n = 0;
 					avg = 0;
 					max = 0;
 					tmp = 0;
-				}else if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_O && event.isControlPressed()){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_O && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
+					try {
+						GlobalScreen.unregisterNativeHook();
+					} catch (NativeHookException e1) {
+						e1.printStackTrace();
+					}
 					System.exit(0);
-				}else if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_I && event.isControlPressed()){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
 					System.out.print("Reset key counts | ");
 					for(Key k : keys.values()){
 						System.out.print(k.name + ":" + k.count + " ");
@@ -230,12 +240,16 @@ public class Main {
 					System.out.println();
 				}
 			}
-			
+
 			@Override
-			public void keyReleased(GlobalKeyEvent event){
-				if(keys.containsKey(event.getVirtualKeyCode())){
-					keys.get(event.getVirtualKeyCode()).keyReleased();
+			public void nativeKeyReleased(NativeKeyEvent event) {
+				if(keys.containsKey(event.getKeyCode())){
+					keys.get(event.getKeyCode()).keyReleased();
 				}
+			}
+
+			@Override
+			public void nativeKeyTyped(NativeKeyEvent arg0) {
 			}
 		});
 	}
@@ -297,7 +311,7 @@ public class Main {
 					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				KeyInformation info = new KeyInformation(lastevent.getKeyChar(), lastevent.getVirtualKeyCode());
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
 				if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 					if(addedkeys.isEmpty()){
 						addedkeys += info.name;
@@ -525,8 +539,8 @@ public class Main {
 		 * @see #name
 		 * @see #keycode
 		 */
-		private KeyInformation(char name, int code){
-			this.name = String.valueOf(name).toUpperCase();
+		private KeyInformation(String name, int code){
+			this.name = name.toUpperCase();
 			this.keycode = code;
 		}
 	}
