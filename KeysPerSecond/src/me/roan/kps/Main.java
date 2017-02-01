@@ -126,6 +126,10 @@ public class Main {
 	 * display all the information
 	 */
 	private static JPanel content = new JPanel(new GridLayout(1, 0, 2, 0));
+	/**
+	 * Graph panel
+	 */
+	private static GraphPanel graph = new GraphPanel();
 
 	/**
 	 * Main method
@@ -141,7 +145,7 @@ public class Main {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
 		}
 		
-		//Initialise native library and register event handlers
+		//Initialize native library and register event handlers
 		setupKeyboardHook();
 		
 		//Get a configuration for the keys
@@ -154,7 +158,7 @@ public class Main {
 		
 		//Build GUI
 		try {
-			buildGUI(fields[0], fields[1], fields[2]);
+			buildGUI(fields[0], fields[1], fields[2], fields[3]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -181,6 +185,8 @@ public class Main {
 					n++;
 					System.out.println("Current keys per second: " + tmp);
 				}
+				graph.addPoint(tmp);
+				graph.repaint();
 				prev = tmp;
 				tmp = 0;
 			}
@@ -218,20 +224,20 @@ public class Main {
 				if(keys.containsKey(event.getKeyCode())){
 					keys.get(event.getKeyCode()).keyPressed();	
 				}
-				if(event.getKeyCode() == NativeKeyEvent.VC_P && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
+				if(event.getKeyCode() == NativeKeyEvent.VC_P && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
 					n = 0;
 					avg = 0;
 					max = 0;
 					tmp = 0;
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_O && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_O && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					try {
 						GlobalScreen.unregisterNativeHook();
 					} catch (NativeHookException e1) {
 						e1.printStackTrace();
 					}
 					System.exit(0);
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					System.out.print("Reset key counts | ");
 					for(Key k : keys.values()){
 						System.out.print(k.name + ":" + k.count + " ");
@@ -270,23 +276,27 @@ public class Main {
 	@SuppressWarnings("unchecked")
 	private static final boolean[] configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(3, 0));
-		JPanel labels = new JPanel(new GridLayout(3, 0));
+		JPanel boxes = new JPanel(new GridLayout(4, 0));
+		JPanel labels = new JPanel(new GridLayout(4, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
+		JCheckBox cgra = new JCheckBox();
 		cmax.setSelected(true);
 		cavg.setSelected(true);
 		ccur.setSelected(true);
 		JLabel lmax = new JLabel("Show maximum: ");
 		JLabel lavg = new JLabel("Show average: ");
 		JLabel lcur = new JLabel("Show current: ");
+		JLabel lgra = new JLabel("Show graph: ");
 		boxes.add(cmax);
 		boxes.add(cavg);
 		boxes.add(ccur);
+		boxes.add(cgra);
 		labels.add(lmax);
 		labels.add(lavg);
 		labels.add(lcur);
+		labels.add(lgra);
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
@@ -366,7 +376,7 @@ public class Main {
 			}
 		});
 		JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
-		return new boolean[]{cmax.isSelected(), cavg.isSelected(), ccur.isSelected()};
+		return new boolean[]{cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected()};
 	}
 	
 	/**
@@ -377,7 +387,7 @@ public class Main {
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails the load its resources
 	 */
-	private static final void buildGUI(boolean max, boolean avg, boolean cur) throws IOException {
+	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph) throws IOException {
 		pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 		unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
 		JFrame frame = new JFrame("Keys per second");
@@ -400,10 +410,15 @@ public class Main {
 			extra++;
 		}
 
-		frame.setSize((keys.size() + extra) * 44 + ((keys.size() + extra) - 1) * 2, 68);
+		JPanel allcontent = new JPanel(new GridLayout(cgraph ? 2 : 1, 1, 0, 0));
+		allcontent.add(content);
+		if(cgraph){
+			allcontent.add(graph);
+		}
+		frame.setSize((keys.size() + extra) * 44 + ((keys.size() + extra) - 1) * 2, 68 + (cgraph ? 68 : 0));
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(content);
+		frame.add(allcontent);
 		frame.setUndecorated(true);
 		frame.addMouseMotionListener(new MouseMotionListener(){
 			/**
