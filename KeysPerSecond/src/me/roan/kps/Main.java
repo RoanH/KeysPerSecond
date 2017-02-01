@@ -32,6 +32,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -301,13 +303,21 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(3, 0));
+		JPanel buttons = new JPanel(new GridLayout(4, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton save = new JButton("Save config");
+		save.setEnabled(false);
+		JButton graph = new JButton("Graph");
+		graph.setEnabled(false);
+		cgra.addActionListener((e)->{
+			graph.setEnabled(cgra.isSelected());
+			graph.repaint();
+		});
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
+		buttons.add(graph);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Config"));
@@ -315,6 +325,28 @@ public class Main {
 		all.add(options, BorderLayout.LINE_START);
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
+		graph.addActionListener((e)->{
+			JPanel config = new JPanel();
+			JSpinner backlog = new JSpinner(new SpinnerNumberModel(GraphPanel.MAX, 1, Integer.MAX_VALUE, 1));
+			JCheckBox showavg = new JCheckBox();
+			showavg.setSelected(GraphPanel.showAverage);
+			JLabel lbacklog = new JLabel("Backlog (seconds): ");
+			lbacklog.setToolTipText("WARNING: High values put a lot of stain on your computer!");
+			JLabel lshowavg = new JLabel("Show average: ");
+			JPanel glabels = new JPanel(new GridLayout(2, 1));
+			JPanel gcomponents = new JPanel(new GridLayout(2, 1));
+			glabels.add(lbacklog);
+			glabels.add(lshowavg);
+			gcomponents.add(backlog);
+			gcomponents.add(showavg);
+			glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
+			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
+			config.add(glabels);
+			config.add(gcomponents);
+			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			GraphPanel.showAverage = showavg.isSelected();
+			GraphPanel.MAX = (int)backlog.getValue();
+		});
 		addkey.addActionListener((e)->{
 			if(JOptionPane.showConfirmDialog(null, "Press a key and press OK to add it\nCurrently added keys: " + addedkeys, "Keys per second", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
 				if(lastevent == null){
@@ -329,6 +361,7 @@ public class Main {
 						addedkeys += ", " + info.name;
 					}
 					keyinfo.add(info);
+					save.setEnabled(true);
 				}
 			}
 		});
@@ -343,6 +376,12 @@ public class Main {
 				try {
 					ObjectOutputStream objout = new ObjectOutputStream(new FileOutputStream(saveloc));
 					objout.writeObject(keyinfo);
+					objout.writeBoolean(cmax.isSelected());
+					objout.writeBoolean(ccur.isSelected());
+					objout.writeBoolean(cavg.isSelected());
+					objout.writeBoolean(cgra.isSelected());
+					objout.writeBoolean(GraphPanel.showAverage);
+					objout.writeInt(GraphPanel.MAX);
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -362,6 +401,15 @@ public class Main {
 				ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
 				keyinfo = (List<KeyInformation>) objin.readObject();
 				addedkeys = "";
+				cmax.setSelected(objin.readBoolean());
+				ccur.setSelected(objin.readBoolean());
+				cavg.setSelected(objin.readBoolean());
+				cgra.setSelected(objin.readBoolean());
+				if(cgra.isSelected()){
+					graph.setEnabled(true);
+				}
+				GraphPanel.showAverage = objin.readBoolean();
+				GraphPanel.MAX = objin.readInt();
 				objin.close();
 				for(KeyInformation i : keyinfo){
 					if(addedkeys.isEmpty()){
@@ -370,6 +418,7 @@ public class Main {
 						addedkeys += ", " + i.name;
 					}
 				}
+				save.setEnabled(true);
 				JOptionPane.showMessageDialog(null, "Config succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
@@ -414,6 +463,10 @@ public class Main {
 		allcontent.add(content);
 		if(cgraph){
 			allcontent.add(graph);
+			GraphPanel.frames = keys.size() + extra;
+			GraphPanel.gright = ImageIO.read(ClassLoader.getSystemResource("graphright.png"));
+			GraphPanel.gleft = ImageIO.read(ClassLoader.getSystemResource("graphleft.png"));
+			GraphPanel.gmid = ImageIO.read(ClassLoader.getSystemResource("graphmiddle.png"));
 		}
 		frame.setSize((keys.size() + extra) * 44 + ((keys.size() + extra) - 1) * 2, 68 + (cgraph ? 68 : 0));
 		frame.setResizable(false);
@@ -451,7 +504,7 @@ public class Main {
 //================== NESTED CLASSES ===============================================================
 //=================================================================================================
 
-	/**
+	/**ff
 	 * This class is used to keep track
 	 * of how many times a specific key
 	 * is pressed
@@ -555,8 +608,71 @@ public class Main {
 		 * @see #keycode
 		 */
 		private KeyInformation(String name, int code){
-			this.name = name.toUpperCase();
+			this.name = name.length() == 1 ? name.toUpperCase() : parseKeyString(name);
 			this.keycode = code;
+		}
+		
+		/**
+		 * Converts a long key name to
+		 * something a bit shorter
+		 * @param key The key to convert
+		 * @return The shorter key name
+		 */
+		private static final String parseKeyString(String key){
+			switch(key){
+			case "Back Quote":
+				return "'";
+			case "Minus":
+				return "-";
+			case "Equals":
+				return "=";
+			case "Backspace":
+				return "\u2190";
+			case "Caps Lock":
+				return "Cap";
+			case "Open Bracket":
+				return "(";
+			case "Close Bracket":
+				return ")";
+			case "Back Slash":
+				return "\\";
+			case "Semicolon":
+				return ";";
+			case "Quote":
+				return "\"";
+			case "Enter":
+				return "\u21B5";
+			case "Comma":
+				return ",";
+			case "Period":
+				return ".";
+			case "Slash":
+				return "/";
+			case "Space":
+				return " ";
+			case "Insert":
+				return "Ins";
+			case "Delete":
+				return "Del";
+			case "Home":
+				return "\u2302";
+			case "Page Up":
+				return "\u2191";
+			case "Page Down":
+				return "\u2193";
+			case "Up":
+				return "\u25B2";
+			case "Left":
+				return "\u25B0";
+			case "Right":
+				return "\u25B6";
+			case "Down":
+				return "\u25BC";
+			case "Shift":
+				return "\u21D1";
+				default:
+					return "?";
+			}
 		}
 	}
 }

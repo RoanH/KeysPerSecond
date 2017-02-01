@@ -61,7 +61,11 @@ public final class KeyPanel extends JPanel {
 		}
 		g.setColor(Color.CYAN);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.setFont(font1);
+		if(key.name.length() == 1){
+			g.setFont(font1);
+		}else{
+			g.setFont(BasePanel.font1);
+		}
 		g.drawString(key.name, (this.getWidth() - g.getFontMetrics().stringWidth(key.name)) / 2, 30);
 		g.setFont(font2);
 		String str = String.valueOf(key.count);
