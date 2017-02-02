@@ -136,9 +136,9 @@ public class Main {
 	 */
 	private static GraphPanel graph = new GraphPanel();
 	/**
-	 * The main frame
+	 * Whether of not the frame forces itself to be the top window
 	 */
-	private static final JFrame frame = new JFrame("Keys per second");
+	private static boolean alwaysOnTop = false;
 
 	/**
 	 * Main method
@@ -438,6 +438,7 @@ public class Main {
 			}
 		});
 		JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
+		alwaysOnTop = ctop.isSelected();
 		return new boolean[]{cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected()};
 	}
 	
@@ -453,7 +454,7 @@ public class Main {
 	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph) throws IOException {
 		pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 		unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
-
+		JFrame frame = new JFrame("Keys per second");
 		content.setBackground(Color.BLACK);
 		for (Key k : keys.values()) {
 			content.add(k.getPanel());
@@ -486,29 +487,28 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
-		frame.setAlwaysOnTop(true);
-		frame.addWindowFocusListener(new WindowFocusListener(){
+		if(alwaysOnTop){
+			frame.setAlwaysOnTop(true);
+			frame.addWindowFocusListener(new WindowFocusListener(){
 
-			@Override
-			public void windowGainedFocus(WindowEvent e) {
-				System.out.println("focus lost");
-				e.getWindow().toFront();
-			}
+				@Override
+				public void windowGainedFocus(WindowEvent e) {
+					e.getWindow().toFront();
+				}
 
-			@Override
-			public void windowLostFocus(WindowEvent e) {
-				System.out.println("focus lost");
-				e.getWindow().toFront();
-			}
-		});
-		frame.addWindowStateListener(new WindowStateListener(){
+				@Override
+				public void windowLostFocus(WindowEvent e) {
+					e.getWindow().toFront();
+				}
+			});
+			frame.addWindowStateListener(new WindowStateListener(){
 
-			@Override
-			public void windowStateChanged(WindowEvent e) {
-				System.out.println("focus lost");
-				e.getWindow().toFront();
-			}
-		});
+				@Override
+				public void windowStateChanged(WindowEvent e) {
+					e.getWindow().toFront();
+				}
+			});
+		}
 		frame.addMouseMotionListener(new MouseMotionListener(){
 			/**
 			 * Previous location of the mouse on the screen
