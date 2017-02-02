@@ -9,6 +9,9 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowStateListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -132,6 +135,10 @@ public class Main {
 	 * Graph panel
 	 */
 	private static GraphPanel graph = new GraphPanel();
+	/**
+	 * The main frame
+	 */
+	private static final JFrame frame = new JFrame("Keys per second");
 
 	/**
 	 * Main method
@@ -268,37 +275,43 @@ public class Main {
 	 * These dialogs also provide the
 	 * option of saving or loading an
 	 * existing configuration
-	 * @return An array consisting of 3 boolean
+	 * @return An array consisting of 4 boolean
 	 *         values. The values represent (in
 	 *         the following order) whether or not
 	 *         to display: the maximum keys per second,
 	 *         the average keys per second, the current
-	 *         keys per second
+	 *         keys per second, the graph
 	 */
 	@SuppressWarnings("unchecked")
 	private static final boolean[] configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(4, 0));
-		JPanel labels = new JPanel(new GridLayout(4, 0));
+		JPanel boxes = new JPanel(new GridLayout(5, 0));
+		JPanel labels = new JPanel(new GridLayout(5, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
 		JCheckBox cgra = new JCheckBox();
+		JCheckBox ctop = new JCheckBox();
 		cmax.setSelected(true);
 		cavg.setSelected(true);
 		ccur.setSelected(true);
+		ctop.setSelected(false);
 		JLabel lmax = new JLabel("Show maximum: ");
 		JLabel lavg = new JLabel("Show average: ");
 		JLabel lcur = new JLabel("Show current: ");
 		JLabel lgra = new JLabel("Show graph: ");
+		JLabel ltop = new JLabel("Overlay osu!: ");
+		ltop.setToolTipText("Requires you to run osu! out of full screen mode");
 		boxes.add(cmax);
 		boxes.add(cavg);
 		boxes.add(ccur);
 		boxes.add(cgra);
+		boxes.add(ctop);
 		labels.add(lmax);
 		labels.add(lavg);
 		labels.add(lcur);
 		labels.add(lgra);
+		labels.add(ltop);
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
@@ -433,13 +446,13 @@ public class Main {
 	 * @param max Whether or not to display the maximum keys per second
 	 * @param avg Whether or not to display the average keys per second
 	 * @param cur Whether or not to display the current keys per second
+	 * @param cgraph Whether or not to display the graph
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails the load its resources
 	 */
 	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph) throws IOException {
 		pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 		unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
-		JFrame frame = new JFrame("Keys per second");
 
 		content.setBackground(Color.BLACK);
 		for (Key k : keys.values()) {
@@ -473,6 +486,29 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
+		frame.setAlwaysOnTop(true);
+		frame.addWindowFocusListener(new WindowFocusListener(){
+
+			@Override
+			public void windowGainedFocus(WindowEvent e) {
+				System.out.println("focus lost");
+				e.getWindow().toFront();
+			}
+
+			@Override
+			public void windowLostFocus(WindowEvent e) {
+				System.out.println("focus lost");
+				e.getWindow().toFront();
+			}
+		});
+		frame.addWindowStateListener(new WindowStateListener(){
+
+			@Override
+			public void windowStateChanged(WindowEvent e) {
+				System.out.println("focus lost");
+				e.getWindow().toFront();
+			}
+		});
 		frame.addMouseMotionListener(new MouseMotionListener(){
 			/**
 			 * Previous location of the mouse on the screen
