@@ -30,5 +30,8 @@ And if you find any bugs feel free to report them.
 ![Windows executable](https://github.com/RoanH/KeysPerSecond/raw/master/KeysPerSecond.exe)<br>
 ![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/raw/master/KeysPerSecond.jar)
 
+## Dependencies
+https://github.com/kwhat/jnativehook
+
 ## History
 Project development started: 23 January 2017
