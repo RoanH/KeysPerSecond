@@ -160,7 +160,7 @@ public class Main {
 	public static void main(String[] args) {		
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
-		System.out.println("Ctrl + O: Terminates the program");
+		System.out.println("Ctrl + U: Terminates the program");
 		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -244,6 +244,7 @@ public class Main {
         catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "There was a problem registering the native hook: " + ex.getMessage(), "Keys per second", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
 		GlobalScreen.addNativeKeyListener(new NativeKeyListener(){
