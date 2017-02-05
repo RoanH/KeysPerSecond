@@ -2,6 +2,7 @@ package me.roan.kps;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -21,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,11 +30,14 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -139,6 +144,14 @@ public class Main {
 	 * Whether of not the frame forces itself to be the top window
 	 */
 	private static boolean alwaysOnTop = false;
+	/**
+	 * Linked list containing all the past key counts per time frame
+	 */
+	private static LinkedList<Integer> timepoints = new LinkedList<Integer>();
+	/**
+	 * The amount of milliseconds a single time frame takes
+	 */
+	private static int timeframe = 1000;
 
 	/**
 	 * Main method
@@ -184,19 +197,27 @@ public class Main {
 	 */
 	private static final void mainLoop(){
 		while(true){
-			if(System.currentTimeMillis() - last >= 1000){
+			if(System.currentTimeMillis() - last >= timeframe){
 				last = System.currentTimeMillis();
-				if(tmp > max){
-					max = tmp;
+				int totaltmp = tmp;
+				for(int i : timepoints){
+					totaltmp += i;
 				}
-				if(tmp != 0){
-					avg = (avg * (double)n + (double)tmp) / ((double)n + 1.0D);
+				if(totaltmp > max){
+					max = totaltmp;
+				}
+				if(totaltmp != 0){
+					avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
 					n++;
-					System.out.println("Current keys per second: " + tmp);
+					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
 				}
-				graph.addPoint(tmp);
+				graph.addPoint(totaltmp);
 				graph.repaint();
-				prev = tmp;
+				prev = totaltmp;
+				timepoints.addFirst(tmp);
+				if(timepoints.size() >= 1000 / timeframe){
+					timepoints.removeLast();
+				}
 				tmp = 0;
 			}
 			try {
@@ -239,7 +260,7 @@ public class Main {
 					avg = 0;
 					max = 0;
 					tmp = 0;
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_O && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_U && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					try {
 						GlobalScreen.unregisterNativeHook();
 					} catch (NativeHookException e1) {
@@ -316,10 +337,11 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(4, 0));
+		JPanel buttons = new JPanel(new GridLayout(5, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton save = new JButton("Save config");
+		JButton updaterate = new JButton("Update rate");
 		save.setEnabled(false);
 		JButton graph = new JButton("Graph");
 		graph.setEnabled(false);
@@ -331,6 +353,7 @@ public class Main {
 		buttons.add(load);
 		buttons.add(save);
 		buttons.add(graph);
+		buttons.add(updaterate);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Config"));
@@ -343,8 +366,12 @@ public class Main {
 			JSpinner backlog = new JSpinner(new SpinnerNumberModel(GraphPanel.MAX, 1, Integer.MAX_VALUE, 1));
 			JCheckBox showavg = new JCheckBox();
 			showavg.setSelected(GraphPanel.showAverage);
-			JLabel lbacklog = new JLabel("Backlog (seconds): ");
-			lbacklog.setToolTipText("WARNING: High values put a lot of stain on your computer!");
+			JLabel lbacklog;
+			if(timeframe != 1000){
+				lbacklog = new JLabel("Backlog (seconds / " + (1000 / timeframe) + "): ");
+			}else{
+				lbacklog = new JLabel("Backlog (seconds): ");
+			}
 			JLabel lshowavg = new JLabel("Show average: ");
 			JPanel glabels = new JPanel(new GridLayout(2, 1));
 			JPanel gcomponents = new JPanel(new GridLayout(2, 1));
@@ -395,6 +422,7 @@ public class Main {
 					objout.writeBoolean(cgra.isSelected());
 					objout.writeBoolean(GraphPanel.showAverage);
 					objout.writeInt(GraphPanel.MAX);
+					objout.writeInt(timeframe);
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -423,6 +451,7 @@ public class Main {
 				}
 				GraphPanel.showAverage = objin.readBoolean();
 				GraphPanel.MAX = objin.readInt();
+				timeframe = objin.readInt();
 				objin.close();
 				for(KeyInformation i : keyinfo){
 					if(addedkeys.isEmpty()){
@@ -436,6 +465,35 @@ public class Main {
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 			}
+		});
+		updaterate.addActionListener((e)->{
+			JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
+			info.add(new JLabel("Here you can change the rate at which"));
+			info.add(new JLabel("the graph, max, avg & cur are updated."));
+			JPanel config = new JPanel(new BorderLayout());
+			JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms"});
+			update.setSelectedItem(timeframe + "ms");
+			update.setRenderer(new DefaultListCellRenderer(){
+				/**
+				 * Serial ID
+				 */
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+					Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+					if(((String)value).length() < 5 || ((String)value).equals("100ms")){
+						item.setForeground(Color.RED);
+					}
+					return item;
+				}
+			});
+			JLabel lupdate = new JLabel("Update rate: ");
+			config.add(info, BorderLayout.PAGE_START);
+			config.add(lupdate, BorderLayout.WEST);
+			config.add(update, BorderLayout.CENTER);
+			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			timeframe = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 		});
 		JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
 		alwaysOnTop = ctop.isSelected();
