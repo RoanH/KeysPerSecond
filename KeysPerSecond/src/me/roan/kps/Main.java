@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
@@ -41,9 +40,11 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel; 
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -123,11 +124,6 @@ public class Main {
 	 */
 	private static NativeKeyEvent lastevent;
 	/**
-	 * String containing all the tracked keys
-	 * only used during the initial setup
-	 */
-	private static String addedkeys = "";
-	/**
 	 * Key configuration data, can be serialised
 	 */
 	private static List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
@@ -172,11 +168,6 @@ public class Main {
 		
 		//Get a configuration for the keys
 		boolean[] fields = configure();
-		
-		//Register the keys to monitor
-		for(KeyInformation i : keyinfo){
-			keys.put(i.keycode, new Key(i.name));
-		}
 		
 		//Build GUI
 		try {
@@ -389,18 +380,56 @@ public class Main {
 			GraphPanel.MAX = (int)backlog.getValue();
 		});
 		addkey.addActionListener((e)->{
-			if(JOptionPane.showConfirmDialog(null, "Press a key and press OK to add it\nCurrently added keys: " + addedkeys, "Keys per second", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
+			JPanel keyform = new JPanel(new BorderLayout());
+			JPanel text = new JPanel(new GridLayout(2, 1));
+			text.add(new JLabel("Press a key and press 'Add Key' to add it"), BorderLayout.PAGE_START);
+			text.add(new JLabel("Currently added keys (you can edit the position):"), BorderLayout.PAGE_START);
+			keyform.add(text, BorderLayout.PAGE_START);
+			JTable keys = new JTable();
+			keys.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			keys.setModel(new DefaultTableModel(){
+				/**
+				 * Serial ID
+				 */
+				private static final long serialVersionUID = -5510962859479828507L;				
+				
+				@Override
+				public int getRowCount() {
+					return keyinfo.size() + 1;
+				}
+
+				@Override
+				public int getColumnCount() {
+					return 2;
+				}
+
+				@Override
+				public Object getValueAt(int rowIndex, int columnIndex) {
+					return rowIndex == 0 ? (columnIndex == 0 ? "Position" : "Key") : (columnIndex == 0 ? keyinfo.get(rowIndex - 1).index : keyinfo.get(rowIndex - 1).name);
+				}
+				
+				@Override
+				public boolean isCellEditable(int row, int col){
+					return col == 0 && row != 0;
+				}
+				
+				@Override
+				public void setValueAt(Object value, int row, int col){
+					try{
+						keyinfo.get(row - 1).index = Integer.parseInt((String)value);
+					}catch(NumberFormatException | NullPointerException e){
+						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+			keyform.add(keys, BorderLayout.CENTER);
+			if(JOptionPane.showOptionDialog(null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Add Key", "Back"}, 0) == 0){
 				if(lastevent == null){
 					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
 				if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-					if(addedkeys.isEmpty()){
-						addedkeys += info.name;
-					}else{
-						addedkeys += ", " + info.name;
-					}
 					keyinfo.add(info);
 					save.setEnabled(true);
 				}
@@ -412,7 +441,7 @@ public class Main {
 			if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
 				return;
 			};
-			File saveloc = new File(chooser.getSelectedFile().getAbsolutePath() + ".kpsconf");
+			File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf"));
 			if(!saveloc.exists() || (saveloc.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
 				try {
 					ObjectOutputStream objout = new ObjectOutputStream(new FileOutputStream(saveloc));
@@ -442,7 +471,6 @@ public class Main {
 			try {
 				ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
 				keyinfo = (List<KeyInformation>) objin.readObject();
-				addedkeys = "";
 				cmax.setSelected(objin.readBoolean());
 				ccur.setSelected(objin.readBoolean());
 				cavg.setSelected(objin.readBoolean());
@@ -454,14 +482,12 @@ public class Main {
 				GraphPanel.MAX = objin.readInt();
 				timeframe = objin.readInt();
 				objin.close();
-				for(KeyInformation i : keyinfo){
-					if(addedkeys.isEmpty()){
-						addedkeys += i.name;
-					}else{
-						addedkeys += ", " + i.name;
+				save.setEnabled(true);
+				for(KeyInformation info : keyinfo){
+					if(info.index > KeyInformation.autoIndex){
+						KeyInformation.autoIndex = info.index + 1;
 					}
 				}
-				save.setEnabled(true);
 				JOptionPane.showMessageDialog(null, "Config succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
@@ -515,7 +541,10 @@ public class Main {
 		unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
 		JFrame frame = new JFrame("Keys per second");
 		content.setBackground(Color.BLACK);
-		for (Key k : keys.values()) {
+		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
+		Key k;
+		for(KeyInformation i : keyinfo){
+			keys.put(i.keycode, k = new Key(i.name));
 			content.add(k.getPanel());
 		}
 		int extra = 0;
@@ -599,7 +628,7 @@ public class Main {
 //================== NESTED CLASSES ===============================================================
 //=================================================================================================
 
-	/**ff
+	/**
 	 * This class is used to keep track
 	 * of how many times a specific key
 	 * is pressed
@@ -614,11 +643,6 @@ public class Main {
 		 * The total number of times this key has been pressed
 		 */
 		protected int count = 0;
-		/**
-		 * The {@link KeyPanel} responsible for
-		 * displaying information about the tracked key
-		 */
-		private KeyPanel kp;
 		/**
 		 * The key in string form<br>
 		 * For example: X
@@ -642,7 +666,7 @@ public class Main {
 		 * @return A new KeyPanel
 		 */
 		private KeyPanel getPanel() {
-			return kp = new KeyPanel(this);
+			return new KeyPanel(this);
 		}
 
 		/**
@@ -654,9 +678,6 @@ public class Main {
 			if (!down) {
 				count++;
 				down = true;
-				if (count >= 1000) {
-					kp.font2 = new Font("Dialog", Font.PLAIN, 14);
-				}
 				tmp++;
 			}
 		}
@@ -682,7 +703,7 @@ public class Main {
 		/**
 		 * Serial ID
 		 */
-		private static final long serialVersionUID = -3752409253121094171L;
+		private static final long serialVersionUID = -8669938978334898443L;
 		/**
 		 * The name of this key
 		 * @see Key#name
@@ -693,6 +714,14 @@ public class Main {
 		 * This code represents the key
 		 */
 		private int keycode;
+		/**
+		 * Index of the key
+		 */
+		private int index = autoIndex++;
+		/**
+		 * Auto-increment for #index
+		 */
+		private static transient int autoIndex = 0; 
 		
 		/**
 		 * Constructs a new KeyInformation

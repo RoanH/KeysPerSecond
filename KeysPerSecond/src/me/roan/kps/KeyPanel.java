@@ -33,10 +33,12 @@ public final class KeyPanel extends JPanel {
 	private static final Font font1 = new Font("Dialog", Font.BOLD, 24);
 	/**
 	 * Font 2 used to display the value of this panel
-	 * this font is changed when the value that has to
-	 * be displayed goes out of the panel bounds 
 	 */
-	protected Font font2 = new Font("Dialog", Font.PLAIN, 18);
+	private Font font2 = new Font("Dialog", Font.PLAIN, 18);
+	/**
+	 * Font 2 but smaller
+	 */
+	private Font font2small = new Font("Dialog", Font.PLAIN, 14);
 
 	/**
 	 * Constructs a new KeyPanel
@@ -67,7 +69,11 @@ public final class KeyPanel extends JPanel {
 			g.setFont(BasePanel.font1);
 		}
 		g.drawString(key.name, (this.getWidth() - g.getFontMetrics().stringWidth(key.name)) / 2, 30);
-		g.setFont(font2);
+		if(key.count >= 1000){
+			g.setFont(font2small);
+		}else{
+			g.setFont(font2);
+		}
 		String str = String.valueOf(key.count);
 		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
 	}
