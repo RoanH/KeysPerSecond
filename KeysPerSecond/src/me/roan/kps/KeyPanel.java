@@ -60,8 +60,9 @@ public final class KeyPanel extends JPanel {
 		g.drawImage(Main.unpressed, 2, 2, null);
 		if (key.down) {
 			g.drawImage(Main.pressed, 2, 2, null);
+		}else{
+			g.setColor(Color.CYAN);
 		}
-		g.setColor(Color.CYAN);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		if(key.name.length() == 1){
 			g.setFont(font1);
