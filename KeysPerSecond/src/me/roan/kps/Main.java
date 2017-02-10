@@ -5,9 +5,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -27,11 +27,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -101,18 +101,6 @@ public class Main {
 	 */
 	protected static int prev;
 	/**
-	 * Image for a pressed key
-	 * Image taken from osu!lazer
-	 * https://cloud.githubusercontent.com/assets/191335/16511435/17acd2f2-3f8b-11e6-8b50-5fccba819ce5.png
-	 */
-	protected static Image pressed;
-	/**
-	 * Image for an unpressed key<br>
-	 * Image taken from osu!lazer
-	 * https://cloud.githubusercontent.com/assets/191335/16511432/17ac5232-3f8b-11e6-95b7-33f9a4df0b7c.png
-	 */
-	protected static Image unpressed;
-	/**
 	 * HashMap containing all the tracked keys and their
 	 * virtual codes<br>Used to increment the count for the
 	 * keys
@@ -166,15 +154,8 @@ public class Main {
 		//Initialize native library and register event handlers
 		setupKeyboardHook();
 		
-		//Get a configuration for the keys
-		boolean[] fields = configure();
-		
-		//Build GUI
-		try {
-			buildGUI(fields[0], fields[1], fields[2], fields[3]);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		//Set configuration for the keys
+		configure();
 		
 		//Enter the main loop
 		mainLoop();
@@ -288,48 +269,45 @@ public class Main {
 	 * These dialogs also provide the
 	 * option of saving or loading an
 	 * existing configuration
-	 * @return An array consisting of 4 boolean
-	 *         values. The values represent (in
-	 *         the following order) whether or not
-	 *         to display: the maximum keys per second,
-	 *         the average keys per second, the current
-	 *         keys per second, the graph
 	 */
 	@SuppressWarnings("unchecked")
-	private static final boolean[] configure(){
+	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(5, 0));
-		JPanel labels = new JPanel(new GridLayout(5, 0));
+		JPanel boxes = new JPanel(new GridLayout(6, 0));
+		JPanel labels = new JPanel(new GridLayout(6, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
 		JCheckBox cgra = new JCheckBox();
 		JCheckBox ctop = new JCheckBox();
+		JCheckBox ccol = new JCheckBox();
 		cmax.setSelected(true);
 		cavg.setSelected(true);
 		ccur.setSelected(true);
-		ctop.setSelected(false);
 		JLabel lmax = new JLabel("Show maximum: ");
 		JLabel lavg = new JLabel("Show average: ");
 		JLabel lcur = new JLabel("Show current: ");
 		JLabel lgra = new JLabel("Show graph: ");
 		JLabel ltop = new JLabel("Overlay osu!: ");
-		ltop.setToolTipText("Requires you to run osu! out of full screen mode");
+		JLabel lcol = new JLabel("Custom colours: ");
+		ltop.setToolTipText("Requires you to run osu! out of full screen mode, know to not always work with the wine version of osu!");
 		boxes.add(cmax);
 		boxes.add(cavg);
 		boxes.add(ccur);
 		boxes.add(cgra);
 		boxes.add(ctop);
+		boxes.add(ccol);
 		labels.add(lmax);
 		labels.add(lavg);
 		labels.add(lcur);
 		labels.add(lgra);
 		labels.add(ltop);
+		labels.add(lcol);
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(5, 0));
+		JPanel buttons = new JPanel(new GridLayout(6, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton save = new JButton("Save config");
@@ -341,11 +319,18 @@ public class Main {
 			graph.setEnabled(cgra.isSelected());
 			graph.repaint();
 		});
+		JButton color = new JButton("Colours");
+		color.setEnabled(false);
+		ccol.addActionListener((e)->{
+			color.setEnabled(ccol.isSelected());
+			color.repaint();
+		});
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
 		buttons.add(graph);
 		buttons.add(updaterate);
+		buttons.add(color);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Config"));
@@ -435,6 +420,65 @@ public class Main {
 				}
 			}
 		});
+		JPanel cfg = new JPanel();
+		JPanel cbg = new JPanel();
+		cbg.setBackground(Color.BLACK);
+		cfg.setBackground(Color.CYAN);
+		MouseListener clistener = new MouseListener(){
+			/**
+			 * Whether or not the color chooser is open
+			 */
+			private boolean open = false;
+			/**
+			 * Color chooser instance
+			 */
+			private final JColorChooser chooser = new JColorChooser();
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!open){
+					open = true;
+					chooser.setColor(e.getComponent().getBackground());
+					if(0 == JOptionPane.showOptionDialog(null, chooser, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+						e.getComponent().setBackground(chooser.getColor());
+					}
+					open = false;
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {				
+			}
+		};
+		cbg.addMouseListener(clistener);
+		cfg.addMouseListener(clistener);
+		color.addActionListener((e)->{
+			Color prevfg = cfg.getForeground();
+			Color prevbg = cbg.getForeground();
+			JPanel cform = new JPanel(new GridLayout(2, 2, 4, 2));	
+			JLabel lfg = new JLabel("Foreground colour: ");
+			JLabel lbg = new JLabel("Background colour: ");
+			cform.add(lfg);
+			cform.add(cfg);
+			cform.add(lbg);
+			cform.add(cbg);
+			if(1 == JOptionPane.showOptionDialog(null, cform, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+				cfg.setForeground(prevfg);
+				cbg.setForeground(prevbg);
+			}
+		});
 		save.addActionListener((e)->{
 			JFileChooser chooser = new JFileChooser();
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -453,6 +497,9 @@ public class Main {
 					objout.writeBoolean(GraphPanel.showAverage);
 					objout.writeInt(GraphPanel.MAX);
 					objout.writeInt(timeframe);
+					objout.writeBoolean(ccol.isSelected());
+					objout.writeObject(cbg.getBackground());
+					objout.writeObject(cfg.getBackground());
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -481,6 +528,14 @@ public class Main {
 				GraphPanel.showAverage = objin.readBoolean();
 				GraphPanel.MAX = objin.readInt();
 				timeframe = objin.readInt();
+				if(objin.available() > 0){
+					ccol.setSelected(objin.readBoolean());
+					if(ccol.isSelected()){
+						color.setEnabled(true);
+					}
+					cbg.setBackground((Color)objin.readObject());
+					cfg.setBackground((Color)objin.readObject());
+				}
 				objin.close();
 				save.setEnabled(true);
 				for(KeyInformation info : keyinfo){
@@ -524,7 +579,13 @@ public class Main {
 		});
 		JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
 		alwaysOnTop = ctop.isSelected();
-		return new boolean[]{cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected()};
+
+		//Build GUI
+		try {
+			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), ccol.isSelected() ? cfg.getBackground() : null, ccol.isSelected() ? cbg.getBackground() : null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -536,11 +597,10 @@ public class Main {
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails the load its resources
 	 */
-	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph) throws IOException {
-		pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
-		unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
+	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg) throws IOException {
+		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
 		JFrame frame = new JFrame("Keys per second");
-		content.setBackground(Color.BLACK);
+		content.setBackground(bg == null ? Color.BLACK : bg);
 		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
 		for(KeyInformation i : keyinfo){
@@ -566,9 +626,6 @@ public class Main {
 		if(cgraph){
 			allcontent.add(graph);
 			GraphPanel.frames = keys.size() + extra;
-			GraphPanel.gright = ImageIO.read(ClassLoader.getSystemResource("graphright.png"));
-			GraphPanel.gleft = ImageIO.read(ClassLoader.getSystemResource("graphleft.png"));
-			GraphPanel.gmid = ImageIO.read(ClassLoader.getSystemResource("graphmiddle.png"));
 		}
 		frame.setSize((keys.size() + extra) * 44 + ((keys.size() + extra) - 1) * 2, 68 + (cgraph ? 68 : 0));
 		frame.setResizable(false);

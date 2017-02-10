@@ -1,10 +1,8 @@
 package me.roan.kps;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
@@ -39,10 +37,6 @@ public class GraphPanel extends JPanel{
 	 */
 	protected static boolean showAverage = true;
 	/**
-	 * Color used to fill the area underneath the graph
-	 */
-	private static final Color alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
-	/**
 	 * Stroke used to draw the graph
 	 */
 	private static final Stroke line = new BasicStroke(2.0F, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0F, null, 0);
@@ -54,18 +48,6 @@ public class GraphPanel extends JPanel{
 	 * Whether or not the graph is active and plotting
 	 */
 	protected boolean enabled = true;
-	/**
-	 * Left side of the graph border
-	 */
-	protected static Image gleft = null;
-	/**
-	 * Right side of the graph border
-	 */
-	protected static Image gright = null;
-	/**
-	 * Middle section of the graph border
-	 */
-	protected static Image gmid = null;
 	/**
 	 * Number of frames, this is used to determine
 	 * the width of the graph and it equal
@@ -80,12 +62,12 @@ public class GraphPanel extends JPanel{
 		if(enabled){
 			Graphics2D g = (Graphics2D)g1;
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setColor(Color.BLACK);
+			g.setColor(ColorManager.background);
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
 			Polygon poly = new Polygon();
-			poly.addPoint(this.getWidth() - 5, this.getHeight() - 5);
+			poly.addPoint(this.getWidth() - 6, this.getHeight() - 5);
 			for(int i = 1; i <= values.size(); i++){
-				int px = (int) (5 + ((double)(this.getWidth() - 10) / (double)(MAX - 1)) * (MAX - i));
+				int px = (int) (6 + ((double)(this.getWidth() - 12) / (double)(MAX - 1)) * (MAX - i));
 				int py = (int) (this.getHeight() - 5 - ((float)(this.getHeight() - 11) * ((float)values.get(i - 1) / (float)maxval)));
 				poly.addPoint(px, py);
 				if(i == values.size()){
@@ -94,18 +76,18 @@ public class GraphPanel extends JPanel{
 			}
 			if(showAverage){
 				int y = (int) (this.getHeight() - 5 - ((float)(this.getHeight() - 11) * (Main.avg / (float)maxval)));
-				g.setColor(Color.CYAN.darker());
+				g.setColor(ColorManager.foreground.darker());
 				g.setStroke(avgstroke);
-				g.drawLine(3, y, this.getWidth() - 5, y);
+				g.drawLine(5, y, this.getWidth() - 5, y);
 			}
 			g.setStroke(line);
-			g.setColor(alphaAqua);
+			g.setColor(ColorManager.alphaAqua);
 			g.fillPolygon(poly);
-			g.setColor(Color.CYAN);
+			g.setColor(ColorManager.foreground);
 			g.drawPolygon(poly);
-			g.drawImage(gleft, 3, 2, null);
-			g.drawImage(gmid, 44 + 1, 2, (44 + 2) * (frames - 2), 64, null);
-			g.drawImage(gright, 44 + 1 + (44 + 2) * (frames - 2), 2, null);
+			g.drawImage(ColorManager.gleft, 3, 2, null);
+			g.drawImage(ColorManager.gmid, 44 + 1, 2, (44 + 2) * (frames - 2), 64, null);
+			g.drawImage(ColorManager.gright, 44 + 1 + (44 + 2) * (frames - 2), 2, null);
 		}
 	}
 	
