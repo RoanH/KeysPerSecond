@@ -15,20 +15,36 @@ For each configured key it shows how many times it is pressed. By default it als
 When enabled it can also show a graph of the number of keys pressed per second over time. The horizontal line in the graph represents the average number of keys pressed per second.
 
 Everything shown in the picture above can be toggled on or off.<br>
-![Config](http://i.imgur.com/rp90PmZ.png)
+![Config](http://i.imgur.com/uCxz5o1.png)
 
 Lastly, there are also some commands that can be sent to the program:<br>
 **Ctrl + P**: Causes the program to reset the average and maximum value.<br>
-**Ctrl + O**: Terminates the program.<br>
+**Ctrl + U**: Terminates the program.<br>
 **Ctrl + I**: Causes the program to reset the key press statistics.
 
 Well I hope some of you find this program usefull and/or will use it for your streams (I would love to see that happen  :) ).
 And if you find any bugs feel free to report them.
 
+## Notes
+- To clarify, you can add any key, and any number of keys to the program. So it can be used for any game mode.
+- The overlay option doesn't work on a Mac.
+- When changing the key order, the keys are ordered from lowest value to highest value (negative values & skipping indices is allowed).
+- To change a GUI colour in the colours menu, click on the current colour.
+
+## Updates
+2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
+5 February 2017: Added support for a variable update rate & changed exit key to Ctrl + U (Ctrl + O opens the osu! options menu).<br>
+6 February 2017: Added the ability to configure the order in which the keys are displayed & some minor bug fixes.<br>
+9 February 2017: Invert the key text color when a key is pressed.<br>
+10 February 2017: Added the option to customize the GUI foreground & background colour.
+
 ## Downloads (Java 8 required)
 
-![Windows executable](https://github.com/RoanH/KeysPerSecond/raw/master/KeysPerSecond.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/raw/master/KeysPerSecond.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v3.5/KeysPerSecond-v3.5.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v3.5/KeysPerSecond-v3.5.jar)
+
+All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
+GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
 
 ## Dependencies
 https://github.com/kwhat/jnativehook
