@@ -36,7 +36,7 @@ And if you find any bugs feel free to report them.
 5 February 2017: Added support for a variable update rate & changed exit key to Ctrl + U (Ctrl + O opens the osu! options menu).<br>
 6 February 2017: Added the ability to configure the order in which the keys are displayed & some minor bug fixes.<br>
 9 February 2017: Invert the key text color when a key is pressed.<br>
-10 February 2017: Added the option to customize the GUI foreground & background colour.
+10 February 2017: Added the option to customize the GUI foreground & background colour.<br>
 12 February 2017: Added the option to track all keys, show track keys or not & fixed some edge case bugs.
 
 ## Downloads (Java 8 required)
