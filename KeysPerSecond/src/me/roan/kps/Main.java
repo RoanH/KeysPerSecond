@@ -419,25 +419,33 @@ public class Main {
 
 				@Override
 				public int getColumnCount() {
-					return 2;
+					return 3;
 				}
 
 				@Override
 				public Object getValueAt(int rowIndex, int columnIndex) {
-					return rowIndex == 0 ? (columnIndex == 0 ? "Position" : "Key") : (columnIndex == 0 ? keyinfo.get(rowIndex - 1).index : keyinfo.get(rowIndex - 1).name);
+					return rowIndex == 0 ? (columnIndex == 0 ? "Position" : (columnIndex == 1 ? "Key" : "Visible")) : (columnIndex == 0 ? keyinfo.get(rowIndex - 1).index : (columnIndex == 1 ? keyinfo.get(rowIndex - 1).name : keyinfo.get(rowIndex - 1).visible));
 				}
 				
 				@Override
 				public boolean isCellEditable(int row, int col){
-					return col == 0 && row != 0;
+					return (col == 0 || col == 2) && row != 0;
 				}
 				
 				@Override
 				public void setValueAt(Object value, int row, int col){
-					try{
-						keyinfo.get(row - 1).index = Integer.parseInt((String)value);
-					}catch(NumberFormatException | NullPointerException e){
-						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					if(col == 0){
+						try{
+							keyinfo.get(row - 1).index = Integer.parseInt((String)value);
+						}catch(NumberFormatException | NullPointerException e){
+							JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+						}
+					}else{
+						if(value != null && (((String)value).equalsIgnoreCase("true") || ((String)value).equalsIgnoreCase("false"))){
+							keyinfo.get(row - 1).visible = Boolean.parseBoolean((String)value);
+						}else{
+							JOptionPane.showMessageDialog(null, "Entered value should be either true or false!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}
 			});
@@ -536,6 +544,7 @@ public class Main {
 					objout.writeObject(cfg.getBackground());
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
+					objout.writeDouble(3.7D);//version
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -564,6 +573,7 @@ public class Main {
 				GraphPanel.showAverage = objin.readBoolean();
 				GraphPanel.MAX = objin.readInt();
 				timeframe = objin.readInt();
+				double version = 3.0D;
 				if(objin.available() > 0){
 					ccol.setSelected(objin.readBoolean());
 					if(ccol.isSelected()){
@@ -574,11 +584,17 @@ public class Main {
 					if(objin.available() > 0){
 						call.setSelected(objin.readBoolean());
 						ckey.setSelected(objin.readBoolean());
+						if(objin.available() > 0){
+							version = objin.readDouble();
+						}
 					}
 				}
 				objin.close();
 				save.setEnabled(true);
 				for(KeyInformation info : keyinfo){
+					if(version < 3.7D){
+						info.visible = true;
+					}
 					if(info.index > KeyInformation.autoIndex){
 						KeyInformation.autoIndex = info.index + 1;
 					}
@@ -655,27 +671,26 @@ public class Main {
 		content.setBackground(bg == null ? Color.BLACK : bg);
 		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
+		int panels = 0;
 		for(KeyInformation i : keyinfo){
 			keys.put(i.keycode, k = new Key(i.name));
-			if(showKeys){
+			if(showKeys && i.visible){
 				content.add(k.getPanel());
+				panels++;
 			}
 		}
-		int extra = 0;
 		if(max){
 			content.add(new MaxPanel());
-			extra++;
+			panels++;
 		}
 		if(avg){
 			content.add(new AvgPanel());
-			extra++;
+			panels++;
 		}
 		if(cur){
 			content.add(new NowPanel());
-			extra++;
+			panels++;
 		}
-		
-		int panels = showKeys ? (keys.size() + extra) : extra;
 		if(panels == 0 && !cgraph){
 			return;//don't create a GUI if there's nothing to display
 		}
@@ -795,7 +810,7 @@ public class Main {
 		/**
 		 * The total number of times this key has been pressed
 		 */
-		protected int count = 9999;
+		protected int count = 0;
 		/**
 		 * The key in string form<br>
 		 * For example: X
@@ -875,6 +890,10 @@ public class Main {
 		 * Auto-increment for #index
 		 */
 		private static transient int autoIndex = 0; 
+		/**
+		 * Whether or not this key is displayed
+		 */
+		private boolean visible = true;
 		
 		/**
 		 * Constructs a new KeyInformation
