@@ -85,9 +85,13 @@ public class GraphPanel extends JPanel{
 			g.fillPolygon(poly);
 			g.setColor(ColorManager.foreground);
 			g.drawPolygon(poly);
-			g.drawImage(ColorManager.gleft, 3, 2, null);
-			g.drawImage(ColorManager.gmid, 44 + 1, 2, (44 + 2) * (frames - 2), 64, null);
-			g.drawImage(ColorManager.gright, 44 + 1 + (44 + 2) * (frames - 2), 2, null);
+			if(frames > 1){
+				g.drawImage(ColorManager.gleft, 3, 2, null);
+				g.drawImage(ColorManager.gmid, 44 + 1, 2, (44 + 2) * (frames - 2), 64, null);
+				g.drawImage(ColorManager.gright, 44 + 1 + (44 + 2) * (frames - 2), 2, null);
+			}else{
+				g.drawImage(ColorManager.unpressed, 2, 2, null);
+			}
 		}
 	}
 	

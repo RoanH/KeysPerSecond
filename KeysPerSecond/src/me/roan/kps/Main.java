@@ -140,7 +140,7 @@ public class Main {
 	/**
 	 * Whether or not to track all key presses
 	 */
-	private static boolean trackAll = true;
+	private static boolean trackAll = false;
 
 	/**
 	 * Main method
@@ -298,11 +298,12 @@ public class Main {
 	@SuppressWarnings("unchecked")
 	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(7, 0));
-		JPanel labels = new JPanel(new GridLayout(7, 0));
+		JPanel boxes = new JPanel(new GridLayout(8, 0));
+		JPanel labels = new JPanel(new GridLayout(8, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
+		JCheckBox ckey = new JCheckBox();
 		JCheckBox cgra = new JCheckBox();
 		JCheckBox ctop = new JCheckBox();
 		JCheckBox ccol = new JCheckBox();
@@ -310,17 +311,20 @@ public class Main {
 		cmax.setSelected(true);
 		cavg.setSelected(true);
 		ccur.setSelected(true);
+		ckey.setSelected(true);
 		JLabel lmax = new JLabel("Show maximum: ");
 		JLabel lavg = new JLabel("Show average: ");
 		JLabel lcur = new JLabel("Show current: ");
+		JLabel lkey = new JLabel("Show keys");
 		JLabel lgra = new JLabel("Show graph: ");
 		JLabel ltop = new JLabel("Overlay osu!: ");
 		JLabel lcol = new JLabel("Custom colours: ");
 		JLabel lall = new JLabel("Track all keys");
-		ltop.setToolTipText("Requires you to run osu! out of full screen mode, know to not always work with the wine version of osu!");
+		ltop.setToolTipText("Requires you to run osu! out of full screen mode, known to not (always) work with the wine version of osu!");
 		boxes.add(cmax);
 		boxes.add(cavg);
 		boxes.add(ccur);
+		boxes.add(ckey);
 		boxes.add(cgra);
 		boxes.add(ctop);
 		boxes.add(ccol);
@@ -328,6 +332,7 @@ public class Main {
 		labels.add(lmax);
 		labels.add(lavg);
 		labels.add(lcur);
+		labels.add(lkey);
 		labels.add(lgra);
 		labels.add(ltop);
 		labels.add(lcol);
@@ -529,6 +534,8 @@ public class Main {
 					objout.writeBoolean(ccol.isSelected());
 					objout.writeObject(cbg.getBackground());
 					objout.writeObject(cfg.getBackground());
+					objout.writeBoolean(call.isSelected());
+					objout.writeBoolean(ckey.isSelected());
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -564,6 +571,10 @@ public class Main {
 					}
 					cbg.setBackground((Color)objin.readObject());
 					cfg.setBackground((Color)objin.readObject());
+					if(objin.available() > 0){
+						call.setSelected(objin.readBoolean());
+						ckey.setSelected(objin.readBoolean());
+					}
 				}
 				objin.close();
 				save.setEnabled(true);
@@ -620,7 +631,7 @@ public class Main {
 
 		//Build GUI
 		try {
-			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), ccol.isSelected() ? cfg.getBackground() : null, ccol.isSelected() ? cbg.getBackground() : null);
+			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), ccol.isSelected() ? cfg.getBackground() : null, ccol.isSelected() ? cbg.getBackground() : null, ckey.isSelected());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -632,10 +643,13 @@ public class Main {
 	 * @param avg Whether or not to display the average keys per second
 	 * @param cur Whether or not to display the current keys per second
 	 * @param cgraph Whether or not to display the graph
+	 * @param fg Foreground color
+	 * @param bg Background color
+	 * @param showKeys Whether or not to display the tracked keys
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails the load its resources
 	 */
-	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg) throws IOException {
+	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
 		JFrame frame = new JFrame("Keys per second");
 		content.setBackground(bg == null ? Color.BLACK : bg);
@@ -643,7 +657,9 @@ public class Main {
 		Key k;
 		for(KeyInformation i : keyinfo){
 			keys.put(i.keycode, k = new Key(i.name));
-			content.add(k.getPanel());
+			if(showKeys){
+				content.add(k.getPanel());
+			}
 		}
 		int extra = 0;
 		if(max){
@@ -658,14 +674,21 @@ public class Main {
 			content.add(new NowPanel());
 			extra++;
 		}
-
-		JPanel allcontent = new JPanel(new GridLayout(cgraph ? 2 : 1, 1, 0, 0));
-		allcontent.add(content);
+		
+		int panels = showKeys ? (keys.size() + extra) : extra;
+		if(panels == 0 && !cgraph){
+			return;//don't create a GUI if there's nothing to display
+		}
+		
+		JPanel allcontent = new JPanel(new GridLayout((cgraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
+		if(panels > 0){
+			allcontent.add(content);
+		}
 		if(cgraph){
 			allcontent.add(graph);
-			GraphPanel.frames = keys.size() + extra;
+			GraphPanel.frames = panels > 0 ? panels : 5;
 		}
-		frame.setSize((keys.size() + extra) * 44 + ((keys.size() + extra) - 1) * 2, 68 + (cgraph ? 68 : 0));
+		frame.setSize((panels == 0 && cgraph) ? 228 : (panels * 44 + (panels - 1) * 2), (panels > 0 ? 68 : 0) + (cgraph ? 68 : 0));
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
