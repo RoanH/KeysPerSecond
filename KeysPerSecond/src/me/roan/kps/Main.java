@@ -795,7 +795,7 @@ public class Main {
 		/**
 		 * The total number of times this key has been pressed
 		 */
-		protected int count = 0;
+		protected int count = 9999;
 		/**
 		 * The key in string form<br>
 		 * For example: X
