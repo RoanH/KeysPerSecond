@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import java.io.File;
 import java.io.FileInputStream;
@@ -151,6 +152,18 @@ public class Main {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
 		}
 		
+		//Make sure the native hook is always unregistered
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run(){
+				try {
+					GlobalScreen.unregisterNativeHook();
+				} catch (NativeHookException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 		//Initialize native library and register event handlers
 		setupKeyboardHook();
 		
@@ -217,6 +230,11 @@ public class Main {
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, "There was a problem registering the native hook: " + ex.getMessage(), "Keys per second", JOptionPane.ERROR_MESSAGE);
+            try {
+				GlobalScreen.unregisterNativeHook();
+			} catch (NativeHookException e1) {
+				e1.printStackTrace();
+			}
             System.exit(1);
         }
 		GlobalScreen.addNativeKeyListener(new NativeKeyListener(){
@@ -577,7 +595,14 @@ public class Main {
 			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			timeframe = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 		});
-		JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
+		if(1 == JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0)){
+			try {
+				GlobalScreen.unregisterNativeHook();
+			} catch (NativeHookException e1) {
+				e1.printStackTrace();
+			}
+			System.exit(0);
+		}
 		alwaysOnTop = ctop.isSelected();
 
 		//Build GUI
@@ -632,6 +657,41 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
+		frame.addWindowListener(new WindowListener(){
+
+			@Override
+			public void windowOpened(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				try {
+					GlobalScreen.unregisterNativeHook();
+				} catch (NativeHookException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {				
+			}
+		});
 		if(alwaysOnTop){
 			frame.setAlwaysOnTop(true);
 			frame.addWindowFocusListener(new WindowFocusListener(){
