@@ -137,6 +137,10 @@ public class Main {
 	 * The amount of milliseconds a single time frame takes
 	 */
 	private static int timeframe = 1000;
+	/**
+	 * Whether or not to track all key presses
+	 */
+	private static boolean trackAll = true;
 
 	/**
 	 * Main method
@@ -242,6 +246,9 @@ public class Main {
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event) {
 				lastevent = event;
+				if(trackAll && !keys.containsKey(event.getKeyCode())){
+					keys.put(event.getKeyCode(), new Key(NativeKeyEvent.getKeyText(lastevent.getKeyCode())));
+				}
 				if(keys.containsKey(event.getKeyCode())){
 					keys.get(event.getKeyCode()).keyPressed();	
 				}
@@ -291,14 +298,15 @@ public class Main {
 	@SuppressWarnings("unchecked")
 	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(6, 0));
-		JPanel labels = new JPanel(new GridLayout(6, 0));
+		JPanel boxes = new JPanel(new GridLayout(7, 0));
+		JPanel labels = new JPanel(new GridLayout(7, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
 		JCheckBox cgra = new JCheckBox();
 		JCheckBox ctop = new JCheckBox();
 		JCheckBox ccol = new JCheckBox();
+		JCheckBox call = new JCheckBox();
 		cmax.setSelected(true);
 		cavg.setSelected(true);
 		ccur.setSelected(true);
@@ -308,6 +316,7 @@ public class Main {
 		JLabel lgra = new JLabel("Show graph: ");
 		JLabel ltop = new JLabel("Overlay osu!: ");
 		JLabel lcol = new JLabel("Custom colours: ");
+		JLabel lall = new JLabel("Track all keys");
 		ltop.setToolTipText("Requires you to run osu! out of full screen mode, know to not always work with the wine version of osu!");
 		boxes.add(cmax);
 		boxes.add(cavg);
@@ -315,12 +324,14 @@ public class Main {
 		boxes.add(cgra);
 		boxes.add(ctop);
 		boxes.add(ccol);
+		boxes.add(call);
 		labels.add(lmax);
 		labels.add(lavg);
 		labels.add(lcur);
 		labels.add(lgra);
 		labels.add(ltop);
 		labels.add(lcol);
+		labels.add(lall);
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
@@ -595,7 +606,8 @@ public class Main {
 			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			timeframe = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 		});
-		if(1 == JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0)){
+		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
+		if(1 == option || option == JOptionPane.CLOSED_OPTION){
 			try {
 				GlobalScreen.unregisterNativeHook();
 			} catch (NativeHookException e1) {
@@ -604,6 +616,7 @@ public class Main {
 			System.exit(0);
 		}
 		alwaysOnTop = ctop.isSelected();
+		trackAll = call.isSelected();
 
 		//Build GUI
 		try {
