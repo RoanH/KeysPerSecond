@@ -40,6 +40,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
@@ -402,10 +403,9 @@ public class Main {
 			JPanel keyform = new JPanel(new BorderLayout());
 			JPanel text = new JPanel(new GridLayout(2, 1));
 			text.add(new JLabel("Press a key and press 'Add Key' to add it"), BorderLayout.PAGE_START);
-			text.add(new JLabel("Currently added keys (you can edit the position):"), BorderLayout.PAGE_START);
+			text.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
 			keyform.add(text, BorderLayout.PAGE_START);
 			JTable keys = new JTable();
-			keys.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 			keys.setModel(new DefaultTableModel(){
 				/**
 				 * Serial ID
@@ -414,42 +414,79 @@ public class Main {
 				
 				@Override
 				public int getRowCount() {
-					return keyinfo.size() + 1;
+					return keyinfo.size();
 				}
 
 				@Override
 				public int getColumnCount() {
-					return 3;
+					return 4;
 				}
 
 				@Override
 				public Object getValueAt(int rowIndex, int columnIndex) {
-					return rowIndex == 0 ? (columnIndex == 0 ? "Position" : (columnIndex == 1 ? "Key" : "Visible")) : (columnIndex == 0 ? keyinfo.get(rowIndex - 1).index : (columnIndex == 1 ? keyinfo.get(rowIndex - 1).name : keyinfo.get(rowIndex - 1).visible));
+					switch(columnIndex){
+					case 0:
+						return keyinfo.get(rowIndex).index;
+					case 1:
+						return keyinfo.get(rowIndex).name;
+					case 2:
+						return keyinfo.get(rowIndex).visible;
+					case 3:
+						return false;
+					}
+					return null;
+				}
+				
+				@Override
+				public String getColumnName(int col) {
+					switch(col){
+					case 0:
+						return "Position";
+					case 1:
+						return "Key";
+					case 2:
+						return "Visible";
+					case 3:
+						return "Remove";
+					}
+					return null;
+				}
+
+				@Override
+				public Class<?> getColumnClass(int columnIndex) {
+				    if (columnIndex == 2 || columnIndex ==3){
+				    	return Boolean.class;
+				    }
+				    return super.getColumnClass(columnIndex);
 				}
 				
 				@Override
 				public boolean isCellEditable(int row, int col){
-					return (col == 0 || col == 2) && row != 0;
+					return col != 1;
 				}
 				
 				@Override
 				public void setValueAt(Object value, int row, int col){
 					if(col == 0){
 						try{
-							keyinfo.get(row - 1).index = Integer.parseInt((String)value);
+							keyinfo.get(row).index = Integer.parseInt((String)value);
 						}catch(NumberFormatException | NullPointerException e){
 							JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 						}
+					}else if(col == 2){
+						keyinfo.get(row).visible = (boolean)value;
 					}else{
-						if(value != null && (((String)value).equalsIgnoreCase("true") || ((String)value).equalsIgnoreCase("false"))){
-							keyinfo.get(row - 1).visible = Boolean.parseBoolean((String)value);
-						}else{
-							JOptionPane.showMessageDialog(null, "Entered value should be either true or false!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+						if((boolean)value == true){
+							keyinfo.remove(row);
+							keys.repaint();
 						}
 					}
 				}
 			});
-			keyform.add(keys, BorderLayout.CENTER);
+			keys.setDragEnabled(false);
+			JScrollPane pane = new JScrollPane(keys);
+			pane.setPreferredSize(new Dimension((int)keys.getPreferredSize().getWidth(), 120));
+			keyform.add(pane, BorderLayout.CENTER);
 			if(JOptionPane.showOptionDialog(null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Add Key", "Back"}, 0) == 0){
 				if(lastevent == null){
 					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
