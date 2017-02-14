@@ -12,7 +12,13 @@ public class Title {
 	private static BufferedReader in;
 	private static int pid;
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args){
+		System.load("C:\\Users\\Roan\\Java development\\KeysPerSecondNative\\me.roan.kps\\KeysPerSecond.dll");
+		String str = getMSNStatus();
+		System.out.println(str);
+	}
+	
+	public static void main2(String[] args) throws IOException{
 		init(OS.WINDOWS);
 		pid = OS.WINDOWS.getOsuPID();
 		while(true){
@@ -124,4 +130,6 @@ public class Title {
 		
 		protected abstract String getOsuWindowTitle(int pid) throws IOException;
 	}
+	
+	private static native final String getMSNStatus();
 }
