@@ -146,6 +146,10 @@ public class Main {
 	 * How many digits to display for cur & avg
 	 */
 	protected static int precision = 0;
+	/**
+	 * The program's main frame
+	 */
+	private static final JFrame frame = new JFrame("Keys per second");
 
 	/**
 	 * Main method
@@ -156,6 +160,7 @@ public class Main {
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
 		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
+		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
@@ -277,6 +282,8 @@ public class Main {
 						k.count = 0;
 					}
 					System.out.println();
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+					frame.setVisible(!frame.isVisible());
 				}
 			}
 
@@ -731,7 +738,6 @@ public class Main {
 	 */
 	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
-		JFrame frame = new JFrame("Keys per second");
 		content.setBackground(bg == null ? Color.BLACK : bg);
 		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
