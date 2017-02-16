@@ -53,6 +53,8 @@ import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
+import com.sun.prism.Graphics;
+
 /**
  * This program can be used to display
  * information about how many times
@@ -717,9 +719,12 @@ public class Main {
 		alwaysOnTop = ctop.isSelected();
 		trackAll = call.isSelected();
 
+		Color bg = new Color(0.0F, 0.0F, 0.0F, 0.5F);//ccol.isSelected() ? cfg.getBackground() : null;
+		Color fg = new Color(0.0F, 1.0F, 1.0F, 1.0F);;//ccol.isSelected() ? cbg.getBackground() : null;
+		
 		//Build GUI
 		try {
-			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), ccol.isSelected() ? cfg.getBackground() : null, ccol.isSelected() ? cbg.getBackground() : null, ckey.isSelected());
+			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), fg, bg, ckey.isSelected());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -739,6 +744,7 @@ public class Main {
 	 */
 	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
+		content.setOpaque(!ColorManager.transparency);
 		content.setBackground(bg == null ? Color.BLACK : bg);
 		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
@@ -767,6 +773,7 @@ public class Main {
 		}
 		
 		JPanel allcontent = new JPanel(new GridLayout((cgraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
+		allcontent.setOpaque(!ColorManager.transparency);
 		if(panels > 0){
 			allcontent.add(content);
 		}
@@ -779,6 +786,7 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
+		frame.setBackground(bg);
 		frame.addWindowListener(new WindowListener(){
 
 			@Override

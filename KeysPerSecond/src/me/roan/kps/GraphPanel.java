@@ -63,7 +63,8 @@ public class GraphPanel extends JPanel{
 			Graphics2D g = (Graphics2D)g1;
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(ColorManager.background);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+			g.clearRect(0, 0, this.getWidth(), this.getHeight());
+			//g.fillRect(0, 0, this.getWidth(), this.getHeight());
 			Polygon poly = new Polygon();
 			poly.addPoint(this.getWidth() - 6, this.getHeight() - 5);
 			for(int i = 1; i <= values.size(); i++){

@@ -49,6 +49,22 @@ public class ColorManager {
 	 * Color used to fill the area underneath the graph
 	 */
 	protected static Color alphaAqua;
+	/**
+	 * Whether or not transparency is enabled
+	 */
+	protected static boolean transparency = true;//TODO make false
+	/**
+	 * Transparent color
+	 */
+	protected static final Color transparent = new Color(0.0F, 0.0F, 0.0F, 0.0F);
+	/**
+	 * Foreground opacity in case transparency is enabled
+	 */
+	protected static float opacityfg = 0.5F;//todo change
+	/**
+	 * Background opacity in case transparency is enabled
+	 */
+	protected static float opacitybg = 0.5F;//todo change
 
 	/**
 	 * Prepares the colours and images
