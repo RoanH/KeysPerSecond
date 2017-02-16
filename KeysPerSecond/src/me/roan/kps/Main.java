@@ -142,6 +142,10 @@ public class Main {
 	 * Whether or not to track all key presses
 	 */
 	private static boolean trackAll = false;
+	/**
+	 * How many digits to display for cur & avg
+	 */
+	protected static int precision = 0;
 
 	/**
 	 * Main method
@@ -342,7 +346,7 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(6, 0));
+		JPanel buttons = new JPanel(new GridLayout(7, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton save = new JButton("Save config");
@@ -360,12 +364,14 @@ public class Main {
 			color.setEnabled(ccol.isSelected());
 			color.repaint();
 		});
+		JButton precision = new JButton("Precision");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
 		buttons.add(graph);
 		buttons.add(updaterate);
 		buttons.add(color);
+		buttons.add(precision);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Config"));
@@ -373,6 +379,23 @@ public class Main {
 		all.add(options, BorderLayout.LINE_START);
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
+		precision.addActionListener((e)->{
+			JPanel config = new JPanel(new BorderLayout());
+			JLabel info1 = new JLabel("Specify how many digits should be displayed");
+			JLabel info2 = new JLabel("beyond the decimal point for avg & cur.");
+			JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
+			plabels.add(info1);
+			plabels.add(info2);
+			JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
+			JLabel vlabel = new JLabel("Precision: ");
+			JPanel pvalue = new JPanel(new BorderLayout());
+			pvalue.add(vlabel, BorderLayout.LINE_START);
+			pvalue.add(values, BorderLayout.CENTER);
+			config.add(plabels, BorderLayout.CENTER);
+			config.add(pvalue, BorderLayout.PAGE_END);
+			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			Main.precision = values.getSelectedIndex();
+		});
 		graph.addActionListener((e)->{
 			JPanel config = new JPanel();
 			JSpinner backlog = new JSpinner(new SpinnerNumberModel(GraphPanel.MAX, 1, Integer.MAX_VALUE, 1));
@@ -581,7 +604,8 @@ public class Main {
 					objout.writeObject(cfg.getBackground());
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
-					objout.writeDouble(3.7D);//version
+					objout.writeDouble(3.8D);//version
+					objout.writeInt(Main.precision);//since 3.8
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -625,6 +649,9 @@ public class Main {
 							version = objin.readDouble();
 						}
 					}
+				}
+				if(version >= 3.8){
+					Main.precision = objin.readInt();
 				}
 				objin.close();
 				save.setEnabled(true);

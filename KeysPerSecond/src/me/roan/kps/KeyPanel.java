@@ -33,15 +33,15 @@ public final class KeyPanel extends JPanel {
 	/**
 	 * Font 2 used to display the value of this panel
 	 */
-	private Font font2 = new Font("Dialog", Font.PLAIN, 18);
+	protected static final Font font2 = new Font("Dialog", Font.PLAIN, 18);
 	/**
 	 * Font 2 but smaller
 	 */
-	private Font font2small = new Font("Dialog", Font.PLAIN, 14);
+	protected static final Font font2small = new Font("Dialog", Font.PLAIN, 14);
 	/**
 	 * Font 2 small but smaller
 	 */
-	private Font font2smallest = new Font("Dialog", Font.PLAIN, 11);
+	protected static final Font font2smallest = new Font("Dialog", Font.PLAIN, 11);
 
 	/**
 	 * Constructs a new KeyPanel

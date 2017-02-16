@@ -23,10 +23,6 @@ public abstract class BasePanel extends JPanel {
 	 * Font 1 used to draw the title of the panel
 	 */
 	protected static final Font font1 = new Font("Dialog", Font.BOLD, 15);
-	/**
-	 * Font 2 used to draw the value of the panel
-	 */
-	private static final Font font2 = new Font("Dialog", Font.PLAIN, 18);
 
 	@Override
 	public void paintComponent(Graphics g1) {
@@ -38,8 +34,14 @@ public abstract class BasePanel extends JPanel {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setFont(font1);
 		g.drawString(getTitle(), (this.getWidth() - g.getFontMetrics().stringWidth(getTitle())) / 2, 30);
-		g.setFont(font2);
 		String str = getValue();
+		if(str.length() >= 5){
+			g.setFont(KeyPanel.font2smallest);
+		}else if(str.length() >= 4){
+			g.setFont(KeyPanel.font2small);
+		}else{
+			g.setFont(KeyPanel.font2);
+		}
 		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
 	}
 
