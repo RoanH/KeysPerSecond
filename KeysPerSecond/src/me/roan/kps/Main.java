@@ -394,6 +394,7 @@ public class Main {
 			plabels.add(info1);
 			plabels.add(info2);
 			JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
+			values.setSelectedIndex(Main.precision);
 			JLabel vlabel = new JLabel("Precision: ");
 			JPanel pvalue = new JPanel(new BorderLayout());
 			pvalue.add(vlabel, BorderLayout.LINE_START);
