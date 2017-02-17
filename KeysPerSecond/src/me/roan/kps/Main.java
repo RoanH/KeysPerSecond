@@ -142,6 +142,14 @@ public class Main {
 	 * Whether or not to track all key presses
 	 */
 	private static boolean trackAll = false;
+	/**
+	 * How many digits to display for cur & avg
+	 */
+	protected static int precision = 0;
+	/**
+	 * The program's main frame
+	 */
+	private static final JFrame frame = new JFrame("Keys per second");
 
 	/**
 	 * Main method
@@ -152,6 +160,7 @@ public class Main {
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
 		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
+		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
@@ -273,6 +282,8 @@ public class Main {
 						k.count = 0;
 					}
 					System.out.println();
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+					frame.setVisible(!frame.isVisible());
 				}
 			}
 
@@ -342,7 +353,7 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(6, 0));
+		JPanel buttons = new JPanel(new GridLayout(7, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton save = new JButton("Save config");
@@ -360,12 +371,14 @@ public class Main {
 			color.setEnabled(ccol.isSelected());
 			color.repaint();
 		});
+		JButton precision = new JButton("Precision");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
 		buttons.add(graph);
 		buttons.add(updaterate);
 		buttons.add(color);
+		buttons.add(precision);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Config"));
@@ -373,6 +386,25 @@ public class Main {
 		all.add(options, BorderLayout.LINE_START);
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
+		precision.addActionListener((e)->{
+			JPanel config = new JPanel(new BorderLayout());
+			JLabel info1 = new JLabel("Specify how many digits should be displayed");
+			JLabel info2 = new JLabel("beyond the decimal point for avg & cur.");
+			JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
+			plabels.add(info1);
+			plabels.add(info2);
+			JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
+			values.setSelectedIndex(Main.precision);
+			JLabel vlabel = new JLabel("Precision: ");
+			JPanel pvalue = new JPanel(new BorderLayout());
+			pvalue.add(vlabel, BorderLayout.LINE_START);
+			pvalue.add(values, BorderLayout.CENTER);
+			config.add(plabels, BorderLayout.CENTER);
+			config.add(pvalue, BorderLayout.PAGE_END);
+			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			Main.precision = values.getSelectedIndex();
+			save.setEnabled(true);
+		});
 		graph.addActionListener((e)->{
 			JPanel config = new JPanel();
 			JSpinner backlog = new JSpinner(new SpinnerNumberModel(GraphPanel.MAX, 1, Integer.MAX_VALUE, 1));
@@ -398,6 +430,7 @@ public class Main {
 			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			GraphPanel.showAverage = showavg.isSelected();
 			GraphPanel.MAX = (int)backlog.getValue();
+			save.setEnabled(true);
 		});
 		addkey.addActionListener((e)->{
 			JPanel keyform = new JPanel(new BorderLayout());
@@ -546,16 +579,32 @@ public class Main {
 		color.addActionListener((e)->{
 			Color prevfg = cfg.getForeground();
 			Color prevbg = cbg.getForeground();
-			JPanel cform = new JPanel(new GridLayout(2, 2, 4, 2));	
+			JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));	
 			JLabel lfg = new JLabel("Foreground colour: ");
 			JLabel lbg = new JLabel("Background colour: ");
+			JSpinner sbg = new JSpinner(new SpinnerNumberModel(ColorManager.opacitybg, 0.0D, 1.0D, 0.05D));
+			JSpinner sfg = new JSpinner(new SpinnerNumberModel(ColorManager.opacityfg, 0.0D, 1.0D, 0.05D));
+			sbg.setPreferredSize(new Dimension(sbg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
+			sfg.setPreferredSize(new Dimension(sfg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
+			JPanel spanelfg = new JPanel(new BorderLayout());
+			JPanel spanelbg = new JPanel(new BorderLayout());
+			spanelfg.add(new JLabel("Opacity (0~1): "), BorderLayout.LINE_START);
+			spanelbg.add(new JLabel("Opacity (0~1): "), BorderLayout.LINE_START);
+			spanelfg.add(sfg, BorderLayout.CENTER);
+			spanelbg.add(sbg, BorderLayout.CENTER);
 			cform.add(lfg);
 			cform.add(cfg);
+			cform.add(spanelfg);
 			cform.add(lbg);
 			cform.add(cbg);
+			cform.add(spanelbg);
 			if(1 == JOptionPane.showOptionDialog(null, cform, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
 				cfg.setForeground(prevfg);
 				cbg.setForeground(prevbg);
+			}else{
+				ColorManager.opacitybg = (float)(double)sbg.getValue();
+				ColorManager.opacityfg = (float)(double)sfg.getValue();
+				save.setEnabled(true);
 			}
 		});
 		save.addActionListener((e)->{
@@ -581,7 +630,10 @@ public class Main {
 					objout.writeObject(cfg.getBackground());
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
-					objout.writeDouble(3.7D);//version
+					objout.writeDouble(3.9D);//version
+					objout.writeInt(Main.precision);//since 3.9
+					objout.writeFloat(ColorManager.opacitybg);//since 3.10
+					objout.writeFloat(ColorManager.opacityfg);//since 3.10
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -626,6 +678,13 @@ public class Main {
 						}
 					}
 				}
+				if(version >= 3.9){
+					Main.precision = objin.readInt();
+				}
+				if(version >= 3.10){
+					ColorManager.opacitybg = objin.readFloat();
+					ColorManager.opacityfg = objin.readFloat();
+				}
 				objin.close();
 				save.setEnabled(true);
 				for(KeyInformation info : keyinfo){
@@ -669,6 +728,7 @@ public class Main {
 			config.add(update, BorderLayout.CENTER);
 			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			timeframe = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
+			save.setEnabled(true);
 		});
 		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
 		if(1 == option || option == JOptionPane.CLOSED_OPTION){
@@ -704,8 +764,11 @@ public class Main {
 	 */
 	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
-		JFrame frame = new JFrame("Keys per second");
-		content.setBackground(bg == null ? Color.BLACK : bg);
+		if(ColorManager.transparency){
+			content.setOpaque(false);
+		}else{
+			content.setBackground(bg == null ? Color.BLACK : bg);
+		}
 		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
 		int panels = 0;
@@ -733,6 +796,7 @@ public class Main {
 		}
 		
 		JPanel allcontent = new JPanel(new GridLayout((cgraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
+		allcontent.setOpaque(!ColorManager.transparency);
 		if(panels > 0){
 			allcontent.add(content);
 		}
@@ -745,6 +809,7 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
+		frame.setBackground(ColorManager.opacitybg != 1.0F ? new Color(bg.getRed(), bg.getGreen(), bg.getBlue(), ColorManager.opacitybg) : bg);
 		frame.addWindowListener(new WindowListener(){
 
 			@Override

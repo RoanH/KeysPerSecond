@@ -1,5 +1,6 @@
 package me.roan.kps;
 
+import java.awt.AlphaComposite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -23,23 +24,33 @@ public abstract class BasePanel extends JPanel {
 	 * Font 1 used to draw the title of the panel
 	 */
 	protected static final Font font1 = new Font("Dialog", Font.BOLD, 15);
+	
 	/**
-	 * Font 2 used to draw the value of the panel
+	 * Constructs a new BasePanel
 	 */
-	private static final Font font2 = new Font("Dialog", Font.PLAIN, 18);
+	protected BasePanel(){
+		this.setOpaque(!ColorManager.transparency);
+	}
 
 	@Override
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
-		g.setColor(ColorManager.background);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		if(ColorManager.transparency){
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
+		}
 		g.drawImage(ColorManager.unpressed, 2, 2, null);
 		g.setColor(ColorManager.foreground);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setFont(font1);
 		g.drawString(getTitle(), (this.getWidth() - g.getFontMetrics().stringWidth(getTitle())) / 2, 30);
-		g.setFont(font2);
 		String str = getValue();
+		if(str.length() >= 5){
+			g.setFont(KeyPanel.font2smallest);
+		}else if(str.length() >= 4){
+			g.setFont(KeyPanel.font2small);
+		}else{
+			g.setFont(KeyPanel.font2);
+		}
 		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
 	}
 

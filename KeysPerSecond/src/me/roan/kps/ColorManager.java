@@ -49,6 +49,22 @@ public class ColorManager {
 	 * Color used to fill the area underneath the graph
 	 */
 	protected static Color alphaAqua;
+	/**
+	 * Whether or not transparency is enabled
+	 */
+	protected static boolean transparency = false;
+	/**
+	 * Transparent color
+	 */
+	protected static final Color transparent = new Color(0.0F, 0.0F, 0.0F, 0.0F);
+	/**
+	 * Foreground opacity in case transparency is enabled
+	 */
+	protected static float opacityfg = 1.0F;
+	/**
+	 * Background opacity in case transparency is enabled
+	 */
+	protected static float opacitybg = 1.0F;
 
 	/**
 	 * Prepares the colours and images
@@ -61,6 +77,9 @@ public class ColorManager {
 	 */
 	public static final void prepareImages(Color front, Color back, boolean graph, boolean custom) throws IOException{
 		if(custom){
+			if(opacityfg != 1.0F || opacitybg != 1.0F){
+				transparency = true;
+			}
 			foreground = front;
 			background = back;
 			alphaAqua = new Color(front.getRed(), front.getGreen(), front.getBlue(), 51);

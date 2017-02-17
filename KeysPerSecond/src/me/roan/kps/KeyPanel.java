@@ -1,5 +1,6 @@
 package me.roan.kps;
 
+import java.awt.AlphaComposite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -33,15 +34,15 @@ public final class KeyPanel extends JPanel {
 	/**
 	 * Font 2 used to display the value of this panel
 	 */
-	private Font font2 = new Font("Dialog", Font.PLAIN, 18);
+	protected static final Font font2 = new Font("Dialog", Font.PLAIN, 18);
 	/**
 	 * Font 2 but smaller
 	 */
-	private Font font2small = new Font("Dialog", Font.PLAIN, 14);
+	protected static final Font font2small = new Font("Dialog", Font.PLAIN, 14);
 	/**
 	 * Font 2 small but smaller
 	 */
-	private Font font2smallest = new Font("Dialog", Font.PLAIN, 11);
+	protected static final Font font2smallest = new Font("Dialog", Font.PLAIN, 11);
 
 	/**
 	 * Constructs a new KeyPanel
@@ -53,18 +54,14 @@ public final class KeyPanel extends JPanel {
 	 */
 	protected KeyPanel(Key key) {
 		this.key = key;
+		this.setOpaque(!ColorManager.transparency);
 	}
 
 	@Override
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
-		g.setColor(ColorManager.background);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.drawImage(ColorManager.unpressed, 2, 2, null);
-		if (key.down) {
-			g.drawImage(ColorManager.pressed, 2, 2, null);
-		}else{
-			g.setColor(ColorManager.foreground);
+		if(ColorManager.transparency){
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
 		}
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		if(key.name.length() == 1){
