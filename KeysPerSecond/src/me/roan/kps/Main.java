@@ -631,9 +631,9 @@ public class Main {
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
 					objout.writeDouble(3.9D);//version
-					objout.writeInt(Main.precision);//since 3.8
-					objout.writeFloat(ColorManager.opacitybg);//since 3.9
-					objout.writeFloat(ColorManager.opacityfg);//since 3.9
+					objout.writeInt(Main.precision);//since 3.9
+					objout.writeFloat(ColorManager.opacitybg);//since 3.10
+					objout.writeFloat(ColorManager.opacityfg);//since 3.10
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -678,10 +678,10 @@ public class Main {
 						}
 					}
 				}
-				if(version >= 3.8){
+				if(version >= 3.9){
 					Main.precision = objin.readInt();
 				}
-				if(version >= 3.9){
+				if(version >= 3.10){
 					ColorManager.opacitybg = objin.readFloat();
 					ColorManager.opacityfg = objin.readFloat();
 				}
