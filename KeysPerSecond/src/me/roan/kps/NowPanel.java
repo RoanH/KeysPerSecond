@@ -22,6 +22,6 @@ public final class NowPanel extends BasePanel {
 
 	@Override
 	protected String getValue() {
-		return Main.precision == 0 ? String.valueOf((int)Main.prev) : String.valueOf(String.format("%1$." + Main.precision + "f", (double)((int)(Main.prev * Math.pow(10, Main.precision)) / Math.pow(10, Main.precision))));
+		return String.valueOf((int)Main.prev);
 	}
 }
