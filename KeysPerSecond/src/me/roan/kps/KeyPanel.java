@@ -1,5 +1,6 @@
 package me.roan.kps;
 
+import java.awt.AlphaComposite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -59,13 +60,8 @@ public final class KeyPanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
-		g.setColor(ColorManager.background);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.drawImage(ColorManager.unpressed, 2, 2, null);
-		if (key.down) {
-			g.drawImage(ColorManager.pressed, 2, 2, null);
-		}else{
-			g.setColor(ColorManager.foreground);
+		if(ColorManager.transparency){
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
 		}
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		if(key.name.length() == 1){

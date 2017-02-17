@@ -53,8 +53,6 @@ import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-import com.sun.prism.Graphics;
-
 /**
  * This program can be used to display
  * information about how many times
@@ -405,6 +403,7 @@ public class Main {
 			config.add(pvalue, BorderLayout.PAGE_END);
 			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			Main.precision = values.getSelectedIndex();
+			save.setEnabled(true);
 		});
 		graph.addActionListener((e)->{
 			JPanel config = new JPanel();
@@ -431,6 +430,7 @@ public class Main {
 			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			GraphPanel.showAverage = showavg.isSelected();
 			GraphPanel.MAX = (int)backlog.getValue();
+			save.setEnabled(true);
 		});
 		addkey.addActionListener((e)->{
 			JPanel keyform = new JPanel(new BorderLayout());
@@ -579,16 +579,32 @@ public class Main {
 		color.addActionListener((e)->{
 			Color prevfg = cfg.getForeground();
 			Color prevbg = cbg.getForeground();
-			JPanel cform = new JPanel(new GridLayout(2, 2, 4, 2));	
+			JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));	
 			JLabel lfg = new JLabel("Foreground colour: ");
 			JLabel lbg = new JLabel("Background colour: ");
+			JSpinner sbg = new JSpinner(new SpinnerNumberModel(ColorManager.opacitybg, 0.0D, 1.0D, 0.05D));
+			JSpinner sfg = new JSpinner(new SpinnerNumberModel(ColorManager.opacityfg, 0.0D, 1.0D, 0.05D));
+			sbg.setPreferredSize(new Dimension(sbg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
+			sfg.setPreferredSize(new Dimension(sfg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
+			JPanel spanelfg = new JPanel(new BorderLayout());
+			JPanel spanelbg = new JPanel(new BorderLayout());
+			spanelfg.add(new JLabel("Opacity (0~1): "), BorderLayout.LINE_START);
+			spanelbg.add(new JLabel("Opacity (0~1): "), BorderLayout.LINE_START);
+			spanelfg.add(sfg, BorderLayout.CENTER);
+			spanelbg.add(sbg, BorderLayout.CENTER);
 			cform.add(lfg);
 			cform.add(cfg);
+			cform.add(spanelfg);
 			cform.add(lbg);
 			cform.add(cbg);
+			cform.add(spanelbg);
 			if(1 == JOptionPane.showOptionDialog(null, cform, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
 				cfg.setForeground(prevfg);
 				cbg.setForeground(prevbg);
+			}else{
+				ColorManager.opacitybg = (float)(double)sbg.getValue();
+				ColorManager.opacityfg = (float)(double)sfg.getValue();
+				save.setEnabled(true);
 			}
 		});
 		save.addActionListener((e)->{
@@ -614,8 +630,10 @@ public class Main {
 					objout.writeObject(cfg.getBackground());
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
-					objout.writeDouble(3.8D);//version
+					objout.writeDouble(3.9D);//version
 					objout.writeInt(Main.precision);//since 3.8
+					objout.writeFloat(ColorManager.opacitybg);//since 3.9
+					objout.writeFloat(ColorManager.opacityfg);//since 3.9
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -663,6 +681,10 @@ public class Main {
 				if(version >= 3.8){
 					Main.precision = objin.readInt();
 				}
+				if(version >= 3.9){
+					ColorManager.opacitybg = objin.readFloat();
+					ColorManager.opacityfg = objin.readFloat();
+				}
 				objin.close();
 				save.setEnabled(true);
 				for(KeyInformation info : keyinfo){
@@ -706,6 +728,7 @@ public class Main {
 			config.add(update, BorderLayout.CENTER);
 			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			timeframe = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
+			save.setEnabled(true);
 		});
 		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
 		if(1 == option || option == JOptionPane.CLOSED_OPTION){
@@ -719,12 +742,9 @@ public class Main {
 		alwaysOnTop = ctop.isSelected();
 		trackAll = call.isSelected();
 
-		Color bg = new Color(0.0F, 0.0F, 0.0F, 0.5F);//ccol.isSelected() ? cfg.getBackground() : null;
-		Color fg = new Color(0.0F, 1.0F, 1.0F, 1.0F);;//ccol.isSelected() ? cbg.getBackground() : null;
-		
 		//Build GUI
 		try {
-			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), fg, bg, ckey.isSelected());
+			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), ccol.isSelected() ? cfg.getBackground() : null, ccol.isSelected() ? cbg.getBackground() : null, ckey.isSelected());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -744,8 +764,11 @@ public class Main {
 	 */
 	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
-		content.setOpaque(!ColorManager.transparency);
-		content.setBackground(bg == null ? Color.BLACK : bg);
+		if(ColorManager.transparency){
+			content.setOpaque(false);
+		}else{
+			content.setBackground(bg == null ? Color.BLACK : bg);
+		}
 		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
 		int panels = 0;
@@ -786,7 +809,7 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
-		frame.setBackground(bg);
+		frame.setBackground(ColorManager.opacitybg != 1.0F ? new Color(bg.getRed(), bg.getGreen(), bg.getBlue(), ColorManager.opacitybg) : bg);
 		frame.addWindowListener(new WindowListener(){
 
 			@Override
