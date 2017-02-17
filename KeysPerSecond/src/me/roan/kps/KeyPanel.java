@@ -64,6 +64,12 @@ public final class KeyPanel extends JPanel {
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
 		}
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.drawImage(ColorManager.unpressed, 2, 2, null);
+		if (key.down) {
+			g.drawImage(ColorManager.pressed, 2, 2, null);
+		}else{
+			g.setColor(ColorManager.foreground);
+		}
 		if(key.name.length() == 1){
 			g.setFont(font1);
 		}else{
