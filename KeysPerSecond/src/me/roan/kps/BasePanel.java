@@ -1,5 +1,6 @@
 package me.roan.kps;
 
+import java.awt.AlphaComposite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -23,12 +24,20 @@ public abstract class BasePanel extends JPanel {
 	 * Font 1 used to draw the title of the panel
 	 */
 	protected static final Font font1 = new Font("Dialog", Font.BOLD, 15);
+	
+	/**
+	 * Constructs a new BasePanel
+	 */
+	protected BasePanel(){
+		this.setOpaque(!ColorManager.transparency);
+	}
 
 	@Override
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
-		g.setColor(ColorManager.background);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		if(ColorManager.transparency){
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
+		}
 		g.drawImage(ColorManager.unpressed, 2, 2, null);
 		g.setColor(ColorManager.foreground);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

@@ -1,5 +1,6 @@
 package me.roan.kps;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -62,8 +63,19 @@ public class GraphPanel extends JPanel{
 		if(enabled){
 			Graphics2D g = (Graphics2D)g1;
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setColor(ColorManager.background);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+			if(ColorManager.transparency){
+				g.setColor(ColorManager.transparent);
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacitybg));
+				g.setColor(ColorManager.background);
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
+			}else{
+				g.setColor(ColorManager.background);
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
+			}
 			Polygon poly = new Polygon();
 			poly.addPoint(this.getWidth() - 6, this.getHeight() - 5);
 			for(int i = 1; i <= values.size(); i++){
