@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -50,6 +51,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel; 
@@ -737,8 +739,8 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><i>Version: 3.11, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
-				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></html>");
+		JLabel ver = new JLabel("<html><center><i>Version: v3.11, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
 			@Override
@@ -747,7 +749,7 @@ public class Main {
 					try {
 						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/forum/t/552405").toURI());
 					} catch (IOException | URISyntaxException e1) {
-						//pity
+						//pitty
 					}
 				}
 			}
@@ -845,6 +847,7 @@ public class Main {
 		}
 		frame.setSize((panels == 0 && cgraph) ? 228 : (panels * 44 + (panels - 1) * 2), (panels > 0 ? 68 : 0) + (cgraph ? 68 : 0));
 		frame.setResizable(false);
+		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
