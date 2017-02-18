@@ -41,8 +41,8 @@ And if you find any bugs feel free to report them.
 
 ## Downloads (Java 8 required)
 
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v3.6/KeysPerSecond-v3.6.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v3.6/KeysPerSecond-v3.6.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v3.11/KeysPerSecond-v3.11.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v3.11/KeysPerSecond-v3.11.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
