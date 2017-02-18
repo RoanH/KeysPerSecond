@@ -55,7 +55,7 @@ And if you find any bugs feel free to report them.
 - Ability to resize the program.
 
 ## Downloads (Java 8 required)
-Supported operating systems: Mac (tested), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)
+Supported operating systems: Mac (tested), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
 ![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v3.11/KeysPerSecond-v3.11.exe)<br>
 ![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v3.11/KeysPerSecond-v3.11.jar)
