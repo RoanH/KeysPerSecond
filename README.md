@@ -40,7 +40,7 @@ And if you find any bugs feel free to report them.
 12 February 2017: Added the option to track all keys, show track keys or not & fixed some edge case bugs.
 
 ## Downloads (Java 8 required)
-Note these download links are not actively being updated. For the latest release check the releases section.
+Note these download links are not actively being updated. For the latest release check the releases section.<br>
 ![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v3.11/KeysPerSecond-v3.11.exe)<br>
 ![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v3.11/KeysPerSecond-v3.11.jar)
 
