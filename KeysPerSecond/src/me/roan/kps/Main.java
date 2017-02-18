@@ -3,6 +3,7 @@ package me.roan.kps;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -13,13 +14,18 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -155,7 +161,7 @@ public class Main {
 	 * Main method
 	 * @param args - No valid command line arguments for this program
 	 */
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
@@ -730,6 +736,39 @@ public class Main {
 			timeframe = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 			save.setEnabled(true);
 		});
+		String version = checkVersion();//XXX the version number 
+		JLabel ver = new JLabel("<html><i>Version: 3.11, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></html>");
+		ver.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(Desktop.isDesktopSupported()){
+					try {
+						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/forum/t/552405").toURI());
+					} catch (IOException | URISyntaxException e1) {
+						//pity
+					}
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+		form.add(ver, BorderLayout.PAGE_END);
 		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
 		if(1 == option || option == JOptionPane.CLOSED_OPTION){
 			try {
@@ -892,6 +931,39 @@ public class Main {
 			}
 		});
 		frame.setVisible(true);
+	}
+	
+	private static final String checkVersion(){
+		try{ 			
+			HttpURLConnection con = (HttpURLConnection) new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection(); 			
+			con.setRequestMethod("GET"); 		
+			con.setConnectTimeout(10000); 					   
+			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream())); 	
+			String line = reader.readLine(); 		
+			reader.close(); 	
+			String[] versions = line.split("\"name\":\"v");
+			int max_main = 3;
+			int max_sub = 0;
+			String[] tmp;
+			for(int i = 1; i < versions.length; i++){
+				tmp = versions[i].split("\",\"")[0].split("\\.");
+				if(Integer.parseInt(tmp[0]) > max_main){
+					max_main = Integer.parseInt(tmp[0]);
+					max_sub = Integer.parseInt(tmp[1]);
+				}else if(Integer.parseInt(tmp[0]) < max_main){
+					continue;
+				}else{
+					if(Integer.parseInt(tmp[1]) > max_sub){
+						max_sub = Integer.parseInt(tmp[1]);
+					}
+				}
+			}
+			return "v" + max_main + "." + max_sub;
+		}catch(Exception e){ 	
+			return null;
+			//No internet acces or something else is wrong,
+			//No problem though since this isn't a critical function
+		}
 	}
 
 //=================================================================================================
