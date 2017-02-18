@@ -30,19 +30,19 @@ public final class KeyPanel extends JPanel {
 	/**
 	 * Font 1 used to display the title of the panel
 	 */
-	private static final Font font1 = new Font("Dialog", Font.BOLD, 24);
+	private static final Font font1 = new Font("Dialog", Font.BOLD, SizeManager.keyPanelFont1Size);
 	/**
 	 * Font 2 used to display the value of this panel
 	 */
-	protected static final Font font2 = new Font("Dialog", Font.PLAIN, 18);
+	protected static final Font font2 = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);
 	/**
 	 * Font 2 but smaller
 	 */
-	protected static final Font font2small = new Font("Dialog", Font.PLAIN, 14);
+	protected static final Font font2small = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);
 	/**
 	 * Font 2 small but smaller
 	 */
-	protected static final Font font2smallest = new Font("Dialog", Font.PLAIN, 11);
+	protected static final Font font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
 
 	/**
 	 * Constructs a new KeyPanel
@@ -64,9 +64,9 @@ public final class KeyPanel extends JPanel {
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
 		}
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.drawImage(ColorManager.unpressed, 2, 2, null);
+		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
 		if (key.down) {
-			g.drawImage(ColorManager.pressed, 2, 2, null);
+			g.drawImage(ColorManager.pressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
 		}else{
 			g.setColor(ColorManager.foreground);
 		}
@@ -75,7 +75,7 @@ public final class KeyPanel extends JPanel {
 		}else{
 			g.setFont(BasePanel.font1);
 		}
-		g.drawString(key.name, (this.getWidth() - g.getFontMetrics().stringWidth(key.name)) / 2, 30);
+		g.drawString(key.name, (this.getWidth() - g.getFontMetrics().stringWidth(key.name)) / 2, SizeManager.keyTitleTextOffset);
 		if(key.count >= 10000){
 			g.setFont(font2smallest);
 		}else if(key.count >= 1000){
@@ -84,6 +84,6 @@ public final class KeyPanel extends JPanel {
 			g.setFont(font2);
 		}
 		String str = String.valueOf(key.count);
-		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
+		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, SizeManager.keyDataTextOffset);
 	}
 }
