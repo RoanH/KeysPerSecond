@@ -77,20 +77,20 @@ public class GraphPanel extends JPanel{
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 			}
 			Polygon poly = new Polygon();
-			poly.addPoint(this.getWidth() - 6, this.getHeight() - 5);
+			poly.addPoint(this.getWidth() - SizeManager.graphOffset - 2, this.getHeight() - SizeManager.graphOffset);
 			for(int i = 1; i <= values.size(); i++){
-				int px = (int) (6 + ((double)(this.getWidth() - 12) / (double)(MAX - 1)) * (MAX - i));
-				int py = (int) (this.getHeight() - 5 - ((float)(this.getHeight() - 11) * ((float)values.get(i - 1) / (float)maxval)));
+				int px = (int) (SizeManager.graphOffset + 2 + ((double)(this.getWidth() - SizeManager.graphOffset * 2 - 4) / (double)(MAX - 1)) * (MAX - i));
+				int py = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * ((float)values.get(i - 1) / (float)maxval)));
 				poly.addPoint(px, py);
 				if(i == values.size()){
-					poly.addPoint(px, this.getHeight() - 5);
+					poly.addPoint(px, this.getHeight() - SizeManager.graphOffset);
 				}
 			}
 			if(showAverage){
-				int y = (int) (this.getHeight() - 5 - ((float)(this.getHeight() - 11) * (Main.avg / (float)maxval)));
+				int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.avg / (float)maxval)));
 				g.setColor(ColorManager.foreground.darker());
 				g.setStroke(avgstroke);
-				g.drawLine(5, y, this.getWidth() - 5, y);
+				g.drawLine(SizeManager.graphOffset + 2, y, this.getWidth() - SizeManager.graphOffset - 2, y);
 			}
 			g.setStroke(line);
 			g.setColor(ColorManager.alphaAqua);
@@ -98,11 +98,11 @@ public class GraphPanel extends JPanel{
 			g.setColor(ColorManager.foreground);
 			g.drawPolygon(poly);
 			if(frames > 1){
-				g.drawImage(ColorManager.gleft, 3, 2, null);
-				g.drawImage(ColorManager.gmid, 44 + 1, 2, (44 + 2) * (frames - 2), 64, null);
-				g.drawImage(ColorManager.gright, 44 + 1 + (44 + 2) * (frames - 2), 2, null);
+				g.drawImage(ColorManager.gleft, 3, 2, 2 + SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 42, 64, null);
+				g.drawImage(ColorManager.gmid, SizeManager.graphImageLeftRightWidth + 2, 2, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2), this.getHeight() - 2, 0, 0, 46, 64, null);
+				g.drawImage(ColorManager.gright, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2),2, this.getWidth() - 4, this.getHeight() - 2, 0, 0, 42, 64, null);
 			}else{
-				g.drawImage(ColorManager.unpressed, 2, 2, null);
+				g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
 			}
 		}
 	}
