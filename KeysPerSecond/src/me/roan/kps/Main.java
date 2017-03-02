@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -47,9 +48,11 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel; 
@@ -149,13 +152,17 @@ public class Main {
 	 */
 	private static boolean trackAll = false;
 	/**
-	 * How many digits to display for cur & avg
+	 * How many digits to display for avg
 	 */
 	protected static int precision = 0;
 	/**
 	 * The program's main frame
 	 */
 	private static final JFrame frame = new JFrame("Keys per second");
+	/**
+	 * The factor to multiply the frame size with
+	 */
+	private static double sizeFactor = 1.0D;
 
 	/**
 	 * Main method
@@ -359,7 +366,7 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(7, 0));
+		JPanel buttons = new JPanel(new GridLayout(8, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton save = new JButton("Save config");
@@ -378,6 +385,7 @@ public class Main {
 			color.repaint();
 		});
 		JButton precision = new JButton("Precision");
+		JButton size = new JButton("Size");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
@@ -385,6 +393,7 @@ public class Main {
 		buttons.add(updaterate);
 		buttons.add(color);
 		buttons.add(precision);
+		buttons.add(size);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Config"));
@@ -392,10 +401,26 @@ public class Main {
 		all.add(options, BorderLayout.LINE_START);
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
+		size.addActionListener((e)->{
+			JPanel config = new JPanel(new BorderLayout());
+			JSpinner s = new JSpinner(new SpinnerNumberModel(sizeFactor * 100, 50, 200, 1));
+			JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
+								   + "The precentage specifies how big the window is in<br>"
+								   + "comparison to the default size of the window.<html>");
+			config.add(info, BorderLayout.PAGE_START);
+			config.add(new JSeparator(), BorderLayout.CENTER);
+			JPanel line = new JPanel();
+			line.add(new JLabel("Size: "));
+			line.add(s);
+			line.add(new JLabel("%"));
+			config.add(line, BorderLayout.PAGE_END);
+			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			sizeFactor = ((double)s.getValue()) / 100.0D;
+		});
 		precision.addActionListener((e)->{
 			JPanel config = new JPanel(new BorderLayout());
 			JLabel info1 = new JLabel("Specify how many digits should be displayed");
-			JLabel info2 = new JLabel("beyond the decimal point for avg & cur.");
+			JLabel info2 = new JLabel("beyond the decimal point for the average.");
 			JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
 			plabels.add(info1);
 			plabels.add(info2);
@@ -636,10 +661,11 @@ public class Main {
 					objout.writeObject(cfg.getBackground());
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
-					objout.writeDouble(3.9D);//version
+					objout.writeDouble(4.0D);//version
 					objout.writeInt(Main.precision);//since 3.9
 					objout.writeFloat(ColorManager.opacitybg);//since 3.10
 					objout.writeFloat(ColorManager.opacityfg);//since 3.10
+					objout.writeDouble(sizeFactor);//since 3.12 / 4.0D
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -691,6 +717,9 @@ public class Main {
 					ColorManager.opacitybg = objin.readFloat();
 					ColorManager.opacityfg = objin.readFloat();
 				}
+				if(version >= 4.0D){
+					sizeFactor = objin.readDouble();
+				}
 				objin.close();
 				save.setEnabled(true);
 				for(KeyInformation info : keyinfo){
@@ -737,8 +766,8 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><i>Version: 3.11, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
-				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></html>");
+		JLabel ver = new JLabel("<html><center><i>Version: v3.12, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
 			@Override
@@ -747,7 +776,7 @@ public class Main {
 					try {
 						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/forum/t/552405").toURI());
 					} catch (IOException | URISyntaxException e1) {
-						//pity
+						//pitty
 					}
 				}
 			}
@@ -803,6 +832,7 @@ public class Main {
 	 */
 	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
+		SizeManager.scale(sizeFactor);
 		if(ColorManager.transparency){
 			content.setOpaque(false);
 		}else{
@@ -843,8 +873,9 @@ public class Main {
 			allcontent.add(graph);
 			GraphPanel.frames = panels > 0 ? panels : 5;
 		}
-		frame.setSize((panels == 0 && cgraph) ? 228 : (panels * 44 + (panels - 1) * 2), (panels > 0 ? 68 : 0) + (cgraph ? 68 : 0));
+		frame.setSize((panels == 0 && cgraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (cgraph ? SizeManager.subComponentHeight : 0));
 		frame.setResizable(false);
+		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);

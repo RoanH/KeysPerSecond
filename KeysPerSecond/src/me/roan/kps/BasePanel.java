@@ -23,7 +23,7 @@ public abstract class BasePanel extends JPanel {
 	/**
 	 * Font 1 used to draw the title of the panel
 	 */
-	protected static final Font font1 = new Font("Dialog", Font.BOLD, 15);
+	protected static final Font font1 = new Font("Dialog", Font.BOLD, SizeManager.basePanelTitleTextSize);
 	
 	/**
 	 * Constructs a new BasePanel
@@ -38,11 +38,11 @@ public abstract class BasePanel extends JPanel {
 		if(ColorManager.transparency){
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
 		}
-		g.drawImage(ColorManager.unpressed, 2, 2, null);
+		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
 		g.setColor(ColorManager.foreground);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setFont(font1);
-		g.drawString(getTitle(), (this.getWidth() - g.getFontMetrics().stringWidth(getTitle())) / 2, 30);
+		g.drawString(getTitle(), (this.getWidth() - g.getFontMetrics().stringWidth(getTitle())) / 2, SizeManager.keyTitleTextOffset);
 		String str = getValue();
 		if(str.length() >= 5){
 			g.setFont(KeyPanel.font2smallest);
@@ -51,7 +51,7 @@ public abstract class BasePanel extends JPanel {
 		}else{
 			g.setFont(KeyPanel.font2);
 		}
-		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, 55);
+		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, SizeManager.keyDataTextOffset);
 	}
 
 	/**
