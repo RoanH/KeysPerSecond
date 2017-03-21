@@ -75,7 +75,8 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * And to print the statistics to standard output
  * </li><li><b>Ctrl + O</b>: Terminates the program
  * </li><li><b>Ctrl + I</b>: Causes the program to reset the amount of times a key is pressed
- * And to print the statistics to standard output</li></ol></pre>
+ * And to print the statistics to standard output
+ * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI</li></ol></pre>
  * The program also constantly prints the current keys per second to
  * the standard output.<br>
  * And key is only counted as being pressed if the key has been released before
@@ -776,7 +777,7 @@ public class Main {
 					try {
 						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/forum/t/552405").toURI());
 					} catch (IOException | URISyntaxException e1) {
-						//pitty
+						//pity
 					}
 				}
 			}
