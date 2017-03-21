@@ -46,19 +46,20 @@ And if you find any bugs feel free to report them.
 12 February 2017: Added the option to remove added keys.<br>
 16 February 2017: Added support for decimal avg & cur, also added a new command key that hides the GUI.<br>
 17 February 2017: Added support for transparent colours.<br>
-17 February 2017: Added automatic version checking & removed the decimal point for cur since cur is an integer.
+17 February 2017: Added automatic version checking & removed the decimal point for cur since cur is an integer.<br>
+18 February 2017: Added support for a variable size & added an icon to the window.<br>
+21 March 2017: Major performance improvements & change opacity settings to use a percentage.
 
 ## Todo list / working on
 - Option to display the song you are currently playing
 - Option to pass the config file via the command line
 - Option to change to command keys
-- Ability to resize the program.
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v3.12/KeysPerSecond-v3.12.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v3.12/KeysPerSecond-v3.12.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v4.0/KeysPerSecond-v4.0.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v4.0/KeysPerSecond-v4.0.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
