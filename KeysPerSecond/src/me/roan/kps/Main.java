@@ -57,7 +57,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.table.DefaultTableModel; 
+import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -463,12 +463,9 @@ public class Main {
 		});
 		addkey.addActionListener((e)->{
 			JPanel keyform = new JPanel(new BorderLayout());
-			JPanel text = new JPanel(new GridLayout(2, 1));
-			text.add(new JLabel("Press a key and press 'Add Key' to add it"), BorderLayout.PAGE_START);
-			text.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
-			keyform.add(text, BorderLayout.PAGE_START);
+			keyform.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
 			JTable keys = new JTable();
-			keys.setModel(new DefaultTableModel(){
+			DefaultTableModel model = new DefaultTableModel(){
 				/**
 				 * Serial ID
 				 */
@@ -544,22 +541,29 @@ public class Main {
 						}
 					}
 				}
-			});
+			};
+			keys.setModel(model);
 			keys.setDragEnabled(false);
 			JScrollPane pane = new JScrollPane(keys);
 			pane.setPreferredSize(new Dimension((int)keys.getPreferredSize().getWidth(), 120));
 			keyform.add(pane, BorderLayout.CENTER);
-			if(JOptionPane.showOptionDialog(null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Add Key", "Back"}, 0) == 0){
-				if(lastevent == null){
-					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-					return;
+			JButton newkey = new JButton("Add Key");
+			newkey.addActionListener((evt)->{
+				if(JOptionPane.showOptionDialog(null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+					if(lastevent == null){
+						JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
+					if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+						keyinfo.add(info);
+						save.setEnabled(true);
+					}
+					model.fireTableDataChanged();
 				}
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
-				if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-					keyinfo.add(info);
-					save.setEnabled(true);
-				}
-			}
+			});
+			keyform.add(newkey, BorderLayout.PAGE_END);
+			JOptionPane.showOptionDialog(null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Back"}, 0);
 		});
 		JPanel cfg = new JPanel();
 		JPanel cbg = new JPanel();
@@ -764,7 +768,7 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v4.0, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v4.1, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
