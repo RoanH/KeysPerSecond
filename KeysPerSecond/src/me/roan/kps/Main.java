@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,6 +49,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
@@ -85,10 +88,6 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * @author Roan
  */
 public class Main {
-	/**
-	 * Last main loop update
-	 */
-	private static long last = System.currentTimeMillis();
 	/**
 	 * The number of seconds the average has
 	 * been calculated for
@@ -164,6 +163,10 @@ public class Main {
 	 * The factor to multiply the frame size with
 	 */
 	private static double sizeFactor = 1.0D;
+	/**
+	 * The right click menu
+	 */
+	protected static final JPopupMenu menu = new JPopupMenu();
 
 	/**
 	 * Main method
@@ -209,9 +212,9 @@ public class Main {
 	 * maximum keys per second
 	 */
 	private static final void mainLoop(){
-		while(true){
-			if(System.currentTimeMillis() - last >= timeframe){
-				last = System.currentTimeMillis();
+		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+	        @Override
+	        public void run() {
 				int totaltmp = tmp;
 				for(int i : timepoints){
 					totaltmp += i;
@@ -226,20 +229,15 @@ public class Main {
 				}
 				graph.addPoint(totaltmp);
 				graph.repaint();
+				content.repaint();
 				prev = totaltmp;
 				timepoints.addFirst(tmp);
 				if(timepoints.size() >= 1000 / timeframe){
 					timepoints.removeLast();
 				}
 				tmp = 0;
-			}
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			content.repaint();
-		}
+	        }
+	    }, 0, timeframe, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -1022,6 +1020,10 @@ public class Main {
 		 * For example: X
 		 */
 		protected final String name;
+		/**
+		 * The graphical display for this key
+		 */
+		private KeyPanel panel = null;
 
 		/**
 		 * Constructs a new Key object
@@ -1040,7 +1042,7 @@ public class Main {
 		 * @return A new KeyPanel
 		 */
 		private KeyPanel getPanel() {
-			return new KeyPanel(this);
+			return panel = new KeyPanel(this);
 		}
 
 		/**
@@ -1053,6 +1055,9 @@ public class Main {
 				count++;
 				down = true;
 				tmp++;
+				if(panel != null){
+					panel.repaint();
+				}
 			}
 		}
 
@@ -1061,6 +1066,9 @@ public class Main {
 		 */
 		private void keyReleased() {
 			down = false;
+			if(panel != null){
+				panel.repaint();
+			}
 		}
 	}
 
