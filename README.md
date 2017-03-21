@@ -30,10 +30,10 @@ And if you find any bugs feel free to report them.
 
 ## Notes
 - To clarify, you can add any key, and any number of keys to the program. So it can be used for any game mode.
-- The overlay option doesn't work on a Mac.
+- The overlay option doesn't work on a Mac nor does it work when the fullscreen option in osu! is enabled.
 - When changing the key order, the keys are ordered from lowest value to highest value (negative values & skipping indices is allowed).
 - To change a GUI colour in the colours menu, click on the current colour
-- An opacity of 1 means completely opaque and an opacity of 0 means completely transparent.
+- An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
 
 ## Updates
 2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
