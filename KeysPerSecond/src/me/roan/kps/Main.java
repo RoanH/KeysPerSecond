@@ -613,14 +613,14 @@ public class Main {
 			JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));	
 			JLabel lfg = new JLabel("Foreground colour: ");
 			JLabel lbg = new JLabel("Background colour: ");
-			JSpinner sbg = new JSpinner(new SpinnerNumberModel(ColorManager.opacitybg, 0.0D, 1.0D, 0.05D));
-			JSpinner sfg = new JSpinner(new SpinnerNumberModel(ColorManager.opacityfg, 0.0D, 1.0D, 0.05D));
+			JSpinner sbg = new JSpinner(new SpinnerNumberModel((int)(ColorManager.opacitybg * 100), 0, 100, 5));
+			JSpinner sfg = new JSpinner(new SpinnerNumberModel((int)(ColorManager.opacityfg * 100), 0, 100, 5));
 			sbg.setPreferredSize(new Dimension(sbg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
 			sfg.setPreferredSize(new Dimension(sfg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
 			JPanel spanelfg = new JPanel(new BorderLayout());
 			JPanel spanelbg = new JPanel(new BorderLayout());
-			spanelfg.add(new JLabel("Opacity (0~1): "), BorderLayout.LINE_START);
-			spanelbg.add(new JLabel("Opacity (0~1): "), BorderLayout.LINE_START);
+			spanelfg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
+			spanelbg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
 			spanelfg.add(sfg, BorderLayout.CENTER);
 			spanelbg.add(sbg, BorderLayout.CENTER);
 			cform.add(lfg);
@@ -633,8 +633,8 @@ public class Main {
 				cfg.setForeground(prevfg);
 				cbg.setForeground(prevbg);
 			}else{
-				ColorManager.opacitybg = (float)(double)sbg.getValue();
-				ColorManager.opacityfg = (float)(double)sfg.getValue();
+				ColorManager.opacitybg = (float)(double)((int)sbg.getValue() / 100.0D);
+				ColorManager.opacityfg = (float)(double)((int)sfg.getValue() / 100.0D);
 				save.setEnabled(true);
 			}
 		});
