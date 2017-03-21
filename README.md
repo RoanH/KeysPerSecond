@@ -48,7 +48,7 @@ And if you find any bugs feel free to report them.
 17 February 2017: Added support for transparent colours.<br>
 17 February 2017: Added automatic version checking & removed the decimal point for cur since cur is an integer.<br>
 18 February 2017: Added support for a variable size & added an icon to the window.<br>
-21 March 2017: Major performance improvements & change opacity settings to use a percentage.
+21 March 2017: Major performance improvements & change opacity settings to use a percentage.<br>
 21 March 2017: Made adding keys a little bit easier.
 
 ## Todo list / working on
