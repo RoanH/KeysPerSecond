@@ -58,6 +58,13 @@ public class GraphPanel extends JPanel{
 	 */
 	protected static int frames = 0;
 	
+	/**
+	 * Constructs a new GraphPanel
+	 */
+	protected GraphPanel(){
+		//this.setComponentPopupMenu(Main.menu);
+	}
+	
 	@Override
 	public void paintComponent(Graphics g1){
 		if(enabled){

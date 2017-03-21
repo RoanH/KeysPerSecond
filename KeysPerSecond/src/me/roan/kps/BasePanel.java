@@ -30,6 +30,7 @@ public abstract class BasePanel extends JPanel {
 	 */
 	protected BasePanel(){
 		this.setOpaque(!ColorManager.transparency);
+		//this.setComponentPopupMenu(Main.menu);
 	}
 
 	@Override
