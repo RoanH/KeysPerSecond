@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -124,7 +125,7 @@ public class Main {
 	/**
 	 * Key configuration data, can be serialised
 	 */
-	private static List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
+	protected static List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
 	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
@@ -133,7 +134,7 @@ public class Main {
 	/**
 	 * Graph panel
 	 */
-	private static GraphPanel graph = new GraphPanel();
+	protected static GraphPanel graph = new GraphPanel();
 	/**
 	 * Whether of not the frame forces itself to be the top window
 	 */
@@ -145,7 +146,7 @@ public class Main {
 	/**
 	 * The amount of milliseconds a single time frame takes
 	 */
-	private static int timeframe = 1000;
+	protected static int timeframe = 1000;
 	/**
 	 * Whether or not to track all key presses
 	 */
@@ -161,7 +162,7 @@ public class Main {
 	/**
 	 * The factor to multiply the frame size with
 	 */
-	private static double sizeFactor = 1.0D;
+	protected static double sizeFactor = 1.0D;
 	/**
 	 * The right click menu
 	 */
@@ -169,7 +170,7 @@ public class Main {
 
 	/**
 	 * Main method
-	 * @param args - No valid command line arguments for this program
+	 * @param args - configuration file path
 	 */
 	public static void main(String[] args) {
 		System.out.println("Control keys:");
@@ -180,6 +181,14 @@ public class Main {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
+		}
+		String config = null;
+		if(args.length >= 1){
+			config = args[0];
+			for(int i = 1; i < args.length; i++){
+				config += args[i];
+			}
+			System.out.println("Attempting to load config: " + config);
 		}
 		
 		//Make sure the native hook is always unregistered
@@ -198,7 +207,7 @@ public class Main {
 		setupKeyboardHook();
 		
 		//Set configuration for the keys
-		configure();
+		configure(config == null ? null : new File(config));
 		
 		//Enter the main loop
 		mainLoop();
@@ -319,7 +328,7 @@ public class Main {
 	 * existing configuration
 	 */
 	@SuppressWarnings("unchecked")
-	private static final void configure(){
+	private static final void configure(File cf){
 		JPanel form = new JPanel(new BorderLayout());
 		JPanel boxes = new JPanel(new GridLayout(8, 0));
 		JPanel labels = new JPanel(new GridLayout(8, 0));
@@ -676,65 +685,83 @@ public class Main {
 				}
 			}
 		});
-		load.addActionListener((e)->{
-			JFileChooser chooser = new JFileChooser();
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
-				return;
-			}
-			File saveloc = chooser.getSelectedFile();
-			try {
-				ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
-				keyinfo = (List<KeyInformation>) objin.readObject();
-				cmax.setSelected(objin.readBoolean());
-				ccur.setSelected(objin.readBoolean());
-				cavg.setSelected(objin.readBoolean());
-				cgra.setSelected(objin.readBoolean());
-				if(cgra.isSelected()){
-					graph.setEnabled(true);
-				}
-				GraphPanel.showAverage = objin.readBoolean();
-				GraphPanel.MAX = objin.readInt();
-				timeframe = objin.readInt();
-				double version = 3.0D;
-				if(objin.available() > 0){
-					ccol.setSelected(objin.readBoolean());
-					if(ccol.isSelected()){
-						color.setEnabled(true);
+		Callable<Boolean> loadAction = new Callable<Boolean>(){
+
+			@Override
+			public Boolean call() throws Exception {
+				File saveloc = cf;
+				if(cf == null){
+					JFileChooser chooser = new JFileChooser();
+					chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+						return false;
 					}
-					cbg.setBackground((Color)objin.readObject());
-					cfg.setBackground((Color)objin.readObject());
+					saveloc = chooser.getSelectedFile();
+				}
+				try {
+					ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
+					keyinfo = (List<KeyInformation>) objin.readObject();
+					cmax.setSelected(objin.readBoolean());
+					ccur.setSelected(objin.readBoolean());
+					cavg.setSelected(objin.readBoolean());
+					cgra.setSelected(objin.readBoolean());
+					if(cgra.isSelected()){
+						graph.setEnabled(true);
+					}
+					GraphPanel.showAverage = objin.readBoolean();
+					GraphPanel.MAX = objin.readInt();
+					timeframe = objin.readInt();
+					double version = 3.0D;
 					if(objin.available() > 0){
-						call.setSelected(objin.readBoolean());
-						ckey.setSelected(objin.readBoolean());
+						ccol.setSelected(objin.readBoolean());
+						if(ccol.isSelected()){
+							color.setEnabled(true);
+						}
+						cbg.setBackground((Color)objin.readObject());
+						cfg.setBackground((Color)objin.readObject());
 						if(objin.available() > 0){
-							version = objin.readDouble();
+							call.setSelected(objin.readBoolean());
+							ckey.setSelected(objin.readBoolean());
+							if(objin.available() > 0){
+								version = objin.readDouble();
+							}
 						}
 					}
-				}
-				if(version >= 3.9){
-					Main.precision = objin.readInt();
-				}
-				if(version >= 3.10){
-					ColorManager.opacitybg = objin.readFloat();
-					ColorManager.opacityfg = objin.readFloat();
-				}
-				if(version >= 4.0D){
-					sizeFactor = objin.readDouble();
-				}
-				objin.close();
-				save.setEnabled(true);
-				for(KeyInformation info : keyinfo){
-					if(version < 3.7D){
-						info.visible = true;
+					if(version >= 3.9){
+						Main.precision = objin.readInt();
 					}
-					if(info.index > KeyInformation.autoIndex){
-						KeyInformation.autoIndex = info.index + 1;
+					if(version >= 3.10){
+						ColorManager.opacitybg = objin.readFloat();
+						ColorManager.opacityfg = objin.readFloat();
 					}
+					if(version >= 4.0D){
+						sizeFactor = objin.readDouble();
+					}
+					objin.close();
+					save.setEnabled(true);
+					for(KeyInformation info : keyinfo){
+						if(version < 3.7D){
+							info.visible = true;
+						}
+						if(info.index > KeyInformation.autoIndex){
+							KeyInformation.autoIndex = info.index + 1;
+						}
+					}
+					if(cf == null){
+						JOptionPane.showMessageDialog(null, "Config succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+					}
+					return true;
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					return false;
 				}
-				JOptionPane.showMessageDialog(null, "Config succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			}
+		};
+		load.addActionListener((e)->{
+			try {
+				loadAction.call();
 			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
 			}
 		});
 		updaterate.addActionListener((e)->{
@@ -800,7 +827,17 @@ public class Main {
 			}
 		});
 		form.add(ver, BorderLayout.PAGE_END);
-		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
+		int option = 0;
+		if(cf == null){
+			option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
+		}else{
+			try {
+				option = loadAction.call() ? 0 : 1;
+			} catch (Exception e1) {
+				option = 1;
+				e1.printStackTrace();
+			}
+		}
 		if(1 == option || option == JOptionPane.CLOSED_OPTION){
 			try {
 				GlobalScreen.unregisterNativeHook();
@@ -832,7 +869,7 @@ public class Main {
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails the load its resources
 	 */
-	private static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
+	protected static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
 		SizeManager.scale(sizeFactor);
 		if(ColorManager.transparency){
@@ -1084,7 +1121,7 @@ public class Main {
 	 * loading of configurations
 	 * @author Roan
 	 */
-	private static final class KeyInformation implements Serializable{
+	protected static final class KeyInformation implements Serializable{
 		/**
 		 * Serial ID
 		 */
