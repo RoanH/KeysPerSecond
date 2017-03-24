@@ -670,11 +670,12 @@ public class Main {
 					objout.writeObject(cfg.getBackground());
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
-					objout.writeDouble(4.0D);//version
+					objout.writeDouble(4.2D);//XXX config version
 					objout.writeInt(Main.precision);//since 3.9
 					objout.writeFloat(ColorManager.opacitybg);//since 3.10
 					objout.writeFloat(ColorManager.opacityfg);//since 3.10
 					objout.writeDouble(sizeFactor);//since 3.12 / 4.0D
+					objout.writeBoolean(ctop.isSelected());//since 4.2
 					objout.flush();
 					objout.close();
 					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -735,6 +736,9 @@ public class Main {
 					if(version >= 4.0D){
 						sizeFactor = objin.readDouble();
 					}
+					if(version >= 4.2D){
+						ctop.setSelected(objin.readBoolean());
+					}
 					objin.close();
 					save.setEnabled(true);
 					for(KeyInformation info : keyinfo){
@@ -793,7 +797,7 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v4.1, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v4.2, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
