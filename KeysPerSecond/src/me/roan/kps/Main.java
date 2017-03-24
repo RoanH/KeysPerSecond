@@ -11,9 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -956,25 +954,6 @@ public class Main {
 		});
 		if(alwaysOnTop){
 			frame.setAlwaysOnTop(true);
-			frame.addWindowFocusListener(new WindowFocusListener(){
-
-				@Override
-				public void windowGainedFocus(WindowEvent e) {
-					e.getWindow().toFront();
-				}
-
-				@Override
-				public void windowLostFocus(WindowEvent e) {
-					e.getWindow().toFront();
-				}
-			});
-			frame.addWindowStateListener(new WindowStateListener(){
-
-				@Override
-				public void windowStateChanged(WindowEvent e) {
-					e.getWindow().toFront();
-				}
-			});
 		}
 		frame.addMouseMotionListener(new MouseMotionListener(){
 			/**
