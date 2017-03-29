@@ -171,6 +171,9 @@ public class Main {
 	 * @param args - configuration file path
 	 */
 	public static void main(String[] args) {
+		Runtime.getRuntime().load("C:\\Users\\Roan\\git\\KeysPerSecond\\KeysPerSecond\\native\\KeysPerSecond.dll");
+
+		
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
@@ -242,6 +245,7 @@ public class Main {
 					timepoints.removeLast();
 				}
 				tmp = 0;
+				toTop();
 	        }
 	    }, 0, timeframe, TimeUnit.MILLISECONDS);
 	}
@@ -1208,4 +1212,6 @@ public class Main {
 			}
 		}
 	}
+	
+	private static final native void toTop();
 }
