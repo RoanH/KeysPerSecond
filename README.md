@@ -10,7 +10,7 @@ I could however not find a program that worked on my computer so I decided to wr
 
 The program when active looks like this:<br>
 ![Interface](http://i.imgur.com/9cCzB0Q.png)
-![Menu](http://i.imgur.com/9joVhNK.png)
+![Menu](http://i.imgur.com/9joVhNK.png)<br>
 Accessible by right clicking on the program.
 
 For each configured key it shows how many times it is pressed. By default it also shows the maximum, average and current number of keys pressed per second.
