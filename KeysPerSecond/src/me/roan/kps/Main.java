@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -903,6 +905,17 @@ public class Main {
 			return;//don't create a GUI if there's nothing to display
 		}
 		
+		JMenuItem snap = new JMenuItem("Snap to edges");
+		snap.setForeground(ColorManager.foreground);
+		snap.addActionListener((e)->{
+			Point loc = frame.getLocationOnScreen();
+			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
+			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
+							  Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
+							  Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
+							  Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
+		});
+		
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.setForeground(ColorManager.foreground);
 		exit.addActionListener((e)->{
@@ -927,6 +940,7 @@ public class Main {
 			resetTotals();
 		});
 		
+		menu.add(snap);
 		menu.add(treset);
 		menu.add(sreset);
 		menu.add(pause);
