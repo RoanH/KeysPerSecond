@@ -55,7 +55,8 @@ public final class KeyPanel extends JPanel {
 	protected KeyPanel(Key key) {
 		this.key = key;
 		this.setOpaque(!ColorManager.transparency);
-		//this.setComponentPopupMenu(Main.menu);
+		this.setComponentPopupMenu(Main.menu);
+		this.addMouseMotionListener(Listener.INSTANCE);
 	}
 
 	@Override
