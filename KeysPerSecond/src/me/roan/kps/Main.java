@@ -6,10 +6,8 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
@@ -46,8 +44,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
@@ -71,13 +71,14 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * amount of keys pressed per second is
  * <pre>
  * Besides the tracking of the assigned keys
- * this program responds to 3 key events these are:
+ * this program responds to 5 key events these are:
  * <ol><li><b>Ctrl + P</b>: Causes the program to reset the average and maximum value
  * And to print the statistics to standard output
  * </li><li><b>Ctrl + O</b>: Terminates the program
  * </li><li><b>Ctrl + I</b>: Causes the program to reset the amount of times a key is pressed
  * And to print the statistics to standard output
- * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI</li></ol></pre>
+ * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI
+ * </li><li><b>Ctrl + T</b>: Pauses/resumes the counter</li></ol></pre>
  * The program also constantly prints the current keys per second to
  * the standard output.<br>
  * And key is only counted as being pressed if the key has been released before
@@ -156,7 +157,7 @@ public class Main {
 	/**
 	 * The program's main frame
 	 */
-	private static final JFrame frame = new JFrame("Keys per second");
+	protected static final JFrame frame = new JFrame("Keys per second");
 	/**
 	 * The factor to multiply the frame size with
 	 */
@@ -164,7 +165,11 @@ public class Main {
 	/**
 	 * The right click menu
 	 */
-	//protected static final JPopupMenu menu = new JPopupMenu();
+	protected static final JPopupMenu menu = new JPopupMenu();
+	/**
+	 * Whether or not the counter is paused
+	 */
+	private static boolean suspended = false;
 
 	/**
 	 * Main method
@@ -176,6 +181,7 @@ public class Main {
 		System.out.println("Ctrl + U: Terminates the program");
 		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
 		System.out.println("Ctrl + Y: Hides/shows the GUI");
+		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
@@ -221,27 +227,31 @@ public class Main {
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
 	        @Override
 	        public void run() {
-				int totaltmp = tmp;
-				for(int i : timepoints){
-					totaltmp += i;
-				}
-				if(totaltmp > max){
-					max = totaltmp;
-				}
-				if(totaltmp != 0){
-					avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
-					n++;
-					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
-				}
-				graph.addPoint(totaltmp);
-				graph.repaint();
-				content.repaint();
-				prev = totaltmp;
-				timepoints.addFirst(tmp);
-				if(timepoints.size() >= 1000 / timeframe){
-					timepoints.removeLast();
-				}
-				tmp = 0;
+	        	if(!suspended){
+	        		int totaltmp = tmp;
+					for(int i : timepoints){
+						totaltmp += i;
+					}
+					if(totaltmp > max){
+						max = totaltmp;
+					}
+					if(totaltmp != 0){
+						avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
+						n++;
+						System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
+					}
+					graph.addPoint(totaltmp);
+					graph.repaint();
+					content.repaint();
+					prev = totaltmp;
+					timepoints.addFirst(tmp);
+					if(timepoints.size() >= 1000 / timeframe){
+						timepoints.removeLast();
+					}
+					tmp = 0;
+	        	}else{
+	        		tmp = 0;
+	        	}
 	        }
 	    }, 0, timeframe, TimeUnit.MILLISECONDS);
 	}
@@ -277,31 +287,19 @@ public class Main {
 				if(trackAll && !keys.containsKey(event.getKeyCode())){
 					keys.put(event.getKeyCode(), new Key(NativeKeyEvent.getKeyText(lastevent.getKeyCode())));
 				}
-				if(keys.containsKey(event.getKeyCode())){
+				if(keys.containsKey(event.getKeyCode()) && !suspended){
 					keys.get(event.getKeyCode()).keyPressed();	
 				}
 				if(event.getKeyCode() == NativeKeyEvent.VC_P && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
-					System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
-					n = 0;
-					avg = 0;
-					max = 0;
-					tmp = 0;
+					resetStats();
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_U && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
-					try {
-						GlobalScreen.unregisterNativeHook();
-					} catch (NativeHookException e1) {
-						e1.printStackTrace();
-					}
-					System.exit(0);
+					exit();
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
-					System.out.print("Reset key counts | ");
-					for(Key k : keys.values()){
-						System.out.print(k.name + ":" + k.count + " ");
-						k.count = 0;
-					}
-					System.out.println();
+					resetTotals();
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					frame.setVisible(!frame.isVisible());
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_T && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+					suspended = !suspended;
 				}
 			}
 
@@ -797,7 +795,7 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v4.2, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v4.3, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
@@ -905,6 +903,38 @@ public class Main {
 			return;//don't create a GUI if there's nothing to display
 		}
 		
+		JMenuItem exit = new JMenuItem("Exit");
+		exit.setForeground(ColorManager.foreground);
+		exit.addActionListener((e)->{
+			exit();
+		});
+		
+		JMenuItem pause = new JMenuItem("Pause/resume");
+		pause.setForeground(ColorManager.foreground);
+		pause.addActionListener((e)->{
+			suspended = !suspended;
+		});
+		
+		JMenuItem sreset = new JMenuItem("Reset stats");
+		sreset.setForeground(ColorManager.foreground);
+		sreset.addActionListener((e)->{
+			resetStats();
+		});
+		
+		JMenuItem treset = new JMenuItem("Reset totals");
+		treset.setForeground(ColorManager.foreground);
+		treset.addActionListener((e)->{
+			resetTotals();
+		});
+		
+		menu.add(treset);
+		menu.add(sreset);
+		menu.add(pause);
+		menu.add(exit);
+		menu.setForeground(ColorManager.foreground);
+		menu.setBackground(ColorManager.background);
+		menu.setBorder(BorderFactory.createLineBorder(ColorManager.foreground));
+		
 		JPanel allcontent = new JPanel(new GridLayout((cgraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
 		allcontent.setOpaque(!ColorManager.transparency);
 		if(panels > 0){
@@ -959,33 +989,15 @@ public class Main {
 		if(alwaysOnTop){
 			frame.setAlwaysOnTop(true);
 		}
-		frame.addMouseMotionListener(new MouseMotionListener(){
-			/**
-			 * Previous location of the mouse on the screen
-			 */
-			private Point from = null;
-			
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				Point to = e.getPoint();
-				if(from == null){
-					from = to;
-					return;
-				}
-				JFrame dia = (JFrame)e.getSource();
-				Point at = dia.getLocation();
-				int x = at.x + (to.x - from.x);
-				int y = at.y + (to.y - from.y);
-				dia.setLocation(new Point(x, y));
-			}
-
-			@Override
-			public void mouseMoved(MouseEvent e) {
-			}
-		});
+		frame.addMouseMotionListener(Listener.INSTANCE);
 		frame.setVisible(true);
 	}
 	
+	/**
+	 * Check the KeysPerSecond version to see
+	 * if we are running the latest version
+	 * @return The latest version
+	 */
 	private static final String checkVersion(){
 		try{ 			
 			HttpURLConnection con = (HttpURLConnection) new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection(); 			
@@ -1014,9 +1026,44 @@ public class Main {
 			return "v" + max_main + "." + max_sub;
 		}catch(Exception e){ 	
 			return null;
-			//No internet acces or something else is wrong,
+			//No Internet access or something else is wrong,
 			//No problem though since this isn't a critical function
 		}
+	}
+	
+	/**
+	 * Shuts down the program
+	 */
+	private static final void exit(){
+		try {
+			GlobalScreen.unregisterNativeHook();
+		} catch (NativeHookException e1) {
+			e1.printStackTrace();
+		}
+		System.exit(0);
+	}
+	
+	/**
+	 * Reset avg, max & cur
+	 */
+	private static final void resetStats(){
+		System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
+		n = 0;
+		avg = 0;
+		max = 0;
+		tmp = 0;
+	}
+	
+	/**
+	 * Rest key count totals
+	 */
+	private static final void resetTotals(){
+		System.out.print("Reset key counts | ");
+		for(Key k : keys.values()){
+			System.out.print(k.name + ":" + k.count + " ");
+			k.count = 0;
+		}
+		System.out.println();
 	}
 
 //=================================================================================================
