@@ -10,6 +10,8 @@ I could however not find a program that worked on my computer so I decided to wr
 
 The program when active looks like this:<br>
 ![Interface](http://i.imgur.com/9cCzB0Q.png)
+![Menu](http://i.imgur.com/9joVhNK.png)
+Accessible by right clicking on the program.
 
 For each configured key it shows how many times it is pressed. By default it also shows the maximum, average and current number of keys pressed per second.
 When enabled it can also show a graph of the number of keys pressed per second over time. The horizontal line in the graph represents the average number of keys pressed per second.
@@ -22,7 +24,8 @@ Lastly, there are also some commands that can be sent to the program:<br>
 **Ctrl + P**: Causes the program to reset the average and maximum value.<br>
 **Ctrl + U**: Terminates the program.<br>
 **Ctrl + I**: Causes the program to reset the key press statistics.<br>
-**Ctrl + Y**: Shows / hides the GUI.
+**Ctrl + Y**: Shows / hides the GUI.<br>
+**Ctrl + T**: Pauses / resumes the counter.
 
 
 Well I hope some of you find this program usefull and/or will use it for your streams (I would love to see that happen  :) ).
@@ -49,18 +52,24 @@ And if you find any bugs feel free to report them.
 17 February 2017: Added automatic version checking & removed the decimal point for cur since cur is an integer.<br>
 18 February 2017: Added support for a variable size & added an icon to the window.<br>
 21 March 2017: Major performance improvements & change opacity settings to use a percentage.<br>
-21 March 2017: Made adding keys a little bit easier.
+21 March 2017: Made adding keys a little bit easier.<br>
+30 March 2017: Implemented a right click dialog, pause functionality & a snap to screen edge function.
+
 
 ## Todo list / working on
 - Option to display the song you are currently playing
-- Option to pass the config file via the command line
 - Option to change to command keys
+- Text based config
+- Remember config save location
+- Automatic config loading of some sort
+- Fix a bug where the program doesn't work when in a folder with a ! in it's name.
+- Mouse tracking?
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v4.1/KeysPerSecond-v4.1.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v4.1/KeysPerSecond-v4.1.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v4.3/KeysPerSecond-v4.3.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v4.3/KeysPerSecond-v4.3.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
