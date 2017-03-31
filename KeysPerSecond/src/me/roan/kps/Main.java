@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -178,6 +180,15 @@ public class Main {
 	 * @param args - configuration file path
 	 */
 	public static void main(String[] args) {
+		String config = null;
+		if(args.length >= 1){
+			config = args[0];
+			for(int i = 1; i < args.length; i++){
+				config += args[i];
+			}
+			System.out.println("Attempting to load config: " + config);
+		}
+		relaunchFromTemp(config);
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
@@ -187,14 +198,6 @@ public class Main {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
-		}
-		String config = null;
-		if(args.length >= 1){
-			config = args[0];
-			for(int i = 1; i < args.length; i++){
-				config += args[i];
-			}
-			System.out.println("Attempting to load config: " + config);
 		}
 		
 		//Make sure the native hook is always unregistered
@@ -797,7 +800,7 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v4.3, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v4.4, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
@@ -1080,6 +1083,76 @@ public class Main {
 			k.count = 0;
 		}
 		System.out.println();
+	}
+	
+	/**
+	 * Re-launches the program from the temp directory
+	 * if the program path contains a ! this fixes a
+	 * bug in the native library loading
+	 * @param args
+	 */
+	private static final void relaunchFromTemp(String args){
+		URL url = Main.class.getProtectionDomain().getCodeSource().getLocation(); 	
+		File exe; 	
+		try { 		 
+			exe = new File(url.toURI()); 	
+		} catch(URISyntaxException e) { 	
+			exe = new File(url.getPath()); 	
+		} 	
+		if(!exe.getAbsolutePath().contains("!")){
+			return;
+		}
+		File jvm = new File(System.getProperty("java.home") +  File.separator + "bin" + File.separator + "java.exe");
+		if(!jvm.exists() || !exe.exists()){
+			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
+			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			System.exit(0);
+		}
+		File tmp = null;
+		try {
+			tmp = File.createTempFile("kps", null);
+			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			tmp.deleteOnExit();
+			tmp.delete();
+			System.exit(0);
+		}
+		ProcessBuilder builder = new ProcessBuilder();
+		if(args != null){
+			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath(), args);
+		}else{
+			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath());
+		}
+		Process proc = null;
+		try {
+			proc = builder.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			tmp.deleteOnExit();
+			tmp.delete();
+			System.exit(0);
+		}		
+		BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		String line;
+		try {
+			while(proc.isAlive()){
+				while((line = in.readLine()) != null){
+					System.out.println(line);
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+			}
+		} catch (IOException e) {
+			System.err.print("Output stream chrashed :/");
+		}
+		tmp.deleteOnExit();
+		tmp.delete();
+		System.exit(0);
 	}
 
 //=================================================================================================
