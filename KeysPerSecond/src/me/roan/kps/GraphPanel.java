@@ -62,7 +62,7 @@ public class GraphPanel extends JPanel{
 	 * Constructs a new GraphPanel
 	 */
 	protected GraphPanel(){
-		this.setComponentPopupMenu(Main.menu);
+		this.addMouseListener(Listener.INSTANCE);
 		this.addMouseMotionListener(Listener.INSTANCE);
 	}
 	
