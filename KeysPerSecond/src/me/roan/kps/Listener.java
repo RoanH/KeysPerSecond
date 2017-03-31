@@ -50,7 +50,9 @@ public class Listener implements MouseMotionListener, MouseListener{
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		Main.menu.show(e.getComponent(), e.getX(), e.getY());
+		if(e.getButton() == MouseEvent.BUTTON3){
+			Main.menu.show(e.getComponent(), e.getX(), e.getY());
+		}
 	}
 
 	@Override
