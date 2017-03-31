@@ -66,6 +66,14 @@ public class GraphPanel extends JPanel{
 		this.addMouseMotionListener(Listener.INSTANCE);
 	}
 	
+	/**
+	 * Resets the graph
+	 */
+	protected final void reset(){
+		values.clear();
+		maxval = 1;
+	}
+	
 	@Override
 	public void paintComponent(Graphics g1){
 		if(enabled){

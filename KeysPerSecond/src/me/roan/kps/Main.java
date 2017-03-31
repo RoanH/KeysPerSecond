@@ -1067,6 +1067,7 @@ public class Main {
 		avg = 0;
 		max = 0;
 		tmp = 0;
+		graph.reset();
 	}
 	
 	/**
