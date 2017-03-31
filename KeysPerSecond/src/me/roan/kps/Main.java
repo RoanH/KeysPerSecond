@@ -879,6 +879,7 @@ public class Main {
 		}else{
 			content.setBackground(bg == null ? Color.BLACK : bg);
 		}
+		content.setComponentPopupMenu(menu);
 		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
 		int panels = 0;

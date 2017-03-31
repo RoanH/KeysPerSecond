@@ -2,13 +2,14 @@ package me.roan.kps;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
  * Listener for dragging the dialog
  * @author Roan
  */
-public class Listener implements MouseMotionListener{
+public class Listener implements MouseMotionListener, MouseListener{
 	/**
 	 * Previous location of the mouse on the screen
 	 */
@@ -33,5 +34,34 @@ public class Listener implements MouseMotionListener{
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		Main.menu.show(e.getComponent(), e.getX(), e.getY());
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
