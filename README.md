@@ -27,6 +27,7 @@ Lastly, there are also some commands that can be sent to the program:<br>
 **Ctrl + Y**: Shows / hides the GUI.<br>
 **Ctrl + T**: Pauses / resumes the counter.
 
+You can also move the program using the arrow keys this makes pixel perfect positioning possible :D .
 
 Well I hope some of you find this program usefull and/or will use it for your streams (I would love to see that happen  :) ).
 And if you find any bugs feel free to report them.
@@ -53,8 +54,8 @@ And if you find any bugs feel free to report them.
 18 February 2017: Added support for a variable size & added an icon to the window.<br>
 21 March 2017: Major performance improvements & change opacity settings to use a percentage.<br>
 21 March 2017: Made adding keys a little bit easier.<br>
-30 March 2017: Implemented a right click dialog, pause functionality & a snap to screen edge function.
-
+30 March 2017: Implemented a right click dialog, pause functionality & a snap to screen edge function.<br>
+31 March 2017: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.
 
 ## Todo list / working on
 - Option to display the song you are currently playing
@@ -68,8 +69,8 @@ And if you find any bugs feel free to report them.
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v4.3/KeysPerSecond-v4.3.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v4.3/KeysPerSecond-v4.3.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v4.4/KeysPerSecond-v4.4.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v4.4/KeysPerSecond-v4.4.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
