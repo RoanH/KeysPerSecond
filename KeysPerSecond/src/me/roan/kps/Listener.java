@@ -1,6 +1,9 @@
 package me.roan.kps;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -58,5 +61,42 @@ public class Listener implements MouseMotionListener, MouseListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {		
+	}
+	
+	static{
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher(){
+			/**
+			 * To prevent new heap allocations
+			 * on each event
+			 */
+			private Point tmp = new Point();
+			
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_LEFT:
+				case KeyEvent.VK_KP_LEFT:
+					Main.frame.getLocation(tmp);
+					Main.frame.setLocation(tmp.x - 1, tmp.y);
+					break;
+				case KeyEvent.VK_RIGHT:
+				case KeyEvent.VK_KP_RIGHT:
+					Main.frame.getLocation(tmp);
+					Main.frame.setLocation(tmp.x + 1, tmp.y);
+					break;
+				case KeyEvent.VK_UP:
+				case KeyEvent.VK_KP_UP:
+					Main.frame.getLocation(tmp);
+					Main.frame.setLocation(tmp.x, tmp.y - 1);
+					break;
+				case KeyEvent.VK_DOWN:
+				case KeyEvent.VK_KP_DOWN:
+					Main.frame.getLocation(tmp);
+					Main.frame.setLocation(tmp.x, tmp.y + 1);
+					break;
+				}
+				return false;
+			}
+		});
 	}
 }
