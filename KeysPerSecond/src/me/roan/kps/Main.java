@@ -774,7 +774,7 @@ public class Main {
 			info.add(new JLabel("Here you can change the rate at which"));
 			info.add(new JLabel("the graph, max, avg & cur are updated."));
 			JPanel config = new JPanel(new BorderLayout());
-			JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms"});
+			JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
 			update.setSelectedItem(timeframe + "ms");
 			update.setRenderer(new DefaultListCellRenderer(){
 				/**
@@ -787,6 +787,9 @@ public class Main {
 					Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 					if(((String)value).length() < 5 || ((String)value).equals("100ms")){
 						item.setForeground(Color.RED);
+					}
+					if(((String)value).length() < 4){
+						item.setForeground(Color.MAGENTA);
 					}
 					return item;
 				}

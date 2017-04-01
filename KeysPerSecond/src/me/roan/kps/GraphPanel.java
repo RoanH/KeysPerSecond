@@ -77,48 +77,54 @@ public class GraphPanel extends JPanel{
 	@Override
 	public void paintComponent(Graphics g1){
 		if(enabled){
-			Graphics2D g = (Graphics2D)g1;
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-			if(ColorManager.transparency){
-				g.setColor(ColorManager.transparent);
-				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacitybg));
-				g.setColor(ColorManager.background);
-				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
-			}else{
-				g.setColor(ColorManager.background);
-				g.fillRect(0, 0, this.getWidth(), this.getHeight());
-				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
-			}
-			Polygon poly = new Polygon();
-			poly.addPoint(this.getWidth() - SizeManager.graphOffset - 2, this.getHeight() - SizeManager.graphOffset);
-			for(int i = 1; i <= values.size(); i++){
-				int px = (int) (SizeManager.graphOffset + 2 + ((double)(this.getWidth() - SizeManager.graphOffset * 2 - 4) / (double)(MAX - 1)) * (MAX - i));
-				int py = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * ((float)values.get(i - 1) / (float)maxval)));
-				poly.addPoint(px, py);
-				if(i == values.size()){
-					poly.addPoint(px, this.getHeight() - SizeManager.graphOffset);
+			try{
+				Graphics2D g = (Graphics2D)g1;
+				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+				if(ColorManager.transparency){
+					g.setColor(ColorManager.transparent);
+					g.fillRect(0, 0, this.getWidth(), this.getHeight());
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacitybg));
+					g.setColor(ColorManager.background);
+					g.fillRect(0, 0, this.getWidth(), this.getHeight());
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
+				}else{
+					g.setColor(ColorManager.background);
+					g.fillRect(0, 0, this.getWidth(), this.getHeight());
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 				}
-			}
-			if(showAverage){
-				int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.avg / (float)maxval)));
-				g.setColor(ColorManager.foreground.darker());
-				g.setStroke(avgstroke);
-				g.drawLine(SizeManager.graphOffset + 2, y, this.getWidth() - SizeManager.graphOffset - 2, y);
-			}
-			g.setStroke(line);
-			g.setColor(ColorManager.alphaAqua);
-			g.fillPolygon(poly);
-			g.setColor(ColorManager.foreground);
-			g.drawPolygon(poly);
-			if(frames > 1){
-				g.drawImage(ColorManager.gleft, 3, 2, 2 + SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 42, 64, null);
-				g.drawImage(ColorManager.gmid, SizeManager.graphImageLeftRightWidth + 2, 2, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2), this.getHeight() - 2, 0, 0, 46, 64, null);
-				g.drawImage(ColorManager.gright, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2),2, this.getWidth() - 4, this.getHeight() - 2, 0, 0, 42, 64, null);
-			}else{
-				g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
+				Polygon poly = new Polygon();
+				poly.addPoint(this.getWidth() - SizeManager.graphOffset - 2, this.getHeight() - SizeManager.graphOffset);
+				for(int i = 1; i <= values.size(); i++){
+					int px = (int) (SizeManager.graphOffset + 2 + ((double)(this.getWidth() - SizeManager.graphOffset * 2 - 4) / (double)(MAX - 1)) * (MAX - i));
+					int py = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * ((float)values.get(i - 1) / (float)maxval)));
+					poly.addPoint(px, py);
+					if(i == values.size()){
+						poly.addPoint(px, this.getHeight() - SizeManager.graphOffset);
+					}
+				}
+				if(showAverage){
+					int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.avg / (float)maxval)));
+					g.setColor(ColorManager.foreground.darker());
+					g.setStroke(avgstroke);
+					g.drawLine(SizeManager.graphOffset + 2, y, this.getWidth() - SizeManager.graphOffset - 2, y);
+				}
+				g.setStroke(line);
+				g.setColor(ColorManager.alphaAqua);
+				g.fillPolygon(poly);
+				g.setColor(ColorManager.foreground);
+				g.drawPolygon(poly);
+				if(frames > 1){
+					g.drawImage(ColorManager.gleft, 3, 2, 2 + SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 42, 64, null);
+					g.drawImage(ColorManager.gmid, SizeManager.graphImageLeftRightWidth + 2, 2, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2), this.getHeight() - 2, 0, 0, 46, 64, null);
+					g.drawImage(ColorManager.gright, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2),2, this.getWidth() - 4, this.getHeight() - 2, 0, 0, 42, 64, null);
+				}else{
+					g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
+				}
+			}catch(NullPointerException e){
+				//catch but do not solve, this is caused by the race
+				//condition. However adding synchronisation would impact
+				//performance more then it is worth
 			}
 		}
 	}
