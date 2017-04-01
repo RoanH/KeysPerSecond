@@ -806,7 +806,7 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v4.4, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v4.5, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
