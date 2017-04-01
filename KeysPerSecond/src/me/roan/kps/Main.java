@@ -880,7 +880,7 @@ public class Main {
 	protected static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
 		SizeManager.scale(sizeFactor);
-		if(ColorManager.transparency){
+		if(ColorManager.transparency && ColorManager.opacitybg != 1.0F){
 			content.setOpaque(false);
 		}else{
 			content.setBackground(bg == null ? Color.BLACK : bg);
@@ -957,7 +957,7 @@ public class Main {
 		menu.setBorder(BorderFactory.createLineBorder(ColorManager.foreground));
 		
 		JPanel allcontent = new JPanel(new GridLayout((cgraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
-		allcontent.setOpaque(!ColorManager.transparency);
+		allcontent.setOpaque(ColorManager.opacitybg != 1.0F ? !ColorManager.transparency : true);
 		if(panels > 0){
 			allcontent.add(content);
 		}
