@@ -64,7 +64,6 @@ And if you find any bugs feel free to report them.
 - Text based config
 - Remember config save location
 - Automatic config loading of some sort
-- Fix a bug where the program doesn't work when in a folder with a ! in it's name.
 - Mouse tracking?
 
 ## Downloads (Java 8 required)
