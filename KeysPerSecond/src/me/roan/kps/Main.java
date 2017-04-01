@@ -60,6 +60,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -652,6 +653,7 @@ public class Main {
 		});
 		save.addActionListener((e)->{
 			JFileChooser chooser = new JFileChooser();
+			chooser.setFileFilter(new FileNameExtensionFilter("Keys per second", "kpsconf"));
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
 				return;
@@ -694,6 +696,7 @@ public class Main {
 				File saveloc = cf;
 				if(cf == null){
 					JFileChooser chooser = new JFileChooser();
+					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second", "kpsconf"));
 					chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 					if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
 						return false;
