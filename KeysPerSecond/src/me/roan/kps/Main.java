@@ -1114,6 +1114,10 @@ public class Main {
 		File tmp = null;
 		try {
 			tmp = File.createTempFile("kps", null);
+			if(tmp.getAbsolutePath().contains("!")){
+				JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+				System.exit(0);
+			}
 			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
