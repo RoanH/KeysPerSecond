@@ -26,7 +26,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -127,10 +126,6 @@ public class Main {
 	 */
 	private static NativeKeyEvent lastevent;
 	/**
-	 * Key configuration data, can be serialised
-	 */
-	protected static List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
-	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
@@ -140,33 +135,13 @@ public class Main {
 	 */
 	protected static GraphPanel graph = new GraphPanel();
 	/**
-	 * Whether of not the frame forces itself to be the top window
-	 */
-	private static boolean alwaysOnTop = false;
-	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
 	private static LinkedList<Integer> timepoints = new LinkedList<Integer>();
 	/**
-	 * The amount of milliseconds a single time frame takes
-	 */
-	protected static int timeframe = 1000;
-	/**
-	 * Whether or not to track all key presses
-	 */
-	private static boolean trackAll = false;
-	/**
-	 * How many digits to display for avg
-	 */
-	protected static int precision = 0;
-	/**
 	 * The program's main frame
 	 */
 	protected static final JFrame frame = new JFrame("Keys per second");
-	/**
-	 * The factor to multiply the frame size with
-	 */
-	protected static double sizeFactor = 1.0D;
 	/**
 	 * The right click menu
 	 */
@@ -175,6 +150,10 @@ public class Main {
 	 * Whether or not the counter is paused
 	 */
 	private static boolean suspended = false;
+	/**
+	 * The configuration
+	 */
+	protected static Configuration config = new Configuration();
 
 	/**
 	 * Main method
@@ -251,7 +230,7 @@ public class Main {
 					content.repaint();
 					prev = totaltmp;
 					timepoints.addFirst(tmp);
-					if(timepoints.size() >= 1000 / timeframe){
+					if(timepoints.size() >= 1000 / config.updateRate){
 						timepoints.removeLast();
 					}
 					tmp = 0;
@@ -259,7 +238,7 @@ public class Main {
 	        		tmp = 0;
 	        	}
 	        }
-	    }, 0, timeframe, TimeUnit.MILLISECONDS);
+	    }, 0, config.updateRate, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -290,7 +269,7 @@ public class Main {
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event) {
 				lastevent = event;
-				if(trackAll && !keys.containsKey(event.getKeyCode())){
+				if(config.trackAll && !keys.containsKey(event.getKeyCode())){
 					keys.put(event.getKeyCode(), new Key(NativeKeyEvent.getKeyText(lastevent.getKeyCode())));
 				}
 				if(keys.containsKey(event.getKeyCode()) && !suspended){
@@ -405,54 +384,54 @@ public class Main {
 		buttons.add(size);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
-		buttons.setBorder(BorderFactory.createTitledBorder("Config"));
+		buttons.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		JPanel all = new JPanel(new BorderLayout());
 		all.add(options, BorderLayout.LINE_START);
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
 		size.addActionListener((e)->{
-			JPanel config = new JPanel(new BorderLayout());
-			JSpinner s = new JSpinner(new SpinnerNumberModel(sizeFactor * 100, 50, 200, 1));
+			JPanel pconfig = new JPanel(new BorderLayout());
+			JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, 200, 1));
 			JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
 								   + "The precentage specifies how big the window is in<br>"
 								   + "comparison to the default size of the window.<html>");
-			config.add(info, BorderLayout.PAGE_START);
-			config.add(new JSeparator(), BorderLayout.CENTER);
+			pconfig.add(info, BorderLayout.PAGE_START);
+			pconfig.add(new JSeparator(), BorderLayout.CENTER);
 			JPanel line = new JPanel();
 			line.add(new JLabel("Size: "));
 			line.add(s);
 			line.add(new JLabel("%"));
-			config.add(line, BorderLayout.PAGE_END);
-			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			sizeFactor = ((double)s.getValue()) / 100.0D;
+			pconfig.add(line, BorderLayout.PAGE_END);
+			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			config.size = ((double)s.getValue()) / 100.0D;
 		});
 		precision.addActionListener((e)->{
-			JPanel config = new JPanel(new BorderLayout());
+			JPanel pconfig = new JPanel(new BorderLayout());
 			JLabel info1 = new JLabel("Specify how many digits should be displayed");
 			JLabel info2 = new JLabel("beyond the decimal point for the average.");
 			JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
 			plabels.add(info1);
 			plabels.add(info2);
 			JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
-			values.setSelectedIndex(Main.precision);
+			values.setSelectedIndex(config.precision);
 			JLabel vlabel = new JLabel("Precision: ");
 			JPanel pvalue = new JPanel(new BorderLayout());
 			pvalue.add(vlabel, BorderLayout.LINE_START);
 			pvalue.add(values, BorderLayout.CENTER);
-			config.add(plabels, BorderLayout.CENTER);
-			config.add(pvalue, BorderLayout.PAGE_END);
-			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			Main.precision = values.getSelectedIndex();
+			pconfig.add(plabels, BorderLayout.CENTER);
+			pconfig.add(pvalue, BorderLayout.PAGE_END);
+			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			config.precision = values.getSelectedIndex();
 			save.setEnabled(true);
 		});
 		graph.addActionListener((e)->{
-			JPanel config = new JPanel();
+			JPanel pconfig = new JPanel();
 			JSpinner backlog = new JSpinner(new SpinnerNumberModel(GraphPanel.MAX, 1, Integer.MAX_VALUE, 1));
 			JCheckBox showavg = new JCheckBox();
 			showavg.setSelected(GraphPanel.showAverage);
 			JLabel lbacklog;
-			if(timeframe != 1000){
-				lbacklog = new JLabel("Backlog (seconds / " + (1000 / timeframe) + "): ");
+			if(config.updateRate != 1000){
+				lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
 			}else{
 				lbacklog = new JLabel("Backlog (seconds): ");
 			}
@@ -465,9 +444,9 @@ public class Main {
 			gcomponents.add(showavg);
 			glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
 			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
-			config.add(glabels);
-			config.add(gcomponents);
-			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			pconfig.add(glabels);
+			pconfig.add(gcomponents);
+			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			GraphPanel.showAverage = showavg.isSelected();
 			GraphPanel.MAX = (int)backlog.getValue();
 			save.setEnabled(true);
@@ -484,7 +463,7 @@ public class Main {
 				
 				@Override
 				public int getRowCount() {
-					return keyinfo.size();
+					return config.keyinfo.size();
 				}
 
 				@Override
@@ -496,11 +475,11 @@ public class Main {
 				public Object getValueAt(int rowIndex, int columnIndex) {
 					switch(columnIndex){
 					case 0:
-						return keyinfo.get(rowIndex).index;
+						return config.keyinfo.get(rowIndex).index;
 					case 1:
-						return keyinfo.get(rowIndex).name;
+						return config.keyinfo.get(rowIndex).name;
 					case 2:
-						return keyinfo.get(rowIndex).visible;
+						return config.keyinfo.get(rowIndex).visible;
 					case 3:
 						return false;
 					}
@@ -539,15 +518,15 @@ public class Main {
 				public void setValueAt(Object value, int row, int col){
 					if(col == 0){
 						try{
-							keyinfo.get(row).index = Integer.parseInt((String)value);
+							config.keyinfo.get(row).index = Integer.parseInt((String)value);
 						}catch(NumberFormatException | NullPointerException e){
 							JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 						}
 					}else if(col == 2){
-						keyinfo.get(row).visible = (boolean)value;
+						config.keyinfo.get(row).visible = (boolean)value;
 					}else{
 						if((boolean)value == true){
-							keyinfo.remove(row);
+							config.keyinfo.remove(row);
 							keys.repaint();
 						}
 					}
@@ -567,7 +546,7 @@ public class Main {
 					}
 					KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
 					if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-						keyinfo.add(info);
+						config.keyinfo.add(info);
 						save.setEnabled(true);
 					}
 					model.fireTableDataChanged();
@@ -662,28 +641,28 @@ public class Main {
 			if(!saveloc.exists() || (saveloc.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
 				try {
 					ObjectOutputStream objout = new ObjectOutputStream(new FileOutputStream(saveloc));
-					objout.writeObject(keyinfo);
+					objout.writeObject(config.keyinfo);
 					objout.writeBoolean(cmax.isSelected());
 					objout.writeBoolean(ccur.isSelected());
 					objout.writeBoolean(cavg.isSelected());
 					objout.writeBoolean(cgra.isSelected());
 					objout.writeBoolean(GraphPanel.showAverage);
 					objout.writeInt(GraphPanel.MAX);
-					objout.writeInt(timeframe);
+					objout.writeInt(config.updateRate);
 					objout.writeBoolean(ccol.isSelected());
 					objout.writeObject(cbg.getBackground());
 					objout.writeObject(cfg.getBackground());
 					objout.writeBoolean(call.isSelected());
 					objout.writeBoolean(ckey.isSelected());
 					objout.writeDouble(4.2D);//XXX config version
-					objout.writeInt(Main.precision);//since 3.9
+					objout.writeInt(config.precision);//since 3.9
 					objout.writeFloat(ColorManager.opacitybg);//since 3.10
 					objout.writeFloat(ColorManager.opacityfg);//since 3.10
-					objout.writeDouble(sizeFactor);//since 3.12 / 4.0D
+					objout.writeDouble(config.size);//since 3.12 / 4.0D
 					objout.writeBoolean(ctop.isSelected());//since 4.2
 					objout.flush();
 					objout.close();
-					JOptionPane.showMessageDialog(null, "Config succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Configuration succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "Failed to save the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 				}
@@ -705,7 +684,7 @@ public class Main {
 				}
 				try {
 					ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
-					keyinfo = (List<KeyInformation>) objin.readObject();
+					config.keyinfo = (List<KeyInformation>) objin.readObject();
 					cmax.setSelected(objin.readBoolean());
 					ccur.setSelected(objin.readBoolean());
 					cavg.setSelected(objin.readBoolean());
@@ -715,7 +694,7 @@ public class Main {
 					}
 					GraphPanel.showAverage = objin.readBoolean();
 					GraphPanel.MAX = objin.readInt();
-					timeframe = objin.readInt();
+					config.updateRate = objin.readInt();
 					double version = 3.0D;
 					if(objin.available() > 0){
 						ccol.setSelected(objin.readBoolean());
@@ -733,21 +712,21 @@ public class Main {
 						}
 					}
 					if(version >= 3.9){
-						Main.precision = objin.readInt();
+						config.precision = objin.readInt();
 					}
 					if(version >= 3.10){
 						ColorManager.opacitybg = objin.readFloat();
 						ColorManager.opacityfg = objin.readFloat();
 					}
 					if(version >= 4.0D){
-						sizeFactor = objin.readDouble();
+						config.size = objin.readDouble();
 					}
 					if(version >= 4.2D){
 						ctop.setSelected(objin.readBoolean());
 					}
 					objin.close();
 					save.setEnabled(true);
-					for(KeyInformation info : keyinfo){
+					for(KeyInformation info : config.keyinfo){
 						if(version < 3.7D){
 							info.visible = true;
 						}
@@ -756,7 +735,7 @@ public class Main {
 						}
 					}
 					if(cf == null){
-						JOptionPane.showMessageDialog(null, "Config succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
 					}
 					return true;
 				} catch (Exception e1) {
@@ -776,9 +755,9 @@ public class Main {
 			JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
 			info.add(new JLabel("Here you can change the rate at which"));
 			info.add(new JLabel("the graph, max, avg & cur are updated."));
-			JPanel config = new JPanel(new BorderLayout());
+			JPanel pconfig = new JPanel(new BorderLayout());
 			JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
-			update.setSelectedItem(timeframe + "ms");
+			update.setSelectedItem(config.updateRate + "ms");
 			update.setRenderer(new DefaultListCellRenderer(){
 				/**
 				 * Serial ID
@@ -798,11 +777,11 @@ public class Main {
 				}
 			});
 			JLabel lupdate = new JLabel("Update rate: ");
-			config.add(info, BorderLayout.PAGE_START);
-			config.add(lupdate, BorderLayout.WEST);
-			config.add(update, BorderLayout.CENTER);
-			JOptionPane.showMessageDialog(null, config, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			timeframe = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
+			pconfig.add(info, BorderLayout.PAGE_START);
+			pconfig.add(lupdate, BorderLayout.WEST);
+			pconfig.add(update, BorderLayout.CENTER);
+			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
@@ -857,8 +836,8 @@ public class Main {
 			}
 			System.exit(0);
 		}
-		alwaysOnTop = ctop.isSelected();
-		trackAll = call.isSelected();
+		config.overlay = ctop.isSelected();
+		config.trackAll = call.isSelected();
 
 		//Build GUI
 		try {
@@ -882,17 +861,17 @@ public class Main {
 	 */
 	protected static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
 		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
-		SizeManager.scale(sizeFactor);
+		SizeManager.scale(config.size);
 		if(ColorManager.transparency && ColorManager.opacitybg != 1.0F){
 			content.setOpaque(false);
 		}else{
 			content.setBackground(bg == null ? Color.BLACK : bg);
 		}
 		content.setComponentPopupMenu(menu);
-		keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
+		config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
 		int panels = 0;
-		for(KeyInformation i : keyinfo){
+		for(KeyInformation i : config.keyinfo){
 			keys.put(i.keycode, k = new Key(i.name));
 			if(showKeys && i.visible){
 				content.add(k.getPanel());
@@ -1010,7 +989,7 @@ public class Main {
 			public void windowDeactivated(WindowEvent e) {				
 			}
 		});
-		if(alwaysOnTop){
+		if(config.overlay){
 			frame.setAlwaysOnTop(true);
 		}
 		frame.addMouseMotionListener(Listener.INSTANCE);
