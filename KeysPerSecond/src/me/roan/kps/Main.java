@@ -14,10 +14,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -25,8 +23,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -38,12 +38,14 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -627,42 +629,7 @@ public class Main {
 			}
 		});
 		save.addActionListener((e)->{
-			JFileChooser chooser = new JFileChooser();
-			chooser.setFileFilter(new FileNameExtensionFilter("Keys per second", "kpsconf"));
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
-				return;
-			};
-			File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf"));
-			if(!saveloc.exists() || (saveloc.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
-				try {
-					ObjectOutputStream objout = new ObjectOutputStream(new FileOutputStream(saveloc));
-					objout.writeObject(config.keyinfo);
-					objout.writeBoolean(cmax.isSelected());
-					objout.writeBoolean(ccur.isSelected());
-					objout.writeBoolean(cavg.isSelected());
-					objout.writeBoolean(cgra.isSelected());
-					objout.writeBoolean(Main.config.graphAvg);
-					objout.writeInt(Main.config.backlog);
-					objout.writeInt(config.updateRate);
-					objout.writeBoolean(ccol.isSelected());
-					objout.writeObject(cbg.getBackground());
-					objout.writeObject(cfg.getBackground());
-					objout.writeBoolean(call.isSelected());
-					objout.writeBoolean(ckey.isSelected());
-					objout.writeDouble(4.2D);//XXX config version
-					objout.writeInt(config.precision);//since 3.9
-					objout.writeFloat(config.opacitybg);//since 3.10
-					objout.writeFloat(config.opacityfg);//since 3.10
-					objout.writeDouble(config.size);//since 3.12 / 4.0D
-					objout.writeBoolean(ctop.isSelected());//since 4.2
-					objout.flush();
-					objout.close();
-					JOptionPane.showMessageDialog(null, "Configuration succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "Failed to save the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-				}
-			}
+			config.saveConfig();
 		});
 		Callable<Boolean> loadAction = new Callable<Boolean>(){
 
@@ -671,7 +638,7 @@ public class Main {
 				File saveloc = cf;
 				if(cf == null){
 					JFileChooser chooser = new JFileChooser();
-					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second", "kpsconf"));
+					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", " kpsconf2"));
 					chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 					if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
 						return false;
@@ -801,15 +768,24 @@ public class Main {
 		}
 		config.overlay = ctop.isSelected();
 		config.trackAll = call.isSelected();
+		config.showMax = cmax.isSelected();
+		config.showAvg = cavg.isSelected();
+		config.showCur = ccur.isSelected();
+		config.showGraph = cgra.isSelected();
+		if(config.customColors = ccol.isSelected()){
+			config.foreground = cfg.getBackground();
+			config.background = cbg.getBackground();
+		}
+		config.showKeys = ckey.isSelected();
 
 		//Build GUI
 		try {
-			buildGUI(cmax.isSelected(), cavg.isSelected(), ccur.isSelected(), cgra.isSelected(), ccol.isSelected() ? cfg.getBackground() : null, ccol.isSelected() ? cbg.getBackground() : null, ckey.isSelected());
+			buildGUI();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Builds the main GUI of the program
 	 * @param max Whether or not to display the maximum keys per second
@@ -822,13 +798,13 @@ public class Main {
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails the load its resources
 	 */
-	protected static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
-		ColorManager.prepareImages(cgraph, fg != null && bg != null);
+	protected static final void buildGUI() throws IOException {
+		ColorManager.prepareImages(config.showGraph, config.customColors);
 		SizeManager.scale(config.size);
 		if(ColorManager.transparency && config.opacitybg != 1.0F){
 			content.setOpaque(false);
 		}else{
-			content.setBackground(bg == null ? Color.BLACK : bg);
+			content.setBackground(config.background);
 		}
 		content.setComponentPopupMenu(menu);
 		config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
@@ -836,24 +812,24 @@ public class Main {
 		int panels = 0;
 		for(KeyInformation i : config.keyinfo){
 			keys.put(i.keycode, k = new Key(i.name));
-			if(showKeys && i.visible){
+			if(config.showKeys && i.visible){
 				content.add(k.getPanel());
 				panels++;
 			}
 		}
-		if(max){
+		if(config.showMax){
 			content.add(new MaxPanel());
 			panels++;
 		}
-		if(avg){
+		if(config.showAvg){
 			content.add(new AvgPanel());
 			panels++;
 		}
-		if(cur){
+		if(config.showCur){
 			content.add(new NowPanel());
 			panels++;
 		}
-		if(panels == 0 && !cgraph){
+		if(panels == 0 && !config.showGraph){
 			return;//don't create a GUI if there's nothing to display
 		}
 		
@@ -892,6 +868,39 @@ public class Main {
 			resetTotals();
 		});
 		
+		JMenu configure = new JMenu("Configure");
+		JMenu general = new JMenu("General");
+		
+		JMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
+		tAll.setSelected(config.trackAll);
+		tAll.addActionListener((e)->{
+			config.trackAll = tAll.isSelected();
+			Iterator<Entry<Integer, Key>> iter = keys.entrySet().iterator();
+			while(iter.hasNext()){
+				Entry<Integer, Key> key = iter.next();
+				for(KeyInformation info : config.keyinfo){
+					if(info.keycode == key.getKey()){
+						continue;
+					}
+				}
+				iter.remove();
+			}
+		});
+		
+		
+		JMenuItem overlay = new JCheckBoxMenuItem("Overlay osu!");
+		overlay.setSelected(config.overlay);
+		overlay.addActionListener((e)->{
+			config.overlay = overlay.isSelected();
+			frame.setAlwaysOnTop(config.overlay);
+		});
+		
+		general.add(overlay);
+		general.add(tAll);
+		
+		configure.add(general);
+		
+		menu.add(configure);
 		menu.add(snap);
 		menu.add(treset);
 		menu.add(sreset);
@@ -901,22 +910,22 @@ public class Main {
 		menu.setBackground(config.background);
 		menu.setBorder(BorderFactory.createLineBorder(config.foreground));
 		
-		JPanel allcontent = new JPanel(new GridLayout((cgraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
+		JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
 		allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
 		if(panels > 0){
 			allcontent.add(content);
 		}
-		if(cgraph){
+		if(config.showGraph){
 			allcontent.add(graph);
 			GraphPanel.frames = panels > 0 ? panels : 5;
 		}
-		frame.setSize((panels == 0 && cgraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (cgraph ? SizeManager.subComponentHeight : 0));
+		frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
 		frame.setResizable(false);
 		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
-		frame.setBackground(config.opacitybg != 1.0F ? new Color(bg.getRed(), bg.getGreen(), bg.getBlue(), config.opacitybg) : bg);
+		frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed(), config.background.getGreen(), config.background.getBlue(), config.opacitybg) : config.background);
 		frame.addWindowListener(new WindowListener(){
 
 			@Override
@@ -1214,7 +1223,7 @@ public class Main {
 		/**
 		 * Auto-increment for #index
 		 */
-		protected  static transient int autoIndex = 0; 
+		protected static transient int autoIndex = 0; 
 		/**
 		 * Whether or not this key is displayed
 		 */
@@ -1231,6 +1240,11 @@ public class Main {
 		private KeyInformation(String name, int code){
 			this.name = name.length() == 1 ? name.toUpperCase() : parseKeyString(name);
 			this.keycode = code;
+		}
+		
+		@Override
+		public String toString(){
+			return "[name=\"" + name + "\",keycode=" + keycode + ",index=" + index + ",visible=" + visible + "]";
 		}
 		
 		/**
