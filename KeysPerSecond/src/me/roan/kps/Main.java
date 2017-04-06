@@ -14,11 +14,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
@@ -28,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -308,7 +305,6 @@ public class Main {
 	 * option of saving or loading an
 	 * existing configuration
 	 */
-	@SuppressWarnings("unchecked")
 	private static final void configure(File cf){
 		JPanel form = new JPanel(new BorderLayout());
 		JPanel boxes = new JPanel(new GridLayout(8, 0));
@@ -426,9 +422,9 @@ public class Main {
 		});
 		graph.addActionListener((e)->{
 			JPanel pconfig = new JPanel();
-			JSpinner backlog = new JSpinner(new SpinnerNumberModel(GraphPanel.MAX, 1, Integer.MAX_VALUE, 1));
+			JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
 			JCheckBox showavg = new JCheckBox();
-			showavg.setSelected(GraphPanel.showAverage);
+			showavg.setSelected(Main.config.graphAvg);
 			JLabel lbacklog;
 			if(config.updateRate != 1000){
 				lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
@@ -447,8 +443,8 @@ public class Main {
 			pconfig.add(glabels);
 			pconfig.add(gcomponents);
 			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			GraphPanel.showAverage = showavg.isSelected();
-			GraphPanel.MAX = (int)backlog.getValue();
+			Main.config.graphAvg = showavg.isSelected();
+			Main.config.backlog = (int)backlog.getValue();
 			save.setEnabled(true);
 		});
 		addkey.addActionListener((e)->{
@@ -605,8 +601,8 @@ public class Main {
 			JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));	
 			JLabel lfg = new JLabel("Foreground colour: ");
 			JLabel lbg = new JLabel("Background colour: ");
-			JSpinner sbg = new JSpinner(new SpinnerNumberModel((int)(ColorManager.opacitybg * 100), 0, 100, 5));
-			JSpinner sfg = new JSpinner(new SpinnerNumberModel((int)(ColorManager.opacityfg * 100), 0, 100, 5));
+			JSpinner sbg = new JSpinner(new SpinnerNumberModel((int)(config.opacitybg * 100), 0, 100, 5));
+			JSpinner sfg = new JSpinner(new SpinnerNumberModel((int)(config.opacityfg * 100), 0, 100, 5));
 			sbg.setPreferredSize(new Dimension(sbg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
 			sfg.setPreferredSize(new Dimension(sfg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
 			JPanel spanelfg = new JPanel(new BorderLayout());
@@ -625,8 +621,8 @@ public class Main {
 				cfg.setForeground(prevfg);
 				cbg.setForeground(prevbg);
 			}else{
-				ColorManager.opacitybg = (float)(double)((int)sbg.getValue() / 100.0D);
-				ColorManager.opacityfg = (float)(double)((int)sfg.getValue() / 100.0D);
+				config.opacitybg = (float)(double)((int)sbg.getValue() / 100.0D);
+				config.opacityfg = (float)(double)((int)sfg.getValue() / 100.0D);
 				save.setEnabled(true);
 			}
 		});
@@ -646,8 +642,8 @@ public class Main {
 					objout.writeBoolean(ccur.isSelected());
 					objout.writeBoolean(cavg.isSelected());
 					objout.writeBoolean(cgra.isSelected());
-					objout.writeBoolean(GraphPanel.showAverage);
-					objout.writeInt(GraphPanel.MAX);
+					objout.writeBoolean(Main.config.graphAvg);
+					objout.writeInt(Main.config.backlog);
 					objout.writeInt(config.updateRate);
 					objout.writeBoolean(ccol.isSelected());
 					objout.writeObject(cbg.getBackground());
@@ -656,8 +652,8 @@ public class Main {
 					objout.writeBoolean(ckey.isSelected());
 					objout.writeDouble(4.2D);//XXX config version
 					objout.writeInt(config.precision);//since 3.9
-					objout.writeFloat(ColorManager.opacitybg);//since 3.10
-					objout.writeFloat(ColorManager.opacityfg);//since 3.10
+					objout.writeFloat(config.opacitybg);//since 3.10
+					objout.writeFloat(config.opacityfg);//since 3.10
 					objout.writeDouble(config.size);//since 3.12 / 4.0D
 					objout.writeBoolean(ctop.isSelected());//since 4.2
 					objout.flush();
@@ -682,66 +678,33 @@ public class Main {
 					}
 					saveloc = chooser.getSelectedFile();
 				}
-				try {
-					ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
-					config.keyinfo = (List<KeyInformation>) objin.readObject();
-					cmax.setSelected(objin.readBoolean());
-					ccur.setSelected(objin.readBoolean());
-					cavg.setSelected(objin.readBoolean());
-					cgra.setSelected(objin.readBoolean());
-					if(cgra.isSelected()){
-						graph.setEnabled(true);
-					}
-					GraphPanel.showAverage = objin.readBoolean();
-					GraphPanel.MAX = objin.readInt();
-					config.updateRate = objin.readInt();
-					double version = 3.0D;
-					if(objin.available() > 0){
-						ccol.setSelected(objin.readBoolean());
-						if(ccol.isSelected()){
-							color.setEnabled(true);
-						}
-						cbg.setBackground((Color)objin.readObject());
-						cfg.setBackground((Color)objin.readObject());
-						if(objin.available() > 0){
-							call.setSelected(objin.readBoolean());
-							ckey.setSelected(objin.readBoolean());
-							if(objin.available() > 0){
-								version = objin.readDouble();
-							}
-						}
-					}
-					if(version >= 3.9){
-						config.precision = objin.readInt();
-					}
-					if(version >= 3.10){
-						ColorManager.opacitybg = objin.readFloat();
-						ColorManager.opacityfg = objin.readFloat();
-					}
-					if(version >= 4.0D){
-						config.size = objin.readDouble();
-					}
-					if(version >= 4.2D){
-						ctop.setSelected(objin.readBoolean());
-					}
-					objin.close();
-					save.setEnabled(true);
-					for(KeyInformation info : config.keyinfo){
-						if(version < 3.7D){
-							info.visible = true;
-						}
-						if(info.index > KeyInformation.autoIndex){
-							KeyInformation.autoIndex = info.index + 1;
-						}
-					}
-					if(cf == null){
-						JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-					}
-					return true;
-				} catch (Exception e1) {
+				Configuration toLoad = new Configuration();
+				if((toLoad.loadConfig(saveloc))){
+					config = toLoad;
+					JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				}else{
 					JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 					return false;
 				}
+				
+				cmax.setSelected(config.showMax);
+				ccur.setSelected(config.showCur);
+				cavg.setSelected(config.showAvg);
+				cgra.setSelected(config.showGraph);
+				if(config.showGraph){
+					graph.setEnabled(true);
+				}
+				ccol.setSelected(config.customColors);
+				if(config.customColors){
+					color.setEnabled(true);
+				}
+				cbg.setBackground(config.background);
+				cfg.setBackground(config.foreground);
+				call.setSelected(config.trackAll);
+				ckey.setSelected(config.showKeys);
+				ctop.setSelected(config.overlay);
+				save.setEnabled(true);
+				return true;
 			}
 		};
 		load.addActionListener((e)->{
@@ -860,9 +823,9 @@ public class Main {
 	 *         when the program fails the load its resources
 	 */
 	protected static final void buildGUI(boolean max, boolean avg, boolean cur, boolean cgraph, Color fg, Color bg, boolean showKeys) throws IOException {
-		ColorManager.prepareImages(fg, bg, cgraph, fg != null && bg != null);
+		ColorManager.prepareImages(cgraph, fg != null && bg != null);
 		SizeManager.scale(config.size);
-		if(ColorManager.transparency && ColorManager.opacitybg != 1.0F){
+		if(ColorManager.transparency && config.opacitybg != 1.0F){
 			content.setOpaque(false);
 		}else{
 			content.setBackground(bg == null ? Color.BLACK : bg);
@@ -895,7 +858,7 @@ public class Main {
 		}
 		
 		JMenuItem snap = new JMenuItem("Snap to edges");
-		snap.setForeground(ColorManager.foreground);
+		snap.setForeground(config.foreground);
 		snap.addActionListener((e)->{
 			Point loc = frame.getLocationOnScreen();
 			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
@@ -906,25 +869,25 @@ public class Main {
 		});
 		
 		JMenuItem exit = new JMenuItem("Exit");
-		exit.setForeground(ColorManager.foreground);
+		exit.setForeground(config.foreground);
 		exit.addActionListener((e)->{
 			exit();
 		});
 		
 		JMenuItem pause = new JMenuItem("Pause/resume");
-		pause.setForeground(ColorManager.foreground);
+		pause.setForeground(config.foreground);
 		pause.addActionListener((e)->{
 			suspended = !suspended;
 		});
 		
 		JMenuItem sreset = new JMenuItem("Reset stats");
-		sreset.setForeground(ColorManager.foreground);
+		sreset.setForeground(config.foreground);
 		sreset.addActionListener((e)->{
 			resetStats();
 		});
 		
 		JMenuItem treset = new JMenuItem("Reset totals");
-		treset.setForeground(ColorManager.foreground);
+		treset.setForeground(config.foreground);
 		treset.addActionListener((e)->{
 			resetTotals();
 		});
@@ -934,12 +897,12 @@ public class Main {
 		menu.add(sreset);
 		menu.add(pause);
 		menu.add(exit);
-		menu.setForeground(ColorManager.foreground);
-		menu.setBackground(ColorManager.background);
-		menu.setBorder(BorderFactory.createLineBorder(ColorManager.foreground));
+		menu.setForeground(config.foreground);
+		menu.setBackground(config.background);
+		menu.setBorder(BorderFactory.createLineBorder(config.foreground));
 		
 		JPanel allcontent = new JPanel(new GridLayout((cgraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
-		allcontent.setOpaque(ColorManager.opacitybg != 1.0F ? !ColorManager.transparency : true);
+		allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
 		if(panels > 0){
 			allcontent.add(content);
 		}
@@ -953,7 +916,7 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
-		frame.setBackground(ColorManager.opacitybg != 1.0F ? new Color(bg.getRed(), bg.getGreen(), bg.getBlue(), ColorManager.opacitybg) : bg);
+		frame.setBackground(config.opacitybg != 1.0F ? new Color(bg.getRed(), bg.getGreen(), bg.getBlue(), config.opacitybg) : bg);
 		frame.addWindowListener(new WindowListener(){
 
 			@Override
@@ -1247,15 +1210,15 @@ public class Main {
 		/**
 		 * Index of the key
 		 */
-		private int index = autoIndex++;
+		protected int index = autoIndex++;
 		/**
 		 * Auto-increment for #index
 		 */
-		private static transient int autoIndex = 0; 
+		protected  static transient int autoIndex = 0; 
 		/**
 		 * Whether or not this key is displayed
 		 */
-		private boolean visible = true;
+		protected boolean visible = true;
 		
 		/**
 		 * Constructs a new KeyInformation

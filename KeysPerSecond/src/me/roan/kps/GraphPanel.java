@@ -25,18 +25,10 @@ public class GraphPanel extends JPanel{
 	 */
 	private LinkedList<Integer> values = new LinkedList<Integer>();
 	/**
-	 * Number of points the graph consists of
-	 */
-	protected static int MAX = 30;
-	/**
 	 * Highest encountered value used as the
 	 * upper bound of the graph
 	 */
 	private int maxval = 1;
-	/**
-	 * Draw the horizontal average line
-	 */
-	protected static boolean showAverage = true;
 	/**
 	 * Stroke used to draw the graph
 	 */
@@ -84,35 +76,35 @@ public class GraphPanel extends JPanel{
 				if(ColorManager.transparency){
 					g.setColor(ColorManager.transparent);
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacitybg));
-					g.setColor(ColorManager.background);
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.opacitybg));
+					g.setColor(Main.config.background);
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.opacityfg));
 				}else{
-					g.setColor(ColorManager.background);
+					g.setColor(Main.config.background);
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
 					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 				}
 				Polygon poly = new Polygon();
 				poly.addPoint(this.getWidth() - SizeManager.graphOffset - 2, this.getHeight() - SizeManager.graphOffset);
 				for(int i = 1; i <= values.size(); i++){
-					int px = (int) (SizeManager.graphOffset + 2 + ((double)(this.getWidth() - SizeManager.graphOffset * 2 - 4) / (double)(MAX - 1)) * (MAX - i));
+					int px = (int) (SizeManager.graphOffset + 2 + ((double)(this.getWidth() - SizeManager.graphOffset * 2 - 4) / (double)(Main.config.backlog - 1)) * (Main.config.backlog - i));
 					int py = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * ((float)values.get(i - 1) / (float)maxval)));
 					poly.addPoint(px, py);
 					if(i == values.size()){
 						poly.addPoint(px, this.getHeight() - SizeManager.graphOffset);
 					}
 				}
-				if(showAverage){
+				if(Main.config.graphAvg){
 					int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.avg / (float)maxval)));
-					g.setColor(ColorManager.foreground.darker());
+					g.setColor(Main.config.foreground.darker());
 					g.setStroke(avgstroke);
 					g.drawLine(SizeManager.graphOffset + 2, y, this.getWidth() - SizeManager.graphOffset - 2, y);
 				}
 				g.setStroke(line);
 				g.setColor(ColorManager.alphaAqua);
 				g.fillPolygon(poly);
-				g.setColor(ColorManager.foreground);
+				g.setColor(Main.config.foreground);
 				g.drawPolygon(poly);
 				if(frames > 1){
 					g.drawImage(ColorManager.gleft, 3, 2, 2 + SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 42, 64, null);
@@ -139,7 +131,7 @@ public class GraphPanel extends JPanel{
 				maxval = value;
 			}
 			values.addFirst(value);
-			if(values.size() > MAX){
+			if(values.size() > Main.config.backlog){
 				values.removeLast();
 			}
 		}
