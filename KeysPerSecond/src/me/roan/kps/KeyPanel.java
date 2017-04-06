@@ -63,23 +63,23 @@ public final class KeyPanel extends JPanel {
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
 		if(ColorManager.transparency){
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacitybg));
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.opacitybg));
 			g.setColor(ColorManager.transparent);
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		}
-		if(ColorManager.opacitybg == 1.0F){
-			g.setColor(ColorManager.background);
+		if(Main.config.opacitybg == 1.0F){
+			g.setColor(Main.config.background);
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		}
 		if(ColorManager.transparency){
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ColorManager.opacityfg));
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.opacityfg));
 		}
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, this);
 		if (key.down) {
 			g.drawImage(ColorManager.pressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, this);
 		}else{
-			g.setColor(ColorManager.foreground);
+			g.setColor(Main.config.foreground);
 		}
 		if(key.name.length() == 1){
 			g.setFont(font1);

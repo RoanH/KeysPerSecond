@@ -38,14 +38,6 @@ public class ColorManager {
 	 */
 	protected static Image gmid = null;
 	/**
-	 * Foreground color
-	 */
-	protected static Color foreground;
-	/**
-	 * Background color
-	 */
-	protected static Color background;
-	/**
 	 * Color used to fill the area underneath the graph
 	 */
 	protected static Color alphaAqua;
@@ -57,32 +49,20 @@ public class ColorManager {
 	 * Transparent color
 	 */
 	protected static final Color transparent = new Color(0.0F, 0.0F, 0.0F, 0.0F);
-	/**
-	 * Foreground opacity in case transparency is enabled
-	 */
-	protected static float opacityfg = 1.0F;
-	/**
-	 * Background opacity in case transparency is enabled
-	 */
-	protected static float opacitybg = 1.0F;
 
 	/**
 	 * Prepares the colours and images
 	 * used by the program.
-	 * @param front The foreground colour of the GUI
-	 * @param back The background colour of the GUI
 	 * @param graph Whether or not to load resources for the graph
 	 * @param custom Whether or not the supplied colours are custom colours
 	 * @throws IOException When an IOException occurs
 	 */
-	public static final void prepareImages(Color front, Color back, boolean graph, boolean custom) throws IOException{
+	public static final void prepareImages(boolean graph, boolean custom) throws IOException{
 		if(custom){
-			if(opacityfg != 1.0F || opacitybg != 1.0F){
+			if(Main.config.opacityfg != 1.0F || Main.config.opacitybg != 1.0F){
 				transparency = true;
 			}
-			foreground = front;
-			background = back;
-			alphaAqua = new Color(front.getRed(), front.getGreen(), front.getBlue(), 51);
+			alphaAqua = new Color(Main.config.foreground.getRed(), Main.config.foreground.getGreen(), Main.config.foreground.getBlue(), 51);
 			pressed = dye(ImageIO.read(ClassLoader.getSystemResource("hit.png")));
 			unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key.png")));
 			if(graph){
@@ -91,8 +71,6 @@ public class ColorManager {
 				gmid = dye(ImageIO.read(ClassLoader.getSystemResource("graphmiddle.png")));
 			}
 		}else{
-			foreground = Color.CYAN;
-			background = Color.BLACK;
 			alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
 			pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 			unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
@@ -115,7 +93,7 @@ public class ColorManager {
 	private static final Image dye(BufferedImage img){
 		for(int x = 0; x < img.getWidth(); x++){
 			for(int y = 0; y < img.getHeight(); y++){
-				img.setRGB(x, y, repaintPixel(img.getRGB(x, y), foreground));
+				img.setRGB(x, y, repaintPixel(img.getRGB(x, y), Main.config.foreground));
 			}
 		}
 		return img;
