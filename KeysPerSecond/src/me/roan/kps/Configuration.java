@@ -1,9 +1,12 @@
 package me.roan.kps;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -85,11 +88,75 @@ public class Configuration {
 	 */
 	protected double size = 1.0D;
 
-	protected final boolean loadConfig(File saveloc){
+	protected final boolean loadConfig(File saveloc) throws IOException{
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			return loadLegacyFormat(saveloc);
 		}else{
-			//TODO new format
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc)));
+			String line;
+			while((line = in.readLine()) != null){
+				if(line.startsWith("#") || line.isEmpty()){
+					continue;
+				}
+				String[] args = line.replace(" ", "").split(":");
+				switch(args[0]){
+				case "showMax":
+					showMax = Boolean.parseBoolean(args[1]);
+					break;
+				case "showAvg":
+					showAvg = Boolean.parseBoolean(args[1]);
+					break;
+				case "showCur":
+
+					break;
+				case "showKeys":
+
+					break;
+				case "overlay":
+
+					break;
+				case "trackAllKeys":
+
+					break;
+				case "updateRate":
+
+					break;
+				case "precision":
+
+					break;
+				case "size":
+
+					break;
+				case "graphEnabled":
+
+					break;
+				case "graphBacklog":
+
+					break;
+				case "graphAverage":
+
+					break;
+				case "customColors":
+
+					break;
+				case "foregroundColor":
+
+					break;
+				case "backgroundColor":
+
+					break;
+				case "foregroundOpacity":
+
+					break;
+				case "backgroundOpacity":
+
+					break;
+				case "Keys":
+
+					break;
+				}
+			}
+			in.close();
 			return false;
 		}
 	}
@@ -178,8 +245,8 @@ public class Configuration {
 				out.println();
 				out.println("# Colors");
 				out.println("customColors: " + customColors);
-				out.println("foregroundColor: [r=" + foreground.getRed() + ", g=" + foreground.getGreen() + ",b=" + foreground.getBlue() + "]");
-				out.println("backgroundColor: [r=" + background.getRed() + ", g=" + background.getGreen() + ",b=" + background.getBlue() + "]");
+				out.println("foregroundColor: [r=" + foreground.getRed() + ",g=" + foreground.getGreen() + ",b=" + foreground.getBlue() + "]");
+				out.println("backgroundColor: [r=" + background.getRed() + ",g=" + background.getGreen() + ",b=" + background.getBlue() + "]");
 				out.println("foregroundOpacity: " + opacityfg);
 				out.println("backgroundOpacity: " + opacitybg);
 				out.println();
