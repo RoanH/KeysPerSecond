@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
@@ -88,10 +87,16 @@ public class Configuration {
 	 */
 	protected double size = 1.0D;
 
-	protected final boolean loadConfig(File saveloc) throws IOException{
+	protected final boolean loadConfig(File saveloc){
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			return loadLegacyFormat(saveloc);
 		}else{
+			return loadNewFormat(saveloc);
+		}
+	}
+	
+	private final boolean loadNewFormat(File saveloc){
+		try{
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc)));
 			String line;
 			while((line = in.readLine()) != null){
@@ -99,6 +104,11 @@ public class Configuration {
 					continue;
 				}
 				String[] args = line.replace(" ", "").split(":");
+				if(args[0].startsWith("keys")){
+					while((line = in.readLine()) != null && (line = line.replace(" ", "")).startsWith("-")){
+						keyinfo.add(parseKey(line.substring(1)));
+					}
+				}
 				switch(args[0]){
 				case "showMax":
 					showMax = Boolean.parseBoolean(args[1]);
@@ -107,58 +117,108 @@ public class Configuration {
 					showAvg = Boolean.parseBoolean(args[1]);
 					break;
 				case "showCur":
-
+					showCur = Boolean.parseBoolean(args[1]);
 					break;
 				case "showKeys":
-
+					showKeys = Boolean.parseBoolean(args[1]);
 					break;
 				case "overlay":
-
+					overlay = Boolean.parseBoolean(args[1]);
 					break;
 				case "trackAllKeys":
-
+					trackAll = Boolean.parseBoolean(args[1]);
 					break;
 				case "updateRate":
-
+					updateRate = Integer.parseInt(args[1]);
+					if(1000 % updateRate != 0){
+						throw new IllegalArgumentException("Update rate must conform to: 1000 mod updateRate = 0");
+					}
 					break;
 				case "precision":
-
+					precision = Integer.parseInt(args[1]);
 					break;
 				case "size":
-
+					size = Double.parseDouble(args[1]);
 					break;
 				case "graphEnabled":
-
+					showGraph = Boolean.parseBoolean(args[1]);
 					break;
 				case "graphBacklog":
-
+					backlog = Integer.parseInt(args[1]);
 					break;
 				case "graphAverage":
-
+					graphAvg = Boolean.parseBoolean(args[1]);
 					break;
 				case "customColors":
-
+					customColors = Boolean.parseBoolean(args[1]);
 					break;
 				case "foregroundColor":
-
+					foreground = parseColor(args[1]);
 					break;
 				case "backgroundColor":
-
+					background = parseColor(args[1]);
 					break;
 				case "foregroundOpacity":
-
+					opacityfg = Float.parseFloat(args[1]);
 					break;
 				case "backgroundOpacity":
-
-					break;
-				case "Keys":
-
+					opacitybg = Float.parseFloat(args[1]);
 					break;
 				}
 			}
 			in.close();
+			return true;
+		}catch(Throwable t){
+			t.printStackTrace();
 			return false;
 		}
+	}
+	
+	private final KeyInformation parseKey(String arg){
+		String[] args = arg.substring(1, arg.length() - 1).split(",", 4);
+		String name = null;
+		int index = -1;
+		int code = -1;
+		boolean visible = false;
+		for(String str : args){
+			String[] comp = str.split("=", 2);
+			switch(comp[0]){
+			case "keycode":
+				code = Integer.parseInt(comp[1]);
+				break;
+			case "index":
+				index = Integer.parseInt(comp[1]);
+				break;
+			case "visible":
+				visible = Boolean.parseBoolean(comp[1]);
+				break;
+			case "name":
+				name = comp[1].substring(1, comp[1].length() - 1);
+				break;
+			}
+		}
+		return new KeyInformation(name, code, visible, index);
+	}
+
+	private final Color parseColor(String arg){
+		String[] rgb = arg.substring(1, arg.length() - 1).split(",");
+		int r, g, b;
+		r = g = b = 0;
+		for(String c : rgb){
+			String[] comp = c.split("=");
+			switch(comp[0]){
+			case "r":
+				r = Integer.parseInt(comp[1]);
+				break;
+			case "g":
+				g= Integer.parseInt(comp[1]);
+				break;
+			case "b":
+				b = Integer.parseInt(comp[1]);
+				break;
+			}
+		}
+		return new Color(r, g, b);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -216,7 +276,7 @@ public class Configuration {
 
 	protected final void saveConfig(){
 		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", " kpsconf2"));
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", "kpsconf2"));
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
 			return;

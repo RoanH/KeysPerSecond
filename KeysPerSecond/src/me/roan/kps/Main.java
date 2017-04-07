@@ -638,7 +638,7 @@ public class Main {
 				File saveloc = cf;
 				if(cf == null){
 					JFileChooser chooser = new JFileChooser();
-					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", " kpsconf2"));
+					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", "kpsconf2"));
 					chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 					if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
 						return false;
@@ -1242,9 +1242,26 @@ public class Main {
 			this.keycode = code;
 		}
 		
+		/**
+		 * Constructs a new KeyInformation
+		 * object with the given information
+		 * @param name The name of the key
+		 * @param code The virtual key code of the key
+		 * @param visible Whether or not the key is visible
+		 * @param index The key index
+		 * @see #name
+		 * @see #keycode
+		 */
+		protected KeyInformation(String name, int code, boolean visible, int index){
+			this.name = name;
+			this.keycode = code;
+			this.visible = visible;
+			this.index = index;
+		}
+		
 		@Override
 		public String toString(){
-			return "[name=\"" + name + "\",keycode=" + keycode + ",index=" + index + ",visible=" + visible + "]";
+			return "[keycode=" + keycode + ",index=" + index + ",visible=" + visible + ",name=\"" + name + "\"]";
 		}
 		
 		/**
