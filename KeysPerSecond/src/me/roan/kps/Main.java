@@ -895,8 +895,61 @@ public class Main {
 			frame.setAlwaysOnTop(config.overlay);
 		});
 		
+		JMenuItem precision = new JMenu("Precision");
+		JCheckBoxMenuItem p0 = new JCheckBoxMenuItem("No digits beyond the decimal point");
+		JCheckBoxMenuItem p1 = new JCheckBoxMenuItem("1 digit beyond the decimal point");
+		JCheckBoxMenuItem p2 = new JCheckBoxMenuItem("2 digits beyond the decimal point");
+		JCheckBoxMenuItem p3 = new JCheckBoxMenuItem("3 digits beyond the decimal point");
+		precision.add(p0);
+		precision.add(p1);
+		precision.add(p2);
+		precision.add(p3);
+		p0.addActionListener((e)->{
+			config.precision = 0;
+			p0.setSelected(true);
+			p1.setSelected(false);
+			p2.setSelected(false);
+			p3.setSelected(false);
+		});
+		p1.addActionListener((e)->{
+			config.precision = 1;
+			p0.setSelected(false);
+			p1.setSelected(true);
+			p2.setSelected(false);
+			p3.setSelected(false);
+		});
+		p2.addActionListener((e)->{
+			config.precision = 2;
+			p0.setSelected(false);
+			p1.setSelected(false);
+			p2.setSelected(true);
+			p3.setSelected(false);
+		});
+		p3.addActionListener((e)->{
+			config.precision = 3;
+			p0.setSelected(false);
+			p1.setSelected(false);
+			p2.setSelected(false);
+			p3.setSelected(true);
+		});
+		switch(config.precision){
+		case 0:
+			p0.setSelected(true);
+			break;
+		case 1:
+			p1.setSelected(true);
+			break;
+		case 2:
+			p2.setSelected(true);
+			break;
+		case 3:
+			p3.setSelected(true);
+			break;
+		}
+		
 		general.add(overlay);
 		general.add(tAll);
+		general.add(precision);
 		
 		configure.add(general);
 		
