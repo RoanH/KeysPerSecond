@@ -17,18 +17,41 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import me.roan.kps.Main.KeyInformation;
 
+/**
+ * This class contains all the configurable
+ * properties for the program
+ * @author Roan
+ */
 public class Configuration {
 
 	//general
+	/**
+	 * Whether or not to show the max value
+	 */
 	protected boolean showMax = true;
+	/**
+	 * Whether or not to show the average value
+	 */
 	protected boolean showAvg = true;
+	/**
+	 * Whether or not to show the current value
+	 */
 	protected boolean showCur = true;
+	/**
+	 * Whether or not to show the keys
+	 */
 	protected boolean showKeys = true;
+	/**
+	 * Whether or not to show the graph
+	 */
 	protected boolean showGraph = false;
 	/**
-	 * Whether of not the frame forces itself to be the top window
+	 * Whether or not the frame forces itself to be the top window
 	 */
 	protected boolean overlay = false;
+	/**
+	 * Whether or not to use custom colors
+	 */
 	protected boolean customColors = false;
 	/**
 	 * Whether or not to track all key presses
@@ -87,6 +110,11 @@ public class Configuration {
 	 */
 	protected double size = 1.0D;
 
+	/**
+	 * Loads a configuration file
+	 * @param saveloc The save location
+	 * @return Whether or not the config was loaded successfully
+	 */
 	protected final boolean loadConfig(File saveloc){
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			return loadLegacyFormat(saveloc);
@@ -95,6 +123,11 @@ public class Configuration {
 		}
 	}
 	
+	/**
+	 * Loads a new format configuration file
+	 * @param saveloc The save location
+	 * @return Whether or not the config was loaded successfully
+	 */
 	private final boolean loadNewFormat(File saveloc){
 		try{
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc)));
@@ -174,6 +207,12 @@ public class Configuration {
 		}
 	}
 	
+	/**
+	 * Parses the text representatation of a key
+	 * to it's actual data
+	 * @param arg The text data
+	 * @return The key data
+	 */
 	private final KeyInformation parseKey(String arg){
 		String[] args = arg.substring(1, arg.length() - 1).split(",", 4);
 		String name = null;
@@ -200,6 +239,12 @@ public class Configuration {
 		return new KeyInformation(name, code, visible, index);
 	}
 
+	/**
+	 * Parses the text representation of a color
+	 * to it's actual data
+	 * @param arg The text data
+	 * @return The color data
+	 */
 	private final Color parseColor(String arg){
 		String[] rgb = arg.substring(1, arg.length() - 1).split(",");
 		int r, g, b;
@@ -221,6 +266,11 @@ public class Configuration {
 		return new Color(r, g, b);
 	}
 
+	/**
+	 * Loads a legacy configuration file
+	 * @param saveloc The save location
+	 * @return Whether or not the config was loaded successfully
+	 */
 	@SuppressWarnings("unchecked")
 	private final boolean loadLegacyFormat(File saveloc){
 		try {
@@ -274,6 +324,9 @@ public class Configuration {
 		}
 	}
 
+	/**
+	 * Saves this configuration file
+	 */
 	protected final void saveConfig(){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", "kpsconf2"));
