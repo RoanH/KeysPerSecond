@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -23,10 +21,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -38,18 +34,14 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
@@ -118,7 +110,7 @@ public class Main {
 	 * virtual codes<br>Used to increment the count for the
 	 * keys
 	 */
-	private static Map<Integer, Key> keys = new HashMap<Integer, Key>();
+	protected static Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
 	 * The most recent key event, only
 	 * used during the initial setup
@@ -142,13 +134,9 @@ public class Main {
 	 */
 	protected static final JFrame frame = new JFrame("Keys per second");
 	/**
-	 * The right click menu
-	 */
-	protected static final JPopupMenu menu = new JPopupMenu();
-	/**
 	 * Whether or not the counter is paused
 	 */
-	private static boolean suspended = false;
+	protected static boolean suspended = false;
 	/**
 	 * The configuration
 	 */
@@ -178,7 +166,7 @@ public class Main {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
 		}
-		
+
 		//Make sure the native hook is always unregistered
 		Runtime.getRuntime().addShutdownHook(new Thread(){
 			@Override
@@ -190,17 +178,17 @@ public class Main {
 				}
 			}
 		});
-		
+
 		//Initialize native library and register event handlers
 		setupKeyboardHook();
-		
+
 		//Set configuration for the keys
 		configure(config == null ? null : new File(config));
-		
+
 		//Enter the main loop
 		mainLoop();
 	}
-	
+
 	/**
 	 * Main loop of the program
 	 * this loop updates the
@@ -209,10 +197,10 @@ public class Main {
 	 */
 	private static final void mainLoop(){
 		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
-	        @Override
-	        public void run() {
-	        	if(!suspended){
-	        		int totaltmp = tmp;
+			@Override
+			public void run() {
+				if(!suspended){
+					int totaltmp = tmp;
 					for(int i : timepoints){
 						totaltmp += i;
 					}
@@ -233,13 +221,13 @@ public class Main {
 						timepoints.removeLast();
 					}
 					tmp = 0;
-	        	}else{
-	        		tmp = 0;
-	        	}
-	        }
-	    }, 0, config.updateRate, TimeUnit.MILLISECONDS);
+				}else{
+					tmp = 0;
+				}
+			}
+		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
 	}
-	
+
 	/**
 	 * Registers the native libraries and
 	 * registers event handlers for key
@@ -247,22 +235,22 @@ public class Main {
 	 */
 	private static final void setupKeyboardHook(){
 		try {
-        	Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-        	logger.setLevel(Level.WARNING);
-        	logger.setUseParentHandlers(false);
-            GlobalScreen.registerNativeHook();
-        }
-        catch (NativeHookException ex) {
-            System.err.println("There was a problem registering the native hook.");
-            System.err.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null, "There was a problem registering the native hook: " + ex.getMessage(), "Keys per second", JOptionPane.ERROR_MESSAGE);
-            try {
+			Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+			logger.setLevel(Level.WARNING);
+			logger.setUseParentHandlers(false);
+			GlobalScreen.registerNativeHook();
+		}
+		catch (NativeHookException ex) {
+			System.err.println("There was a problem registering the native hook.");
+			System.err.println(ex.getMessage());
+			JOptionPane.showMessageDialog(null, "There was a problem registering the native hook: " + ex.getMessage(), "Keys per second", JOptionPane.ERROR_MESSAGE);
+			try {
 				GlobalScreen.unregisterNativeHook();
 			} catch (NativeHookException e1) {
 				e1.printStackTrace();
 			}
-            System.exit(1);
-        }
+			System.exit(1);
+		}
 		GlobalScreen.addNativeKeyListener(new NativeKeyListener(){
 
 			@Override
@@ -391,8 +379,8 @@ public class Main {
 			JPanel pconfig = new JPanel(new BorderLayout());
 			JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, 200, 1));
 			JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
-								   + "The precentage specifies how big the window is in<br>"
-								   + "comparison to the default size of the window.<html>");
+					+ "The precentage specifies how big the window is in<br>"
+					+ "comparison to the default size of the window.<html>");
 			pconfig.add(info, BorderLayout.PAGE_START);
 			pconfig.add(new JSeparator(), BorderLayout.CENTER);
 			JPanel line = new JPanel();
@@ -458,7 +446,7 @@ public class Main {
 				 * Serial ID
 				 */
 				private static final long serialVersionUID = -5510962859479828507L;				
-				
+
 				@Override
 				public int getRowCount() {
 					return config.keyinfo.size();
@@ -483,7 +471,7 @@ public class Main {
 					}
 					return null;
 				}
-				
+
 				@Override
 				public String getColumnName(int col) {
 					switch(col){
@@ -501,17 +489,17 @@ public class Main {
 
 				@Override
 				public Class<?> getColumnClass(int columnIndex) {
-				    if (columnIndex == 2 || columnIndex ==3){
-				    	return Boolean.class;
-				    }
-				    return super.getColumnClass(columnIndex);
+					if (columnIndex == 2 || columnIndex ==3){
+						return Boolean.class;
+					}
+					return super.getColumnClass(columnIndex);
 				}
-				
+
 				@Override
 				public boolean isCellEditable(int row, int col){
 					return col != 1;
 				}
-				
+
 				@Override
 				public void setValueAt(Object value, int row, int col){
 					if(col == 0){
@@ -653,7 +641,7 @@ public class Main {
 					JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 					return false;
 				}
-				
+
 				cmax.setSelected(config.showMax);
 				ccur.setSelected(config.showCur);
 				cavg.setSelected(config.showAvg);
@@ -716,7 +704,7 @@ public class Main {
 		});
 		String version = checkVersion();//XXX the version number 
 		JLabel ver = new JLabel("<html><center><i>Version: v4.5, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
-				              + "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
+				+ "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
 			@Override
@@ -788,13 +776,6 @@ public class Main {
 
 	/**
 	 * Builds the main GUI of the program
-	 * @param max Whether or not to display the maximum keys per second
-	 * @param avg Whether or not to display the average keys per second
-	 * @param cur Whether or not to display the current keys per second
-	 * @param cgraph Whether or not to display the graph
-	 * @param fg Foreground color
-	 * @param bg Background color
-	 * @param showKeys Whether or not to display the tracked keys
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails the load its resources
 	 */
@@ -806,7 +787,7 @@ public class Main {
 		}else{
 			content.setBackground(config.background);
 		}
-		content.setComponentPopupMenu(menu);
+		content.setComponentPopupMenu(Menu.menu);
 		config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 		Key k;
 		int panels = 0;
@@ -832,137 +813,9 @@ public class Main {
 		if(panels == 0 && !config.showGraph){
 			return;//don't create a GUI if there's nothing to display
 		}
-		
-		JMenuItem snap = new JMenuItem("Snap to edges");
-		snap.setForeground(config.foreground);
-		snap.addActionListener((e)->{
-			Point loc = frame.getLocationOnScreen();
-			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
-			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
-							  Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
-							  Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
-							  Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
-		});
-		
-		JMenuItem exit = new JMenuItem("Exit");
-		exit.setForeground(config.foreground);
-		exit.addActionListener((e)->{
-			exit();
-		});
-		
-		JMenuItem pause = new JMenuItem("Pause/resume");
-		pause.setForeground(config.foreground);
-		pause.addActionListener((e)->{
-			suspended = !suspended;
-		});
-		
-		JMenuItem sreset = new JMenuItem("Reset stats");
-		sreset.setForeground(config.foreground);
-		sreset.addActionListener((e)->{
-			resetStats();
-		});
-		
-		JMenuItem treset = new JMenuItem("Reset totals");
-		treset.setForeground(config.foreground);
-		treset.addActionListener((e)->{
-			resetTotals();
-		});
-		
-		JMenu configure = new JMenu("Configure");
-		JMenu general = new JMenu("General");
-		
-		JMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
-		tAll.setSelected(config.trackAll);
-		tAll.addActionListener((e)->{
-			config.trackAll = tAll.isSelected();
-			Iterator<Entry<Integer, Key>> iter = keys.entrySet().iterator();
-			while(iter.hasNext()){
-				Entry<Integer, Key> key = iter.next();
-				for(KeyInformation info : config.keyinfo){
-					if(info.keycode == key.getKey()){
-						continue;
-					}
-				}
-				iter.remove();
-			}
-		});
-		
-		
-		JMenuItem overlay = new JCheckBoxMenuItem("Overlay osu!");
-		overlay.setSelected(config.overlay);
-		overlay.addActionListener((e)->{
-			config.overlay = overlay.isSelected();
-			frame.setAlwaysOnTop(config.overlay);
-		});
-		
-		JMenuItem precision = new JMenu("Precision");
-		JCheckBoxMenuItem p0 = new JCheckBoxMenuItem("No digits beyond the decimal point");
-		JCheckBoxMenuItem p1 = new JCheckBoxMenuItem("1 digit beyond the decimal point");
-		JCheckBoxMenuItem p2 = new JCheckBoxMenuItem("2 digits beyond the decimal point");
-		JCheckBoxMenuItem p3 = new JCheckBoxMenuItem("3 digits beyond the decimal point");
-		precision.add(p0);
-		precision.add(p1);
-		precision.add(p2);
-		precision.add(p3);
-		p0.addActionListener((e)->{
-			config.precision = 0;
-			p0.setSelected(true);
-			p1.setSelected(false);
-			p2.setSelected(false);
-			p3.setSelected(false);
-		});
-		p1.addActionListener((e)->{
-			config.precision = 1;
-			p0.setSelected(false);
-			p1.setSelected(true);
-			p2.setSelected(false);
-			p3.setSelected(false);
-		});
-		p2.addActionListener((e)->{
-			config.precision = 2;
-			p0.setSelected(false);
-			p1.setSelected(false);
-			p2.setSelected(true);
-			p3.setSelected(false);
-		});
-		p3.addActionListener((e)->{
-			config.precision = 3;
-			p0.setSelected(false);
-			p1.setSelected(false);
-			p2.setSelected(false);
-			p3.setSelected(true);
-		});
-		switch(config.precision){
-		case 0:
-			p0.setSelected(true);
-			break;
-		case 1:
-			p1.setSelected(true);
-			break;
-		case 2:
-			p2.setSelected(true);
-			break;
-		case 3:
-			p3.setSelected(true);
-			break;
-		}
-		
-		general.add(overlay);
-		general.add(tAll);
-		general.add(precision);
-		
-		configure.add(general);
-		
-		menu.add(configure);
-		menu.add(snap);
-		menu.add(treset);
-		menu.add(sreset);
-		menu.add(pause);
-		menu.add(exit);
-		menu.setForeground(config.foreground);
-		menu.setBackground(config.background);
-		menu.setBorder(BorderFactory.createLineBorder(config.foreground));
-		
+
+		Menu.createMenu();
+
 		JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
 		allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
 		if(panels > 0){
@@ -1020,7 +873,63 @@ public class Main {
 		frame.addMouseMotionListener(Listener.INSTANCE);
 		frame.setVisible(true);
 	}
-	
+
+	protected static final void reconfigure() throws IOException{
+		frame.removeAll();
+		content = new JPanel(new GridLayout(1, 0, 2, 0));
+		ColorManager.prepareImages(config.showGraph, config.customColors);
+		SizeManager.scale(config.size);
+		if(ColorManager.transparency && config.opacitybg != 1.0F){
+			content.setOpaque(false);
+		}else{
+			content.setBackground(config.background);
+		}
+		config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
+		Key k;
+		int panels = 0;
+		for(KeyInformation i : config.keyinfo){
+			keys.put(i.keycode, k = new Key(i.name));
+			if(config.showKeys && i.visible){
+				content.add(k.getPanel());
+				panels++;
+			}
+		}
+		if(config.showMax){
+			content.add(new MaxPanel());
+			panels++;
+		}
+		if(config.showAvg){
+			content.add(new AvgPanel());
+			panels++;
+		}
+		if(config.showCur){
+			content.add(new NowPanel());
+			panels++;
+		}
+		if(panels == 0 && !config.showGraph){
+			return;//don't create a GUI if there's nothing to display
+		}
+
+		Menu.repaint();
+
+		JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
+		allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
+		if(panels > 0){
+			allcontent.add(content);
+		}
+		if(config.showGraph){
+			allcontent.add(graph);
+			GraphPanel.frames = panels > 0 ? panels : 5;
+		}
+		frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
+		frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed(), config.background.getGreen(), config.background.getBlue(), config.opacitybg) : config.background);
+		frame.add(allcontent);
+		frame.revalidate();
+		frame.repaint();
+		frame.validate();
+		System.out.println("redo");
+	}
+
 	/**
 	 * Check the KeysPerSecond version to see
 	 * if we are running the latest version
@@ -1058,11 +967,11 @@ public class Main {
 			//No problem though since this isn't a critical function
 		}
 	}
-	
+
 	/**
 	 * Shuts down the program
 	 */
-	private static final void exit(){
+	protected static final void exit(){
 		try {
 			GlobalScreen.unregisterNativeHook();
 		} catch (NativeHookException e1) {
@@ -1070,11 +979,11 @@ public class Main {
 		}
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Reset avg, max & cur
 	 */
-	private static final void resetStats(){
+	protected static final void resetStats(){
 		System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
 		n = 0;
 		avg = 0;
@@ -1082,11 +991,11 @@ public class Main {
 		tmp = 0;
 		graph.reset();
 	}
-	
+
 	/**
 	 * Rest key count totals
 	 */
-	private static final void resetTotals(){
+	protected static final void resetTotals(){
 		System.out.print("Reset key counts | ");
 		for(Key k : keys.values()){
 			System.out.print(k.name + ":" + k.count + " ");
@@ -1094,7 +1003,7 @@ public class Main {
 		}
 		System.out.println();
 	}
-	
+
 	/**
 	 * Re-launches the program from the temp directory
 	 * if the program path contains a ! this fixes a
@@ -1169,9 +1078,9 @@ public class Main {
 		System.exit(0);
 	}
 
-//=================================================================================================
-//================== NESTED CLASSES ===============================================================
-//=================================================================================================
+	//=================================================================================================
+	//================== NESTED CLASSES ===============================================================
+	//=================================================================================================
 
 	/**
 	 * This class is used to keep track
@@ -1268,7 +1177,7 @@ public class Main {
 		 * The virtual key code of this key<br>
 		 * This code represents the key
 		 */
-		private int keycode;
+		protected int keycode;
 		/**
 		 * Index of the key
 		 */
@@ -1281,7 +1190,7 @@ public class Main {
 		 * Whether or not this key is displayed
 		 */
 		protected boolean visible = true;
-		
+
 		/**
 		 * Constructs a new KeyInformation
 		 * object with the given information
@@ -1294,7 +1203,7 @@ public class Main {
 			this.name = name.length() == 1 ? name.toUpperCase() : parseKeyString(name);
 			this.keycode = code;
 		}
-		
+
 		/**
 		 * Constructs a new KeyInformation
 		 * object with the given information
@@ -1311,12 +1220,12 @@ public class Main {
 			this.visible = visible;
 			this.index = index;
 		}
-		
+
 		@Override
 		public String toString(){
 			return "[keycode=" + keycode + ",index=" + index + ",visible=" + visible + ",name=\"" + name + "\"]";
 		}
-		
+
 		/**
 		 * Converts a long key name to
 		 * something a bit shorter
@@ -1375,8 +1284,8 @@ public class Main {
 				return "\u25BC";
 			case "Shift":
 				return "\u21D1";
-				default:
-					return "?";
+			default:
+				return "?";
 			}
 		}
 	}
