@@ -18,6 +18,6 @@ public final class AvgPanel extends BasePanel {
 
 	@Override
 	protected String getValue() {
-		return Main.precision == 0 ? String.valueOf((int)Main.avg) : String.valueOf(String.format("%1$." + Main.precision + "f", (double)((int)(Main.avg * Math.pow(10, Main.precision)) / Math.pow(10, Main.precision))));
+		return Main.config.precision == 0 ? String.valueOf((int)Main.avg) : String.valueOf(String.format("%1$." + Main.config.precision + "f", (double)((int)(Main.avg * Math.pow(10, Main.config.precision)) / Math.pow(10, Main.config.precision))));
 	}
 }
