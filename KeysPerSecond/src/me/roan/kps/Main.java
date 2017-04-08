@@ -875,7 +875,7 @@ public class Main {
 		frame.setVisible(true);
 	}
 
-	protected static final void reconfigure(boolean color, double oldSize) throws IOException{
+	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
 			content = new JPanel(new GridLayout(1, 0, 2, 0));
@@ -932,7 +932,6 @@ public class Main {
 			frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed(), config.background.getGreen(), config.background.getBlue(), config.opacitybg) : config.background);
 			frame.add(allcontent);
 			frame.setVisible(true);
-			System.out.println("redo");
 		});
 	}
 
@@ -1130,7 +1129,7 @@ public class Main {
 		 * @return A new KeyPanel
 		 */
 		private KeyPanel getPanel() {
-			return panel = new KeyPanel(this);
+			return panel != null ? panel : (panel = new KeyPanel(this));
 		}
 
 		/**
