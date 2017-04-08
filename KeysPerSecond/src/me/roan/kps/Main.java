@@ -439,108 +439,8 @@ public class Main {
 			save.setEnabled(true);
 		});
 		addkey.addActionListener((e)->{
-			JPanel keyform = new JPanel(new BorderLayout());
-			keyform.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
-			JTable keys = new JTable();
-			DefaultTableModel model = new DefaultTableModel(){
-				/**
-				 * Serial ID
-				 */
-				private static final long serialVersionUID = -5510962859479828507L;				
-
-				@Override
-				public int getRowCount() {
-					return config.keyinfo.size();
-				}
-
-				@Override
-				public int getColumnCount() {
-					return 4;
-				}
-
-				@Override
-				public Object getValueAt(int rowIndex, int columnIndex) {
-					switch(columnIndex){
-					case 0:
-						return config.keyinfo.get(rowIndex).index;
-					case 1:
-						return config.keyinfo.get(rowIndex).name;
-					case 2:
-						return config.keyinfo.get(rowIndex).visible;
-					case 3:
-						return false;
-					}
-					return null;
-				}
-
-				@Override
-				public String getColumnName(int col) {
-					switch(col){
-					case 0:
-						return "Position";
-					case 1:
-						return "Key";
-					case 2:
-						return "Visible";
-					case 3:
-						return "Remove";
-					}
-					return null;
-				}
-
-				@Override
-				public Class<?> getColumnClass(int columnIndex) {
-					if (columnIndex == 2 || columnIndex ==3){
-						return Boolean.class;
-					}
-					return super.getColumnClass(columnIndex);
-				}
-
-				@Override
-				public boolean isCellEditable(int row, int col){
-					return col != 1;
-				}
-
-				@Override
-				public void setValueAt(Object value, int row, int col){
-					if(col == 0){
-						try{
-							config.keyinfo.get(row).index = Integer.parseInt((String)value);
-						}catch(NumberFormatException | NullPointerException e){
-							JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-						}
-					}else if(col == 2){
-						config.keyinfo.get(row).visible = (boolean)value;
-					}else{
-						if((boolean)value == true){
-							config.keyinfo.remove(row);
-							keys.repaint();
-						}
-					}
-				}
-			};
-			keys.setModel(model);
-			keys.setDragEnabled(false);
-			JScrollPane pane = new JScrollPane(keys);
-			pane.setPreferredSize(new Dimension((int)keys.getPreferredSize().getWidth(), 120));
-			keyform.add(pane, BorderLayout.CENTER);
-			JButton newkey = new JButton("Add Key");
-			newkey.addActionListener((evt)->{
-				if(JOptionPane.showOptionDialog(null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
-					if(lastevent == null){
-						JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
-					if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-						config.keyinfo.add(info);
-						save.setEnabled(true);
-					}
-					model.fireTableDataChanged();
-				}
-			});
-			keyform.add(newkey, BorderLayout.PAGE_END);
-			JOptionPane.showOptionDialog(null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Back"}, 0);
+			configureKeys();
+			save.setEnabled(true);
 		});
 		JPanel cfg = new JPanel();
 		JPanel cbg = new JPanel();
@@ -774,6 +674,110 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
+	
+	protected static final void configureKeys(){
+		JPanel keyform = new JPanel(new BorderLayout());
+		keyform.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
+		JTable keys = new JTable();
+		DefaultTableModel model = new DefaultTableModel(){
+			/**
+			 * Serial ID
+			 */
+			private static final long serialVersionUID = -5510962859479828507L;				
+
+			@Override
+			public int getRowCount() {
+				return config.keyinfo.size();
+			}
+
+			@Override
+			public int getColumnCount() {
+				return 4;
+			}
+
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				switch(columnIndex){
+				case 0:
+					return config.keyinfo.get(rowIndex).index;
+				case 1:
+					return config.keyinfo.get(rowIndex).name;
+				case 2:
+					return config.keyinfo.get(rowIndex).visible;
+				case 3:
+					return false;
+				}
+				return null;
+			}
+
+			@Override
+			public String getColumnName(int col) {
+				switch(col){
+				case 0:
+					return "Position";
+				case 1:
+					return "Key";
+				case 2:
+					return "Visible";
+				case 3:
+					return "Remove";
+				}
+				return null;
+			}
+
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 2 || columnIndex ==3){
+					return Boolean.class;
+				}
+				return super.getColumnClass(columnIndex);
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int col){
+				return col != 1;
+			}
+
+			@Override
+			public void setValueAt(Object value, int row, int col){
+				if(col == 0){
+					try{
+						config.keyinfo.get(row).index = Integer.parseInt((String)value);
+					}catch(NumberFormatException | NullPointerException e){
+						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					}
+				}else if(col == 2){
+					config.keyinfo.get(row).visible = (boolean)value;
+				}else{
+					if((boolean)value == true){
+						config.keyinfo.remove(row);
+						keys.repaint();
+					}
+				}
+			}
+		};
+		keys.setModel(model);
+		keys.setDragEnabled(false);
+		JScrollPane pane = new JScrollPane(keys);
+		pane.setPreferredSize(new Dimension((int)keys.getPreferredSize().getWidth(), 120));
+		keyform.add(pane, BorderLayout.CENTER);
+		JButton newkey = new JButton("Add Key");
+		newkey.addActionListener((evt)->{
+			if(JOptionPane.showOptionDialog(null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+				if(lastevent == null){
+					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
+				if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+					config.keyinfo.add(info);
+				}
+				model.fireTableDataChanged();
+			}
+		});
+		keyform.add(newkey, BorderLayout.PAGE_END);
+		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Back"}, 0);
+	}
 
 	/**
 	 * Builds the main GUI of the program
@@ -816,6 +820,7 @@ public class Main {
 		}
 
 		Menu.createMenu();
+		Menu.repaint();
 
 		JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
 		allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
