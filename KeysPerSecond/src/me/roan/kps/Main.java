@@ -442,80 +442,9 @@ public class Main {
 			configureKeys();
 			save.setEnabled(true);
 		});
-		JPanel cfg = new JPanel();
-		JPanel cbg = new JPanel();
-		cbg.setBackground(Color.BLACK);
-		cfg.setBackground(Color.CYAN);
-		MouseListener clistener = new MouseListener(){
-			/**
-			 * Whether or not the color chooser is open
-			 */
-			private boolean open = false;
-			/**
-			 * Color chooser instance
-			 */
-			private final JColorChooser chooser = new JColorChooser();
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(!open){
-					open = true;
-					chooser.setColor(e.getComponent().getBackground());
-					if(0 == JOptionPane.showOptionDialog(null, chooser, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-						e.getComponent().setBackground(chooser.getColor());
-					}
-					open = false;
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {				
-			}
-		};
-		cbg.addMouseListener(clistener);
-		cfg.addMouseListener(clistener);
 		color.addActionListener((e)->{
-			Color prevfg = cfg.getForeground();
-			Color prevbg = cbg.getForeground();
-			JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));	
-			JLabel lfg = new JLabel("Foreground colour: ");
-			JLabel lbg = new JLabel("Background colour: ");
-			JSpinner sbg = new JSpinner(new SpinnerNumberModel((int)(config.opacitybg * 100), 0, 100, 5));
-			JSpinner sfg = new JSpinner(new SpinnerNumberModel((int)(config.opacityfg * 100), 0, 100, 5));
-			sbg.setPreferredSize(new Dimension(sbg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
-			sfg.setPreferredSize(new Dimension(sfg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
-			JPanel spanelfg = new JPanel(new BorderLayout());
-			JPanel spanelbg = new JPanel(new BorderLayout());
-			spanelfg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
-			spanelbg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
-			spanelfg.add(sfg, BorderLayout.CENTER);
-			spanelbg.add(sbg, BorderLayout.CENTER);
-			cform.add(lfg);
-			cform.add(cfg);
-			cform.add(spanelfg);
-			cform.add(lbg);
-			cform.add(cbg);
-			cform.add(spanelbg);
-			if(1 == JOptionPane.showOptionDialog(null, cform, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-				cfg.setForeground(prevfg);
-				cbg.setForeground(prevbg);
-			}else{
-				config.opacitybg = (float)(double)((int)sbg.getValue() / 100.0D);
-				config.opacityfg = (float)(double)((int)sfg.getValue() / 100.0D);
-				save.setEnabled(true);
-			}
+			configureColors();
+			save.setEnabled(true);
 		});
 		save.addActionListener((e)->{
 			config.saveConfig();
@@ -527,7 +456,7 @@ public class Main {
 				File saveloc = cf;
 				if(cf == null){
 					JFileChooser chooser = new JFileChooser();
-					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", "kpsconf2"));
+					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
 					chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 					if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
 						return false;
@@ -554,8 +483,6 @@ public class Main {
 				if(config.customColors){
 					color.setEnabled(true);
 				}
-				cbg.setBackground(config.background);
-				cfg.setBackground(config.foreground);
 				call.setSelected(config.trackAll);
 				ckey.setSelected(config.showKeys);
 				ctop.setSelected(config.overlay);
@@ -661,10 +588,7 @@ public class Main {
 		config.showAvg = cavg.isSelected();
 		config.showCur = ccur.isSelected();
 		config.showGraph = cgra.isSelected();
-		if(config.customColors = ccol.isSelected()){
-			config.foreground = cfg.getBackground();
-			config.background = cbg.getBackground();
-		}
+		config.customColors = ccol.isSelected();
 		config.showKeys = ckey.isSelected();
 
 		//Build GUI
@@ -672,6 +596,83 @@ public class Main {
 			buildGUI();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	protected static final void configureColors(){
+		JPanel cfg = new JPanel();
+		JPanel cbg = new JPanel();
+		MouseListener clistener = new MouseListener(){
+			/**
+			 * Whether or not the color chooser is open
+			 */
+			private boolean open = false;
+			/**
+			 * Color chooser instance
+			 */
+			private final JColorChooser chooser = new JColorChooser();
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!open){
+					open = true;
+					chooser.setColor(e.getComponent().getBackground());
+					if(0 == JOptionPane.showOptionDialog(null, chooser, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+						e.getComponent().setBackground(chooser.getColor());
+					}
+					open = false;
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {				
+			}
+		};
+		cbg.addMouseListener(clistener);
+		cfg.addMouseListener(clistener);
+		cfg.setBackground(Main.config.foreground);
+		cbg.setBackground(Main.config.background);
+		Color prevfg = cfg.getForeground();
+		Color prevbg = cbg.getForeground();
+		JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));	
+		JLabel lfg = new JLabel("Foreground colour: ");
+		JLabel lbg = new JLabel("Background colour: ");
+		JSpinner sbg = new JSpinner(new SpinnerNumberModel((int)(config.opacitybg * 100), 0, 100, 5));
+		JSpinner sfg = new JSpinner(new SpinnerNumberModel((int)(config.opacityfg * 100), 0, 100, 5));
+		sbg.setPreferredSize(new Dimension(sbg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
+		sfg.setPreferredSize(new Dimension(sfg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
+		JPanel spanelfg = new JPanel(new BorderLayout());
+		JPanel spanelbg = new JPanel(new BorderLayout());
+		spanelfg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
+		spanelbg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
+		spanelfg.add(sfg, BorderLayout.CENTER);
+		spanelbg.add(sbg, BorderLayout.CENTER);
+		cform.add(lfg);
+		cform.add(cfg);
+		cform.add(spanelfg);
+		cform.add(lbg);
+		cform.add(cbg);
+		cform.add(spanelbg);
+		if(1 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, cform, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			cfg.setForeground(prevfg);
+			cbg.setForeground(prevbg);
+		}else{
+			config.foreground = cfg.getBackground();
+			config.background = cbg.getBackground();
+			config.opacitybg = (float)(double)((int)sbg.getValue() / 100.0D);
+			config.opacityfg = (float)(double)((int)sfg.getValue() / 100.0D);
 		}
 	}
 	
@@ -785,6 +786,12 @@ public class Main {
 	 *         when the program fails the load its resources
 	 */
 	protected static final void buildGUI() throws IOException {
+		if(!config.customColors){
+			config.foreground = Color.CYAN;
+			config.background = Color.BLACK;
+			config.opacitybg = 1.0F;
+			config.opacityfg = 1.0F;
+		}
 		ColorManager.prepareImages(config.showGraph, config.customColors);
 		SizeManager.scale(config.size);
 		if(ColorManager.transparency && config.opacitybg != 1.0F){
@@ -837,7 +844,7 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(allcontent);
 		frame.setUndecorated(true);
-		frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed(), config.background.getGreen(), config.background.getBlue(), config.opacitybg) : config.background);
+		frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed() / 255.0F, config.background.getGreen() / 255.0F, config.background.getBlue() / 255.0F, config.opacitybg) : config.background);
 		frame.addWindowListener(new WindowListener(){
 
 			@Override
@@ -882,6 +889,10 @@ public class Main {
 
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
+			if(!config.customColors){
+				config.foreground = Color.CYAN;
+				config.background = Color.BLACK;
+			}
 			frame.getContentPane().removeAll();
 			content = new JPanel(new GridLayout(1, 0, 2, 0));
 			try {
@@ -934,7 +945,7 @@ public class Main {
 				GraphPanel.frames = panels > 0 ? panels : 5;
 			}
 			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
-			frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed(), config.background.getGreen(), config.background.getBlue(), config.opacitybg) : config.background);
+			frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed() / 255.0F, config.background.getGreen() / 255.0F, config.background.getBlue() / 255.0F, config.opacitybg) : config.background);
 			frame.add(allcontent);
 			frame.setVisible(true);
 		});

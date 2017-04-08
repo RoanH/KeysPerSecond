@@ -329,7 +329,7 @@ public class Configuration {
 	 */
 	protected final void saveConfig(){
 		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second config file", "kpsconf", "kpsconf2"));
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
 			return;

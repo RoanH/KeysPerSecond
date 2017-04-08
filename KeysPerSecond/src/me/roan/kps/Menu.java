@@ -30,6 +30,7 @@ public class Menu {
 	private static final JMenuItem sreset = new JMenuItem("Reset stats");
 	private static final JMenuItem treset = new JMenuItem("Reset totals");
 	private static final JMenuItem configkeys = new JMenuItem("Keys");
+	private static final JMenuItem configcolors = new JMenuItem("Colours");
 	private static final JCheckBoxMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
 	private static final JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay osu!");
 	private static final JCheckBoxMenuItem p0 = new JCheckBoxMenuItem("No digits beyond the decimal point");
@@ -64,6 +65,7 @@ public class Menu {
 		graph.setForeground(Main.config.foreground);
 		keys.setForeground(Main.config.foreground);
 		configkeys.setForeground(Main.config.foreground);
+		configcolors.setForeground(Main.config.foreground);
 		
 		menu.setBackground(Main.config.background);
 		configure.setBackground(Main.config.background);
@@ -86,6 +88,7 @@ public class Menu {
 		graph.setBackground(Main.config.background);
 		keys.setBackground(Main.config.background);
 		configkeys.setBackground(Main.config.background);
+		configcolors.setBackground(Main.config.background);
 		
 		menu.setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
@@ -114,6 +117,7 @@ public class Menu {
 		cur.setOpaque(true);
 		graph.setOpaque(true);
 		keys.setOpaque(true);
+		configcolors.setOpaque(true);
 		configkeys.setOpaque(true);
 		snap.addActionListener((e)->{
 			Point loc = Main.frame.getLocationOnScreen();
@@ -229,6 +233,10 @@ public class Menu {
 			Main.configureKeys();
 			Main.reconfigure();
 		});
+		configcolors.addActionListener((e)->{
+			Main.configureColors();
+			Main.reconfigure();
+		});
 		
 		general.add(max);
 		general.add(avg);
@@ -240,6 +248,7 @@ public class Menu {
 		
 		configure.add(general);
 		configure.add(configkeys);
+		configure.add(configcolors);
 		configure.add(precision);
 		
 		menu.add(configure);
