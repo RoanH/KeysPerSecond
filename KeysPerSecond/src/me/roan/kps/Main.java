@@ -388,20 +388,7 @@ public class Main {
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
 		size.addActionListener((e)->{
-			JPanel pconfig = new JPanel(new BorderLayout());
-			JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, 200, 1));
-			JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
-					+ "The precentage specifies how big the window is in<br>"
-					+ "comparison to the default size of the window.<html>");
-			pconfig.add(info, BorderLayout.PAGE_START);
-			pconfig.add(new JSeparator(), BorderLayout.CENTER);
-			JPanel line = new JPanel();
-			line.add(new JLabel("Size: "));
-			line.add(s);
-			line.add(new JLabel("%"));
-			pconfig.add(line, BorderLayout.PAGE_END);
-			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			config.size = ((double)s.getValue()) / 100.0D;
+			configureSize();
 		});
 		precision.addActionListener((e)->{
 			JPanel pconfig = new JPanel(new BorderLayout());
@@ -576,6 +563,26 @@ public class Main {
 		config.showGraph = cgra.isSelected();
 		config.customColors = ccol.isSelected();
 		config.showKeys = ckey.isSelected();
+	}
+	
+	/**
+	 * Shows the size configuration dialog
+	 */
+	protected static final void configureSize(){
+		JPanel pconfig = new JPanel(new BorderLayout());
+		JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, 200, 1));
+		JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
+				+ "The precentage specifies how big the window is in<br>"
+				+ "comparison to the default size of the window.<html>");
+		pconfig.add(info, BorderLayout.PAGE_START);
+		pconfig.add(new JSeparator(), BorderLayout.CENTER);
+		JPanel line = new JPanel();
+		line.add(new JLabel("Size: "));
+		line.add(s);
+		line.add(new JLabel("%"));
+		pconfig.add(line, BorderLayout.PAGE_END);
+		JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+		config.size = ((double)s.getValue()) / 100.0D;
 	}
 	
 	/**
@@ -813,6 +820,7 @@ public class Main {
 			}
 		});
 		frame.addMouseMotionListener(Listener.INSTANCE);
+		SizeManager.scale(config.size);
 		reconfigure();
 	}
 
@@ -838,7 +846,6 @@ public class Main {
 			}else{
 				content.setBackground(config.background);
 			}
-			SizeManager.scale(config.size);
 			config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 			Key k;
 			int panels = 0;

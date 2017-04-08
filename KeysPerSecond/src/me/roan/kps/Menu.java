@@ -46,6 +46,10 @@ public class Menu {
 	 */
 	private static final JMenu configcolors = new JMenu("Colours");
 	/**
+	 * The size menu
+	 */
+	private static final JMenuItem size = new JMenuItem("Size");
+	/**
 	 * Snap program to screen edges
 	 */
 	private static final JMenuItem snap = new JMenuItem("Snap to edges");
@@ -162,6 +166,7 @@ public class Menu {
 		mgraph.setForeground(Main.config.foreground);
 		graphavg.setForeground(Main.config.foreground);
 		backlog.setForeground(Main.config.foreground);
+		size.setForeground(Main.config.foreground);
 		
 		menu.setBackground(Main.config.background);
 		configure.setBackground(Main.config.background);
@@ -190,6 +195,7 @@ public class Menu {
 		mgraph.setBackground(Main.config.background);
 		graphavg.setBackground(Main.config.background);
 		backlog.setBackground(Main.config.background);
+		size.setBackground(Main.config.background);
 		
 		menu.setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
@@ -230,6 +236,7 @@ public class Menu {
 		mgraph.setOpaque(true);
 		graphavg.setOpaque(true);
 		backlog.setOpaque(true);
+		size.setOpaque(true);
 		snap.addActionListener((e)->{
 			Point loc = Main.frame.getLocationOnScreen();
 			Rectangle bounds = Main.frame.getGraphicsConfiguration().getBounds();	
@@ -373,6 +380,12 @@ public class Menu {
 			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			Main.config.backlog = (int)backlog.getValue();
 		});
+		size.addActionListener((e)->{
+			double old = Main.config.size;
+			Main.configureSize();
+			SizeManager.scale(Main.config.size / old);
+			Main.reconfigure();
+		});
 		
 		mgraph.add(graph);
 		mgraph.add(graphavg);
@@ -390,6 +403,7 @@ public class Menu {
 		configure.add(mgraph);
 		configure.add(configcolors);
 		configure.add(precision);
+		configure.add(size);
 		
 		menu.add(configure);
 		menu.add(snap);
