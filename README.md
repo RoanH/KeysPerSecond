@@ -38,6 +38,8 @@ And if you find any bugs feel free to report them.
 - When changing the key order, the keys are ordered from lowest value to highest value (negative values & skipping indices is allowed).
 - To change a GUI colour in the colours menu, click on the current colour
 - An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
+- The snap to screen edge function work on multi-monitor setups.
+- You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
 
 ## Updates
 2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
@@ -56,12 +58,12 @@ And if you find any bugs feel free to report them.
 21 March 2017: Made adding keys a little bit easier.<br>
 30 March 2017: Implemented a right click dialog, pause functionality & a snap to screen edge function.<br>
 31 March 2017: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.<br>
-1 April 2017: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.
+1 April 2017: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
+8 April 2017: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.
 
 ## Todo list / working on
 - Option to display the song you are currently playing
 - Option to change to command keys
-- Text based config
 - Remember config save location
 - Automatic config loading of some sort
 - Mouse tracking?
@@ -69,8 +71,8 @@ And if you find any bugs feel free to report them.
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v4.5/KeysPerSecond-v4.5.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v4.5/KeysPerSecond-v4.5.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v5.0/KeysPerSecond-v5.0.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v5.0/KeysPerSecond-v5.0.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
