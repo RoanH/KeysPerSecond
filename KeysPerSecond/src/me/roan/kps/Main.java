@@ -23,7 +23,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -180,11 +179,23 @@ public class Main {
 			}
 		});
 
-		//Initialize native library and register event handlers
+		//Initialise native library and register event handlers
 		setupKeyboardHook();
 
 		//Set configuration for the keys
-		configure(config == null ? null : new File(config));
+		Configuration toLoad = new Configuration();
+		if(config != null && !toLoad.loadConfig(new File(config))){
+			Main.config = toLoad;
+		}else{
+			configure();
+		}
+		
+		//Build GUI
+		try {
+			buildGUI();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		//Enter the main loop
 		mainLoop();
@@ -296,7 +307,7 @@ public class Main {
 	 * option of saving or loading an
 	 * existing configuration
 	 */
-	private static final void configure(File cf){
+	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
 		JPanel boxes = new JPanel(new GridLayout(8, 0));
 		JPanel labels = new JPanel(new GridLayout(8, 0));
@@ -449,53 +460,38 @@ public class Main {
 		save.addActionListener((e)->{
 			config.saveConfig();
 		});
-		Callable<Boolean> loadAction = new Callable<Boolean>(){
-
-			@Override
-			public Boolean call() throws Exception {
-				File saveloc = cf;
-				if(cf == null){
-					JFileChooser chooser = new JFileChooser();
-					chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
-					chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-					if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
-						return false;
-					}
-					saveloc = chooser.getSelectedFile();
-				}
-				Configuration toLoad = new Configuration();
-				if((toLoad.loadConfig(saveloc))){
-					config = toLoad;
-					JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-				}else{
-					JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-					return false;
-				}
-
-				cmax.setSelected(config.showMax);
-				ccur.setSelected(config.showCur);
-				cavg.setSelected(config.showAvg);
-				cgra.setSelected(config.showGraph);
-				if(config.showGraph){
-					graph.setEnabled(true);
-				}
-				ccol.setSelected(config.customColors);
-				if(config.customColors){
-					color.setEnabled(true);
-				}
-				call.setSelected(config.trackAll);
-				ckey.setSelected(config.showKeys);
-				ctop.setSelected(config.overlay);
-				save.setEnabled(true);
-				return true;
-			}
-		};
 		load.addActionListener((e)->{
-			try {
-				loadAction.call();
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			JFileChooser chooser = new JFileChooser();
+			chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
+			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+				return;
 			}
+			File saveloc = chooser.getSelectedFile();
+			Configuration toLoad = new Configuration();
+			if((toLoad.loadConfig(saveloc))){
+				config = toLoad;
+				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			}else{
+				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			cmax.setSelected(config.showMax);
+			ccur.setSelected(config.showCur);
+			cavg.setSelected(config.showAvg);
+			cgra.setSelected(config.showGraph);
+			if(config.showGraph){
+				graph.setEnabled(true);
+			}
+			ccol.setSelected(config.customColors);
+			if(config.customColors){
+				color.setEnabled(true);
+			}
+			call.setSelected(config.trackAll);
+			ckey.setSelected(config.showKeys);
+			ctop.setSelected(config.overlay);
+			save.setEnabled(true);
 		});
 		updaterate.addActionListener((e)->{
 			JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
@@ -563,17 +559,7 @@ public class Main {
 			}
 		});
 		form.add(ver, BorderLayout.PAGE_END);
-		int option = 0;
-		if(cf == null){
-			option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
-		}else{
-			try {
-				option = loadAction.call() ? 0 : 1;
-			} catch (Exception e1) {
-				option = 1;
-				e1.printStackTrace();
-			}
-		}
+		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
 		if(1 == option || option == JOptionPane.CLOSED_OPTION){
 			try {
 				GlobalScreen.unregisterNativeHook();
@@ -590,15 +576,11 @@ public class Main {
 		config.showGraph = cgra.isSelected();
 		config.customColors = ccol.isSelected();
 		config.showKeys = ckey.isSelected();
-
-		//Build GUI
-		try {
-			buildGUI();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
+	/**
+	 * Shows the color configuration dialog
+	 */
 	protected static final void configureColors(){
 		JPanel cfg = new JPanel();
 		JPanel cbg = new JPanel();
@@ -676,6 +658,9 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Shows the key configuration dialog
+	 */
 	protected static final void configureKeys(){
 		JPanel keyform = new JPanel(new BorderLayout());
 		keyform.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
@@ -786,65 +771,12 @@ public class Main {
 	 *         when the program fails the load its resources
 	 */
 	protected static final void buildGUI() throws IOException {
-		if(!config.customColors){
-			config.foreground = Color.CYAN;
-			config.background = Color.BLACK;
-			config.opacitybg = 1.0F;
-			config.opacityfg = 1.0F;
-		}
-		ColorManager.prepareImages(config.showGraph, config.customColors);
-		SizeManager.scale(config.size);
-		if(ColorManager.transparency && config.opacitybg != 1.0F){
-			content.setOpaque(false);
-		}else{
-			content.setBackground(config.background);
-		}
 		content.setComponentPopupMenu(Menu.menu);
-		config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
-		Key k;
-		int panels = 0;
-		for(KeyInformation i : config.keyinfo){
-			keys.put(i.keycode, k = new Key(i.name));
-			if(config.showKeys && i.visible){
-				content.add(k.getPanel());
-				panels++;
-			}
-		}
-		if(config.showMax){
-			content.add(new MaxPanel());
-			panels++;
-		}
-		if(config.showAvg){
-			content.add(new AvgPanel());
-			panels++;
-		}
-		if(config.showCur){
-			content.add(new NowPanel());
-			panels++;
-		}
-		if(panels == 0 && !config.showGraph){
-			return;//don't create a GUI if there's nothing to display
-		}
-
 		Menu.createMenu();
-		Menu.repaint();
-
-		JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
-		allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
-		if(panels > 0){
-			allcontent.add(content);
-		}
-		if(config.showGraph){
-			allcontent.add(graph);
-			GraphPanel.frames = panels > 0 ? panels : 5;
-		}
-		frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
 		frame.setResizable(false);
 		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(allcontent);
 		frame.setUndecorated(true);
-		frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed() / 255.0F, config.background.getGreen() / 255.0F, config.background.getBlue() / 255.0F, config.opacitybg) : config.background);
 		frame.addWindowListener(new WindowListener(){
 
 			@Override
@@ -880,13 +812,13 @@ public class Main {
 			public void windowDeactivated(WindowEvent e) {				
 			}
 		});
-		if(config.overlay){
-			frame.setAlwaysOnTop(true);
-		}
 		frame.addMouseMotionListener(Listener.INSTANCE);
-		frame.setVisible(true);
+		reconfigure();
 	}
 
+	/**
+	 * Reconfigures the layout of the program
+	 */
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			if(!config.customColors){

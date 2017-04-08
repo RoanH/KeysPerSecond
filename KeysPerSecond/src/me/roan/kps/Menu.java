@@ -20,29 +20,103 @@ public class Menu {
 	 * The right click menu
 	 */
 	protected static final JPopupMenu menu = new JPopupMenu();
-	
+	/**
+	 * The configuration menu
+	 */
 	private static final JMenu configure = new JMenu("Configure");
+	/**
+	 * The general menu
+	 */
 	private static final JMenu general = new JMenu("General");
+	/**
+	 * Precision menu
+	 */
 	private static final JMenu precision = new JMenu("Precision");
+	/**
+	 * Custom colors menu
+	 */
+	private static final JMenu configcolors = new JMenu("Colours");
+	/**
+	 * Snap program to screen edges
+	 */
 	private static final JMenuItem snap = new JMenuItem("Snap to edges");
+	/**
+	 * Exit the program
+	 */
 	private static final JMenuItem exit = new JMenuItem("Exit");
+	/**
+	 * Pause the program
+	 */
 	private static final JMenuItem pause = new JMenuItem("Pause/resume");
+	/**
+	 * Reset stats
+	 */
 	private static final JMenuItem sreset = new JMenuItem("Reset stats");
+	/**
+	 * Reset totals
+	 */
 	private static final JMenuItem treset = new JMenuItem("Reset totals");
+	/**
+	 * The key menu
+	 */
 	private static final JMenuItem configkeys = new JMenuItem("Keys");
-	private static final JMenuItem configcolors = new JMenuItem("Colours");
+	/**
+	 * The custom colors menu
+	 */
+	private static final JMenuItem colorcustom = new JMenuItem("Configure colours");
+	/**
+	 * Whether or not to use custom colors
+	 */
+	private static final JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
+	/**
+	 * Whether or not to track all keys
+	 */
 	private static final JCheckBoxMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
+	/**
+	 * Whether or not to overlay osu!
+	 */
 	private static final JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay osu!");
+	/**
+	 * Precision of 0
+	 */
 	private static final JCheckBoxMenuItem p0 = new JCheckBoxMenuItem("No digits beyond the decimal point");
+	/**
+	 * Precision of 1
+	 */
 	private static final JCheckBoxMenuItem p1 = new JCheckBoxMenuItem("1 digit beyond the decimal point");
+	/**
+	 * Precision of 2
+	 */
 	private static final JCheckBoxMenuItem p2 = new JCheckBoxMenuItem("2 digits beyond the decimal point");
+	/**
+	 * Precision of 3
+	 */
 	private static final JCheckBoxMenuItem p3 = new JCheckBoxMenuItem("3 digits beyond the decimal point");
+	/**
+	 * Whether or not to show the max
+	 */
 	private static final JCheckBoxMenuItem max = new JCheckBoxMenuItem("Show max");
+	/**
+	 * Whether or not to show the average
+	 */
 	private static final JCheckBoxMenuItem avg = new JCheckBoxMenuItem("Show average");
+	/**
+	 * Whether or not to show current
+	 */
 	private static final JCheckBoxMenuItem cur = new JCheckBoxMenuItem("Show current");
+	/**
+	 * Whether or not to show the graph
+	 */
 	private static final JCheckBoxMenuItem graph = new JCheckBoxMenuItem("Show graph");
+	/**
+	 * Whether or not to show keys
+	 */
 	private static final JCheckBoxMenuItem keys = new JCheckBoxMenuItem("Show keys");
 	
+	/**
+	 * Sets the foreground and background
+	 * color of the popup menu
+	 */
 	protected static final void repaint(){
 		menu.setForeground(Main.config.foreground);
 		configure.setForeground(Main.config.foreground);
@@ -66,6 +140,8 @@ public class Menu {
 		keys.setForeground(Main.config.foreground);
 		configkeys.setForeground(Main.config.foreground);
 		configcolors.setForeground(Main.config.foreground);
+		colorenable.setForeground(Main.config.foreground);
+		colorcustom.setForeground(Main.config.foreground);
 		
 		menu.setBackground(Main.config.background);
 		configure.setBackground(Main.config.background);
@@ -89,13 +165,19 @@ public class Menu {
 		keys.setBackground(Main.config.background);
 		configkeys.setBackground(Main.config.background);
 		configcolors.setBackground(Main.config.background);
+		colorenable.setBackground(Main.config.background);
+		colorcustom.setBackground(Main.config.background);
 		
 		menu.setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		precision.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		configure.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
+		configcolors.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 	}
 
+	/**
+	 * Creates the popup menu
+	 */
 	protected static final void createMenu(){
 		menu.setOpaque(true);
 		configure.setOpaque(true);
@@ -119,6 +201,8 @@ public class Menu {
 		keys.setOpaque(true);
 		configcolors.setOpaque(true);
 		configkeys.setOpaque(true);
+		colorenable.setOpaque(true);
+		colorcustom.setOpaque(true);
 		snap.addActionListener((e)->{
 			Point loc = Main.frame.getLocationOnScreen();
 			Rectangle bounds = Main.frame.getGraphicsConfiguration().getBounds();	
@@ -233,10 +317,17 @@ public class Menu {
 			Main.configureKeys();
 			Main.reconfigure();
 		});
-		configcolors.addActionListener((e)->{
+		colorcustom.addActionListener((e)->{
 			Main.configureColors();
 			Main.reconfigure();
 		});
+		colorenable.setSelected(Main.config.customColors);
+		colorenable.addActionListener((e)->{
+			Main.config.customColors = colorenable.isSelected();
+			Main.reconfigure();
+		});
+		configcolors.add(colorenable);
+		configcolors.add(colorcustom);
 		
 		general.add(max);
 		general.add(avg);
