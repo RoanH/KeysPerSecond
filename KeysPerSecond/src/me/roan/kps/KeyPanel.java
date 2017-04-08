@@ -30,19 +30,19 @@ public final class KeyPanel extends JPanel {
 	/**
 	 * Font 1 used to display the title of the panel
 	 */
-	private static final Font font1 = new Font("Dialog", Font.BOLD, SizeManager.keyPanelFont1Size);
+	protected static Font font1;
 	/**
 	 * Font 2 used to display the value of this panel
 	 */
-	protected static final Font font2 = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);
+	protected static Font font2;
 	/**
 	 * Font 2 but smaller
 	 */
-	protected static final Font font2small = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);
+	protected static Font font2small;
 	/**
 	 * Font 2 small but smaller
 	 */
-	protected static final Font font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
+	protected static Font font2smallest;
 
 	/**
 	 * Constructs a new KeyPanel

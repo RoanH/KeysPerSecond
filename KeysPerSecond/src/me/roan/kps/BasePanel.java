@@ -23,7 +23,7 @@ public abstract class BasePanel extends JPanel {
 	/**
 	 * Font 1 used to draw the title of the panel
 	 */
-	protected static final Font font1 = new Font("Dialog", Font.BOLD, SizeManager.basePanelTitleTextSize);
+	protected static Font font1;
 	
 	/**
 	 * Constructs a new BasePanel
