@@ -38,10 +38,6 @@ public class GraphPanel extends JPanel{
 	 */
 	private static final Stroke avgstroke = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0F, null, 0);
 	/**
-	 * Whether or not the graph is active and plotting
-	 */
-	protected boolean enabled = true;
-	/**
 	 * Number of frames, this is used to determine
 	 * the width of the graph and it equal
 	 * to the number of keys being tracked +
@@ -68,7 +64,7 @@ public class GraphPanel extends JPanel{
 	
 	@Override
 	public void paintComponent(Graphics g1){
-		if(enabled){
+		if(Main.config.showGraph){
 			try{
 				Graphics2D g = (Graphics2D)g1;
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -126,7 +122,7 @@ public class GraphPanel extends JPanel{
 	 * @param value The new point to add
 	 */
 	public void addPoint(int value){
-		if(enabled){
+		if(Main.config.showGraph){
 			if(value > maxval){
 				maxval = value;
 			}

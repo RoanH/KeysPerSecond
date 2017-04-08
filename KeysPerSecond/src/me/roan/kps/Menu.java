@@ -2,7 +2,6 @@ package me.roan.kps;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -11,7 +10,6 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
@@ -38,6 +36,10 @@ public class Menu {
 	private static final JCheckBoxMenuItem p2 = new JCheckBoxMenuItem("2 digits beyond the decimal point");
 	private static final JCheckBoxMenuItem p3 = new JCheckBoxMenuItem("3 digits beyond the decimal point");
 	private static final JCheckBoxMenuItem max = new JCheckBoxMenuItem("Show max");
+	private static final JCheckBoxMenuItem avg = new JCheckBoxMenuItem("Show average");
+	private static final JCheckBoxMenuItem cur = new JCheckBoxMenuItem("Show current");
+	private static final JCheckBoxMenuItem graph = new JCheckBoxMenuItem("Show graph");
+	private static final JCheckBoxMenuItem keys = new JCheckBoxMenuItem("Show keys");
 	
 	protected static final void repaint(){
 		snap.setForeground(Main.config.foreground);
@@ -141,22 +143,39 @@ public class Menu {
 		max.setSelected(Main.config.showMax);
 		max.addActionListener((e)->{
 			Main.config.showMax = max.isSelected();
-			SwingUtilities.invokeLater(()->{
-				try {
-					Main.reconfigure();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			});
+			Main.reconfigure();
+		});
+		avg.setSelected(Main.config.showAvg);
+		avg.addActionListener((e)->{
+			Main.config.showAvg = avg.isSelected();
+			Main.reconfigure();
+		});
+		cur.setSelected(Main.config.showCur);
+		cur.addActionListener((e)->{
+			Main.config.showCur = cur.isSelected();
+			Main.reconfigure();
+		});
+		keys.setSelected(Main.config.showKeys);
+		keys.addActionListener((e)->{
+			Main.config.showKeys = keys.isSelected();
+			Main.reconfigure();
+		});
+		graph.setSelected(Main.config.showGraph);
+		graph.addActionListener((e)->{
+			Main.config.showGraph = graph.isSelected();
+			Main.reconfigure();
 		});
 		
 		general.add(max);
+		general.add(avg);
+		general.add(cur);
+		general.add(keys);
+		general.add(graph);
 		general.add(overlay);
 		general.add(tAll);
-		general.add(precision);
 		
 		configure.add(general);
+		configure.add(precision);
 		
 		menu.add(configure);
 		menu.add(snap);
