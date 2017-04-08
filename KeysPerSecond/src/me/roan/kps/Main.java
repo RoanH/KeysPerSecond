@@ -48,6 +48,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -874,60 +875,65 @@ public class Main {
 		frame.setVisible(true);
 	}
 
-	protected static final void reconfigure() throws IOException{
-		frame.removeAll();
-		content = new JPanel(new GridLayout(1, 0, 2, 0));
-		ColorManager.prepareImages(config.showGraph, config.customColors);
-		SizeManager.scale(config.size);
-		if(ColorManager.transparency && config.opacitybg != 1.0F){
-			content.setOpaque(false);
-		}else{
-			content.setBackground(config.background);
-		}
-		config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
-		Key k;
-		int panels = 0;
-		for(KeyInformation i : config.keyinfo){
-			keys.put(i.keycode, k = new Key(i.name));
-			if(config.showKeys && i.visible){
-				content.add(k.getPanel());
+	protected static final void reconfigure(boolean color, double oldSize) throws IOException{
+		SwingUtilities.invokeLater(()->{
+			frame.getContentPane().removeAll();
+			content = new JPanel(new GridLayout(1, 0, 2, 0));
+			try {
+				ColorManager.prepareImages(config.showGraph, config.customColors);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(ColorManager.transparency && config.opacitybg != 1.0F){
+				content.setOpaque(false);
+			}else{
+				content.setBackground(config.background);
+			}
+			SizeManager.scale(config.size);
+			config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
+			Key k;
+			int panels = 0;
+			for(KeyInformation i : config.keyinfo){
+				keys.put(i.keycode, k = new Key(i.name));
+				if(config.showKeys && i.visible){
+					content.add(k.getPanel());
+					panels++;
+				}
+			}
+			if(config.showMax){
+				content.add(new MaxPanel());
 				panels++;
 			}
-		}
-		if(config.showMax){
-			content.add(new MaxPanel());
-			panels++;
-		}
-		if(config.showAvg){
-			content.add(new AvgPanel());
-			panels++;
-		}
-		if(config.showCur){
-			content.add(new NowPanel());
-			panels++;
-		}
-		if(panels == 0 && !config.showGraph){
-			return;//don't create a GUI if there's nothing to display
-		}
+			if(config.showAvg){
+				content.add(new AvgPanel());
+				panels++;
+			}
+			if(config.showCur){
+				content.add(new NowPanel());
+				panels++;
+			}
+			if(panels == 0 && !config.showGraph){
+				return;//don't create a GUI if there's nothing to display
+			}
 
-		Menu.repaint();
+			Menu.repaint();
 
-		JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
-		allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
-		if(panels > 0){
-			allcontent.add(content);
-		}
-		if(config.showGraph){
-			allcontent.add(graph);
-			GraphPanel.frames = panels > 0 ? panels : 5;
-		}
-		frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
-		frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed(), config.background.getGreen(), config.background.getBlue(), config.opacitybg) : config.background);
-		frame.add(allcontent);
-		frame.revalidate();
-		frame.repaint();
-		frame.validate();
-		System.out.println("redo");
+			JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
+			allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
+			if(panels > 0){
+				allcontent.add(content);
+			}
+			if(config.showGraph){
+				allcontent.add(graph);
+				GraphPanel.frames = panels > 0 ? panels : 5;
+			}
+			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
+			frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed(), config.background.getGreen(), config.background.getBlue(), config.opacitybg) : config.background);
+			frame.add(allcontent);
+			frame.setVisible(true);
+			System.out.println("redo");
+		});
 	}
 
 	/**
