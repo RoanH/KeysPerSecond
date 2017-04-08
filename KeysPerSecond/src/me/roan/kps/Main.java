@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +37,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -50,7 +51,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -141,6 +141,14 @@ public class Main {
 	 * The configuration
 	 */
 	protected static Configuration config = new Configuration();
+	/**
+	 * The loop timer
+	 */
+	protected static ScheduledExecutorService timer = null;
+	/**
+	 * The loop timer task
+	 */
+	protected static ScheduledFuture<?> future = null;
 
 	/**
 	 * Main method
@@ -207,8 +215,13 @@ public class Main {
 	 * average, current and 
 	 * maximum keys per second
 	 */
-	private static final void mainLoop(){
-		Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+	protected static final void mainLoop(){
+		if(timer == null){
+			timer = Executors.newSingleThreadScheduledExecutor();
+		}else{
+			future.cancel(false);
+		}
+		future = timer.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if(!suspended){
@@ -448,19 +461,7 @@ public class Main {
 			config.saveConfig();
 		});
 		load.addActionListener((e)->{
-			JFileChooser chooser = new JFileChooser();
-			chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
-				return;
-			}
-			File saveloc = chooser.getSelectedFile();
-			Configuration toLoad = new Configuration();
-			if((toLoad.loadConfig(saveloc))){
-				config = toLoad;
-				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-			}else{
-				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+			if(!Configuration.loadConfiguration()){
 				return;
 			}
 
@@ -581,7 +582,7 @@ public class Main {
 		line.add(s);
 		line.add(new JLabel("%"));
 		pconfig.add(line, BorderLayout.PAGE_END);
-		JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 		config.size = ((double)s.getValue()) / 100.0D;
 	}
 	
@@ -838,7 +839,6 @@ public class Main {
 			try {
 				ColorManager.prepareImages(config.showGraph, config.customColors);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if(ColorManager.transparency && config.opacitybg != 1.0F){

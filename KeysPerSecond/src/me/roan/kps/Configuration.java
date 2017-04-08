@@ -109,6 +109,30 @@ public class Configuration {
 	 * The factor to multiply the frame size with
 	 */
 	protected double size = 1.0D;
+	
+	/**
+	 * Loads a configuration file (with GUI)
+	 * @param saveloc The save location
+	 * @return Whether or not the config was loaded successfully
+	 */
+	protected static final boolean loadConfiguration(){
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+			return false;
+		}
+		File saveloc = chooser.getSelectedFile();
+		Configuration toLoad = new Configuration();
+		if((toLoad.loadConfig(saveloc))){
+			Main.config = toLoad;
+			JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+		}else{
+			JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Loads a configuration file
