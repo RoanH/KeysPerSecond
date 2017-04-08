@@ -7,9 +7,14 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
@@ -28,6 +33,10 @@ public class Menu {
 	 * The general menu
 	 */
 	private static final JMenu general = new JMenu("General");
+	/**
+	 * The graph menu
+	 */
+	private static final JMenu mgraph = new JMenu("Graph");
 	/**
 	 * Precision menu
 	 */
@@ -64,6 +73,10 @@ public class Menu {
 	 * The custom colors menu
 	 */
 	private static final JMenuItem colorcustom = new JMenuItem("Configure colours");
+	/**
+	 * The backlog menu
+	 */
+	private static final JMenuItem backlog = new JMenuItem("Backlog");
 	/**
 	 * Whether or not to use custom colors
 	 */
@@ -107,11 +120,15 @@ public class Menu {
 	/**
 	 * Whether or not to show the graph
 	 */
-	private static final JCheckBoxMenuItem graph = new JCheckBoxMenuItem("Show graph");
+	private static final JCheckBoxMenuItem graph = new JCheckBoxMenuItem("Enable graph");
 	/**
 	 * Whether or not to show keys
 	 */
 	private static final JCheckBoxMenuItem keys = new JCheckBoxMenuItem("Show keys");
+	/**
+	 * Whether or not to show keys
+	 */
+	private static final JCheckBoxMenuItem graphavg = new JCheckBoxMenuItem("Show average");
 	
 	/**
 	 * Sets the foreground and background
@@ -142,6 +159,9 @@ public class Menu {
 		configcolors.setForeground(Main.config.foreground);
 		colorenable.setForeground(Main.config.foreground);
 		colorcustom.setForeground(Main.config.foreground);
+		mgraph.setForeground(Main.config.foreground);
+		graphavg.setForeground(Main.config.foreground);
+		backlog.setForeground(Main.config.foreground);
 		
 		menu.setBackground(Main.config.background);
 		configure.setBackground(Main.config.background);
@@ -167,12 +187,16 @@ public class Menu {
 		configcolors.setBackground(Main.config.background);
 		colorenable.setBackground(Main.config.background);
 		colorcustom.setBackground(Main.config.background);
+		mgraph.setBackground(Main.config.background);
+		graphavg.setBackground(Main.config.background);
+		backlog.setBackground(Main.config.background);
 		
 		menu.setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		precision.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		configure.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 		configcolors.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
+		mgraph.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 	}
 
 	/**
@@ -203,6 +227,9 @@ public class Menu {
 		configkeys.setOpaque(true);
 		colorenable.setOpaque(true);
 		colorcustom.setOpaque(true);
+		mgraph.setOpaque(true);
+		graphavg.setOpaque(true);
+		backlog.setOpaque(true);
 		snap.addActionListener((e)->{
 			Point loc = Main.frame.getLocationOnScreen();
 			Rectangle bounds = Main.frame.getGraphicsConfiguration().getBounds();	
@@ -328,17 +355,39 @@ public class Menu {
 		});
 		configcolors.add(colorenable);
 		configcolors.add(colorcustom);
+		graphavg.setSelected(Main.config.graphAvg);
+		graphavg.addActionListener((e)->{
+			Main.config.graphAvg = graphavg.isSelected();
+		});
+		backlog.addActionListener((e)->{
+			JPanel pconfig = new JPanel();
+			JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
+			JLabel lbacklog;
+			if(Main.config.updateRate != 1000){
+				lbacklog = new JLabel("Backlog (seconds / " + (1000 / Main.config.updateRate) + "): ");
+			}else{
+				lbacklog = new JLabel("Backlog (seconds): ");
+			}
+			pconfig.add(lbacklog);
+			pconfig.add(backlog);
+			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			Main.config.backlog = (int)backlog.getValue();
+		});
+		
+		mgraph.add(graph);
+		mgraph.add(graphavg);
+		mgraph.add(backlog);
 		
 		general.add(max);
 		general.add(avg);
 		general.add(cur);
 		general.add(keys);
-		general.add(graph);
 		general.add(overlay);
 		general.add(tAll);
 		
 		configure.add(general);
 		configure.add(configkeys);
+		configure.add(mgraph);
 		configure.add(configcolors);
 		configure.add(precision);
 		
