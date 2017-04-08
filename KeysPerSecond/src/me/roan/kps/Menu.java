@@ -23,14 +23,15 @@ public class Menu {
 	
 	private static final JMenu configure = new JMenu("Configure");
 	private static final JMenu general = new JMenu("General");
+	private static final JMenu precision = new JMenu("Precision");
 	private static final JMenuItem snap = new JMenuItem("Snap to edges");
 	private static final JMenuItem exit = new JMenuItem("Exit");
 	private static final JMenuItem pause = new JMenuItem("Pause/resume");
 	private static final JMenuItem sreset = new JMenuItem("Reset stats");
 	private static final JMenuItem treset = new JMenuItem("Reset totals");
-	private static final JMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
-	private static final JMenuItem overlay = new JCheckBoxMenuItem("Overlay osu!");
-	private static final JMenuItem precision = new JMenu("Precision");
+	private static final JMenuItem configkeys = new JMenuItem("Keys");
+	private static final JCheckBoxMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
+	private static final JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay osu!");
 	private static final JCheckBoxMenuItem p0 = new JCheckBoxMenuItem("No digits beyond the decimal point");
 	private static final JCheckBoxMenuItem p1 = new JCheckBoxMenuItem("1 digit beyond the decimal point");
 	private static final JCheckBoxMenuItem p2 = new JCheckBoxMenuItem("2 digits beyond the decimal point");
@@ -42,19 +43,78 @@ public class Menu {
 	private static final JCheckBoxMenuItem keys = new JCheckBoxMenuItem("Show keys");
 	
 	protected static final void repaint(){
+		menu.setForeground(Main.config.foreground);
+		configure.setForeground(Main.config.foreground);
+		general.setForeground(Main.config.foreground);
+		precision.setForeground(Main.config.foreground);
 		snap.setForeground(Main.config.foreground);
 		exit.setForeground(Main.config.foreground);
 		pause.setForeground(Main.config.foreground);
-		menu.setForeground(Main.config.foreground);
-		menu.setBackground(Main.config.background);
-		treset.setForeground(Main.config.foreground);
 		sreset.setForeground(Main.config.foreground);
-		tAll.setSelected(Main.config.trackAll);
+		treset.setForeground(Main.config.foreground);
+		tAll.setForeground(Main.config.foreground);
+		overlay.setForeground(Main.config.foreground);
+		p0.setForeground(Main.config.foreground);
+		p1.setForeground(Main.config.foreground);
+		p2.setForeground(Main.config.foreground);
+		p3.setForeground(Main.config.foreground);
+		max.setForeground(Main.config.foreground);
+		avg.setForeground(Main.config.foreground);
+		cur.setForeground(Main.config.foreground);
+		graph.setForeground(Main.config.foreground);
+		keys.setForeground(Main.config.foreground);
+		configkeys.setForeground(Main.config.foreground);
+		
+		menu.setBackground(Main.config.background);
+		configure.setBackground(Main.config.background);
+		general.setBackground(Main.config.background);
+		precision.setBackground(Main.config.background);
+		snap.setBackground(Main.config.background);
+		exit.setBackground(Main.config.background);
+		pause.setBackground(Main.config.background);
+		sreset.setBackground(Main.config.background);
+		treset.setBackground(Main.config.background);
+		tAll.setBackground(Main.config.background);
+		overlay.setBackground(Main.config.background);
+		p0.setBackground(Main.config.background);
+		p1.setBackground(Main.config.background);
+		p2.setBackground(Main.config.background);
+		p3.setBackground(Main.config.background);
+		max.setBackground(Main.config.background);
+		avg.setBackground(Main.config.background);
+		cur.setBackground(Main.config.background);
+		graph.setBackground(Main.config.background);
+		keys.setBackground(Main.config.background);
+		configkeys.setBackground(Main.config.background);
 		
 		menu.setBorder(BorderFactory.createLineBorder(Main.config.foreground));
+		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
+		precision.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
+		configure.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
 	}
 
 	protected static final void createMenu(){
+		menu.setOpaque(true);
+		configure.setOpaque(true);
+		general.setOpaque(true);
+		precision.setOpaque(true);
+		snap.setOpaque(true);
+		exit.setOpaque(true);
+		pause.setOpaque(true);
+		sreset.setOpaque(true);
+		treset.setOpaque(true);
+		tAll.setOpaque(true);
+		overlay.setOpaque(true);
+		p0.setOpaque(true);
+		p1.setOpaque(true);
+		p2.setOpaque(true);
+		p3.setOpaque(true);
+		max.setOpaque(true);
+		avg.setOpaque(true);
+		cur.setOpaque(true);
+		graph.setOpaque(true);
+		keys.setOpaque(true);
+		configkeys.setOpaque(true);
 		snap.addActionListener((e)->{
 			Point loc = Main.frame.getLocationOnScreen();
 			Rectangle bounds = Main.frame.getGraphicsConfiguration().getBounds();	
@@ -165,6 +225,10 @@ public class Menu {
 			Main.config.showGraph = graph.isSelected();
 			Main.reconfigure();
 		});
+		configkeys.addActionListener((e)->{
+			Main.configureKeys();
+			Main.reconfigure();
+		});
 		
 		general.add(max);
 		general.add(avg);
@@ -175,6 +239,7 @@ public class Menu {
 		general.add(tAll);
 		
 		configure.add(general);
+		configure.add(configkeys);
 		configure.add(precision);
 		
 		menu.add(configure);
