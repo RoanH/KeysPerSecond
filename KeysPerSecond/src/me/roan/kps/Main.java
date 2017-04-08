@@ -192,7 +192,7 @@ public class Main {
 
 		//Set configuration for the keys
 		Configuration toLoad = new Configuration();
-		if(config != null && !toLoad.loadConfig(new File(config))){
+		if(config != null && toLoad.loadConfig(new File(config))){
 			Main.config = toLoad;
 		}else{
 			configure();
@@ -515,7 +515,7 @@ public class Main {
 			save.setEnabled(true);
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v4.5, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v5.0, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				+ "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
