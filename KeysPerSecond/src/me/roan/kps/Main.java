@@ -20,8 +20,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -670,6 +672,7 @@ public class Main {
 	 * Shows the key configuration dialog
 	 */
 	protected static final void configureKeys(){
+		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
 		JPanel keyform = new JPanel(new BorderLayout());
 		keyform.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
 		JTable keys = new JTable();
@@ -770,7 +773,9 @@ public class Main {
 			}
 		});
 		keyform.add(newkey, BorderLayout.PAGE_END);
-		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Back"}, 0);
+		if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Save", "Cancel"}, 0) == 1){
+			config.keyinfo = copy;
+		}
 	}
 
 	/**
