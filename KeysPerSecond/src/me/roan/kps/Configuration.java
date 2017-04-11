@@ -186,22 +186,47 @@ public class Configuration {
 					trackAll = Boolean.parseBoolean(args[1]);
 					break;
 				case "updateRate":
-					updateRate = Integer.parseInt(args[1]);
-					if(1000 % updateRate != 0){
-						throw new IllegalArgumentException("Update rate must conform to: 1000 mod updateRate = 0");
+					try{
+						updateRate = Integer.parseInt(args[1]);
+						if(1000 % updateRate != 0 || updateRate <= 0){
+							updateRate = 1000;
+						}
+					}catch(NumberFormatException e){
+						updateRate = 1000;
 					}
 					break;
 				case "precision":
-					precision = Integer.parseInt(args[1]);
+					try{
+						precision = Integer.parseInt(args[1]);
+						if(precision < 0 || precision > 3){
+							precision = 0;
+						}
+					}catch(NumberFormatException e){
+						precision = 0;
+					}
 					break;
 				case "size":
-					size = Double.parseDouble(args[1]);
+					try{
+						size = Double.parseDouble(args[1]);
+						if(size <= 0.0D){
+							size = 1.0D;
+						}
+					}catch(NumberFormatException e){
+						size = 1.0D;
+					}
 					break;
 				case "graphEnabled":
 					showGraph = Boolean.parseBoolean(args[1]);
 					break;
 				case "graphBacklog":
-					backlog = Integer.parseInt(args[1]);
+					try{
+						backlog = Integer.parseInt(args[1]);
+						if(backlog <= 0){
+							backlog = 30;
+						}
+					}catch(NumberFormatException e){
+						backlog = 30;
+					}
 					break;
 				case "graphAverage":
 					graphAvg = Boolean.parseBoolean(args[1]);
@@ -210,16 +235,38 @@ public class Configuration {
 					customColors = Boolean.parseBoolean(args[1]);
 					break;
 				case "foregroundColor":
-					foreground = parseColor(args[1]);
+					try{
+						foreground = parseColor(args[1]);
+					}catch(Exception e){
+						foreground = Color.CYAN;
+					}
 					break;
 				case "backgroundColor":
-					background = parseColor(args[1]);
+					try{
+						background = parseColor(args[1]);
+					}catch(Exception e){
+						background = Color.BLACK;
+					}
 					break;
 				case "foregroundOpacity":
-					opacityfg = Float.parseFloat(args[1]);
+					try{
+						opacityfg = Float.parseFloat(args[1]);
+						if(opacityfg > 1.0F || opacityfg < 0.0F){
+							opacityfg = 1.0F;
+						}
+					}catch(NumberFormatException e){
+						opacityfg = 1.0F;
+					}
 					break;
 				case "backgroundOpacity":
-					opacitybg = Float.parseFloat(args[1]);
+					try{
+						opacitybg = Float.parseFloat(args[1]);
+						if(opacitybg > 1.0F || opacitybg < 0.0F){
+							opacitybg = 1.0F;
+						}
+					}catch(NumberFormatException e){
+						opacitybg = 1.0F;
+					}
 					break;
 				}
 			}
