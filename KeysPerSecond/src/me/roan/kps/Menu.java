@@ -435,6 +435,7 @@ public class Menu {
 			Main.config.saveConfig();
 		});
 		load.addActionListener((e)->{
+			double oldScale = Main.config.size;
 			if(Configuration.loadConfiguration()){
 				menu.removeAll();
 				configure.removeAll();
@@ -444,6 +445,7 @@ public class Menu {
 				mgraph.removeAll();
 				rate.removeAll();
 				createMenu();
+				SizeManager.scale(1.0D / oldScale);
 				Main.reconfigure();
 				Main.mainLoop();
 			}
