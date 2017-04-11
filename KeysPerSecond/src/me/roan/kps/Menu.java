@@ -1,5 +1,6 @@
 package me.roan.kps;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -417,7 +418,7 @@ public class Menu {
 			rates[10].setSelected(true);
 		});
 		rate.add(rates[10]);
-		rates[11] = new JCheckBoxMenuItem("1ms", Main.config.updateRate == 1);
+		rates[11] = new ColoredMenuItem("1ms", Main.config.updateRate == 1);
 		rates[11].addActionListener((e)->{
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
@@ -478,5 +479,28 @@ public class Menu {
 		menu.add(load);
 		menu.add(save);
 		menu.add(exit);
+	}
+	
+	private static final class ColoredMenuItem extends JCheckBoxMenuItem{
+		/**
+		 * Serial ID
+		 */
+		private static final long serialVersionUID = 2897377593905514680L;
+
+		private ColoredMenuItem(String txt){
+			super(txt);
+		}
+		
+		private ColoredMenuItem(String txt, boolean selected){
+			super(txt, selected);
+		}
+		
+		@Override
+		protected void paintComponent(Graphics g){
+			super.paintComponent(g);//TODO proper icon loading & focus handling
+			g.setColor(Main.config.getBackgroundColor());
+			g.fillRect(0, 0, this.getHeight(), this.getHeight());
+			g.drawImage(ColorManager.checkmark, 0, 0, this.getHeight(), this.getHeight(), 0, 0, 100, 100, this);
+		}
 	}
 }
