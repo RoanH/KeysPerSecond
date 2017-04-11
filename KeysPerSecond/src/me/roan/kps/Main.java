@@ -835,10 +835,6 @@ public class Main {
 	 */
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
-			if(!config.customColors){
-				config.foreground = Color.CYAN;
-				config.background = Color.BLACK;
-			}
 			frame.getContentPane().removeAll();
 			content = new JPanel(new GridLayout(1, 0, 2, 0));
 			try {
@@ -846,10 +842,10 @@ public class Main {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(ColorManager.transparency && config.opacitybg != 1.0F){
+			if(ColorManager.transparency && config.getBackgroundOpacity() != 1.0F){
 				content.setOpaque(false);
 			}else{
-				content.setBackground(config.background);
+				content.setBackground(config.getBackgroundColor());
 			}
 			config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 			Key k;
@@ -880,7 +876,7 @@ public class Main {
 			Menu.repaint();
 
 			JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
-			allcontent.setOpaque(config.opacitybg != 1.0F ? !ColorManager.transparency : true);
+			allcontent.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 			if(panels > 0){
 				allcontent.add(content);
 			}
@@ -889,7 +885,7 @@ public class Main {
 				GraphPanel.frames = panels > 0 ? panels : 5;
 			}
 			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
-			frame.setBackground(config.opacitybg != 1.0F ? new Color(config.background.getRed() / 255.0F, config.background.getGreen() / 255.0F, config.background.getBlue() / 255.0F, config.opacitybg) : config.background);
+			frame.setBackground(config.getBackgroundOpacity() != 1.0F ? new Color(config.getBackgroundColor().getRed() / 255.0F, config.getBackgroundColor().getGreen() / 255.0F, config.getBackgroundColor().getBlue() / 255.0F, config.getBackgroundOpacity()) : config.getBackgroundColor());
 			frame.add(allcontent);
 			frame.setVisible(true);
 		});

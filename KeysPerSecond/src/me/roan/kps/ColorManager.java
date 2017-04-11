@@ -59,10 +59,10 @@ public class ColorManager {
 	 */
 	public static final void prepareImages(boolean graph, boolean custom) throws IOException{
 		if(custom){
-			if(Main.config.opacityfg != 1.0F || Main.config.opacitybg != 1.0F){
+			if(Main.config.getForegroundOpacity() != 1.0F || Main.config.getBackgroundOpacity() != 1.0F){
 				transparency = true;
 			}
-			alphaAqua = new Color(Main.config.foreground.getRed(), Main.config.foreground.getGreen(), Main.config.foreground.getBlue(), 51);
+			alphaAqua = new Color(Main.config.getForegroundColor().getRed(), Main.config.getForegroundColor().getGreen(), Main.config.getForegroundColor().getBlue(), 51);
 			pressed = dye(ImageIO.read(ClassLoader.getSystemResource("hit.png")));
 			unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key.png")));
 			if(graph){
@@ -93,7 +93,7 @@ public class ColorManager {
 	private static final Image dye(BufferedImage img){
 		for(int x = 0; x < img.getWidth(); x++){
 			for(int y = 0; y < img.getHeight(); y++){
-				img.setRGB(x, y, repaintPixel(img.getRGB(x, y), Main.config.foreground));
+				img.setRGB(x, y, repaintPixel(img.getRGB(x, y), Main.config.getForegroundColor()));
 			}
 		}
 		return img;

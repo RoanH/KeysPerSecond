@@ -111,6 +111,34 @@ public class Configuration {
 	protected double size = 1.0D;
 	
 	/**
+	 * @return The background opacity
+	 */
+	protected final float getBackgroundOpacity(){
+		return customColors ? opacitybg : 1.0F;
+	}
+	
+	/**
+	 * @return The foreground opacity
+	 */
+	protected final float getForegroundOpacity(){
+		return customColors ? opacityfg : 1.0F;
+	}
+	
+	/**
+	 * @return The background color
+	 */
+	protected final Color getBackgroundColor(){
+		return customColors ? background : Color.BLACK;
+	}
+	
+	/**
+	 * @return The foreground color
+	 */
+	protected final Color getForegroundColor(){
+		return customColors ? foreground : Color.CYAN;
+	}
+	
+	/**
 	 * Loads a configuration file (with GUI)
 	 * @param saveloc The save location
 	 * @return Whether or not the config was loaded successfully
