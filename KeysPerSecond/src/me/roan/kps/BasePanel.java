@@ -38,10 +38,10 @@ public abstract class BasePanel extends JPanel {
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
 		if(ColorManager.transparency){
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.opacityfg));
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 		}
 		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
-		g.setColor(Main.config.foreground);
+		g.setColor(Main.config.getForegroundColor());
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setFont(font1);
 		g.drawString(getTitle(), (this.getWidth() - g.getFontMetrics().stringWidth(getTitle())) / 2, SizeManager.keyTitleTextOffset);

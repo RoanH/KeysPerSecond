@@ -72,12 +72,12 @@ public class GraphPanel extends JPanel{
 				if(ColorManager.transparency){
 					g.setColor(ColorManager.transparent);
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.opacitybg));
-					g.setColor(Main.config.background);
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getBackgroundOpacity()));
+					g.setColor(Main.config.getBackgroundColor());
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.opacityfg));
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getBackgroundOpacity()));
 				}else{
-					g.setColor(Main.config.background);
+					g.setColor(Main.config.getBackgroundColor());
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
 					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 				}
@@ -93,14 +93,14 @@ public class GraphPanel extends JPanel{
 				}
 				if(Main.config.graphAvg){
 					int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.avg / (float)maxval)));
-					g.setColor(Main.config.foreground.darker());
+					g.setColor(Main.config.getForegroundColor().darker());
 					g.setStroke(avgstroke);
 					g.drawLine(SizeManager.graphOffset + 2, y, this.getWidth() - SizeManager.graphOffset - 2, y);
 				}
 				g.setStroke(line);
 				g.setColor(ColorManager.alphaAqua);
 				g.fillPolygon(poly);
-				g.setColor(Main.config.foreground);
+				g.setColor(Main.config.getForegroundColor());
 				g.drawPolygon(poly);
 				if(frames > 1){
 					g.drawImage(ColorManager.gleft, 3, 2, 2 + SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 42, 64, null);

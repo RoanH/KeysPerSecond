@@ -65,34 +65,34 @@ public class Menu {
 	 * color of the popup menu
 	 */
 	protected static final void repaint(){
-		menu.setForeground(Main.config.foreground);
-		configure.setForeground(Main.config.foreground);
-		general.setForeground(Main.config.foreground);
-		precision.setForeground(Main.config.foreground);
-		configcolors.setForeground(Main.config.foreground);
-		mgraph.setForeground(Main.config.foreground);
-		rate.setForeground(Main.config.foreground);
+		menu.setForeground(Main.config.getForegroundColor());
+		configure.setForeground(Main.config.getForegroundColor());
+		general.setForeground(Main.config.getForegroundColor());
+		precision.setForeground(Main.config.getForegroundColor());
+		configcolors.setForeground(Main.config.getForegroundColor());
+		mgraph.setForeground(Main.config.getForegroundColor());
+		rate.setForeground(Main.config.getForegroundColor());
 		
-		menu.setBackground(Main.config.background);
-		configure.setBackground(Main.config.background);
-		general.setBackground(Main.config.background);
-		precision.setBackground(Main.config.background);
-		configcolors.setBackground(Main.config.background);
-		mgraph.setBackground(Main.config.background);
-		rate.setBackground(Main.config.background);
+		menu.setBackground(Main.config.getBackgroundColor());
+		configure.setBackground(Main.config.getBackgroundColor());
+		general.setBackground(Main.config.getBackgroundColor());
+		precision.setBackground(Main.config.getBackgroundColor());
+		configcolors.setBackground(Main.config.getBackgroundColor());
+		mgraph.setBackground(Main.config.getBackgroundColor());
+		rate.setBackground(Main.config.getBackgroundColor());
 		
 		for(JMenuItem item : components){
-			item.setForeground(Main.config.foreground);
-			item.setBackground(Main.config.background);
+			item.setForeground(Main.config.getForegroundColor());
+			item.setBackground(Main.config.getBackgroundColor());
 		}
 		
-		menu.setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		precision.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		configure.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		configcolors.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		mgraph.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		rate.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
+		menu.setBorder(BorderFactory.createLineBorder(Main.config.getForegroundColor()));
+		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.getForegroundColor()));
+		precision.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.getForegroundColor()));
+		configure.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.getForegroundColor()));
+		configcolors.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.getForegroundColor()));
+		mgraph.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.getForegroundColor()));
+		rate.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.getForegroundColor()));
 	}
 
 	/**
