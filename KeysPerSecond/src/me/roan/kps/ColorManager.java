@@ -53,7 +53,7 @@ public class ColorManager {
 	 * Checkmark icon
 	 */
 	protected static Image checkmark;
-
+	
 	/**
 	 * Prepares the colours and images
 	 * used by the program.
@@ -74,7 +74,6 @@ public class ColorManager {
 				gleft = dye(ImageIO.read(ClassLoader.getSystemResource("graphleft.png")));
 				gmid = dye(ImageIO.read(ClassLoader.getSystemResource("graphmiddle.png")));
 			}
-			checkmark = dye(ImageIO.read(ClassLoader.getSystemResource("checkmark.png")));
 		}else{
 			alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
 			pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
@@ -84,8 +83,8 @@ public class ColorManager {
 				gleft = ImageIO.read(ClassLoader.getSystemResource("graphleft.png"));
 				gmid = ImageIO.read(ClassLoader.getSystemResource("graphmiddle.png"));
 			}
-			checkmark = ImageIO.read(ClassLoader.getSystemResource("checkmark.png"));
 		}
+		checkmark = dye(ImageIO.read(ClassLoader.getSystemResource("checkmark.png")));
 	}
 	
 	/**
