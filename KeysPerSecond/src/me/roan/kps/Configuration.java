@@ -152,12 +152,21 @@ public class Configuration {
 		}
 		File saveloc = chooser.getSelectedFile();
 		Configuration toLoad = new Configuration();
-		if((toLoad.loadConfig(saveloc))){
-			Main.config = toLoad;
-			JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
+			if(toLoad.loadLegacyFormat(saveloc)){
+				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				Main.config = toLoad;
+			}else{
+				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
 		}else{
-			JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-			return false;
+			if(toLoad.loadNewFormat(saveloc)){
+				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded but some default values were used", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			}else{
+				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			}
+			Main.config = toLoad;
 		}
 		return true;
 	}
@@ -171,16 +180,18 @@ public class Configuration {
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			return loadLegacyFormat(saveloc);
 		}else{
-			return loadNewFormat(saveloc);
+			loadNewFormat(saveloc);
+			return true;
 		}
 	}
 	
 	/**
 	 * Loads a new format configuration file
 	 * @param saveloc The save location
-	 * @return Whether or not the config was loaded successfully
+	 * @return Whether or not some defaults were used
 	 */
 	private final boolean loadNewFormat(File saveloc){
+		boolean modified = false;
 		try{
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc)));
 			String line;
@@ -191,7 +202,11 @@ public class Configuration {
 				String[] args = line.replace(" ", "").split(":");
 				if(args[0].startsWith("keys")){
 					while((line = in.readLine()) != null && (line = line.replace(" ", "")).startsWith("-")){
-						keyinfo.add(parseKey(line.substring(1)));
+						try{
+							keyinfo.add(parseKey(line.substring(1)));
+						}catch(Exception e){
+							modified = true;;
+						}
 					}
 				}
 				switch(args[0]){
@@ -218,9 +233,11 @@ public class Configuration {
 						updateRate = Integer.parseInt(args[1]);
 						if(1000 % updateRate != 0 || updateRate <= 0){
 							updateRate = 1000;
+							modified = true;
 						}
 					}catch(NumberFormatException e){
 						updateRate = 1000;
+						modified = true;
 					}
 					break;
 				case "precision":
@@ -228,9 +245,11 @@ public class Configuration {
 						precision = Integer.parseInt(args[1]);
 						if(precision < 0 || precision > 3){
 							precision = 0;
+							modified = true;
 						}
 					}catch(NumberFormatException e){
 						precision = 0;
+						modified = true;
 					}
 					break;
 				case "size":
@@ -238,9 +257,11 @@ public class Configuration {
 						size = Double.parseDouble(args[1]);
 						if(size <= 0.0D){
 							size = 1.0D;
+							modified = true;
 						}
 					}catch(NumberFormatException e){
 						size = 1.0D;
+						modified = true;
 					}
 					break;
 				case "graphEnabled":
@@ -251,9 +272,11 @@ public class Configuration {
 						backlog = Integer.parseInt(args[1]);
 						if(backlog <= 0){
 							backlog = 30;
+							modified = true;
 						}
 					}catch(NumberFormatException e){
 						backlog = 30;
+						modified = true;
 					}
 					break;
 				case "graphAverage":
@@ -267,6 +290,7 @@ public class Configuration {
 						foreground = parseColor(args[1]);
 					}catch(Exception e){
 						foreground = Color.CYAN;
+						modified = true;
 					}
 					break;
 				case "backgroundColor":
@@ -274,6 +298,7 @@ public class Configuration {
 						background = parseColor(args[1]);
 					}catch(Exception e){
 						background = Color.BLACK;
+						modified = true;
 					}
 					break;
 				case "foregroundOpacity":
@@ -281,9 +306,11 @@ public class Configuration {
 						opacityfg = Float.parseFloat(args[1]);
 						if(opacityfg > 1.0F || opacityfg < 0.0F){
 							opacityfg = 1.0F;
+							modified = true;
 						}
 					}catch(NumberFormatException e){
 						opacityfg = 1.0F;
+						modified = true;
 					}
 					break;
 				case "backgroundOpacity":
@@ -291,18 +318,20 @@ public class Configuration {
 						opacitybg = Float.parseFloat(args[1]);
 						if(opacitybg > 1.0F || opacitybg < 0.0F){
 							opacitybg = 1.0F;
+							modified = true;
 						}
 					}catch(NumberFormatException e){
 						opacitybg = 1.0F;
+						modified = true;
 					}
 					break;
 				}
 			}
 			in.close();
-			return true;
+			return modified;
 		}catch(Throwable t){
 			t.printStackTrace();
-			return false;
+			return true;
 		}
 	}
 	
