@@ -446,7 +446,7 @@ public class Menu {
 				mgraph.removeAll();
 				rate.removeAll();
 				createMenu();
-				SizeManager.scale(1.0D / oldScale);
+				SizeManager.scale(Main.config.size / oldScale);
 				Main.reconfigure();
 				Main.mainLoop();
 			}

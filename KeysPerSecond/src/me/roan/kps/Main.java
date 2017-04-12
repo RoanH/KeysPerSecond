@@ -573,7 +573,7 @@ public class Main {
 	 */
 	protected static final void configureSize(){
 		JPanel pconfig = new JPanel(new BorderLayout());
-		JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, 200, 1));
+		JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, Integer.MAX_VALUE, 1));
 		JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
 				+ "The precentage specifies how big the window is in<br>"
 				+ "comparison to the default size of the window.<html>");
