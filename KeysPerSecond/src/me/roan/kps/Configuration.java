@@ -448,6 +448,7 @@ public class Configuration {
 			}
 			return true;
 		} catch (Exception e1) {
+			e1.printStackTrace();
 			return false;
 		}
 	}

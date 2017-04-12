@@ -168,8 +168,8 @@ public class Menu {
 			Rectangle bounds = Main.frame.getGraphicsConfiguration().getBounds();	
 			Main.frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
 				Math.abs((loc.x + Main.frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - Main.frame.getWidth() : loc.x, 
-						Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
-							Math.abs((loc.y + Main.frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - Main.frame.getHeight() : loc.y);
+				Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
+				Math.abs((loc.y + Main.frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - Main.frame.getHeight() : loc.y);
 		});
 		exit.addActionListener((e)->{
 			Main.exit();

@@ -161,7 +161,7 @@ public class Main {
 		if(args.length >= 1){
 			config = args[0];
 			for(int i = 1; i < args.length; i++){
-				config += args[i];
+				config += " " + args[i];
 			}
 			System.out.println("Attempting to load config: " + config);
 		}
