@@ -289,13 +289,15 @@ public class Main {
 				if(keys.containsKey(event.getKeyCode()) && !suspended){
 					keys.get(event.getKeyCode()).keyPressed();	
 				}
+				System.out.println(Integer.toBinaryString(event.getModifiers()));
+				System.out.println(Integer.toBinaryString(NativeKeyEvent.CTRL_MASK));
 				if(event.getKeyCode() == NativeKeyEvent.VC_P && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					resetStats();
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_U && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					exit();
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					resetTotals();
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
 					if(frame.getContentPane().getComponentCount() != 0){
 						frame.setVisible(!frame.isVisible());
 					}
