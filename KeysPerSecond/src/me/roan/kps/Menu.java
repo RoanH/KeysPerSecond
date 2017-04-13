@@ -190,12 +190,15 @@ public class Menu {
 			Iterator<Entry<Integer, Key>> iter = Main.keys.entrySet().iterator();
 			while(iter.hasNext()){
 				Entry<Integer, Key> key = iter.next();
+				boolean remove = true;
 				for(KeyInformation info : Main.config.keyinfo){
 					if(info.keycode == key.getKey()){
-						continue;
+						remove = false;
 					}
 				}
-				iter.remove();
+				if(remove){
+					iter.remove();
+				}
 			}
 		});
 		overlay.setSelected(Main.config.overlay);
@@ -541,16 +544,12 @@ public class Menu {
 				field.setAccessible(true);
 				field.set(ui, checkmark);
 			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
