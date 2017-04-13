@@ -202,11 +202,11 @@ public class Main {
 			}catch(NullPointerException e){
 				e.printStackTrace();
 				try{
-					JOptionPane.showInternalMessageDialog(null, "Failed to load the configuration menu, use the live menu instead", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Failed to load the configuration menu, however you can use the live menu instead", "Keys per second", JOptionPane.ERROR_MESSAGE);
 				}catch(Throwable t){
 					t.printStackTrace();
 				}
-				System.err.println("Failed to load the configuration menu, you can use the live menu instead");
+				System.err.println("Failed to load the configuration menu, however you can use the live menu instead");
 			}
 		}
 		
@@ -292,6 +292,7 @@ public class Main {
 
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event) {
+				boolean ctrl = (!frame.isFocusOwner()) ? ((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) : (((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) && (lastevent == null ? false : ((lastevent.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0)));
 				lastevent = event;
 				if(config.trackAll && !keys.containsKey(event.getKeyCode())){
 					keys.put(event.getKeyCode(), new Key(NativeKeyEvent.getKeyText(lastevent.getKeyCode())));
@@ -299,21 +300,19 @@ public class Main {
 				if(keys.containsKey(event.getKeyCode()) && !suspended){
 					keys.get(event.getKeyCode()).keyPressed();	
 				}
-				System.out.println(Integer.toBinaryString(event.getModifiers()));
-				System.out.println(Integer.toBinaryString(NativeKeyEvent.CTRL_MASK));
-				if(event.getKeyCode() == NativeKeyEvent.VC_P && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+				if(event.getKeyCode() == NativeKeyEvent.VC_P && ctrl){
 					resetStats();
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_U && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_U && ctrl){
 					exit();
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && ctrl){
 					resetTotals();
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && (event.getModifiers() & NativeKeyEvent.CTRL_MASK) == NativeKeyEvent.CTRL_MASK){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && ctrl){
 					if(frame.getContentPane().getComponentCount() != 0){
 						frame.setVisible(!frame.isVisible());
 					}
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_T && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_T && ctrl){
 					suspended = !suspended;
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_R && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_R && ctrl){
 					double oldScale = config.size;
 					config.reloadConfig();
 					Menu.resetData(oldScale);
