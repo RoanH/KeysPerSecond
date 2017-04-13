@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -193,9 +194,31 @@ public class Main {
 		setupKeyboardHook();
 
 		//Set configuration for the keys
-		Configuration toLoad = new Configuration(config == null ? null : new File(config));
-		if(config != null && toLoad.loadConfig(new File(config))){
-			Main.config = toLoad;
+		if(config != null){
+			Configuration toLoad = new Configuration(config == null ? null : new File(config));
+			int index = config.lastIndexOf(File.separatorChar);
+			File dir = new File(config.substring(0, index));
+			final String name = config.substring(index + 1);
+			File[] files = null;
+			if(dir.exists()){
+				files = dir.listFiles((FilenameFilter) (f, n)->{
+					for(int i = 0; i < name.length(); i++){
+						char ch = name.charAt(i);
+						if(ch == '?'){
+							continue;
+						}
+						if(i >= n.length() || ch != n.charAt(i)){
+							return false;
+						}
+					}
+					return true;
+				});
+			}
+			if(files != null && files.length > 0){
+				toLoad.loadConfig(files[0]);
+				Main.config = toLoad;
+				System.out.println("Loaded config file: " + files[0].getName());
+			}
 		}else{
 			try{
 				configure();
