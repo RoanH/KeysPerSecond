@@ -197,7 +197,17 @@ public class Main {
 		if(config != null && toLoad.loadConfig(new File(config))){
 			Main.config = toLoad;
 		}else{
-			configure();
+			try{
+				configure();
+			}catch(NullPointerException e){
+				e.printStackTrace();
+				try{
+					JOptionPane.showInternalMessageDialog(null, "Failed to load the configuration menu, use the live menu instead", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				}catch(Throwable t){
+					t.printStackTrace();
+				}
+				System.err.println("Failed to load the configuration menu, you can use the live menu instead");
+			}
 		}
 		
 		//Build GUI
