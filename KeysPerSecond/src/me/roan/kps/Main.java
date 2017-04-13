@@ -76,7 +76,8 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * </li><li><b>Ctrl + I</b>: Causes the program to reset the amount of times a key is pressed
  * And to print the statistics to standard output
  * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI
- * </li><li><b>Ctrl + T</b>: Pauses/resumes the counter</li></ol></pre>
+ * </li><li><b>Ctrl + T</b>: Pauses/resumes the counter
+ * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol></pre>
  * The program also constantly prints the current keys per second to
  * the standard output.<br>
  * And key is only counted as being pressed if the key has been released before
@@ -173,6 +174,7 @@ public class Main {
 		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
 		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
+		System.out.println("Ctrl + R: Reloads the configuration");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
