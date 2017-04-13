@@ -296,7 +296,9 @@ public class Main {
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					resetTotals();
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
-					frame.setVisible(!frame.isVisible());
+					if(frame.getContentPane().getComponentCount() != 0){
+						frame.setVisible(!frame.isVisible());
+					}
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_T && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					suspended = !suspended;
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_R && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
@@ -875,6 +877,7 @@ public class Main {
 				panels++;
 			}
 			if(panels == 0 && !config.showGraph){
+				frame.setVisible(false);
 				return;//don't create a GUI if there's nothing to display
 			}
 
