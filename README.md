@@ -25,7 +25,8 @@ Lastly, there are also some commands that can be sent to the program:<br>
 **Ctrl + U**: Terminates the program.<br>
 **Ctrl + I**: Causes the program to reset the key press statistics.<br>
 **Ctrl + Y**: Shows / hides the GUI.<br>
-**Ctrl + T**: Pauses / resumes the counter.
+**Ctrl + T**: Pauses / resumes the counter.<br>
+**Ctrl + R**: Reloads the configuration file.
 
 You can also move the program using the arrow keys this makes pixel perfect positioning possible :D .
 
@@ -60,6 +61,8 @@ And if you find any bugs feel free to report them.
 31 March 2017: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.<br>
 1 April 2017: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
 8 April 2017: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.
+12 April 2017: Fix checkmark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
+13 April 2017: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.
 
 ## Todo list / working on
 - Option to display the song you are currently playing
