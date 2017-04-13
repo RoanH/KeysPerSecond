@@ -107,7 +107,7 @@ public class Menu {
 		JMenuItem size = new JMenuItem("Size");
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
-		JMenuItem pause = new JMenuItem("Pause/resume");
+		ColoredMenuItem pause = new ColoredMenuItem("Pause");
 		JMenuItem sreset = new JMenuItem("Reset stats");
 		JMenuItem treset = new JMenuItem("Reset totals");
 		JMenuItem configkeys = new JMenuItem("Keys");
@@ -174,8 +174,9 @@ public class Menu {
 		exit.addActionListener((e)->{
 			Main.exit();
 		});
+		pause.setSelected(Main.suspended);
 		pause.addActionListener((e)->{
-			Main.suspended = !Main.suspended;
+			Main.suspended = pause.isSelected();
 		});
 		sreset.addActionListener((e)->{
 			Main.resetStats();
