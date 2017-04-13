@@ -494,6 +494,7 @@ public class Menu {
 		SizeManager.scale(Main.config.size / oldScale);
 		Main.reconfigure();
 		Main.mainLoop();
+		Main.frame.setAlwaysOnTop(Main.config.overlay);
 	}
 
 	/**
