@@ -559,6 +559,7 @@ public class Main {
 			System.exit(0);
 		}
 		config.overlay = ctop.isSelected();
+		frame.setAlwaysOnTop(config.overlay);
 		config.trackAll = call.isSelected();
 		config.showMax = cmax.isSelected();
 		config.showAvg = cavg.isSelected();
