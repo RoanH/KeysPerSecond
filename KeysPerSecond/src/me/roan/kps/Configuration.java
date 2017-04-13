@@ -111,6 +111,19 @@ public class Configuration {
 	protected double size = 1.0D;
 	
 	/**
+	 * The original configuration file
+	 */
+	private File data;
+	
+	/**
+	 * Constructs a new configuration object
+	 * @param data The data file
+	 */
+	protected Configuration(File data){
+		this.data = data;
+	}
+	
+	/**
 	 * @return The background opacity
 	 */
 	protected final float getBackgroundOpacity(){
@@ -139,6 +152,25 @@ public class Configuration {
 	}
 	
 	/**
+	 * Reloads the config from file
+	 */
+	protected final void reloadConfig(){
+		Configuration toLoad = new Configuration(data);
+		if(data != null){
+			if(data.getAbsolutePath().endsWith(".kpsconf")){
+				if(toLoad.loadLegacyFormat(data)){
+					Main.config = toLoad;
+				}else{
+					JOptionPane.showMessageDialog(null, "Failed to reload the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				}
+			}else{
+				toLoad.loadNewFormat(data);
+				Main.config = toLoad;
+			}
+		}
+	}
+	
+	/**
 	 * Loads a configuration file (with GUI)
 	 * @param saveloc The save location
 	 * @return Whether or not the config was loaded successfully
@@ -151,7 +183,7 @@ public class Configuration {
 			return false;
 		}
 		File saveloc = chooser.getSelectedFile();
-		Configuration toLoad = new Configuration();
+		Configuration toLoad = new Configuration(saveloc);
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			if(toLoad.loadLegacyFormat(saveloc)){
 				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);

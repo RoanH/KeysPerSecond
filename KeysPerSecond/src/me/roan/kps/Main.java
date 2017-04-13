@@ -142,7 +142,7 @@ public class Main {
 	/**
 	 * The configuration
 	 */
-	protected static Configuration config = new Configuration();
+	protected static Configuration config = new Configuration(null);
 	/**
 	 * The loop timer
 	 */
@@ -193,7 +193,7 @@ public class Main {
 		setupKeyboardHook();
 
 		//Set configuration for the keys
-		Configuration toLoad = new Configuration();
+		Configuration toLoad = new Configuration(config == null ? null : new File(config));
 		if(config != null && toLoad.loadConfig(new File(config))){
 			Main.config = toLoad;
 		}else{
@@ -299,6 +299,10 @@ public class Main {
 					frame.setVisible(!frame.isVisible());
 				}else if(event.getKeyCode() == NativeKeyEvent.VC_T && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
 					suspended = !suspended;
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_R && (event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0){
+					double oldScale = config.size;
+					config.reloadConfig();
+					Menu.resetData(oldScale);
 				}
 			}
 

@@ -443,17 +443,7 @@ public class Menu {
 		load.addActionListener((e)->{
 			double oldScale = Main.config.size;
 			if(Configuration.loadConfiguration()){
-				menu.removeAll();
-				configure.removeAll();
-				general.removeAll();
-				precision.removeAll();
-				configcolors.removeAll();
-				mgraph.removeAll();
-				rate.removeAll();
-				createMenu();
-				SizeManager.scale(Main.config.size / oldScale);
-				Main.reconfigure();
-				Main.mainLoop();
+				resetData(oldScale);
 			}
 		});
 
@@ -484,6 +474,23 @@ public class Menu {
 		menu.add(load);
 		menu.add(save);
 		menu.add(exit);
+	}
+	
+	/**
+	 * Applies a new configuration to the program
+	 */
+	protected static final void resetData(double oldScale){
+		menu.removeAll();
+		configure.removeAll();
+		general.removeAll();
+		precision.removeAll();
+		configcolors.removeAll();
+		mgraph.removeAll();
+		rate.removeAll();
+		createMenu();
+		SizeManager.scale(Main.config.size / oldScale);
+		Main.reconfigure();
+		Main.mainLoop();
 	}
 
 	/**
