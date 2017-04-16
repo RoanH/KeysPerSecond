@@ -546,7 +546,7 @@ public class Main {
 			save.setEnabled(true);
 		});
 		save.addActionListener((e)->{
-			config.saveConfig();
+			config.saveConfig(false);
 		});
 		load.addActionListener((e)->{
 			if(!Configuration.loadConfiguration()){
@@ -847,13 +847,13 @@ public class Main {
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
-			if(JOptionPane.showOptionDialog(null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){ 	
+			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){ 	
 				if(lastevent == null){ 				
-					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
+					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 					return; 	
 				} 			
 				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode()); 	
-				if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
+				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
 					config.keyinfo.add(info); 			
 				} 			
 				model.fireTableDataChanged(); 		
@@ -899,7 +899,7 @@ public class Main {
 			
 			addform.add(buttons, BorderLayout.CENTER);
 			
-			if(JOptionPane.showOptionDialog(null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
 				if(cm1.isSelected()){
 					config.keyinfo.add(new KeyInformation("M1", -NativeMouseEvent.BUTTON1));
 				}

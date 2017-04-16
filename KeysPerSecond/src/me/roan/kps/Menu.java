@@ -441,7 +441,7 @@ public class Menu {
 			e.setOpaque(true);
 		}
 		save.addActionListener((e)->{
-			Main.config.saveConfig();
+			Main.config.saveConfig(true);
 		});
 		load.addActionListener((e)->{
 			double oldScale = Main.config.size;

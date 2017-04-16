@@ -1,6 +1,7 @@
 package me.roan.kps;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -357,6 +358,9 @@ public class Configuration {
 						modified = true;
 					}
 					break;
+				case "position":
+					Main.frame.setLocation(parsePosition(args[1]));
+					break;
 				}
 			}
 			in.close();
@@ -425,6 +429,29 @@ public class Configuration {
 		}
 		return new Color(r, g, b);
 	}
+	
+	/**
+	 * Parses the text representation of the position
+	 * to it's actual data
+	 * @param arg The text data
+	 * @return The position data
+	 */
+	private final Point parsePosition(String data){
+		data = data.replace(" ", "").substring(1, data.length() - 1);
+		String[] args = data.split(",");
+		Point loc = new Point();
+		try{
+			for(String arg : args){
+				if(arg.startsWith("x=")){
+					loc.x = Integer.parseInt(arg.replace("x=", ""));
+				}else if(arg.startsWith("y=")){
+					loc.y = Integer.parseInt(arg.replace("y=", ""));
+				}
+			}
+		}catch(Exception e){
+		}
+		return loc;
+	}
 
 	/**
 	 * Loads a legacy configuration file
@@ -487,8 +514,12 @@ public class Configuration {
 
 	/**
 	 * Saves this configuration file
+	 * @param pos Whether or not the ask
+	 *        to save the on screen position
+	 *        of the program
 	 */
-	protected final void saveConfig(){
+	protected final void saveConfig(boolean pos){
+		boolean savepos = (!pos) ? false : (JOptionPane.showConfirmDialog(null, "Do you want to save the onscreen position of the program?", "Keys per Second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -524,6 +555,11 @@ public class Configuration {
 				out.println("foregroundOpacity: " + opacityfg);
 				out.println("backgroundOpacity: " + opacitybg);
 				out.println();
+				if(savepos){
+					out.println("# Position");
+					out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
+					out.println();
+				}
 				out.println("# Keys");
 				out.println("keys: ");
 				for(KeyInformation i : keyinfo){
