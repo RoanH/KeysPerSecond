@@ -9,8 +9,8 @@ So I wanted to know how many keys / second I pressed in osu! And I had already s
 I could however not find a program that worked on my computer so I decided to write one myself.
 
 The program when active looks like this:<br>
-![Interface](http://i.imgur.com/9cCzB0Q.png)
-![Menu](http://i.imgur.com/9joVhNK.png)<br>
+![Interface](http://i.imgur.com/9cCzB0Q.png)<br>
+![Menu](http://i.imgur.com/stzF9YR.png)<br>
 Accessible by right clicking on the program.
 
 For each configured key it shows how many times it is pressed. By default it also shows the maximum, average and current number of keys pressed per second.
@@ -18,7 +18,7 @@ When enabled it can also show a graph of the number of keys pressed per second o
 
 Everything shown in the picture above can be toggled on or off.<br>
 ![Config](http://i.imgur.com/sjAVVNb.png)
-![Key config](http://i.imgur.com/ZbXldxP.png)
+![Key config](http://i.imgur.com/N6JOCJk.png)
 
 Lastly, there are also some commands that can be sent to the program:<br>
 **Ctrl + P**: Causes the program to reset the average and maximum value.<br>
@@ -41,6 +41,7 @@ And if you find any bugs feel free to report them.
 - An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
 - The snap to screen edge function work on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
+- You can also track mouse buttons with this program.
 
 ## Updates
 2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
@@ -62,14 +63,14 @@ And if you find any bugs feel free to report them.
 1 April 2017: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
 8 April 2017: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.
 12 April 2017: Fix checkmark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
-13 April 2017: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.
+13 April 2017: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
+16 April 2017: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.
 
 ## Todo list / working on
-- Option to display the song you are currently playing
 - Option to change to command keys
 - Remember config save location
 - Automatic config loading of some sort
-- Mouse tracking?
+- Never ending stream of bugs from SALZKARTOFFEEEL :3
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
