@@ -58,8 +58,11 @@ import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
+import org.jnativehook.mouse.NativeMouseEvent;
+import org.jnativehook.mouse.NativeMouseListener;
 
 /**
  * This program can be used to display
@@ -193,7 +196,7 @@ public class Main {
 		});
 
 		//Initialise native library and register event handlers
-		setupKeyboardHook();
+		setupNativeHook();
 
 		//Set configuration for the keys
 		if(config != null){
@@ -295,7 +298,7 @@ public class Main {
 	 * registers event handlers for key
 	 * press events
 	 */
-	private static final void setupKeyboardHook(){
+	private static final void setupNativeHook(){
 		try {
 			Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
 			logger.setLevel(Level.WARNING);
@@ -317,44 +320,85 @@ public class Main {
 
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event) {
-				boolean ctrl = (!frame.isFocusOwner()) ? ((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) : (((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) && (lastevent == null ? false : ((lastevent.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0)));
-				lastevent = event;
-				if(config.trackAll && !keys.containsKey(event.getKeyCode())){
-					keys.put(event.getKeyCode(), new Key(NativeKeyEvent.getKeyText(lastevent.getKeyCode())));
-				}
-				if(keys.containsKey(event.getKeyCode()) && !suspended){
-					keys.get(event.getKeyCode()).keyPressed();	
-				}
-				if(event.getKeyCode() == NativeKeyEvent.VC_P && ctrl){
-					resetStats();
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_U && ctrl){
-					exit();
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_I && ctrl){
-					resetTotals();
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && ctrl){
-					if(frame.getContentPane().getComponentCount() != 0){
-						frame.setVisible(!frame.isVisible());
-					}
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_T && ctrl){
-					suspended = !suspended;
-				}else if(event.getKeyCode() == NativeKeyEvent.VC_R && ctrl){
-					double oldScale = config.size;
-					config.reloadConfig();
-					Menu.resetData(oldScale);
-				}
+				pressEvent(event);
 			}
 
 			@Override
 			public void nativeKeyReleased(NativeKeyEvent event) {
-				if(keys.containsKey(event.getKeyCode())){
-					keys.get(event.getKeyCode()).keyReleased();
-				}
+				releaseEvent(event);
 			}
 
 			@Override
-			public void nativeKeyTyped(NativeKeyEvent arg0) {
+			public void nativeKeyTyped(NativeKeyEvent event) {
 			}
 		});
+		GlobalScreen.addNativeMouseListener(new NativeMouseListener(){
+
+			@Override
+			public void nativeMouseClicked(NativeMouseEvent event) {				
+			}
+
+			@Override
+			public void nativeMousePressed(NativeMouseEvent event) {
+				pressEvent(event);
+			}
+
+			@Override
+			public void nativeMouseReleased(NativeMouseEvent event) {
+				releaseEvent(event);
+			}
+		});
+	}
+	
+	/**
+	 * Called when a key is released
+	 * @param event The event that occurred
+	 */
+	private static final void releaseEvent(NativeInputEvent event){
+		int code = event instanceof NativeKeyEvent ? ((NativeKeyEvent)event).getKeyCode() : -((NativeMouseEvent)event).getButton();
+		if(keys.containsKey(code)){
+			keys.get(code).keyReleased();
+		}
+	}
+	
+	/**
+	 * Called when a key is pressed
+	 * @param event The event that occurred
+	 */
+	private static final void pressEvent(NativeInputEvent nevent){
+		int code = nevent instanceof NativeKeyEvent ? ((NativeKeyEvent)nevent).getKeyCode() : -((NativeMouseEvent)nevent).getButton();
+		if(config.trackAll && !keys.containsKey(code)){
+			if(nevent instanceof NativeKeyEvent){
+				keys.put(code, new Key(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode())));
+			}else{
+				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
+			}
+		}
+		if(keys.containsKey(code) && !suspended){
+			keys.get(code).keyPressed();	
+		}
+		if(nevent instanceof NativeKeyEvent){
+			NativeKeyEvent event = (NativeKeyEvent)nevent;
+			boolean ctrl = (!frame.isFocusOwner()) ? ((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) : (((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) && (lastevent == null ? false : ((lastevent.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0)));
+			lastevent = event;
+			if(event.getKeyCode() == NativeKeyEvent.VC_P && ctrl){
+				resetStats();
+			}else if(event.getKeyCode() == NativeKeyEvent.VC_U && ctrl){
+				exit();
+			}else if(event.getKeyCode() == NativeKeyEvent.VC_I && ctrl){
+				resetTotals();
+			}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && ctrl){
+				if(frame.getContentPane().getComponentCount() != 0){
+					frame.setVisible(!frame.isVisible());
+				}
+			}else if(event.getKeyCode() == NativeKeyEvent.VC_T && ctrl){
+				suspended = !suspended;
+			}else if(event.getKeyCode() == NativeKeyEvent.VC_R && ctrl){
+				double oldScale = config.size;
+				config.reloadConfig();
+				Menu.resetData(oldScale);
+			}
+		}
 	}
 
 	/**
@@ -803,19 +847,81 @@ public class Main {
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
-			if(JOptionPane.showOptionDialog(null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
-				if(lastevent == null){
-					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-					return;
+			if(JOptionPane.showOptionDialog(null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){ 	
+				if(lastevent == null){ 				
+					JOptionPane.showMessageDialog(null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
+					return; 	
+				} 			
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode()); 	
+				if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
+					config.keyinfo.add(info); 			
+				} 			
+				model.fireTableDataChanged(); 		
+			}
+		});
+		JButton newmouse = new JButton("Add Mouse Button");
+		newmouse.addActionListener((e)->{
+			JPanel addform = new JPanel(new BorderLayout());
+			addform.add(new JLabel("Select the mouse buttons to add:"), BorderLayout.PAGE_START);
+			
+			JPanel buttons = new JPanel(new GridLayout(5, 1, 2, 0));
+			
+			JPanel m1 = new JPanel(new BorderLayout());
+			JCheckBox cm1 = new JCheckBox();
+			m1.add(cm1, BorderLayout.LINE_START);
+			m1.add(new JLabel("M1 (left click)"), BorderLayout.CENTER);
+			
+			JPanel m2 = new JPanel(new BorderLayout());
+			JCheckBox cm2 = new JCheckBox();
+			m2.add(cm2, BorderLayout.LINE_START);
+			m2.add(new JLabel("M2 (right click)"), BorderLayout.CENTER);
+			
+			JPanel m3 = new JPanel(new BorderLayout());
+			JCheckBox cm3 = new JCheckBox();
+			m3.add(cm3, BorderLayout.LINE_START);
+			m3.add(new JLabel("M3 (mouse wheel)"), BorderLayout.CENTER);
+			
+			JPanel m4 = new JPanel(new BorderLayout());
+			JCheckBox cm4 = new JCheckBox();
+			m4.add(cm4, BorderLayout.LINE_START);
+			m4.add(new JLabel("M4"), BorderLayout.CENTER);
+			
+			JPanel m5 = new JPanel(new BorderLayout());
+			JCheckBox cm5 = new JCheckBox();
+			m5.add(cm5, BorderLayout.LINE_START);
+			m5.add(new JLabel("M5"), BorderLayout.CENTER);
+			
+			buttons.add(m1);
+			buttons.add(m2);
+			buttons.add(m3);
+			buttons.add(m4);
+			buttons.add(m5);
+			
+			addform.add(buttons, BorderLayout.CENTER);
+			
+			if(JOptionPane.showOptionDialog(null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+				if(cm1.isSelected()){
+					config.keyinfo.add(new KeyInformation("M1", -NativeMouseEvent.BUTTON1));
 				}
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode());
-				if(JOptionPane.showConfirmDialog(null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-					config.keyinfo.add(info);
+				if(cm2.isSelected()){
+					config.keyinfo.add(new KeyInformation("M2", -NativeMouseEvent.BUTTON2));
+				}
+				if(cm3.isSelected()){
+					config.keyinfo.add(new KeyInformation("M3", -NativeMouseEvent.BUTTON3));
+				}
+				if(cm4.isSelected()){
+					config.keyinfo.add(new KeyInformation("M4", -NativeMouseEvent.BUTTON4));
+				}
+				if(cm5.isSelected()){
+					config.keyinfo.add(new KeyInformation("M5", -NativeMouseEvent.BUTTON5));
 				}
 				model.fireTableDataChanged();
 			}
 		});
-		keyform.add(newkey, BorderLayout.PAGE_END);
+		JPanel nbuttons = new JPanel(new GridLayout(1, 2, 2, 0));
+		nbuttons.add(newkey, BorderLayout.LINE_START);
+		nbuttons.add(newmouse, BorderLayout.LINE_END);
+		keyform.add(nbuttons, BorderLayout.PAGE_END);
 		if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Save", "Cancel"}, 0) == 1){
 			config.keyinfo = copy;
 		}
@@ -1290,7 +1396,7 @@ public class Main {
 			case "Shift":
 				return "\u21D1";
 			default:
-				return "?";
+				return key;
 			}
 		}
 	}
