@@ -430,7 +430,7 @@ public class Main {
 		JLabel lcur = new JLabel("Show current: ");
 		JLabel lkey = new JLabel("Show keys");
 		JLabel lgra = new JLabel("Show graph: ");
-		JLabel ltop = new JLabel("Overlay osu!: ");
+		JLabel ltop = new JLabel("Overlay mode: ");
 		JLabel lcol = new JLabel("Custom colours: ");
 		JLabel lall = new JLabel("Track all keys");
 		ltop.setToolTipText("Requires you to run osu! out of full screen mode, known to not (always) work with the wine version of osu!");

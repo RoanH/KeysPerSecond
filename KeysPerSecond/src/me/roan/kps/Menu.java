@@ -118,7 +118,7 @@ public class Menu {
 		JMenuItem backlog = new JMenuItem("Backlog");
 		JCheckBoxMenuItem colorenable = new ColoredMenuItem("Enable custom colours");
 		JCheckBoxMenuItem tAll = new ColoredMenuItem("Track all keys");
-		JCheckBoxMenuItem overlay = new ColoredMenuItem("Overlay osu!");
+		JCheckBoxMenuItem overlay = new ColoredMenuItem("Overlay mode");
 		JCheckBoxMenuItem p0 = new ColoredMenuItem("No digits beyond the decimal point");
 		JCheckBoxMenuItem p1 = new ColoredMenuItem("1 digit beyond the decimal point");
 		JCheckBoxMenuItem p2 = new ColoredMenuItem("2 digits beyond the decimal point");
