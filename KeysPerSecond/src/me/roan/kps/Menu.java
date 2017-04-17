@@ -64,6 +64,10 @@ public class Menu {
 	 * Update rate menu
 	 */
 	private static final JMenu rate = new JMenu("Update rate");
+	/**
+	 * The pause menu item
+	 */
+	protected static final ColoredMenuItem pause = new ColoredMenuItem("Pause");
 
 	/**
 	 * Sets the foreground and background
@@ -107,7 +111,6 @@ public class Menu {
 		JMenuItem size = new JMenuItem("Size");
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
-		ColoredMenuItem pause = new ColoredMenuItem("Pause");
 		JMenuItem sreset = new JMenuItem("Reset stats");
 		JMenuItem treset = new JMenuItem("Reset totals");
 		JMenuItem configkeys = new JMenuItem("Keys");
@@ -501,7 +504,7 @@ public class Menu {
 	 * Menu item with a colored check mark
 	 * @author Roan
 	 */
-	private static final class ColoredMenuItem extends JCheckBoxMenuItem{
+	protected static final class ColoredMenuItem extends JCheckBoxMenuItem{
 		/**
 		 * Serial ID
 		 */

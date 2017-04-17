@@ -393,6 +393,7 @@ public class Main {
 				}
 			}else if(event.getKeyCode() == NativeKeyEvent.VC_T && ctrl){
 				suspended = !suspended;
+				Menu.pause.setSelected(suspended);
 			}else if(event.getKeyCode() == NativeKeyEvent.VC_R && ctrl){
 				double oldScale = config.size;
 				config.reloadConfig();
