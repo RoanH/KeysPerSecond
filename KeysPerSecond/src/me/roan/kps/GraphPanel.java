@@ -91,6 +91,7 @@ public class GraphPanel extends JPanel{
 						poly.addPoint(px, this.getHeight() - SizeManager.graphOffset);
 					}
 				}
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 				if(Main.config.graphAvg){
 					int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.avg / (float)maxval)));
 					g.setColor(Main.config.getForegroundColor().darker());
