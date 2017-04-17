@@ -64,7 +64,8 @@ And if you find any bugs feel free to report them.
 8 April 2017: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.
 12 April 2017: Fix checkmark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
 13 April 2017: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
-16 April 2017: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.
+16 April 2017: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
+17 April 2017: Rendering fixes & fix the counters being reset when the color is changed.
 
 ## Todo list / working on
 - Option to change to command keys
@@ -75,8 +76,8 @@ And if you find any bugs feel free to report them.
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v5.3/KeysPerSecond-v5.3.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v5.3/KeysPerSecond-v5.3.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v5.4/KeysPerSecond-v5.4.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v5.4/KeysPerSecond-v5.4.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
