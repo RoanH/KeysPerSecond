@@ -1000,7 +1000,11 @@ public class Main {
 			Key k;
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
-				keys.put(i.keycode, k = new Key(i.name));
+				if(!keys.containsKey(i.keycode)){
+					keys.put(i.keycode, k = new Key(i.name));
+				}else{
+					k = keys.get(i.keycode);
+				}
 				if(config.showKeys && i.visible){
 					content.add(k.getPanel());
 					panels++;
