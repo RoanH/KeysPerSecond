@@ -495,6 +495,7 @@ public class Menu {
 		rate.removeAll();
 		createMenu();
 		SizeManager.scale(Main.config.size / oldScale);
+		Main.keys.clear();
 		Main.reconfigure();
 		Main.mainLoop();
 		Main.frame.setAlwaysOnTop(Main.config.overlay);
