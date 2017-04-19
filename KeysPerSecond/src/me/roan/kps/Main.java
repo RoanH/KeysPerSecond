@@ -939,7 +939,6 @@ public class Main {
 	 *         when the program fails the load its resources
 	 */
 	protected static final void buildGUI() throws IOException {
-		content.setComponentPopupMenu(Menu.menu);
 		Menu.createMenu();
 		frame.setResizable(false);
 		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));

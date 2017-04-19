@@ -70,7 +70,6 @@ public final class KeyPanel extends JPanel {
 		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, this);
 		if (key.down) {
 			g.drawImage(ColorManager.pressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, this);
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, Main.config.getBackgroundOpacity()));
 			g.setColor(Main.config.getBackgroundColor());
 		}else{
 			g.setColor(Main.config.getForegroundColor());
