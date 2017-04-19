@@ -507,9 +507,10 @@ public class Main {
 			pvalue.add(values, BorderLayout.CENTER);
 			pconfig.add(plabels, BorderLayout.CENTER);
 			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			config.precision = values.getSelectedIndex();
-			save.setEnabled(true);
+			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+				config.precision = values.getSelectedIndex();
+				save.setEnabled(true);
+			}
 		});
 		graph.addActionListener((e)->{
 			JPanel pconfig = new JPanel();
@@ -533,10 +534,11 @@ public class Main {
 			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
 			pconfig.add(glabels);
 			pconfig.add(gcomponents);
-			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			Main.config.graphAvg = showavg.isSelected();
-			Main.config.backlog = (int)backlog.getValue();
-			save.setEnabled(true);
+			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+				Main.config.graphAvg = showavg.isSelected();
+				Main.config.backlog = (int)backlog.getValue();
+				save.setEnabled(true);
+			}
 		});
 		addkey.addActionListener((e)->{
 			configureKeys();
@@ -599,9 +601,10 @@ public class Main {
 			pconfig.add(info, BorderLayout.PAGE_START);
 			pconfig.add(lupdate, BorderLayout.WEST);
 			pconfig.add(update, BorderLayout.CENTER);
-			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-			config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
-			save.setEnabled(true);
+			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
+				save.setEnabled(true);
+			}
 		});
 		String version = checkVersion();//XXX the version number 
 		JLabel ver = new JLabel("<html><center><i>Version: v5.4, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
@@ -672,8 +675,9 @@ public class Main {
 		line.add(s);
 		line.add(new JLabel("%"));
 		pconfig.add(line, BorderLayout.PAGE_END);
-		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
-		config.size = ((double)s.getValue()) / 100.0D;
+		if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			config.size = ((double)s.getValue()) / 100.0D;
+		}
 	}
 	
 	/**
