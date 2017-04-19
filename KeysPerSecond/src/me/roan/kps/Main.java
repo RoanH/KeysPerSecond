@@ -835,6 +835,7 @@ public class Main {
 					config.keyinfo.get(row).visible = (boolean)value;
 				}else{
 					if((boolean)value == true){
+						Main.keys.remove(config.keyinfo.get(row).keycode);
 						config.keyinfo.remove(row);
 						keys.repaint();
 					}
