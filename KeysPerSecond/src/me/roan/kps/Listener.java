@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.SwingUtilities;
+
 /**
  * Listener for dragging the dialog
  * @author Roan
@@ -51,7 +53,9 @@ public class Listener implements MouseMotionListener, MouseListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON3){
-			Menu.menu.show(e.getComponent(), e.getX(), e.getY());
+			SwingUtilities.invokeLater(()->{
+				Menu.menu.show(e.getComponent(), e.getX(), e.getY());
+			});
 		}
 	}
 
