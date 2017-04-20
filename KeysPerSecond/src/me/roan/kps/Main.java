@@ -758,6 +758,7 @@ public class Main {
 			config.opacitybg = (float)(double)((int)sbg.getValue() / 100.0D);
 			config.opacityfg = (float)(double)((int)sfg.getValue() / 100.0D);
 		}
+		frame.repaint();
 	}
 	
 	/**
@@ -1034,7 +1035,7 @@ public class Main {
 			}
 
 			Menu.repaint();
-
+			
 			JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
 			allcontent.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 			if(panels > 0){

@@ -53,6 +53,10 @@ public class ColorManager {
 	 * Checkmark icon
 	 */
 	protected static Image checkmark;
+	/**
+	 * Arrow icon
+	 */
+	protected static Image arrow;
 	
 	/**
 	 * Prepares the colours and images
@@ -85,6 +89,7 @@ public class ColorManager {
 			}
 		}
 		checkmark = dye(ImageIO.read(ClassLoader.getSystemResource("checkmark.png")));
+		arrow = dye(ImageIO.read(ClassLoader.getSystemResource("arrow.png")));
 	}
 	
 	/**
