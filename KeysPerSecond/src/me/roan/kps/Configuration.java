@@ -16,6 +16,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.jnativehook.keyboard.NativeKeyEvent;
+
+import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
 
 /**
@@ -115,10 +118,37 @@ public class Configuration {
 	 */
 	protected double size = 1.0D;
 	
+	//command keys
+	/**
+	 * Reset stats command key
+	 */
+	protected CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
+	/**
+	 * Reset totals command key
+	 */
+	protected CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
+	/**
+	 * Exit command key
+	 */
+	protected CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
+	/**
+	 * Hide/show command key
+	 */
+	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
+	/**
+	 * Pause command key
+	 */
+	protected CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
+	/**
+	 * Reload command key
+	 */
+	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
+	
 	/**
 	 * The original configuration file
 	 */
 	private File data;
+	
 	
 	/**
 	 * Constructs a new configuration object
@@ -368,6 +398,48 @@ public class Configuration {
 				case "showTotal":
 					showTotal = Boolean.parseBoolean(args[1]);
 					break;
+				case "keyResetStats":
+					try{
+						CP = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyExit":
+					try{
+						CU = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyResetTotal":
+					try{
+						CI = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyHide":
+					try{
+						CY = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyPause":
+					try{
+						CT = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyReload":
+					try{
+						CR = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
 				}
 			}
 			in.close();
@@ -376,6 +448,34 @@ public class Configuration {
 			t.printStackTrace();
 			return true;
 		}
+	}
+	
+	/**
+	 * Parses the text representation of
+	 * a command key to it's actual data
+	 * @param arg The text data
+	 * @return The command key data
+	 */
+	private final CMD parseCommand(String arg){
+		String[] args = arg.substring(1, arg.length() - 1).split(",");
+		int code = -10;
+		boolean alt = false;
+		boolean ctrl = false;
+		for(String str : args){
+			String[] data = str.split("=");
+			switch(data[0]){
+			case "keycode":
+				code = Integer.parseInt(data[1]);
+				break;
+			case "ctrl":
+				ctrl = Boolean.parseBoolean(data[1]);
+				break;
+			case "alt":
+				alt = Boolean.parseBoolean(data[1]);
+				break;
+			}
+		}
+		return new CMD(code, alt, ctrl);
 	}
 	
 	/**
@@ -568,6 +668,14 @@ public class Configuration {
 					out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
 					out.println();
 				}
+				out.println("# Command keys");
+				out.println("keyResetStats: " + CP.toSaveString());
+				out.println("keyExit: " + CU.toSaveString());
+				out.println("keyResetTotals: " + CI.toSaveString());
+				out.println("keyHide: " + CY.toSaveString());
+				out.println("keyPause: " + CT.toSaveString());
+				out.println("keyReload: " + CR.toSaveString());
+				out.println();
 				out.println("# Keys");
 				out.println("keys: ");
 				for(KeyInformation i : keyinfo){
