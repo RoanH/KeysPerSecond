@@ -385,20 +385,20 @@ public class Main {
 			boolean ctrl = (!frame.isFocusOwner()) ? ((event.getModifiers() & NativeKeyEvent.CTRL_MASK) != 0) : (((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) && (lastevent == null ? false : ((lastevent.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0)));
 			boolean alt = (event.getModifiers() & NativeKeyEvent.ALT_MASK) != 0;
 			lastevent = event;
-			if(CommandKeys.CP.matches(event.getKeyCode(), alt, ctrl)){
+			if(config.CP.matches(event.getKeyCode(), alt, ctrl)){
 				resetStats();
-			}else if(CommandKeys.CU.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CU.matches(event.getKeyCode(), alt, ctrl)){
 				exit();
-			}else if(CommandKeys.CI.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CI.matches(event.getKeyCode(), alt, ctrl)){
 				resetTotals();
-			}else if(CommandKeys.CY.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CY.matches(event.getKeyCode(), alt, ctrl)){
 				if(frame.getContentPane().getComponentCount() != 0){
 					frame.setVisible(!frame.isVisible());
 				}
-			}else if(CommandKeys.CT.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CT.matches(event.getKeyCode(), alt, ctrl)){
 				suspended = !suspended;
 				Menu.pause.setSelected(suspended);
-			}else if(CommandKeys.CR.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CR.matches(event.getKeyCode(), alt, ctrl)){
 				double oldScale = config.size;
 				config.reloadConfig();
 				Menu.resetData(oldScale);
@@ -808,12 +808,12 @@ public class Main {
 		JLabel lct = new JLabel("Pause/Resume:");
 		JLabel lcr = new JLabel("Reload config:");
 		
-		JButton bcp = new JButton(CommandKeys.CP.toString());
-		JButton bcu = new JButton(CommandKeys.CU.toString());
-		JButton bci = new JButton(CommandKeys.CI.toString());
-		JButton bcy = new JButton(CommandKeys.CY.toString());
-		JButton bct = new JButton(CommandKeys.CT.toString());
-		JButton bcr = new JButton(CommandKeys.CR.toString());
+		JButton bcp = new JButton(config.CP.toString());
+		JButton bcu = new JButton(config.CU.toString());
+		JButton bci = new JButton(config.CI.toString());
+		JButton bcy = new JButton(config.CY.toString());
+		JButton bct = new JButton(config.CT.toString());
+		JButton bcr = new JButton(config.CR.toString());
 		
 		content.add(lcp);
 		content.add(bcp);
@@ -836,42 +836,42 @@ public class Main {
 		bcp.addActionListener((e)->{
 			CMD cmd = CommandKeys.askForNewKey();
 			if(cmd != null){
-				CommandKeys.CP = cmd;
+				config.CP = cmd;
 				bcp.setText(cmd.toString());
 			}
 		});
 		bci.addActionListener((e)->{
 			CMD cmd = CommandKeys.askForNewKey();
 			if(cmd != null){
-				CommandKeys.CI = cmd;
+				config.CI = cmd;
 				bci.setText(cmd.toString());
 			}
 		});
 		bcu.addActionListener((e)->{
 			CMD cmd = CommandKeys.askForNewKey();
 			if(cmd != null){
-				CommandKeys.CU = cmd;
+				config.CU = cmd;
 				bcu.setText(cmd.toString());
 			}
 		});
 		bcy.addActionListener((e)->{
 			CMD cmd = CommandKeys.askForNewKey();
 			if(cmd != null){
-				CommandKeys.CY = cmd;
+				config.CY = cmd;
 				bcy.setText(cmd.toString());
 			}
 		});
 		bct.addActionListener((e)->{
 			CMD cmd = CommandKeys.askForNewKey();
 			if(cmd != null){
-				CommandKeys.CT = cmd;
+				config.CT = cmd;
 				bct.setText(cmd.toString());
 			}
 		});
 		bcr.addActionListener((e)->{
 			CMD cmd = CommandKeys.askForNewKey();
 			if(cmd != null){
-				CommandKeys.CR = cmd;
+				config.CR = cmd;
 				bcr.setText(cmd.toString());
 			}
 		});

@@ -16,6 +16,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.jnativehook.keyboard.NativeKeyEvent;
+
+import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
 
 /**
@@ -115,10 +118,19 @@ public class Configuration {
 	 */
 	protected double size = 1.0D;
 	
+	//command keys
+	protected CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
+	protected CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
+	protected CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
+	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
+	protected CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
+	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
+	
 	/**
 	 * The original configuration file
 	 */
 	private File data;
+	
 	
 	/**
 	 * Constructs a new configuration object

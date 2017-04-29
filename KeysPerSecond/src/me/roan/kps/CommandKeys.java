@@ -10,26 +10,54 @@ import javax.swing.JPanel;
 
 import org.jnativehook.keyboard.NativeKeyEvent;
 
+/**
+ * This class is used to configure
+ * the command keys for the program
+ * @author Roan
+ */
 public class CommandKeys {
 	
-	protected static CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
-	protected static CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
-	protected static CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
-	protected static CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
-	protected static CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
-	protected static CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
-	
+	/**
+	 * Simple class to represent
+	 * a command key
+	 * @author Roan
+	 */
 	protected static class CMD{
+		/**
+		 * Whether or not alt has
+		 * to be pressed
+		 */
 		private final boolean alt;
+		/**
+		 * Whether or not ctrl has
+		 * to be pressed
+		 */
 		private final boolean ctrl;
+		/**
+		 * Key code
+		 */
 		private final int keycode;
 
+		/**
+		 * Constructs a new command key
+		 * @param keycode The key code
+		 * @param alt Whether or not alt has to be pressed
+		 * @param ctrl Whether or not ctrl has to be pressed
+		 */
 		protected CMD(int keycode, boolean alt, boolean ctrl){
 			this.alt = alt;
 			this.ctrl = ctrl;
 			this.keycode = keycode;
 		}
 		
+		/**
+		 * Check to see if the given state
+		 * triggers this command key
+		 * @param keycode
+		 * @param alt
+		 * @param ctrl
+		 * @return
+		 */
 		protected final boolean matches(int keycode, boolean alt, boolean ctrl){
 			if((this.keycode != keycode) || (this.alt && !alt) || (this.ctrl && !ctrl)){
 				return false;
@@ -44,6 +72,10 @@ public class CommandKeys {
 		}
 	}
 
+	/**
+	 * Prompts the user for a new command key
+	 * @return The new command key or null
+	 */
 	protected static CMD askForNewKey(){
 		JPanel form = new JPanel(new GridLayout(3, 1));
 		JLabel txt = new JLabel("Press a key and click 'OK'");
