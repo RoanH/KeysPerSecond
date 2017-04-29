@@ -458,32 +458,42 @@ public class Main {
 		labels.add(ltop);
 		labels.add(lcol);
 		labels.add(lall);
+		JButton save = new JButton("Save config");
 		ctop.addActionListener((e)->{
 			config.overlay = ctop.isSelected();
+			save.setEnabled(true);
 		});
 		call.addActionListener((e)->{
 			config.trackAll = call.isSelected();
+			save.setEnabled(true);
 		});
 		cmax.addActionListener((e)->{
 			config.showMax = cmax.isSelected();
+			save.setEnabled(true);
 		});
 		cavg.addActionListener((e)->{
 			config.showAvg = cavg.isSelected();
+			save.setEnabled(true);
 		});
 		ccur.addActionListener((e)->{
 			config.showCur = ccur.isSelected();
+			save.setEnabled(true);
 		});
 		cgra.addActionListener((e)->{
 			config.showGraph = cgra.isSelected();
+			save.setEnabled(true);
 		});
 		ccol.addActionListener((e)->{
 			config.customColors = ccol.isSelected();
+			save.setEnabled(true);
 		});
 		ckey.addActionListener((e)->{
 			config.showKeys = ckey.isSelected();
+			save.setEnabled(true);
 		});
 		ctot.addActionListener((e)->{
 			config.showTotal = ctot.isSelected();
+			save.setEnabled(true);
 		});
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
@@ -492,7 +502,6 @@ public class Main {
 		JPanel buttons = new JPanel(new GridLayout(9, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
-		JButton save = new JButton("Save config");
 		JButton updaterate = new JButton("Update rate");
 		JButton cmdkeys = new JButton("Commands");
 		save.setEnabled(false);
@@ -528,9 +537,11 @@ public class Main {
 		form.add(all, BorderLayout.CENTER);
 		size.addActionListener((e)->{
 			configureSize();
+			save.setEnabled(true);
 		});
 		cmdkeys.addActionListener((e)->{
 			configureCommandKeys();
+			save.setEnabled(true);
 		});
 		precision.addActionListener((e)->{
 			JPanel pconfig = new JPanel(new BorderLayout());
@@ -648,7 +659,7 @@ public class Main {
 			}
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v5.5, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v5.6, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				+ "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
@@ -798,7 +809,6 @@ public class Main {
 	 * Show the command key configuration dialog
 	 */
 	protected static final void configureCommandKeys(){
-		//TODO implement
 		JPanel content = new JPanel(new GridLayout(6, 2, 10, 2));
 		
 		JLabel lcp = new JLabel("Reset stats:");
