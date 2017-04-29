@@ -28,6 +28,8 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
@@ -83,13 +85,14 @@ public class Menu {
 	 * Repaints the component border
 	 */
 	protected static final void repaint(){
-		menu.setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		configure.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		general.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		precision.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		configcolors.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		mgraph.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
-		rate.getPopupMenu().setBorder(BorderFactory.createLineBorder(Main.config.foreground));
+		Border border = BorderFactory.createLineBorder(Main.config.customColors ? Main.config.foreground : Color.CYAN);
+		menu.setBorder(border);
+		configure.getPopupMenu().setBorder(border);
+		general.getPopupMenu().setBorder(border);
+		precision.getPopupMenu().setBorder(border);
+		configcolors.getPopupMenu().setBorder(border);
+		mgraph.getPopupMenu().setBorder(border);
+		rate.getPopupMenu().setBorder(border);
 	}
 
 	/**
@@ -279,13 +282,17 @@ public class Menu {
 			Main.reconfigure();
 		});
 		colorcustom.addActionListener((e)->{
-			Main.configureColors();
-			Main.reconfigure();
+			SwingUtilities.invokeLater(()->{
+				Main.configureColors();
+				Main.reconfigure();
+			});
 		});
 		colorenable.setSelected(Main.config.customColors);
 		colorenable.addActionListener((e)->{
-			Main.config.customColors = colorenable.isSelected();
-			Main.reconfigure();
+			SwingUtilities.invokeLater(()->{
+				Main.config.customColors = colorenable.isSelected();
+				Main.reconfigure();
+			});
 		});
 		configcolors.add(colorenable);
 		configcolors.add(colorcustom);
@@ -532,16 +539,15 @@ public class Menu {
 		 * @param defaultTextIconGap The gap between the text and the icon
 		 */
 		private static final void paintMenuItem(Graphics2D g, JMenuItem menuItem, boolean hasCursor, int defaultTextIconGap){
-			g.setColor(Main.config.background);
+			g.setColor(Main.config.customColors ? Main.config.background : Color.BLACK);
 			g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 			if(menuItem instanceof JCheckBoxMenuItem && menuItem.isSelected()){
 				g.drawImage(ColorManager.checkmark, 0, 0, 22, 22, 0, 0, 100, 100, menuItem);
 			}else if(menuItem instanceof JMenu){
 				g.drawImage(ColorManager.arrow, menuItem.getWidth() - 12, 5, menuItem.getWidth(), 17, 0, 0, 128, 128, menuItem);
 			}
-			g.setColor(Main.config.foreground);
+			g.setColor(Main.config.customColors ? Main.config.foreground : Color.CYAN);
 			if(hasCursor){
-				System.out.println("Repainting: " + hasCursor);
 				g.drawLine(0, 0, menuItem.getWidth(), 0);
 				g.drawLine(0, menuItem.getHeight() - 1, menuItem.getWidth(), menuItem.getHeight() - 1);
 				Composite prev = g.getComposite();
