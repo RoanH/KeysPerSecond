@@ -64,6 +64,8 @@ import org.jnativehook.keyboard.NativeKeyListener;
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseListener;
 
+import me.roan.kps.CommandKeys.CMD;
+
 /**
  * This program can be used to display
  * information about how many times
@@ -122,7 +124,7 @@ public class Main {
 	 * The most recent key event, only
 	 * used during the initial setup
 	 */
-	private static NativeKeyEvent lastevent;
+	protected static NativeKeyEvent lastevent;
 	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
@@ -380,22 +382,23 @@ public class Main {
 		}
 		if(nevent instanceof NativeKeyEvent){
 			NativeKeyEvent event = (NativeKeyEvent)nevent;
-			boolean ctrl = (!frame.isFocusOwner()) ? ((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) : (((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) && (lastevent == null ? false : ((lastevent.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0)));
+			boolean ctrl = (!frame.isFocusOwner()) ? ((event.getModifiers() & NativeKeyEvent.CTRL_MASK) != 0) : (((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) && (lastevent == null ? false : ((lastevent.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0)));
+			boolean alt = (event.getModifiers() & NativeKeyEvent.ALT_MASK) != 0;
 			lastevent = event;
-			if(event.getKeyCode() == NativeKeyEvent.VC_P && ctrl){
+			if(CommandKeys.CP.matches(event.getKeyCode(), alt, ctrl)){
 				resetStats();
-			}else if(event.getKeyCode() == NativeKeyEvent.VC_U && ctrl){
+			}else if(CommandKeys.CU.matches(event.getKeyCode(), alt, ctrl)){
 				exit();
-			}else if(event.getKeyCode() == NativeKeyEvent.VC_I && ctrl){
+			}else if(CommandKeys.CI.matches(event.getKeyCode(), alt, ctrl)){
 				resetTotals();
-			}else if(event.getKeyCode() == NativeKeyEvent.VC_Y && ctrl){
+			}else if(CommandKeys.CY.matches(event.getKeyCode(), alt, ctrl)){
 				if(frame.getContentPane().getComponentCount() != 0){
 					frame.setVisible(!frame.isVisible());
 				}
-			}else if(event.getKeyCode() == NativeKeyEvent.VC_T && ctrl){
+			}else if(CommandKeys.CT.matches(event.getKeyCode(), alt, ctrl)){
 				suspended = !suspended;
 				Menu.pause.setSelected(suspended);
-			}else if(event.getKeyCode() == NativeKeyEvent.VC_R && ctrl){
+			}else if(CommandKeys.CR.matches(event.getKeyCode(), alt, ctrl)){
 				double oldScale = config.size;
 				config.reloadConfig();
 				Menu.resetData(oldScale);
@@ -486,11 +489,12 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(8, 0));
+		JPanel buttons = new JPanel(new GridLayout(9, 0));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton save = new JButton("Save config");
 		JButton updaterate = new JButton("Update rate");
+		JButton cmdkeys = new JButton("Commands");
 		save.setEnabled(false);
 		JButton graph = new JButton("Graph");
 		graph.setEnabled(false);
@@ -514,6 +518,7 @@ public class Main {
 		buttons.add(color);
 		buttons.add(precision);
 		buttons.add(size);
+		buttons.add(cmdkeys);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Configuration"));
@@ -523,6 +528,9 @@ public class Main {
 		form.add(all, BorderLayout.CENTER);
 		size.addActionListener((e)->{
 			configureSize();
+		});
+		cmdkeys.addActionListener((e)->{
+			configureCommandKeys();
 		});
 		precision.addActionListener((e)->{
 			JPanel pconfig = new JPanel(new BorderLayout());
@@ -791,19 +799,84 @@ public class Main {
 	 */
 	protected static final void configureCommandKeys(){
 		//TODO implement
-		JPanel content = new JPanel();
+		JPanel content = new JPanel(new GridLayout(6, 2, 10, 2));
 		
-		JLabel lcp = new JLabel("Reset max & avg");
-		JLabel lcp = new JLabel("Reset max & avg");
-		JLabel lcp = new JLabel("Reset max & avg");
-		JLabel lcp = new JLabel("Reset max & avg");
-		JLabel lcp = new JLabel("Reset max & avg");
-		JLabel lcp = new JLabel("Reset max & avg");
+		JLabel lcp = new JLabel("Reset stats:");
+		JLabel lcu = new JLabel("Exit the program:");
+		JLabel lci = new JLabel("Reset totals:");
+		JLabel lcy = new JLabel("Show/hide GUI:");
+		JLabel lct = new JLabel("Pause/Resume:");
+		JLabel lcr = new JLabel("Reload config:");
 		
+		JButton bcp = new JButton(CommandKeys.CP.toString());
+		JButton bcu = new JButton(CommandKeys.CU.toString());
+		JButton bci = new JButton(CommandKeys.CI.toString());
+		JButton bcy = new JButton(CommandKeys.CY.toString());
+		JButton bct = new JButton(CommandKeys.CT.toString());
+		JButton bcr = new JButton(CommandKeys.CR.toString());
 		
+		content.add(lcp);
+		content.add(bcp);
 		
+		content.add(lcu);
+		content.add(bcu);
 		
+		content.add(lci);
+		content.add(bci);
 		
+		content.add(lcy);
+		content.add(bcy);
+		
+		content.add(lct);
+		content.add(bct);
+		
+		content.add(lcr);
+		content.add(bcr);
+		
+		bcp.addActionListener((e)->{
+			CMD cmd = CommandKeys.askForNewKey();
+			if(cmd != null){
+				CommandKeys.CP = cmd;
+				bcp.setText(cmd.toString());
+			}
+		});
+		bci.addActionListener((e)->{
+			CMD cmd = CommandKeys.askForNewKey();
+			if(cmd != null){
+				CommandKeys.CI = cmd;
+				bci.setText(cmd.toString());
+			}
+		});
+		bcu.addActionListener((e)->{
+			CMD cmd = CommandKeys.askForNewKey();
+			if(cmd != null){
+				CommandKeys.CU = cmd;
+				bcu.setText(cmd.toString());
+			}
+		});
+		bcy.addActionListener((e)->{
+			CMD cmd = CommandKeys.askForNewKey();
+			if(cmd != null){
+				CommandKeys.CY = cmd;
+				bcy.setText(cmd.toString());
+			}
+		});
+		bct.addActionListener((e)->{
+			CMD cmd = CommandKeys.askForNewKey();
+			if(cmd != null){
+				CommandKeys.CT = cmd;
+				bct.setText(cmd.toString());
+			}
+		});
+		bcr.addActionListener((e)->{
+			CMD cmd = CommandKeys.askForNewKey();
+			if(cmd != null){
+				CommandKeys.CR = cmd;
+				bcr.setText(cmd.toString());
+			}
+		});
+		
+		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, content, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
 	}
 	
 	/**
