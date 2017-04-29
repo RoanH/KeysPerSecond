@@ -93,7 +93,7 @@ public class Main {
 	 * The number of seconds the average has
 	 * been calculated for
 	 */
-	private static long n = 0;
+	protected static long n = 0;
 	/**
 	 * The number of keys pressed in the
 	 * ongoing second
@@ -275,6 +275,7 @@ public class Main {
 					if(totaltmp != 0){
 						avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
 						n++;
+						TotPanel.hits += tmp;
 						System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
 					}
 					graph.addPoint(totaltmp);
@@ -411,8 +412,8 @@ public class Main {
 	 */
 	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(8, 0));
-		JPanel labels = new JPanel(new GridLayout(8, 0));
+		JPanel boxes = new JPanel(new GridLayout(9, 0));
+		JPanel labels = new JPanel(new GridLayout(9, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
@@ -421,6 +422,7 @@ public class Main {
 		JCheckBox ctop = new JCheckBox();
 		JCheckBox ccol = new JCheckBox();
 		JCheckBox call = new JCheckBox();
+		JCheckBox ctot = new JCheckBox();
 		cmax.setSelected(true);
 		cavg.setSelected(true);
 		ccur.setSelected(true);
@@ -433,10 +435,12 @@ public class Main {
 		JLabel ltop = new JLabel("Overlay mode: ");
 		JLabel lcol = new JLabel("Custom colours: ");
 		JLabel lall = new JLabel("Track all keys");
+		JLabel ltot = new JLabel("Show total");
 		ltop.setToolTipText("Requires you to run osu! out of full screen mode, known to not (always) work with the wine version of osu!");
 		boxes.add(cmax);
 		boxes.add(cavg);
 		boxes.add(ccur);
+		boxes.add(ctot);
 		boxes.add(ckey);
 		boxes.add(cgra);
 		boxes.add(ctop);
@@ -445,11 +449,39 @@ public class Main {
 		labels.add(lmax);
 		labels.add(lavg);
 		labels.add(lcur);
+		labels.add(ltot);
 		labels.add(lkey);
 		labels.add(lgra);
 		labels.add(ltop);
 		labels.add(lcol);
 		labels.add(lall);
+		ctop.addActionListener((e)->{
+			config.overlay = ctop.isSelected();
+		});
+		call.addActionListener((e)->{
+			config.trackAll = call.isSelected();
+		});
+		cmax.addActionListener((e)->{
+			config.showMax = cmax.isSelected();
+		});
+		cavg.addActionListener((e)->{
+			config.showAvg = cavg.isSelected();
+		});
+		ccur.addActionListener((e)->{
+			config.showCur = ccur.isSelected();
+		});
+		cgra.addActionListener((e)->{
+			config.showGraph = cgra.isSelected();
+		});
+		ccol.addActionListener((e)->{
+			config.customColors = ccol.isSelected();
+		});
+		ckey.addActionListener((e)->{
+			config.showKeys = ckey.isSelected();
+		});
+		ctot.addActionListener((e)->{
+			config.showTotal = ctot.isSelected();
+		});
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
@@ -570,6 +602,7 @@ public class Main {
 			call.setSelected(config.trackAll);
 			ckey.setSelected(config.showKeys);
 			ctop.setSelected(config.overlay);
+			ctot.setSelected(config.showTotal);
 			save.setEnabled(true);
 		});
 		updaterate.addActionListener((e)->{
@@ -648,15 +681,7 @@ public class Main {
 			}
 			System.exit(0);
 		}
-		config.overlay = ctop.isSelected();
 		frame.setAlwaysOnTop(config.overlay);
-		config.trackAll = call.isSelected();
-		config.showMax = cmax.isSelected();
-		config.showAvg = cavg.isSelected();
-		config.showCur = ccur.isSelected();
-		config.showGraph = cgra.isSelected();
-		config.customColors = ccol.isSelected();
-		config.showKeys = ckey.isSelected();
 	}
 	
 	/**
@@ -1027,6 +1052,10 @@ public class Main {
 			}
 			if(config.showCur){
 				content.add(new NowPanel());
+				panels++;
+			}
+			if(config.showTotal){
+				content.add(new TotPanel());
 				panels++;
 			}
 			if(panels == 0 && !config.showGraph){

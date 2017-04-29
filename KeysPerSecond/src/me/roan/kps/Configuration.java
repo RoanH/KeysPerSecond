@@ -58,7 +58,11 @@ public class Configuration {
 	 * Whether or not to track all key presses
 	 */
 	protected boolean trackAll = false;
-
+	/**
+	 * Whether or not to show the total number of hits
+	 */
+	protected boolean showTotal = false;
+	
 	//keys
 	/**
 	 * Key configuration data, can be serialised
@@ -361,6 +365,9 @@ public class Configuration {
 				case "position":
 					Main.frame.setLocation(parsePosition(args[1]));
 					break;
+				case "showTotal":
+					showTotal = Boolean.parseBoolean(args[1]);
+					break;
 				}
 			}
 			in.close();
@@ -535,6 +542,7 @@ public class Configuration {
 				out.println("showMax: " + showMax);
 				out.println("showAvg: " + showAvg);
 				out.println("showCur: " + showCur);
+				out.println("showTotal: " + showTotal);
 				out.println("showKeys: " + showKeys);
 				out.println("overlay: " + overlay);
 				out.println("trackAllKeys: " + trackAll);

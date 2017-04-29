@@ -114,6 +114,7 @@ public class Menu {
 		JCheckBoxMenuItem max = new JCheckBoxMenuItem("Show max");
 		JCheckBoxMenuItem avg = new JCheckBoxMenuItem("Show average");
 		JCheckBoxMenuItem cur = new JCheckBoxMenuItem("Show current");
+		JCheckBoxMenuItem tot = new JCheckBoxMenuItem("Show total");
 		JCheckBoxMenuItem graph = new JCheckBoxMenuItem("Enable graph");
 		JCheckBoxMenuItem keys = new JCheckBoxMenuItem("Show keys");
 		JCheckBoxMenuItem graphavg = new JCheckBoxMenuItem("Show average");
@@ -141,6 +142,7 @@ public class Menu {
 		components.add(max);
 		components.add(avg);
 		components.add(cur);
+		components.add(tot);
 		components.add(graph);
 		components.add(keys);
 		components.add(graphavg);
@@ -255,6 +257,11 @@ public class Menu {
 		cur.setSelected(Main.config.showCur);
 		cur.addActionListener((e)->{
 			Main.config.showCur = cur.isSelected();
+			Main.reconfigure();
+		});
+		tot.setSelected(Main.config.showTotal);
+		tot.addActionListener((e)->{
+			Main.config.showTotal = tot.isSelected();
 			Main.reconfigure();
 		});
 		keys.setSelected(Main.config.showKeys);
@@ -447,6 +454,7 @@ public class Menu {
 		general.add(max);
 		general.add(avg);
 		general.add(cur);
+		general.add(tot);
 		general.add(keys);
 		general.add(overlay);
 		general.add(tAll);
