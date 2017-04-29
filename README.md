@@ -66,13 +66,11 @@ And if you find any bugs feel free to report them.
 13 April 2017: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
 16 April 2017: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
 17 April 2017: Rendering fixes & fix the counters being reset when the color is changed.<br>
-19 April 2017: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.
+19 April 2017: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.<br>
+29 April 2017: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs
 
 ## Todo list / working on
-- Option to change to command keys
-- Remember config save location
-- Automatic config loading of some sort
-- Never ending stream of bugs from SALZKARTOFFEEEL :3
+It's kinda empty here right now :c, so please suggest things c:
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
