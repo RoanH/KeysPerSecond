@@ -70,6 +70,13 @@ public class CommandKeys {
 		public String toString(){
 			return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + NativeKeyEvent.getKeyText(keycode);
 		}
+		
+		/**
+		 * @return The save form of this command key
+		 */
+		public String toSaveString(){
+			return "[keycode=" + keycode + ",ctrl=" + ctrl + ",alt=" + alt + "]";
+		}
 	}
 
 	/**

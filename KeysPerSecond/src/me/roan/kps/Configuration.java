@@ -380,6 +380,48 @@ public class Configuration {
 				case "showTotal":
 					showTotal = Boolean.parseBoolean(args[1]);
 					break;
+				case "keyResetStats":
+					try{
+						CP = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyExit":
+					try{
+						CU = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyResetTotal":
+					try{
+						CI = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyHide":
+					try{
+						CY = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyPause":
+					try{
+						CT = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "keyReload":
+					try{
+						CR = parseCommand(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
 				}
 			}
 			in.close();
@@ -388,6 +430,28 @@ public class Configuration {
 			t.printStackTrace();
 			return true;
 		}
+	}
+	
+	private final CMD parseCommand(String arg){
+		String[] args = arg.substring(1, arg.length() - 1).split(",");
+		int code = -10;
+		boolean alt = false;
+		boolean ctrl = false;
+		for(String str : args){
+			String[] data = str.split("=");
+			switch(data[0]){
+			case "keycode":
+				code = Integer.parseInt(data[1]);
+				break;
+			case "ctrl":
+				ctrl = Boolean.parseBoolean(data[1]);
+				break;
+			case "alt":
+				alt = Boolean.parseBoolean(data[1]);
+				break;
+			}
+		}
+		return new CMD(code, alt, ctrl);
 	}
 	
 	/**
@@ -580,6 +644,14 @@ public class Configuration {
 					out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
 					out.println();
 				}
+				out.println("# Command keys");
+				out.println("keyResetStats: " + CP.toSaveString());
+				out.println("keyExit: " + CU.toSaveString());
+				out.println("keyResetTotals: " + CI.toSaveString());
+				out.println("keyHide: " + CY.toSaveString());
+				out.println("keyPause: " + CT.toSaveString());
+				out.println("keyReload: " + CR.toSaveString());
+				out.println();
 				out.println("# Keys");
 				out.println("keys: ");
 				for(KeyInformation i : keyinfo){
