@@ -965,7 +965,6 @@ public class Main {
 	 *         when the program fails the load its resources
 	 */
 	protected static final void buildGUI() throws IOException {
-		content.setComponentPopupMenu(Menu.menu);
 		Menu.createMenu();
 		frame.setResizable(false);
 		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
@@ -1007,6 +1006,7 @@ public class Main {
 			}
 		});
 		frame.addMouseMotionListener(Listener.INSTANCE);
+		frame.addMouseListener(Listener.INSTANCE);
 		SizeManager.scale(config.size);
 		reconfigure();
 	}
@@ -1023,11 +1023,7 @@ public class Main {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(ColorManager.transparency && config.getBackgroundOpacity() != 1.0F){
-				content.setOpaque(false);
-			}else{
-				content.setBackground(config.getBackgroundColor());
-			}
+			content.setBackground(config.getBackgroundColor());
 			config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 			Key k;
 			int panels = 0;
@@ -1075,7 +1071,8 @@ public class Main {
 				GraphPanel.frames = panels > 0 ? panels : 5;
 			}
 			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
-			frame.setBackground(config.getBackgroundOpacity() != 1.0F ? new Color(config.getBackgroundColor().getRed() / 255.0F, config.getBackgroundColor().getGreen() / 255.0F, config.getBackgroundColor().getBlue() / 255.0F, config.getBackgroundOpacity()) : config.getBackgroundColor());
+			frame.setOpacity(config.getBackgroundOpacity());
+			frame.setBackground(config.getBackgroundColor());
 			frame.add(allcontent);
 			frame.setVisible(true);
 		});
