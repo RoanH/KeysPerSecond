@@ -30,6 +30,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
@@ -508,7 +510,7 @@ public class Menu {
 	 * UI for JMenus
 	 * @author Roan
 	 */
-	private static final class MenuUI extends BasicMenuUI implements MouseListener{
+	private static final class MenuUI extends BasicMenuUI implements MouseListener, PopupMenuListener{
 		/**
 		 * Whether or not the component currently has focus
 		 */
@@ -518,6 +520,7 @@ public class Menu {
 		public void installUI(JComponent c) {
 			super.installUI(c);
 			this.menuItem.addMouseListener(this);
+			menu.addPopupMenuListener(this);
 		}
 
 		@Override
@@ -582,13 +585,27 @@ public class Menu {
 		public void mouseExited(MouseEvent e) {
 			hasCursor = false;	
 		}
+
+		@Override
+		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		}
+
+		@Override
+		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			hasCursor = false;
+		}
+
+		@Override
+		public void popupMenuCanceled(PopupMenuEvent e) {
+			hasCursor = false;
+		}
 	}
 
 	/**
 	 * UI for JMenuItems
 	 * @author Roan
 	 */
-	private static final class MenuItemUI extends BasicMenuItemUI implements MouseListener{
+	private static final class MenuItemUI extends BasicMenuItemUI implements MouseListener, PopupMenuListener{
 		/**
 		 * Whether or not the component currently has a mouse over it
 		 */
@@ -602,6 +619,7 @@ public class Menu {
 		public void installUI(JComponent c) {
 			super.installUI(c);
 			this.menuItem.addMouseListener(this);
+			menu.addPopupMenuListener(this);
 		}
 
 		@Override
@@ -635,6 +653,20 @@ public class Menu {
 		@Override
 		public void mouseExited(MouseEvent e) {
 			hasCursor = false;		
+		}
+		
+		@Override
+		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+		}
+
+		@Override
+		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+			hasCursor = false;
+		}
+
+		@Override
+		public void popupMenuCanceled(PopupMenuEvent e) {
+			hasCursor = false;
 		}
 	}
 }
