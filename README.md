@@ -17,7 +17,7 @@ For each configured key it shows how many times it is pressed. By default it als
 When enabled it can also show a graph of the number of keys pressed per second over time. The horizontal line in the graph represents the average number of keys pressed per second.
 
 Everything shown in the picture above can be toggled on or off.<br>
-![Config](http://i.imgur.com/sjAVVNb.png)
+![Config](http://i.imgur.com/9Jsus8e.png)
 ![Key config](http://i.imgur.com/N6JOCJk.png)
 
 Lastly, there are also some commands that can be sent to the program:<br>
