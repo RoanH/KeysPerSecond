@@ -119,11 +119,29 @@ public class Configuration {
 	protected double size = 1.0D;
 	
 	//command keys
+	/**
+	 * Reset stats command key
+	 */
 	protected CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
+	/**
+	 * Reset totals command key
+	 */
 	protected CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
+	/**
+	 * Exit command key
+	 */
 	protected CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
+	/**
+	 * Hide/show command key
+	 */
 	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
+	/**
+	 * Pause command key
+	 */
 	protected CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
+	/**
+	 * Reload command key
+	 */
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
 	
 	/**
@@ -432,6 +450,12 @@ public class Configuration {
 		}
 	}
 	
+	/**
+	 * Parses the text representation of
+	 * a command key to it's actual data
+	 * @param arg The text data
+	 * @return The command key data
+	 */
 	private final CMD parseCommand(String arg){
 		String[] args = arg.substring(1, arg.length() - 1).split(",");
 		int code = -10;
