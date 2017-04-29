@@ -659,7 +659,11 @@ public class Main {
 			}
 		});
 		String version = checkVersion();//XXX the version number 
+<<<<<<< HEAD
 		JLabel ver = new JLabel("<html><center><i>Version: v6.0, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+=======
+		JLabel ver = new JLabel("<html><center><i>Version: v5.6, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+>>>>>>> branch 'master' of https://github.com/RoanH/KeysPerSecond.git
 				+ "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
