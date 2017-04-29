@@ -787,6 +787,26 @@ public class Main {
 	}
 	
 	/**
+	 * Show the command key configuration dialog
+	 */
+	protected static final void configureCommandKeys(){
+		//TODO implement
+		JPanel content = new JPanel();
+		
+		JLabel lcp = new JLabel("Reset max & avg");
+		JLabel lcp = new JLabel("Reset max & avg");
+		JLabel lcp = new JLabel("Reset max & avg");
+		JLabel lcp = new JLabel("Reset max & avg");
+		JLabel lcp = new JLabel("Reset max & avg");
+		JLabel lcp = new JLabel("Reset max & avg");
+		
+		
+		
+		
+		
+	}
+	
+	/**
 	 * Shows the key configuration dialog
 	 */
 	protected static final void configureKeys(){
