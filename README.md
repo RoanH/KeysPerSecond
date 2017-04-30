@@ -67,7 +67,8 @@ And if you find any bugs feel free to report them.
 16 April 2017: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
 17 April 2017: Rendering fixes & fix the counters being reset when the color is changed.<br>
 19 April 2017: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.<br>
-29 April 2017: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs
+29 April 2017: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs<br>
+30 April 2017: Fix an opacity bug that causes the window to be invisible with certain settings
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
