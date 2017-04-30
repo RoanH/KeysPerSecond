@@ -659,7 +659,7 @@ public class Main {
 			}
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v6.0, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v6.1, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				+ "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
@@ -1120,13 +1120,12 @@ public class Main {
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
-			content = new JPanel(new GridLayout(1, 0, 2, 0));
+			content = new JPanel(new GridLayout(1, 0, 0, 0));
 			try {
 				ColorManager.prepareImages(config.showGraph, config.customColors);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			content.setBackground(config.getBackgroundColor());
 			config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
 			Key k;
 			int panels = 0;
@@ -1173,9 +1172,10 @@ public class Main {
 				allcontent.add(graph);
 				GraphPanel.frames = panels > 0 ? panels : 5;
 			}
-			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth + (panels - 1) * 2), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
-			frame.setOpacity(config.getBackgroundOpacity());
-			frame.setBackground(config.getBackgroundColor());
+			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
+			if(ColorManager.transparency){
+				frame.setBackground(ColorManager.transparent);
+			}
 			frame.add(allcontent);
 			frame.setVisible(true);
 		});
