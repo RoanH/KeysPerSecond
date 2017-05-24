@@ -358,7 +358,18 @@ public class Main {
 	 * @param event The event that occurred
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
-		int code = event instanceof NativeKeyEvent ? ((NativeKeyEvent)event).getKeyCode() : -((NativeMouseEvent)event).getButton();
+		int code;
+		if(event instanceof NativeKeyEvent){
+			NativeKeyEvent evt = ((NativeKeyEvent)event);
+			code = evt.getKeyCode();
+			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
+				CommandKeys.isAltDown = false;
+			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+				CommandKeys.isCtrlDown = false;
+			}
+		}else{
+			code = -((NativeMouseEvent)event).getButton();
+		}
 		if(keys.containsKey(code)){
 			keys.get(code).keyReleased();
 		}
@@ -382,23 +393,26 @@ public class Main {
 		}
 		if(nevent instanceof NativeKeyEvent){
 			NativeKeyEvent event = (NativeKeyEvent)nevent;
-			boolean ctrl = (!frame.isFocusOwner()) ? ((event.getModifiers() & NativeKeyEvent.CTRL_MASK) != 0) : (((event.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0) && (lastevent == null ? false : ((lastevent.getModifiers() & (NativeKeyEvent.CTRL_MASK | NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.CTRL_R_MASK)) != 0)));
-			boolean alt = (event.getModifiers() & NativeKeyEvent.ALT_MASK) != 0;
+			if(event.getKeyCode() == NativeKeyEvent.VC_ALT){
+				CommandKeys.isAltDown = true;
+			}else if(event.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+				CommandKeys.isCtrlDown = true;
+			}
 			lastevent = event;
-			if(config.CP.matches(event.getKeyCode(), alt, ctrl)){
+			if(config.CP.matches(event.getKeyCode())){
 				resetStats();
-			}else if(config.CU.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CU.matches(event.getKeyCode())){
 				exit();
-			}else if(config.CI.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CI.matches(event.getKeyCode())){
 				resetTotals();
-			}else if(config.CY.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CY.matches(event.getKeyCode())){
 				if(frame.getContentPane().getComponentCount() != 0){
 					frame.setVisible(!frame.isVisible());
 				}
-			}else if(config.CT.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CT.matches(event.getKeyCode())){
 				suspended = !suspended;
 				Menu.pause.setSelected(suspended);
-			}else if(config.CR.matches(event.getKeyCode(), alt, ctrl)){
+			}else if(config.CR.matches(event.getKeyCode())){
 				double oldScale = config.size;
 				config.reloadConfig();
 				Menu.resetData(oldScale);

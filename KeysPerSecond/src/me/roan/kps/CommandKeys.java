@@ -16,6 +16,14 @@ import org.jnativehook.keyboard.NativeKeyEvent;
  * @author Roan
  */
 public class CommandKeys {
+	/**
+	 * Whether or not ctrl is down
+	 */
+	protected static boolean isCtrlDown = false;
+	/**
+	 * Whether or not alt is down
+	 */
+	protected static boolean isAltDown = false;
 	
 	/**
 	 * Simple class to represent
@@ -58,11 +66,11 @@ public class CommandKeys {
 		 * @param ctrl
 		 * @return
 		 */
-		protected final boolean matches(int keycode, boolean alt, boolean ctrl){
-			if((this.keycode != keycode) || (this.alt && !alt) || (this.ctrl && !ctrl)){
-				return false;
-			}else{
+		protected final boolean matches(int keycode){
+			if((this.keycode == keycode) && (this.alt == isAltDown) && (this.ctrl == isCtrlDown)){
 				return true;
+			}else{
+				return false;
 			}
 		}
 		
@@ -101,7 +109,7 @@ public class CommandKeys {
 			if(Main.lastevent == null){
 				return null;
 			}
-			CMD cmd = new CMD(Main.lastevent.getKeyCode(), alt.isSelected(), ctrl.isSelected());
+			CMD cmd = new CMD(Main.lastevent.getKeyCode(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
 			if(JOptionPane.showOptionDialog(Main.frame.isVisible() ? Main.frame : null, "Set command key to: " + cmd.toString(), "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
 				return cmd;
 			}
