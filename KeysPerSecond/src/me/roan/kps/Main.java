@@ -239,7 +239,7 @@ public class Main {
 				System.err.println("Failed to load the configuration menu, however you can use the live menu instead");
 			}
 		}
-		
+
 		//Build GUI
 		try {
 			buildGUI();
@@ -352,7 +352,7 @@ public class Main {
 			}
 		});
 	}
-	
+
 	/**
 	 * Called when a key is released
 	 * @param event The event that occurred
@@ -374,7 +374,7 @@ public class Main {
 			keys.get(code).keyReleased();
 		}
 	}
-	
+
 	/**
 	 * Called when a key is pressed
 	 * @param event The event that occurred
@@ -716,7 +716,7 @@ public class Main {
 		}
 		frame.setAlwaysOnTop(config.overlay);
 	}
-	
+
 	/**
 	 * Shows the size configuration dialog
 	 */
@@ -737,7 +737,7 @@ public class Main {
 			config.size = ((double)s.getValue()) / 100.0D;
 		}
 	}
-	
+
 	/**
 	 * Shows the color configuration dialog
 	 */
@@ -818,45 +818,45 @@ public class Main {
 		}
 		frame.repaint();
 	}
-	
+
 	/**
 	 * Show the command key configuration dialog
 	 */
 	protected static final void configureCommandKeys(){
 		JPanel content = new JPanel(new GridLayout(6, 2, 10, 2));
-		
+
 		JLabel lcp = new JLabel("Reset stats:");
 		JLabel lcu = new JLabel("Exit the program:");
 		JLabel lci = new JLabel("Reset totals:");
 		JLabel lcy = new JLabel("Show/hide GUI:");
 		JLabel lct = new JLabel("Pause/Resume:");
 		JLabel lcr = new JLabel("Reload config:");
-		
+
 		JButton bcp = new JButton(config.CP.toString());
 		JButton bcu = new JButton(config.CU.toString());
 		JButton bci = new JButton(config.CI.toString());
 		JButton bcy = new JButton(config.CY.toString());
 		JButton bct = new JButton(config.CT.toString());
 		JButton bcr = new JButton(config.CR.toString());
-		
+
 		content.add(lcp);
 		content.add(bcp);
-		
+
 		content.add(lcu);
 		content.add(bcu);
-		
+
 		content.add(lci);
 		content.add(bci);
-		
+
 		content.add(lcy);
 		content.add(bcy);
-		
+
 		content.add(lct);
 		content.add(bct);
-		
+
 		content.add(lcr);
 		content.add(bcr);
-		
+
 		bcp.addActionListener((e)->{
 			CMD cmd = CommandKeys.askForNewKey();
 			if(cmd != null){
@@ -899,10 +899,10 @@ public class Main {
 				bcr.setText(cmd.toString());
 			}
 		});
-		
+
 		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, content, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
 	}
-	
+
 	/**
 	 * Shows the key configuration dialog
 	 */
@@ -1012,42 +1012,42 @@ public class Main {
 		newmouse.addActionListener((e)->{
 			JPanel addform = new JPanel(new BorderLayout());
 			addform.add(new JLabel("Select the mouse buttons to add:"), BorderLayout.PAGE_START);
-			
+
 			JPanel buttons = new JPanel(new GridLayout(5, 1, 2, 0));
-			
+
 			JPanel m1 = new JPanel(new BorderLayout());
 			JCheckBox cm1 = new JCheckBox();
 			m1.add(cm1, BorderLayout.LINE_START);
 			m1.add(new JLabel("M1 (left click)"), BorderLayout.CENTER);
-			
+
 			JPanel m2 = new JPanel(new BorderLayout());
 			JCheckBox cm2 = new JCheckBox();
 			m2.add(cm2, BorderLayout.LINE_START);
 			m2.add(new JLabel("M2 (right click)"), BorderLayout.CENTER);
-			
+
 			JPanel m3 = new JPanel(new BorderLayout());
 			JCheckBox cm3 = new JCheckBox();
 			m3.add(cm3, BorderLayout.LINE_START);
 			m3.add(new JLabel("M3 (mouse wheel)"), BorderLayout.CENTER);
-			
+
 			JPanel m4 = new JPanel(new BorderLayout());
 			JCheckBox cm4 = new JCheckBox();
 			m4.add(cm4, BorderLayout.LINE_START);
 			m4.add(new JLabel("M4"), BorderLayout.CENTER);
-			
+
 			JPanel m5 = new JPanel(new BorderLayout());
 			JCheckBox cm5 = new JCheckBox();
 			m5.add(cm5, BorderLayout.LINE_START);
 			m5.add(new JLabel("M5"), BorderLayout.CENTER);
-			
+
 			buttons.add(m1);
 			buttons.add(m2);
 			buttons.add(m3);
 			buttons.add(m4);
 			buttons.add(m5);
-			
+
 			addform.add(buttons, BorderLayout.CENTER);
-			
+
 			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
 				if(cm1.isSelected()){
 					config.keyinfo.add(new KeyInformation("M1", -NativeMouseEvent.BUTTON1));
@@ -1176,7 +1176,7 @@ public class Main {
 			}
 
 			Menu.repaint();
-			
+
 			JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
 			allcontent.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 			if(panels > 0){
@@ -1465,7 +1465,7 @@ public class Main {
 		 * @see #keycode
 		 */
 		private KeyInformation(String name, int code){
-			this.name = name.length() == 1 ? name.toUpperCase() : parseKeyString(name);
+			this.name = name.length() == 1 ? name.toUpperCase() : getKeyText(code);
 			this.keycode = code;
 		}
 
@@ -1490,67 +1490,133 @@ public class Main {
 		public String toString(){
 			return "[keycode=" + keycode + ",index=" + index + ",visible=" + visible + ",name=\"" + name + "\"]";
 		}
-
+		
 		/**
-		 * Converts a long key name to
-		 * something a bit shorter
-		 * @param key The key to convert
-		 * @return The shorter key name
+		 * Gets the key name for a key code
+		 * @param keyCode The key code
+		 * @return The key name
 		 */
-		private static final String parseKeyString(String key){
-			switch(key){
-			case "Back Quote":
+		public static String getKeyText(int keyCode) {
+			switch (keyCode) {
+			case NativeKeyEvent.VC_ESCAPE:
+				return "Esc";
+			// Begin Function Keys
+			case NativeKeyEvent.VC_F1:
+				return "F1";
+			case NativeKeyEvent.VC_F2:
+				return "F2";
+			case NativeKeyEvent.VC_F3:
+				return "F3";
+			case NativeKeyEvent.VC_F4:
+				return "F4";
+			case NativeKeyEvent.VC_F5:
+				return "F5";
+			case NativeKeyEvent.VC_F6:
+				return "F6";
+			case NativeKeyEvent.VC_F7:
+				return "F7";
+			case NativeKeyEvent.VC_F8:
+				return "F8";
+			case NativeKeyEvent.VC_F9:
+				return "F9";
+			case NativeKeyEvent.VC_F10:
+				return "F10";
+			case NativeKeyEvent.VC_F11:
+				return "F11";
+			case NativeKeyEvent.VC_F12:
+				return "F12";
+			case NativeKeyEvent.VC_F13:
+				return "F13";
+			case NativeKeyEvent.VC_F14:
+				return "F14";
+			case NativeKeyEvent.VC_F15:
+				return "F15";
+			case NativeKeyEvent.VC_F16:
+				return "F16";
+			case NativeKeyEvent.VC_F17:
+				return "F17";
+			case NativeKeyEvent.VC_F18:
+				return "F18";
+			case NativeKeyEvent.VC_F19:
+				return "F19";
+			case NativeKeyEvent.VC_F20:
+				return "F20";
+			case NativeKeyEvent.VC_F21:
+				return "F21";
+			case NativeKeyEvent.VC_F22:
+				return "F22";
+			case NativeKeyEvent.VC_F23:
+				return "F23";
+			case NativeKeyEvent.VC_F24:
+				return "F24";
+			// Begin Alphanumeric Zone
+			case NativeKeyEvent.VC_BACKQUOTE:
 				return "'";
-			case "Minus":
+			case NativeKeyEvent.VC_MINUS:
 				return "-";
-			case "Equals":
+			case NativeKeyEvent.VC_EQUALS:
 				return "=";
-			case "Backspace":
+			case NativeKeyEvent.VC_BACKSPACE:
 				return "\u2190";
-			case "Caps Lock":
+			case NativeKeyEvent.VC_TAB:
+				return "Tab";
+			case NativeKeyEvent.VC_CAPS_LOCK:
 				return "Cap";
-			case "Open Bracket":
+			case NativeKeyEvent.VC_OPEN_BRACKET:
 				return "(";
-			case "Close Bracket":
+			case NativeKeyEvent.VC_CLOSE_BRACKET:
 				return ")";
-			case "Back Slash":
+			case NativeKeyEvent.VC_BACK_SLASH:
 				return "\\";
-			case "Semicolon":
+			case NativeKeyEvent.VC_SEMICOLON:
 				return ";";
-			case "Quote":
+			case NativeKeyEvent.VC_QUOTE:
 				return "\"";
-			case "Enter":
+			case NativeKeyEvent.VC_ENTER:
 				return "\u21B5";
-			case "Comma":
+			case NativeKeyEvent.VC_COMMA:
 				return ",";
-			case "Period":
+			case NativeKeyEvent.VC_PERIOD:
 				return ".";
-			case "Slash":
+			case NativeKeyEvent.VC_SLASH:
 				return "/";
-			case "Space":
+			case NativeKeyEvent.VC_SPACE:
 				return " ";
-			case "Insert":
+			// Begin Edit Key Zone
+			case NativeKeyEvent.VC_INSERT:
 				return "Ins";
-			case "Delete":
+			case NativeKeyEvent.VC_DELETE:
 				return "Del";
-			case "Home":
+			case NativeKeyEvent.VC_HOME:
 				return "\u2302";
-			case "Page Up":
+			case NativeKeyEvent.VC_END:
+				return "End";
+			case NativeKeyEvent.VC_PAGE_UP:
 				return "\u2191";
-			case "Page Down":
+			case NativeKeyEvent.VC_PAGE_DOWN:
 				return "\u2193";
-			case "Up":
+			// Begin Cursor Key Zone
+			case NativeKeyEvent.VC_UP:
 				return "\u25B2";
-			case "Left":
+			case NativeKeyEvent.VC_LEFT:
 				return "\u25B0";
-			case "Right":
+			case NativeKeyEvent.VC_CLEAR:
+				return "Clr";
+			case NativeKeyEvent.VC_RIGHT:
 				return "\u25B6";
-			case "Down":
+			case NativeKeyEvent.VC_DOWN:
 				return "\u25BC";
-			case "Shift":
-				return "\u21D1";
-			default:
-				return key;
+			// Begin Modifier and Control Keys
+			case NativeKeyEvent.VC_SHIFT:
+				return	"\u21D1";
+			case NativeKeyEvent.VC_CONTROL:
+				return "Ctl";
+			case NativeKeyEvent.VC_ALT:
+				return "Alt";
+			case NativeKeyEvent.VC_META:
+				return "\u2318";
+			default: 
+				return NativeKeyEvent.getKeyText(keyCode);
 			}
 		}
 	}
