@@ -68,7 +68,8 @@ And if you find any bugs feel free to report them.
 17 April 2017: Rendering fixes & fix the counters being reset when the color is changed.<br>
 19 April 2017: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.<br>
 29 April 2017: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs<br>
-30 April 2017: Fix an opacity bug that causes the window to be invisible with certain settings
+30 April 2017: Fix an opacity bug that causes the window to be invisible with certain settings<br>
+28 May 2017: Fix a localization bug & add the option to track key-modifier combinations
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
@@ -76,8 +77,8 @@ It's kinda empty here right now :c, so please suggest things c:
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v6.1/KeysPerSecond-v6.1.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v6.1/KeysPerSecond-v6.1.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v6.2/KeysPerSecond-v6.2.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v6.2/KeysPerSecond-v6.2.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
