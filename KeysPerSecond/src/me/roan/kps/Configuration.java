@@ -485,11 +485,14 @@ public class Configuration {
 	 * @return The key data
 	 */
 	private final KeyInformation parseKey(String arg){
-		String[] args = arg.substring(1, arg.length() - 1).split(",", 4);
+		String[] args = arg.substring(1, arg.length() - 1).split(",", 7);
 		String name = null;
 		int index = -1;
 		int code = -1;
 		boolean visible = false;
+		boolean ctrl = false;
+		boolean alt = false;
+		boolean shift = false;
 		for(String str : args){
 			String[] comp = str.split("=", 2);
 			switch(comp[0]){
@@ -505,9 +508,22 @@ public class Configuration {
 			case "name":
 				name = comp[1].substring(1, comp[1].length() - 1);
 				break;
+			case "ctrl":
+				ctrl = Boolean.parseBoolean(comp[1]);
+				break;
+			case "alt":
+				alt = Boolean.parseBoolean(comp[1]);
+				break;
+			case "shift":
+				shift = Boolean.parseBoolean(comp[1]);
+				break;
 			}
 		}
-		return new KeyInformation(name, code, visible, index);
+		KeyInformation kinfo = new KeyInformation(name, code, visible, index);
+		kinfo.alt = alt;
+		kinfo.shift = shift;
+		kinfo.ctrl = ctrl;
+		return kinfo;
 	}
 
 	/**

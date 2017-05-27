@@ -158,7 +158,7 @@ public class Main {
 	 * The loop timer task
 	 */
 	protected static ScheduledFuture<?> future = null;
-
+	
 	/**
 	 * Main method
 	 * @param args - configuration file path
@@ -364,11 +364,31 @@ public class Main {
 			code = evt.getKeyCode();
 			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
 				CommandKeys.isAltDown = false;
+				for(Key k : keys.values()){
+					if(k.alt){
+						k.keyReleased();
+					}
+				}
 			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
 				CommandKeys.isCtrlDown = false;
+				for(Key k : keys.values()){
+					if(k.ctrl){
+						k.keyReleased();
+					}
+				}
+			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+				CommandKeys.isShiftDown = false;
+				for(Key k : keys.values()){
+					if(k.shift){
+						k.keyReleased();
+					}
+				}
 			}
 		}else{
 			code = -((NativeMouseEvent)event).getButton();
+		}
+		if(event instanceof NativeKeyEvent){
+			code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
 		}
 		if(keys.containsKey(code)){
 			keys.get(code).keyReleased();
@@ -381,6 +401,9 @@ public class Main {
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		int code = nevent instanceof NativeKeyEvent ? ((NativeKeyEvent)nevent).getKeyCode() : -((NativeMouseEvent)nevent).getButton();
+		if(nevent instanceof NativeKeyEvent){
+			code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
+		}
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
 				keys.put(code, new Key(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode())));
@@ -397,6 +420,8 @@ public class Main {
 				CommandKeys.isAltDown = true;
 			}else if(event.getKeyCode() == NativeKeyEvent.VC_CONTROL){
 				CommandKeys.isCtrlDown = true;
+			}else if(event.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+				CommandKeys.isShiftDown = true;
 			}
 			lastevent = event;
 			if(config.CP.matches(event.getKeyCode())){
@@ -933,7 +958,7 @@ public class Main {
 				case 0:
 					return config.keyinfo.get(rowIndex).index;
 				case 1:
-					return config.keyinfo.get(rowIndex).name;
+					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name;
 				case 2:
 					return config.keyinfo.get(rowIndex).visible;
 				case 3:
@@ -996,13 +1021,35 @@ public class Main {
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
-			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, "Press a key and press 'OK' to add it.", "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){ 	
+			JPanel form = new JPanel(new GridLayout(4, 1));
+			JLabel txt = new JLabel("Press a key and click 'OK' to add it.");
+			JPanel a = new JPanel(new BorderLayout());
+			JPanel c = new JPanel(new BorderLayout());
+			JPanel s = new JPanel(new BorderLayout());
+			JCheckBox ctrl = new JCheckBox();
+			JCheckBox alt = new JCheckBox();
+			JCheckBox shift = new JCheckBox();
+			c.add(ctrl, BorderLayout.LINE_START);
+			c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
+			a.add(alt, BorderLayout.LINE_START);
+			a.add(new JLabel("Alt"), BorderLayout.CENTER);
+			s.add(shift, BorderLayout.LINE_START);
+			s.add(new JLabel("Shift"), BorderLayout.CENTER);
+			form.add(txt);
+			form.add(c);
+			form.add(a);
+			form.add(s);
+			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, form, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){ 	
 				if(lastevent == null){ 				
 					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 					return; 	
 				} 			
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode()); 	
-				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode()); 
+				info.alt = alt.isSelected() || CommandKeys.isAltDown;
+				info.ctrl = ctrl.isSelected() || CommandKeys.isCtrlDown;
+				info.shift = shift.isSelected() || CommandKeys.isShiftDown;
+				info.keycode += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
+				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
 					config.keyinfo.add(info); 			
 				} 			
 				model.fireTableDataChanged(); 		
@@ -1146,6 +1193,9 @@ public class Main {
 			for(KeyInformation i : config.keyinfo){
 				if(!keys.containsKey(i.keycode)){
 					keys.put(i.keycode, k = new Key(i.name));
+					k.alt = i.alt;
+					k.ctrl = i.ctrl;
+					k.shift = i.shift;
 				}else{
 					k = keys.get(i.keycode);
 				}
@@ -1371,6 +1421,18 @@ public class Main {
 		 * The graphical display for this key
 		 */
 		private KeyPanel panel = null;
+		/**
+		 * Whether or not alt has to be down
+		 */
+		protected boolean alt;
+		/**
+		 * Whether or not ctrl has to be down
+		 */
+		protected boolean ctrl;
+		/**
+		 * Whether or not shift has to be down
+		 */
+		protected boolean shift;
 
 		/**
 		 * Constructs a new Key object
@@ -1412,9 +1474,11 @@ public class Main {
 		 * Called when a key is released
 		 */
 		private void keyReleased() {
-			down = false;
-			if(panel != null){
-				panel.repaint();
+			if(down){
+				down = false;
+				if(panel != null){
+					panel.repaint();
+				}
 			}
 		}
 	}
@@ -1455,7 +1519,19 @@ public class Main {
 		 * Whether or not this key is displayed
 		 */
 		protected boolean visible = true;
-
+		/**
+		 * Whether or not alt is down
+		 */
+		protected boolean alt = false;
+		/**
+		 * Whether or not ctrl is down
+		 */
+		protected boolean ctrl = false;
+		/**
+		 * Whether or not shift is down
+		 */
+		protected boolean shift = false;
+		
 		/**
 		 * Constructs a new KeyInformation
 		 * object with the given information
@@ -1485,10 +1561,19 @@ public class Main {
 			this.visible = visible;
 			this.index = index;
 		}
+		
+		/**
+		 * Gets a string containing all
+		 * the modifiers for this key
+		 * @return The modifier string
+		 */
+		public String getModifierString(){
+			return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + (shift ? "Shift + " : "");
+		}
 
 		@Override
 		public String toString(){
-			return "[keycode=" + keycode + ",index=" + index + ",visible=" + visible + ",name=\"" + name + "\"]";
+			return "[keycode=" + keycode + ",index=" + index + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
 		}
 		
 		/**

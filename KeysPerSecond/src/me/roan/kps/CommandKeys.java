@@ -24,6 +24,10 @@ public class CommandKeys {
 	 * Whether or not alt is down
 	 */
 	protected static boolean isAltDown = false;
+	/**
+	 * Whether or not shift is down
+	 */
+	protected static boolean isShiftDown = false;
 	
 	/**
 	 * Simple class to represent
