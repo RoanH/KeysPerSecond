@@ -417,10 +417,32 @@ public class Main {
 		if(nevent instanceof NativeKeyEvent){
 			NativeKeyEvent event = (NativeKeyEvent)nevent;
 			if(event.getKeyCode() == NativeKeyEvent.VC_ALT){
+				Key ak = keys.get(event.getKeyCode());
+				if(!CommandKeys.isAltDown){
+					for(Key k : keys.values()){
+						if(!k.alt && !k.equals(ak)){
+							k.keyReleased();
+						}
+					}
+				}
 				CommandKeys.isAltDown = true;
 			}else if(event.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+				if(!CommandKeys.isCtrlDown){
+					for(Key k : keys.values()){
+						if(!k.ctrl){
+							k.keyReleased();
+						}
+					}
+				}
 				CommandKeys.isCtrlDown = true;
 			}else if(event.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+				if(!CommandKeys.isShiftDown){
+					for(Key k : keys.values()){
+						if(!k.shift){
+							k.keyReleased();
+						}
+					}
+				}
 				CommandKeys.isShiftDown = true;
 			}
 			lastevent = event;
@@ -958,7 +980,8 @@ public class Main {
 				case 0:
 					return config.keyinfo.get(rowIndex).index;
 				case 1:
-					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name;
+					int n  = (config.keyinfo.get(rowIndex).alt ? 1 : 0) + (config.keyinfo.get(rowIndex).ctrl ? 1 : 0) + (config.keyinfo.get(rowIndex).shift ? 1 : 0);
+					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
 				case 2:
 					return config.keyinfo.get(rowIndex).visible;
 				case 3:
@@ -1044,12 +1067,10 @@ public class Main {
 					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 					return; 	
 				} 			
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode()); 
-				info.alt = alt.isSelected() || CommandKeys.isAltDown;
-				info.ctrl = ctrl.isSelected() || CommandKeys.isCtrlDown;
-				info.shift = shift.isSelected() || CommandKeys.isShiftDown;
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), alt.isSelected() || CommandKeys.isAltDown, ctrl.isSelected() || CommandKeys.isCtrlDown, shift.isSelected() || CommandKeys.isShiftDown); 
 				info.keycode += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
-				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
+				int n  = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
+				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
 					config.keyinfo.add(info); 			
 				} 			
 				model.fireTableDataChanged(); 		
@@ -1097,19 +1118,19 @@ public class Main {
 
 			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
 				if(cm1.isSelected()){
-					config.keyinfo.add(new KeyInformation("M1", -NativeMouseEvent.BUTTON1));
+					config.keyinfo.add(new KeyInformation("M1", -NativeMouseEvent.BUTTON1, false, false, false));
 				}
 				if(cm2.isSelected()){
-					config.keyinfo.add(new KeyInformation("M2", -NativeMouseEvent.BUTTON2));
+					config.keyinfo.add(new KeyInformation("M2", -NativeMouseEvent.BUTTON2, false, false, false));
 				}
 				if(cm3.isSelected()){
-					config.keyinfo.add(new KeyInformation("M3", -NativeMouseEvent.BUTTON3));
+					config.keyinfo.add(new KeyInformation("M3", -NativeMouseEvent.BUTTON3, false, false, false));
 				}
 				if(cm4.isSelected()){
-					config.keyinfo.add(new KeyInformation("M4", -NativeMouseEvent.BUTTON4));
+					config.keyinfo.add(new KeyInformation("M4", -NativeMouseEvent.BUTTON4, false, false, false));
 				}
 				if(cm5.isSelected()){
-					config.keyinfo.add(new KeyInformation("M5", -NativeMouseEvent.BUTTON5));
+					config.keyinfo.add(new KeyInformation("M5", -NativeMouseEvent.BUTTON5, false, false, false));
 				}
 				model.fireTableDataChanged();
 			}
@@ -1191,13 +1212,17 @@ public class Main {
 			Key k;
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
-				if(!keys.containsKey(i.keycode)){
-					keys.put(i.keycode, k = new Key(i.name));
+				int code = i.keycode;
+				if(code >= 0){
+					code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
+				}
+				if(!keys.containsKey(code)){
+					keys.put(code, k = new Key(i.name));
 					k.alt = i.alt;
 					k.ctrl = i.ctrl;
 					k.shift = i.shift;
 				}else{
-					k = keys.get(i.keycode);
+					k = keys.get(code);
 				}
 				if(config.showKeys && i.visible){
 					content.add(k.getPanel());
@@ -1540,8 +1565,11 @@ public class Main {
 		 * @see #name
 		 * @see #keycode
 		 */
-		private KeyInformation(String name, int code){
-			this.name = name.length() == 1 ? name.toUpperCase() : getKeyText(code);
+		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift){
+			this.alt = alt;
+			this.ctrl = ctrl;
+			this.shift = shift;
+			this.name = ((alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "")) + (name.length() == 1 ? name.toUpperCase() : getKeyText(code));
 			this.keycode = code;
 		}
 
