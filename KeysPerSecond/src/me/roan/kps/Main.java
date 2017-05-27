@@ -720,15 +720,15 @@ public class Main {
 			}
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v6.1, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
-				+ "<u><font color=blue>https://osu.ppy.sh/forum/t/552405</font></u></i></center></html>", SwingConstants.CENTER);
+		JLabel ver = new JLabel("<html><center><i>Version: v6.2, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(Desktop.isDesktopSupported()){
 					try {
-						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/forum/t/552405").toURI());
+						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/community/forums/topics/552405").toURI());
 					} catch (IOException | URISyntaxException e1) {
 						//pity
 					}
