@@ -144,6 +144,10 @@ public class Configuration {
 	 */
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
 	
+	//layout
+	protected int rows = 2;
+	protected int columns = 0;
+	
 	/**
 	 * The original configuration file
 	 */

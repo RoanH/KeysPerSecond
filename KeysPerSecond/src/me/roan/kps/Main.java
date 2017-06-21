@@ -949,6 +949,25 @@ public class Main {
 
 		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, content, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
 	}
+	
+	/**
+	 * Shows the layout configuration dialog
+	 */
+	protected static final void configureLayout(){
+		JPanel panel = new JPanel(new GridLayout());
+		//Text mode (horizontal / vertical)
+		//Graph mode (left, right, top, bottom, detached)
+		//max position
+		//avg pos
+		//cur pos
+		//tot pos
+		//rows
+		//cols
+		
+		//XXX check not rows & cols unlimited
+		
+		
+	}
 
 	/**
 	 * Shows the key configuration dialog
@@ -1202,7 +1221,7 @@ public class Main {
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
-			content = new JPanel(new GridLayout(1, 0, 0, 0));
+			content = new JPanel();
 			try {
 				ColorManager.prepareImages(config.showGraph, config.customColors);
 			} catch (IOException e) {
@@ -1261,7 +1280,16 @@ public class Main {
 				allcontent.add(graph);
 				GraphPanel.frames = panels > 0 ? panels : 5;
 			}
-			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
+			int r = config.rows;
+			int c = config.columns;
+			if(r == 0){
+				r = (int) Math.ceil((double)panels / (double)c);
+			}else if(c == 0){
+				c = (int) Math.ceil((double)panels / (double)r);
+			}
+			content.setLayout(new GridLayout(r, c, 0, 0));
+			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (c * SizeManager.keyPanelWidth), 
+					      (panels > 0 ? SizeManager.subComponentHeight * r : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
 			if(ColorManager.transparency){
 				frame.setBackground(ColorManager.transparent);
 			}
