@@ -87,7 +87,8 @@ public final class KeyPanel extends JPanel {
 		}else{
 			g.setFont(BasePanel.font1);
 		}
-		g.drawString(key.name, (this.getWidth() - g.getFontMetrics().stringWidth(key.name)) / 2, SizeManager.keyTitleTextOffset);
+		int baseline = (this.getHeight() / 2) - ((g.getFontMetrics().getAscent() + g.getFontMetrics().getDescent()) / 2) + g.getFontMetrics().getAscent();
+		g.drawString(key.name, SizeManager.horizontalTextOffset, baseline);
 		if(key.count >= 10000){
 			g.setFont(font2smallest);
 		}else if(key.count >= 1000){
@@ -96,7 +97,7 @@ public final class KeyPanel extends JPanel {
 			g.setFont(font2);
 		}
 		String str = String.valueOf(key.count);
-		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, SizeManager.keyDataTextOffset);
+		g.drawString(str, this.getWidth() - SizeManager.horizontalTextOffset - g.getFontMetrics().stringWidth(str), baseline);
 	}
 	
 	private final void verticalRenderer(Graphics2D g){

@@ -35,7 +35,7 @@ public class SizeManager {
 	/**
 	 * Horizontal offset for the title text from the right side
 	 */
-	protected static int horizontalTextOffset = 5;
+	protected static int horizontalTextOffset = 6;
 	
 	//Fonts
 	/**

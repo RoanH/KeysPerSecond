@@ -564,7 +564,7 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(9, 0));
+		JPanel buttons = new JPanel(new GridLayout(10, 1));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
@@ -584,6 +584,7 @@ public class Main {
 		});
 		JButton precision = new JButton("Precision");
 		JButton size = new JButton("Size");
+		JButton layout = new JButton("Layout");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
@@ -593,6 +594,7 @@ public class Main {
 		buttons.add(precision);
 		buttons.add(size);
 		buttons.add(cmdkeys);
+		buttons.add(layout);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Configuration"));
@@ -600,6 +602,10 @@ public class Main {
 		all.add(options, BorderLayout.LINE_START);
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
+		layout.addActionListener((e)->{
+			configureLayout();
+			save.setEnabled(true);
+		});
 		size.addActionListener((e)->{
 			configureSize();
 			save.setEnabled(true);
@@ -958,19 +964,37 @@ public class Main {
 	 * Shows the layout configuration dialog
 	 */
 	protected static final void configureLayout(){
-		JPanel panel = new JPanel(new GridLayout());
+		JPanel panel = new JPanel(new GridLayout(0, 2, 0, 5));
 		//Text mode (horizontal / vertical)
+		panel.add(new JLabel("Text mode: "));
+		JComboBox<String> textMode = new JComboBox<String>(new String[]{"Vertical", "Horizontal"});
+		panel.add(textMode);
 		//Graph mode (left, right, top, bottom, detached)
+		panel.add(new JLabel("Graph mode: "));
+		JComboBox<String> graphMode = new JComboBox<String>(new String[]{"Bottom", "Top", "Left", "Right", "Detached"});
+		panel.add(graphMode);
 		//max position
+		panel.add(new JLabel("'Max' position: "));
+		JSpinner posMax = new JSpinner(new SpinnerNumberModel(101, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posMax);
 		//avg pos
+		panel.add(new JLabel("'Avg' position: "));
+		JSpinner posAvg = new JSpinner(new SpinnerNumberModel(102, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posAvg);
 		//cur pos
+		panel.add(new JLabel("'Cur' position: "));
+		JSpinner posCur = new JSpinner(new SpinnerNumberModel(103, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posCur);
 		//tot pos
+		panel.add(new JLabel("'Tot' position: "));
+		JSpinner posTot = new JSpinner(new SpinnerNumberModel(104, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posTot);
 		//rows
 		//cols
 		
 		//XXX check not rows & cols unlimited
 		
-		
+		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, panel, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
 	}
 
 	/**
