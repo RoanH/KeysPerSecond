@@ -32,6 +32,10 @@ public class SizeManager {
 	 * Height of the data / count in a key panel
 	 */
 	protected static int keyDataTextOffset = 55;
+	/**
+	 * Horizontal offset for the title text from the right side
+	 */
+	protected static int horizontalTextOffset = 6;
 	
 	//Fonts
 	/**
@@ -92,6 +96,7 @@ public class SizeManager {
 		graphImageHeight          = (int)Math.ceil(factor * graphImageHeight);
 		graphImageMiddleWidth     = (int)Math.ceil(factor * graphImageMiddleWidth);
 		graphOffset               = (int)Math.ceil(factor * graphOffset);
+		horizontalTextOffset      = (int)Math.ceil(factor * horizontalTextOffset);
 		setFonts();
 	}
 	
@@ -104,5 +109,15 @@ public class SizeManager {
 		KeyPanel.font2 = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);                		                                                                                         		                                                                                         		                                                                                         
 		KeyPanel.font2small = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);      		                                                                                                                                                                         
 		KeyPanel.font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
+	}
+	
+	protected static final void setLayoutMode(RenderingMode oldMode, RenderingMode newMode){
+		if(oldMode == newMode){
+			return;
+		}else{
+			int tmp = subComponentHeight;
+			subComponentHeight = keyPanelWidth;
+			keyPanelWidth = tmp;
+		}
 	}
 }

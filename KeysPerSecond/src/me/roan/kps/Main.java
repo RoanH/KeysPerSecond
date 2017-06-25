@@ -158,6 +158,10 @@ public class Main {
 	 * The loop timer task
 	 */
 	protected static ScheduledFuture<?> future = null;
+	/**
+	 * Frame for the graph
+	 */
+	protected static JFrame graphFrame = null;
 	
 	/**
 	 * Main method
@@ -1212,6 +1216,7 @@ public class Main {
 		frame.addMouseMotionListener(Listener.INSTANCE);
 		frame.addMouseListener(Listener.INSTANCE);
 		SizeManager.scale(config.size);
+		SizeManager.setLayoutMode(RenderingMode.VERTICAL, Main.config.mode);
 		reconfigure();
 	}
 

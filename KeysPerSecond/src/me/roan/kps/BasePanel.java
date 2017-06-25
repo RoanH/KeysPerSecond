@@ -36,7 +36,35 @@ public abstract class BasePanel extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g1) {
-		Graphics2D g = (Graphics2D) g1;
+		if(Main.config.mode == RenderingMode.VERTICAL){
+			verticalRenderer((Graphics2D) g1);
+		}else{
+			horizontalRenderer((Graphics2D) g1);
+		}
+	}
+	
+	private final void horizontalRenderer(Graphics2D g){
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, Main.config.getBackgroundOpacity()));
+		g.setColor(Main.config.getBackgroundColor());
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
+		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 64, 40, null);
+		g.setColor(Main.config.getForegroundColor());
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setFont(font1);
+		g.drawString(getTitle(), SizeManager.horizontalTextOffset, (this.getHeight() / 2) - ((g.getFontMetrics().getAscent() + g.getFontMetrics().getDescent()) / 2) + g.getFontMetrics().getAscent());
+		String str = getValue();
+		if(str.length() >= 5){
+			g.setFont(KeyPanel.font2smallest);
+		}else if(str.length() >= 4){
+			g.setFont(KeyPanel.font2small);
+		}else{
+			g.setFont(KeyPanel.font2);
+		}
+		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, SizeManager.keyDataTextOffset);
+	}
+	
+	private final void verticalRenderer(Graphics2D g){
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, Main.config.getBackgroundOpacity()));
 		g.setColor(Main.config.getBackgroundColor());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
