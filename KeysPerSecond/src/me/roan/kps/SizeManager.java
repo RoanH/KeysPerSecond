@@ -35,7 +35,7 @@ public class SizeManager {
 	/**
 	 * Horizontal offset for the title text from the right side
 	 */
-	protected static int horizontalTextOffset = 6;
+	protected static int horizontalTextOffset = 5;
 	
 	//Fonts
 	/**
@@ -53,11 +53,11 @@ public class SizeManager {
 	/**
 	 * Font size for a medium key count value (n >= 100 && n < 1000)
 	 */
-	protected static int keyPanelFont2smallSize = 14;
+	protected static int keyPanelFont2smallSize = 13;
 	/**
 	 * Font size for a huge key count value (n >= 1000)
 	 */
-	protected static int keyPanelFont2smallestSize = 11;
+	protected static int keyPanelFont2smallestSize = 10;
 	
 	//Graph
 	/**

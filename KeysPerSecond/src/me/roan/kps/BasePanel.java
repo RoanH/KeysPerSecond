@@ -52,16 +52,19 @@ public abstract class BasePanel extends JPanel {
 		g.setColor(Main.config.getForegroundColor());
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setFont(font1);
-		g.drawString(getTitle(), SizeManager.horizontalTextOffset, (this.getHeight() / 2) - ((g.getFontMetrics().getAscent() + g.getFontMetrics().getDescent()) / 2) + g.getFontMetrics().getAscent());
+		int baseline = (this.getHeight() / 2) - ((g.getFontMetrics().getAscent() + g.getFontMetrics().getDescent()) / 2) + g.getFontMetrics().getAscent();
+		g.drawString(getTitle(), SizeManager.horizontalTextOffset, baseline);
 		String str = getValue();
 		if(str.length() >= 5){
 			g.setFont(KeyPanel.font2smallest);
-		}else if(str.length() >= 4){
+		}else if(str.length() >= 3){
 			g.setFont(KeyPanel.font2small);
 		}else{
 			g.setFont(KeyPanel.font2);
 		}
-		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, SizeManager.keyDataTextOffset);
+		int delta = ((this.getHeight() / 2) - ((g.getFontMetrics().getAscent() + g.getFontMetrics().getDescent()) / 2) + g.getFontMetrics().getAscent()) - baseline;
+		System.out.println(delta);
+		g.drawString(str, this.getWidth() - SizeManager.horizontalTextOffset - g.getFontMetrics().stringWidth(str), baseline);
 	}
 	
 	private final void verticalRenderer(Graphics2D g){
