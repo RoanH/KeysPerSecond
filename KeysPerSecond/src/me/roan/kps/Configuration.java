@@ -147,7 +147,7 @@ public class Configuration {
 	//layout
 	protected int rows = 2;
 	protected int columns = 0;
-	protected RenderingMode mode = RenderingMode.VERTICAL;
+	protected RenderingMode mode = RenderingMode.HORIZONTAL;
 	
 	/**
 	 * The original configuration file
