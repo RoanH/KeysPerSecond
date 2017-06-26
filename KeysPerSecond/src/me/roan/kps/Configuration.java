@@ -151,6 +151,10 @@ public class Configuration {
 	protected GraphMode graphMode = GraphMode.Detached;
 	protected int graphWidth = SizeManager.defaultGraphWidth;
 	protected int graphHeight = SizeManager.subComponentHeight;
+	protected int posMax = 101;
+	protected int posAvg = 102;
+	protected int posCur = 103;
+	protected int posTot = 104;
 	
 	/**
 	 * The original configuration file
