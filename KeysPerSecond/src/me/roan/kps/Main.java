@@ -54,6 +54,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -964,15 +965,28 @@ public class Main {
 	 * Shows the layout configuration dialog
 	 */
 	protected static final void configureLayout(){
-		JPanel panel = new JPanel(new GridLayout(0, 2, 0, 5));
+		JPanel config = new JPanel(new BorderLayout());
+		JPanel mode = new JPanel(new GridLayout(0, 2, 0, 5));
 		//Text mode (horizontal / vertical)
-		panel.add(new JLabel("Text mode: "));
+		mode.add(new JLabel("Text mode: "));
 		JComboBox<String> textMode = new JComboBox<String>(new String[]{"Vertical", "Horizontal"});
-		panel.add(textMode);
-		//Graph mode (left, right, top, bottom, detached)
-		panel.add(new JLabel("Graph mode: "));
-		JComboBox<String> graphMode = new JComboBox<String>(new String[]{"Bottom", "Top", "Left", "Right", "Detached"});
-		panel.add(graphMode);
+		mode.add(textMode);
+		mode.add(new JLabel("Rows (0=infinite): "));
+		JSpinner rows = new JSpinner(new SpinnerNumberModel(1, 0, Integer.MAX_VALUE, 1));
+		mode.add(rows);
+		mode.add(new JLabel("Columns (0=infinite): "));
+		JSpinner cols = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+		mode.add(cols);
+		ChangeListener cl = (e)->{
+			if((int)rows.getValue() == 0 && (int)cols.getValue() == 0){
+				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "Rows & Columns cannot both be zero!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				rows.setValue(1);
+			}
+		};
+		rows.addChangeListener(cl);
+		cols.addChangeListener(cl);
+		
+		JPanel panel = new JPanel(new GridLayout(0, 2, 0, 5));
 		//max position
 		panel.add(new JLabel("'Max' position: "));
 		JSpinner posMax = new JSpinner(new SpinnerNumberModel(101, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
@@ -989,12 +1003,44 @@ public class Main {
 		panel.add(new JLabel("'Tot' position: "));
 		JSpinner posTot = new JSpinner(new SpinnerNumberModel(104, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 		panel.add(posTot);
-		//rows
-		//cols
+		
+		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));
+		//Graph mode (left, right, top, bottom, detached)
+		graphLayout.add(new JLabel("Graph mode: "));
+		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
+		graphLayout.add(graphMode);
+		graphLayout.add(new JLabel("Graph width: "));
+		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, SizeManager.graphImageLeftRightWidth * 2, Integer.MAX_VALUE, 1));
+		graphLayout.add(gw);
+		graphLayout.add(new JLabel("Graph height: "));
+		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, SizeManager.graphImageHeight, Integer.MAX_VALUE, 1));
+		graphLayout.add(gh);
+		
+		graphMode.addActionListener((event)->{
+			if(graphMode.getSelectedItem() == GraphMode.Detached){
+				gw.setEnabled(true);
+				gh.setEnabled(true);
+			}else if(graphMode.getSelectedItem() == GraphMode.Bottom || graphMode.getSelectedItem() == GraphMode.Top){
+				gw.setEnabled(false);
+				gh.setEnabled(true);
+			}else{
+				gw.setEnabled(true);
+				gh.setEnabled(false);
+			}
+		});
+		graphMode.setSelectedItem(Main.config.graphMode);
 		
 		//XXX check not rows & cols unlimited
+		mode.setBorder(BorderFactory.createTitledBorder("Layout"));
+		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
+		panel.setBorder(BorderFactory.createTitledBorder("Positions"));
+		config.add(panel, BorderLayout.CENTER);
+		config.add(graphLayout, BorderLayout.PAGE_END);
+		config.add(mode, BorderLayout.PAGE_START);
 		
-		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, panel, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
+		if(0 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, config, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			
+		}
 	}
 
 	/**
@@ -1300,7 +1346,7 @@ public class Main {
 
 			Menu.repaint();
 
-			JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
+			JPanel allcontent = new JPanel(new GridLayout((config.showGraph && (config.graphMode == GraphMode.Bottom || config.graphMode == GraphMode.Top) ? 1 : 0) + (panels > 0 ? 1 : 0), 1 + (config.showGraph && (config.graphMode == GraphMode.Right || config.graphMode == GraphMode.Left) ? 1 : 0), 0, 0));
 			allcontent.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 			if(panels > 0){
 				allcontent.add(content);
@@ -1317,8 +1363,8 @@ public class Main {
 				c = (int) Math.ceil((double)panels / (double)r);
 			}
 			content.setLayout(new GridLayout(r, c, 0, 0));
-			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (c * SizeManager.keyPanelWidth), 
-					      (panels > 0 ? SizeManager.subComponentHeight * r : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
+			frame.setSize((panels == 0 && config.showGraph) ? Main.config.graphWidth : (c * SizeManager.keyPanelWidth * (config.showGraph ? 2 : 1)), 
+					      (panels > 0 ? SizeManager.subComponentHeight * r : 0) + ((config.showGraph && (config.graphMode == GraphMode.Bottom || config.graphMode == GraphMode.Top)) ? SizeManager.subComponentHeight : 0));
 			if(ColorManager.transparency){
 				frame.setBackground(ColorManager.transparent);
 			}

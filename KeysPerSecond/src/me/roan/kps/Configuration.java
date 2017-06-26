@@ -145,9 +145,12 @@ public class Configuration {
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
 	
 	//layout
-	protected int rows = 2;
-	protected int columns = 0;
+	protected int rows = 0;
+	protected int columns = 1;
 	protected RenderingMode mode = RenderingMode.HORIZONTAL;
+	protected GraphMode graphMode = GraphMode.Detached;
+	protected int graphWidth = SizeManager.defaultGraphWidth;
+	protected int graphHeight = SizeManager.subComponentHeight;
 	
 	/**
 	 * The original configuration file

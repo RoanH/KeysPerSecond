@@ -105,8 +105,8 @@ public class GraphPanel extends JPanel{
 				g.drawPolygon(poly);
 				if(frames > 1){
 					g.drawImage(ColorManager.gleft, 3, 2, 2 + SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 42, 64, null);
-					g.drawImage(ColorManager.gmid, SizeManager.graphImageLeftRightWidth + 2, 2, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2), this.getHeight() - 2, 0, 0, 46, 64, null);
-					g.drawImage(ColorManager.gright, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2),2, this.getWidth() - 4, this.getHeight() - 2, 0, 0, 42, 64, null);
+					g.drawImage(ColorManager.gmid, SizeManager.graphImageLeftRightWidth + 2, 2, this.getWidth() - 4 - SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 46, 64, null);
+					g.drawImage(ColorManager.gright, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2), 2, this.getWidth() - 4, this.getHeight() - 2, 0, 0, 42, 64, null);
 				}else{
 					g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
 				}
