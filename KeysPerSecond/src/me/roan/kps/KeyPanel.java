@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import javax.swing.JPanel;
 
 import me.roan.kps.Main.Key;
+import me.roan.kps.Main.KeyInformation;
 
 /**
  * Panel to display the number
@@ -16,7 +17,7 @@ import me.roan.kps.Main.Key;
  * been pressed
  * @author Roan
  */
-public final class KeyPanel extends JPanel {
+public final class KeyPanel extends JPanel implements LayoutPosition{
 	/**
 	 * Serial ID
 	 */
@@ -43,6 +44,11 @@ public final class KeyPanel extends JPanel {
 	 * Font 2 small but smaller
 	 */
 	protected static Font font2smallest;
+	/**
+	 * The key information object
+	 * for this key
+	 */
+	protected static KeyInformation info;
 
 	/**
 	 * Constructs a new KeyPanel
@@ -52,8 +58,9 @@ public final class KeyPanel extends JPanel {
 	 * @see Key
 	 * @see #key
 	 */
-	protected KeyPanel(Key key) {
+	protected KeyPanel(Key key, KeyInformation i) {
 		this.key = key;
+		info = i;
 		this.setOpaque(!ColorManager.transparency);
 	}
 
@@ -126,5 +133,10 @@ public final class KeyPanel extends JPanel {
 		}
 		String str = String.valueOf(key.count);
 		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, SizeManager.keyDataTextOffset);
+	}
+
+	@Override
+	public int getIndex() {
+		return info.index;
 	}
 }

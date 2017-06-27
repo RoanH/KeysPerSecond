@@ -20,4 +20,9 @@ public final class MaxPanel extends BasePanel {
 	protected String getValue() {
 		return String.valueOf(Main.max);
 	}
+
+	@Override
+	public int getIndex() {
+		return Main.config.posMax;
+	}
 }

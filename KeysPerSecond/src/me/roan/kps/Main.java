@@ -1353,7 +1353,7 @@ public class Main {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
+			List<LayoutPosition> components = new ArrayList<LayoutPosition>();
 			Key k;
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
@@ -1370,25 +1370,29 @@ public class Main {
 					k = keys.get(code);
 				}
 				if(config.showKeys && i.visible){
-					content.add(k.getPanel());
+					components.add(k.getPanel(i));
 					panels++;
 				}
 			}
 			if(config.showMax){
-				content.add(new MaxPanel());
+				components.add(new MaxPanel());
 				panels++;
 			}
 			if(config.showAvg){
-				content.add(new AvgPanel());
+				components.add(new AvgPanel());
 				panels++;
 			}
 			if(config.showCur){
-				content.add(new NowPanel());
+				components.add(new NowPanel());
 				panels++;
 			}
 			if(config.showTotal){
-				content.add(new TotPanel());
+				components.add(new TotPanel());
 				panels++;
+			}
+			components.sort((LayoutPosition left, LayoutPosition right) -> (left.getIndex() > right.getIndex() ? 1 : -1));
+			for(LayoutPosition c : components){
+				content.add((Component) c);
 			}
 			if(panels == 0 && !config.showGraph){
 				frame.setVisible(false);
@@ -1640,10 +1644,11 @@ public class Main {
 		/**
 		 * Creates a new KeyPanel with this
 		 * objects as its data source
+		 * @param i The information object about this key
 		 * @return A new KeyPanel
 		 */
-		private KeyPanel getPanel() {
-			return panel != null ? panel : (panel = new KeyPanel(this));
+		private KeyPanel getPanel(KeyInformation i) {
+			return panel != null ? panel : (panel = new KeyPanel(this, i));
 		}
 
 		/**

@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  * keys per second
  * @author Roan
  */
-public abstract class BasePanel extends JPanel {
+public abstract class BasePanel extends JPanel implements LayoutPosition{
 	/**
 	 * Serial ID
 	 */

@@ -112,6 +112,7 @@ public class Menu {
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
 		JMenuItem backlog = new JMenuItem("Backlog");
 		JMenuItem commandkeys = new JMenuItem("Commands");
+		JMenuItem layout = new JMenuItem("Layout");
 		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
 		JCheckBoxMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
 		JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay mode");
@@ -130,6 +131,7 @@ public class Menu {
 		JMenuItem save = new JMenuItem("Save config");
 		JMenuItem load = new JMenuItem("Load config");
 		components.add(load);
+		components.add(layout);
 		components.add(save);
 		components.add(size);
 		components.add(snap);
@@ -331,6 +333,12 @@ public class Menu {
 			SizeManager.scale(Main.config.size / old);
 			Main.reconfigure();
 		});
+		layout.addActionListener((e)->{
+			RenderingMode m = Main.config.mode;
+			Main.configureLayout();
+			SizeManager.setLayoutMode(m, Main.config.mode);
+			Main.reconfigure();
+		});
 		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.updateRate == 1000);
 		rates[0].addActionListener((e)->{
 			for(JCheckBoxMenuItem item : rates){
@@ -485,6 +493,7 @@ public class Menu {
 		configure.add(precision);
 		configure.add(size);
 		configure.add(commandkeys);
+		configure.add(layout);
 
 		menu.add(configure);
 		menu.add(snap);
