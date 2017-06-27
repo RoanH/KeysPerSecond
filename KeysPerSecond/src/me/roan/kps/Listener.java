@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /**
@@ -19,10 +20,11 @@ public class Listener implements MouseMotionListener, MouseListener{
 	 * Previous location of the mouse on the screen
 	 */
 	private Point from = null;
-	/**
-	 * Instance
-	 */
-	protected static final Listener INSTANCE = new Listener();
+
+	protected Listener(JFrame frame){
+		frame.addMouseMotionListener(this);
+		frame.addMouseListener(this);
+	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
@@ -31,10 +33,10 @@ public class Listener implements MouseMotionListener, MouseListener{
 			from = to;
 			return;
 		}
-		Point at = Main.frame.getLocation();
+		Point at = e.getComponent().getLocation();
 		int x = at.x + (to.x - from.x);
 		int y = at.y + (to.y - from.y);
-		Main.frame.setLocation(new Point(x, y));
+		e.getComponent().setLocation(new Point(x, y));
 	}
 
 	@Override
@@ -83,23 +85,23 @@ public class Listener implements MouseMotionListener, MouseListener{
 						switch(e.getKeyCode()){
 						case KeyEvent.VK_LEFT:
 						case KeyEvent.VK_KP_LEFT:
-							Main.frame.getLocation(tmp);
-							Main.frame.setLocation(tmp.x - d, tmp.y);
+							e.getComponent().getLocation(tmp);
+							e.getComponent().setLocation(tmp.x - d, tmp.y);
 							break;
 						case KeyEvent.VK_RIGHT:
 						case KeyEvent.VK_KP_RIGHT:
-							Main.frame.getLocation(tmp);
-							Main.frame.setLocation(tmp.x + d, tmp.y);
+							e.getComponent().getLocation(tmp);
+							e.getComponent().setLocation(tmp.x + d, tmp.y);
 							break;
 						case KeyEvent.VK_UP:
 						case KeyEvent.VK_KP_UP:
-							Main.frame.getLocation(tmp);
-							Main.frame.setLocation(tmp.x, tmp.y - d);
+							e.getComponent().getLocation(tmp);
+							e.getComponent().setLocation(tmp.x, tmp.y - d);
 							break;
 						case KeyEvent.VK_DOWN:
 						case KeyEvent.VK_KP_DOWN:
-							Main.frame.getLocation(tmp);
-							Main.frame.setLocation(tmp.x, tmp.y + d);
+							e.getComponent().getLocation(tmp);
+							e.getComponent().setLocation(tmp.x, tmp.y + d);
 							break;
 						}
 					}

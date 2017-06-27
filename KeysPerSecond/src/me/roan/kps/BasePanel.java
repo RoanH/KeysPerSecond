@@ -30,8 +30,6 @@ public abstract class BasePanel extends JPanel {
 	 */
 	protected BasePanel(){
 		this.setOpaque(!ColorManager.transparency);
-		this.addMouseListener(Listener.INSTANCE);
-		this.addMouseMotionListener(Listener.INSTANCE);
 	}
 
 	@Override

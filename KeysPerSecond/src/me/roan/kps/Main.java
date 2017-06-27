@@ -162,7 +162,7 @@ public class Main {
 	/**
 	 * Frame for the graph
 	 */
-	protected static JFrame graphFrame = null;
+	protected static JFrame graphFrame = new JFrame("Keys per second");
 	
 	/**
 	 * Main method
@@ -1283,8 +1283,47 @@ public class Main {
 			public void windowDeactivated(WindowEvent e) {				
 			}
 		});
-		frame.addMouseMotionListener(Listener.INSTANCE);
-		frame.addMouseListener(Listener.INSTANCE);
+		new Listener(frame);
+		graphFrame.setResizable(false);
+		graphFrame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
+		graphFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		graphFrame.setUndecorated(true);
+		graphFrame.addWindowListener(new WindowListener(){
+
+			@Override
+			public void windowOpened(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				try {
+					GlobalScreen.unregisterNativeHook();
+				} catch (NativeHookException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {				
+			}
+		});
+		new Listener(graphFrame);
 		SizeManager.scale(config.size);
 		SizeManager.setLayoutMode(RenderingMode.VERTICAL, Main.config.mode);
 		reconfigure();
@@ -1355,9 +1394,14 @@ public class Main {
 			if(config.showGraph){
 				if(config.graphMode != GraphMode.Detached){
 					all.add(gpanel, config.graphMode.layoutPosition);
+					graphFrame.setVisible(false);
 				}else{
-					
+					graphFrame.add(gpanel);
+					graphFrame.setSize(config.graphWidth, config.graphHeight);
+					graphFrame.setVisible(true);
 				}
+			}else{
+				graphFrame.setVisible(false);
 			}
 			int r = config.rows;
 			int c = config.columns;
@@ -1373,7 +1417,11 @@ public class Main {
 				frame.setBackground(ColorManager.transparent);
 			}
 			frame.add(all);
-			frame.setVisible(true);
+			if(panels > 0){
+				frame.setVisible(true);
+			}else{
+				frame.setVisible(false);
+			}
 		});
 	}
 

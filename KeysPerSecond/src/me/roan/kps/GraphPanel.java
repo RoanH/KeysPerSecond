@@ -40,14 +40,6 @@ public class GraphPanel extends JPanel{
 	private static final Stroke avgstroke = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0F, null, 0);
 	
 	/**
-	 * Constructs a new GraphPanel
-	 */
-	protected GraphPanel(){
-		this.addMouseListener(Listener.INSTANCE);
-		this.addMouseMotionListener(Listener.INSTANCE);
-	}
-	
-	/**
 	 * Resets the graph
 	 */
 	protected final void reset(){
