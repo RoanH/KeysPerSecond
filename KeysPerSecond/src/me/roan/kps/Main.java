@@ -731,7 +731,7 @@ public class Main {
 			}
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v6.2, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v6.3, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
@@ -1033,7 +1033,6 @@ public class Main {
 		});
 		graphMode.setSelectedItem(Main.config.graphMode);
 		
-		//XXX check not rows & cols unlimited
 		mode.setBorder(BorderFactory.createTitledBorder("Layout"));
 		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
 		panel.setBorder(BorderFactory.createTitledBorder("Positions"));
