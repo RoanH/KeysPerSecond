@@ -2,6 +2,7 @@ package me.roan.kps;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -37,14 +38,6 @@ public class GraphPanel extends JPanel{
 	 * Stroke used to draw average line
 	 */
 	private static final Stroke avgstroke = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0F, null, 0);
-	/**
-	 * Number of frames, this is used to determine
-	 * the width of the graph and it equal
-	 * to the number of keys being tracked +
-	 * the number of informative keys being
-	 * displayed (avg, max, cur)
-	 */
-	protected static int frames = 0;
 	
 	/**
 	 * Constructs a new GraphPanel
@@ -60,6 +53,11 @@ public class GraphPanel extends JPanel{
 	protected final void reset(){
 		values.clear();
 		maxval = 1;
+	}
+	
+	@Override
+	public Dimension getPreferredSize(){
+		return new Dimension(Main.config.graphWidth, Main.config.graphHeight);
 	}
 	
 	@Override

@@ -1346,14 +1346,18 @@ public class Main {
 
 			Menu.repaint();
 
-			JPanel allcontent = new JPanel(new GridLayout((config.showGraph && (config.graphMode == GraphMode.Bottom || config.graphMode == GraphMode.Top) ? 1 : 0) + (panels > 0 ? 1 : 0), 1 + (config.showGraph && (config.graphMode == GraphMode.Right || config.graphMode == GraphMode.Left) ? 1 : 0), 0, 0));
-			allcontent.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
-			if(panels > 0){
-				allcontent.add(content);
-			}
+			JPanel all = new JPanel(new BorderLayout());
+			all.add(content, BorderLayout.CENTER);
+			JPanel gpanel = new JPanel(new BorderLayout());
+			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+			gpanel.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+			gpanel.add(graph, BorderLayout.CENTER);
 			if(config.showGraph){
-				allcontent.add(graph);
-				GraphPanel.frames = panels > 0 ? panels : 5;
+				if(config.graphMode != GraphMode.Detached){
+					all.add(gpanel, config.graphMode.layoutPosition);
+				}else{
+					
+				}
 			}
 			int r = config.rows;
 			int c = config.columns;
@@ -1363,12 +1367,12 @@ public class Main {
 				c = (int) Math.ceil((double)panels / (double)r);
 			}
 			content.setLayout(new GridLayout(r, c, 0, 0));
-			frame.setSize((panels == 0 && config.showGraph) ? Main.config.graphWidth : (c * SizeManager.keyPanelWidth * (config.showGraph ? 2 : 1)), 
-					      (panels > 0 ? SizeManager.subComponentHeight * r : 0) + ((config.showGraph && (config.graphMode == GraphMode.Bottom || config.graphMode == GraphMode.Top)) ? SizeManager.subComponentHeight : 0));
+			frame.setSize(c * SizeManager.keyPanelWidth + (config.showGraph ? config.graphMode.getAddedWidth() : 0), 
+					      SizeManager.subComponentHeight * r + (config.showGraph ? config.graphMode.getAddedHeight() : 0));
 			if(ColorManager.transparency){
 				frame.setBackground(ColorManager.transparent);
 			}
-			frame.add(allcontent);
+			frame.add(all);
 			frame.setVisible(true);
 		});
 	}
