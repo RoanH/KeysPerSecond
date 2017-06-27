@@ -147,8 +147,8 @@ public class Configuration {
 	//layout
 	protected int rows = 1;
 	protected int columns = 0;
-	protected RenderingMode mode = RenderingMode.HORIZONTAL;
-	protected GraphMode graphMode = GraphMode.Detached;
+	protected RenderingMode mode = RenderingMode.Vertical;
+	protected GraphMode graphMode = GraphMode.Bottom;
 	protected int graphWidth = SizeManager.defaultGraphWidth;
 	protected int graphHeight = SizeManager.subComponentHeight;
 	protected int posMax = 101;

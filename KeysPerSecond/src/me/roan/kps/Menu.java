@@ -210,6 +210,7 @@ public class Menu {
 		overlay.addActionListener((e)->{
 			Main.config.overlay = overlay.isSelected();
 			Main.frame.setAlwaysOnTop(Main.config.overlay);
+			Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
 		});
 		precision.add(p0);
 		precision.add(p1);
@@ -512,6 +513,7 @@ public class Menu {
 		Main.resetStats();
 		Main.reconfigure();
 		Main.mainLoop();
+		Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
 		Main.frame.setAlwaysOnTop(Main.config.overlay);
 	}
 

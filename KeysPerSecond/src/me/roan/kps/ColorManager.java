@@ -67,10 +67,10 @@ public class ColorManager {
 				transparency = true;
 			}
 			alphaAqua = new Color(Main.config.getForegroundColor().getRed(), Main.config.getForegroundColor().getGreen(), Main.config.getForegroundColor().getBlue(), 51);
-			if(Main.config.mode == RenderingMode.VERTICAL){
+			if(Main.config.mode == RenderingMode.Vertical){
 				pressed = dye(ImageIO.read(ClassLoader.getSystemResource("hit.png")));
 				unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key.png")));
-			}else if(Main.config.mode == RenderingMode.HORIZONTAL){
+			}else if(Main.config.mode == RenderingMode.Horizontal){
 				pressed = dye(ImageIO.read(ClassLoader.getSystemResource("hit_horizontal.png")));
 				unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key_horizontal.png")));
 			}
@@ -86,10 +86,10 @@ public class ColorManager {
 			}
 		}else{
 			alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
-			if(Main.config.mode == RenderingMode.VERTICAL){
+			if(Main.config.mode == RenderingMode.Vertical){
 				pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 				unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
-			}else if(Main.config.mode == RenderingMode.HORIZONTAL){
+			}else if(Main.config.mode == RenderingMode.Horizontal){
 				pressed = ImageIO.read(ClassLoader.getSystemResource("hit_horizontal.png"));
 				unpressed = ImageIO.read(ClassLoader.getSystemResource("key_horizontal.png"));
 			}

@@ -773,6 +773,7 @@ public class Main {
 			System.exit(0);
 		}
 		frame.setAlwaysOnTop(config.overlay);
+		graphFrame.setAlwaysOnTop(config.overlay);
 	}
 
 	/**
@@ -969,13 +970,14 @@ public class Main {
 		JPanel mode = new JPanel(new GridLayout(0, 2, 0, 5));
 		//Text mode (horizontal / vertical)
 		mode.add(new JLabel("Text mode: "));
-		JComboBox<String> textMode = new JComboBox<String>(new String[]{"Vertical", "Horizontal"});
+		JComboBox<RenderingMode> textMode = new JComboBox<RenderingMode>(RenderingMode.values());
+		textMode.setSelectedItem(Main.config.mode);
 		mode.add(textMode);
 		mode.add(new JLabel("Rows (0=infinite): "));
-		JSpinner rows = new JSpinner(new SpinnerNumberModel(1, 0, Integer.MAX_VALUE, 1));
+		JSpinner rows = new JSpinner(new SpinnerNumberModel(Main.config.rows, 0, Integer.MAX_VALUE, 1));
 		mode.add(rows);
 		mode.add(new JLabel("Columns (0=infinite): "));
-		JSpinner cols = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+		JSpinner cols = new JSpinner(new SpinnerNumberModel(Main.config.columns, 0, Integer.MAX_VALUE, 1));
 		mode.add(cols);
 		ChangeListener cl = (e)->{
 			if((int)rows.getValue() == 0 && (int)cols.getValue() == 0){
@@ -989,25 +991,26 @@ public class Main {
 		JPanel panel = new JPanel(new GridLayout(0, 2, 0, 5));
 		//max position
 		panel.add(new JLabel("'Max' position: "));
-		JSpinner posMax = new JSpinner(new SpinnerNumberModel(101, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		JSpinner posMax = new JSpinner(new SpinnerNumberModel(Main.config.posMax, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 		panel.add(posMax);
 		//avg pos
 		panel.add(new JLabel("'Avg' position: "));
-		JSpinner posAvg = new JSpinner(new SpinnerNumberModel(102, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		JSpinner posAvg = new JSpinner(new SpinnerNumberModel(Main.config.posAvg, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 		panel.add(posAvg);
 		//cur pos
 		panel.add(new JLabel("'Cur' position: "));
-		JSpinner posCur = new JSpinner(new SpinnerNumberModel(103, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		JSpinner posCur = new JSpinner(new SpinnerNumberModel(Main.config.posCur, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 		panel.add(posCur);
 		//tot pos
 		panel.add(new JLabel("'Tot' position: "));
-		JSpinner posTot = new JSpinner(new SpinnerNumberModel(104, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		JSpinner posTot = new JSpinner(new SpinnerNumberModel(Main.config.posTot, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 		panel.add(posTot);
 		
 		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));
 		//Graph mode (left, right, top, bottom, detached)
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
+		graphMode.setSelectedItem(Main.config.graphMode);
 		graphLayout.add(graphMode);
 		graphLayout.add(new JLabel("Graph width: "));
 		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, 1, Integer.MAX_VALUE, 1));
@@ -1039,7 +1042,16 @@ public class Main {
 		config.add(mode, BorderLayout.PAGE_START);
 		
 		if(0 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, config, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			
+			Main.config.graphMode = (GraphMode) graphMode.getSelectedItem();
+			Main.config.graphWidth = (int)gw.getValue();
+			Main.config.graphHeight = (int)gh.getValue();
+			Main.config.posAvg = (int) posAvg.getValue();
+			Main.config.posMax = (int) posMax.getValue();
+			Main.config.posCur = (int) posCur.getValue();
+			Main.config.posTot = (int) posTot.getValue();
+			Main.config.rows = (int) rows.getValue();
+			Main.config.columns = (int) cols.getValue();
+			Main.config.mode = (RenderingMode) textMode.getSelectedItem();
 		}
 	}
 
@@ -1325,7 +1337,7 @@ public class Main {
 		});
 		new Listener(graphFrame);
 		SizeManager.scale(config.size);
-		SizeManager.setLayoutMode(RenderingMode.VERTICAL, Main.config.mode);
+		SizeManager.setLayoutMode(RenderingMode.Vertical, Main.config.mode);
 		reconfigure();
 	}
 
