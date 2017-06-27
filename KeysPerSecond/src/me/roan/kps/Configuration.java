@@ -145,15 +145,45 @@ public class Configuration {
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
 	
 	//layout
+	/**
+	 * Number of rows in the layout
+	 */
 	protected int rows = 1;
+	/**
+	 * Number of columns in the layout
+	 */
 	protected int columns = 0;
+	/**
+	 * Mode in which text is rendered
+	 */
 	protected RenderingMode mode = RenderingMode.Vertical;
+	/**
+	 * Position the graph is rendered in
+	 */
 	protected GraphMode graphMode = GraphMode.Bottom;
+	/**
+	 * Width of the graph
+	 */
 	protected int graphWidth = SizeManager.defaultGraphWidth;
+	/**
+	 * Height of the graph
+	 */
 	protected int graphHeight = SizeManager.subComponentHeight;
+	/**
+	 * Position of the maximum
+	 */
 	protected int posMax = 101;
+	/**
+	 * Position of the average
+	 */
 	protected int posAvg = 102;
+	/**
+	 * Position of current
+	 */
 	protected int posCur = 103;
+	/**
+	 * Position of the total
+	 */
 	protected int posTot = 104;
 	
 	/**
@@ -452,6 +482,100 @@ public class Configuration {
 						modified = true;
 					}
 					break;
+				case "graphPosition":
+					Main.graphFrame.setLocation(parsePosition(args[1]));
+					break;
+				case "textMode":
+					switch(args[1]){
+					case "Vertical":
+						mode = RenderingMode.Vertical;
+						break;
+					case "Horizontal":
+						mode = RenderingMode.Horizontal;
+						break;
+						default:
+							modified = true;
+							break;
+					}
+					break;
+				case "rows":
+					try{
+						rows = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "columns":
+					try{
+						columns = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "maxPos":
+					try{
+						posMax = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "avgPos":
+					try{
+						posAvg = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "curPos":
+					try{
+						posCur = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "totPos":
+					try{
+						posTot = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "graphMode":
+					switch(args[1]){
+					case "Bottom":
+						graphMode = GraphMode.Bottom;
+						break;
+					case "Detached":
+						graphMode = GraphMode.Detached;
+						break;
+					case "Left":
+						graphMode = GraphMode.Left;
+						break;
+					case "Right":
+						graphMode = GraphMode.Right;
+						break;
+					case "Top":
+						graphMode = GraphMode.Top;
+						break;
+						default:
+							modified = true;
+							break;
+					}
+					break;
+				case "graphWidth":
+					try{
+						graphWidth = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "graphHeight":
+					try{
+						graphHeight = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
 				}
 			}
 			in.close();
@@ -694,6 +818,7 @@ public class Configuration {
 				if(savepos){
 					out.println("# Position");
 					out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
+					out.println("graphPosition: [x=" + Main.graphFrame.getLocationOnScreen().x + ",y=" + Main.graphFrame.getLocationOnScreen().y + "]");
 					out.println();
 				}
 				out.println("# Command keys");
@@ -703,6 +828,18 @@ public class Configuration {
 				out.println("keyHide: " + CY.toSaveString());
 				out.println("keyPause: " + CT.toSaveString());
 				out.println("keyReload: " + CR.toSaveString());
+				out.println();
+				out.println("# Layout");
+				out.println("textMode: " + mode);
+				out.println("rows: " + rows);
+				out.println("columns: " + columns);
+				out.println("maxPos: " + posMax);
+				out.println("avgPos: " + posAvg);
+				out.println("curPos: " + posCur);
+				out.println("totPos: " + posTot);
+				out.println("graphMode: " + graphMode);
+				out.println("graphWidth: " + graphWidth);
+				out.println("graphHeight: " + graphHeight);
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");
