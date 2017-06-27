@@ -145,8 +145,8 @@ public class Configuration {
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
 	
 	//layout
-	protected int rows = 0;
-	protected int columns = 1;
+	protected int rows = 1;
+	protected int columns = 0;
 	protected RenderingMode mode = RenderingMode.HORIZONTAL;
 	protected GraphMode graphMode = GraphMode.Detached;
 	protected int graphWidth = SizeManager.defaultGraphWidth;

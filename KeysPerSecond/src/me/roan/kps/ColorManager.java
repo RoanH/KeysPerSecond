@@ -25,18 +25,14 @@ public class ColorManager {
 	 * https://cloud.githubusercontent.com/assets/191335/16511432/17ac5232-3f8b-11e6-95b7-33f9a4df0b7c.png
 	 */
 	protected static Image unpressed;
-	/**
-	 * Left side of the graph border
-	 */
-	protected static Image gleft = null;
-	/**
-	 * Right side of the graph border
-	 */
-	protected static Image gright = null;
-	/**
-	 * Middle section of the graph border
-	 */
-	protected static Image gmid = null;
+	protected static Image graph_lower_right;//TODO
+	protected static Image graph_lower_left;
+	protected static Image graph_lower_middle;
+	protected static Image graph_side_left;
+	protected static Image graph_side_right;
+	protected static Image graph_upper_right;
+	protected static Image graph_upper_left;
+	protected static Image graph_upper_middle;
 	/**
 	 * Color used to fill the area underneath the graph
 	 */
@@ -79,9 +75,14 @@ public class ColorManager {
 				unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key_horizontal.png")));
 			}
 			if(graph){
-				gright = dye(ImageIO.read(ClassLoader.getSystemResource("graphright.png")));
-				gleft = dye(ImageIO.read(ClassLoader.getSystemResource("graphleft.png")));
-				gmid = dye(ImageIO.read(ClassLoader.getSystemResource("graphmiddle.png")));
+				graph_lower_right  = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_right.png")));
+				graph_lower_left   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_left.png")));
+				graph_lower_middle = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_middle.png")));
+				graph_side_left    = dye(ImageIO.read(ClassLoader.getSystemResource("graph_side_left.png")));
+				graph_side_right   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_side_right.png")));
+				graph_upper_right  = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png")));
+				graph_upper_left   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png")));
+				graph_upper_middle = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png")));
 			}
 		}else{
 			alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
@@ -93,9 +94,14 @@ public class ColorManager {
 				unpressed = ImageIO.read(ClassLoader.getSystemResource("key_horizontal.png"));
 			}
 			if(graph){
-				gright = ImageIO.read(ClassLoader.getSystemResource("graphright.png"));
-				gleft = ImageIO.read(ClassLoader.getSystemResource("graphleft.png"));
-				gmid = ImageIO.read(ClassLoader.getSystemResource("graphmiddle.png"));
+				graph_lower_right  = ImageIO.read(ClassLoader.getSystemResource("graph_lower_right.png"));
+				graph_lower_left   = ImageIO.read(ClassLoader.getSystemResource("graph_lower_left.png"));
+				graph_lower_middle = ImageIO.read(ClassLoader.getSystemResource("graph_lower_middle.png"));
+				graph_side_left    = ImageIO.read(ClassLoader.getSystemResource("graph_side_left.png"));
+				graph_side_right   = ImageIO.read(ClassLoader.getSystemResource("graph_side_right.png"));
+				graph_upper_right  = ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png"));
+				graph_upper_left   = ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png"));
+				graph_upper_middle = ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png"));
 			}
 		}
 		checkmark = dye(ImageIO.read(ClassLoader.getSystemResource("checkmark.png")));

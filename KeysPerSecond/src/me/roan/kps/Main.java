@@ -1010,10 +1010,10 @@ public class Main {
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
 		graphLayout.add(graphMode);
 		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, SizeManager.graphImageLeftRightWidth * 2, Integer.MAX_VALUE, 1));
+		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, 1, Integer.MAX_VALUE, 1));
 		graphLayout.add(gw);
 		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, SizeManager.graphImageHeight, Integer.MAX_VALUE, 1));
+		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, 1, Integer.MAX_VALUE, 1));
 		graphLayout.add(gh);
 		
 		graphMode.addActionListener((event)->{

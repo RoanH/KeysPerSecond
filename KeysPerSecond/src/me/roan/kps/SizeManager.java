@@ -61,21 +61,13 @@ public class SizeManager {
 	
 	//Graph
 	/**
-	 * Width of the left & right graph images
+	 * Smallest size of graph images
 	 */
-	protected static int graphImageLeftRightWidth = 42;
-	/**
-	 * Height of the graph border
-	 */
-	protected static int graphImageHeight = 64;
-	/**
-	 * Width of a single middle image for the graph
-	 */
-	protected static int graphImageMiddleWidth = 46;
+	protected static int graphImageSize = 4;
 	/**
 	 * Graph offset from the sides of the panel
 	 */
-	protected static int graphOffset = 4;
+	protected static int graphOffset = 5;
 	
 	/**
 	 * Multiplier all constants by the given factor
@@ -92,9 +84,7 @@ public class SizeManager {
 		keyPanelFont2Size         = (int)Math.floor(factor * keyPanelFont2Size);
 		keyPanelFont2smallSize    = (int)Math.floor(factor * keyPanelFont2smallSize);
 		keyPanelFont2smallestSize = (int)Math.floor(factor * keyPanelFont2smallestSize);
-		graphImageLeftRightWidth  = (int)Math.ceil(factor * graphImageLeftRightWidth);
-		graphImageHeight          = (int)Math.ceil(factor * graphImageHeight);
-		graphImageMiddleWidth     = (int)Math.ceil(factor * graphImageMiddleWidth);
+		graphImageSize            = (int)Math.ceil(factor * graphImageSize);
 		graphOffset               = (int)Math.ceil(factor * graphOffset);
 		horizontalTextOffset      = (int)Math.ceil(factor * horizontalTextOffset);
 		setFonts();
