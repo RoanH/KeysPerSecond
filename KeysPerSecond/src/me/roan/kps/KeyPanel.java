@@ -48,7 +48,7 @@ public final class KeyPanel extends JPanel implements LayoutPosition{
 	 * The key information object
 	 * for this key
 	 */
-	protected static KeyInformation info;
+	protected KeyInformation info;
 
 	/**
 	 * Constructs a new KeyPanel

@@ -1391,6 +1391,7 @@ public class Main {
 			}
 			components.sort((LayoutPosition left, LayoutPosition right) -> (left.getIndex() > right.getIndex() ? 1 : -1));
 			for(LayoutPosition c : components){
+				System.out.println(c + " " + c.getIndex());
 				content.add((Component) c);
 			}
 			if(panels == 0 && !config.showGraph){
