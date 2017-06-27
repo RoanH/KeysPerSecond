@@ -101,6 +101,13 @@ public class SizeManager {
 		KeyPanel.font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
 	}
 	
+	/**
+	 * Changes the component width & height values depending
+	 * on the rendering mode
+	 * @param oldMode The old rendering mode
+	 * @param newMode The new rendering mode
+	 * @see RenderingMode
+	 */
 	protected static final void setLayoutMode(RenderingMode oldMode, RenderingMode newMode){
 		if(oldMode == newMode){
 			return;

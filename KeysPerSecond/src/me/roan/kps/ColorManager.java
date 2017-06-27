@@ -25,13 +25,37 @@ public class ColorManager {
 	 * https://cloud.githubusercontent.com/assets/191335/16511432/17ac5232-3f8b-11e6-95b7-33f9a4df0b7c.png
 	 */
 	protected static Image unpressed;
-	protected static Image graph_lower_right;//TODO
+	/**
+	 * Graph image segment 'lower right'
+	 */
+	protected static Image graph_lower_right;
+	/**
+	 * Graph image segment 'lower left'
+	 */
 	protected static Image graph_lower_left;
+	/**
+	 * Graph image segment 'lower middle'
+	 */
 	protected static Image graph_lower_middle;
+	/**
+	 * Graph image segment 'side left'
+	 */
 	protected static Image graph_side_left;
+	/**
+	 * Graph image segment 'side right'
+	 */
 	protected static Image graph_side_right;
+	/**
+	 * Graph image segment 'upper right'
+	 */
 	protected static Image graph_upper_right;
+	/**
+	 * Graph image segment 'upper left'
+	 */
 	protected static Image graph_upper_left;
+	/**
+	 * Graph image segment 'upper middle'
+	 */
 	protected static Image graph_upper_middle;
 	/**
 	 * Color used to fill the area underneath the graph
