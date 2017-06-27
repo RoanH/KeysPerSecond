@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -20,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -110,6 +112,7 @@ public class Menu {
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
 		JMenuItem backlog = new JMenuItem("Backlog");
 		JMenuItem commandkeys = new JMenuItem("Commands");
+		JMenuItem layout = new JMenuItem("Layout");
 		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
 		JCheckBoxMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
 		JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay mode");
@@ -128,6 +131,7 @@ public class Menu {
 		JMenuItem save = new JMenuItem("Save config");
 		JMenuItem load = new JMenuItem("Load config");
 		components.add(load);
+		components.add(layout);
 		components.add(save);
 		components.add(size);
 		components.add(snap);
@@ -163,12 +167,13 @@ public class Menu {
 			e.setUI(new MenuItemUI());
 		}
 		snap.addActionListener((e)->{
-			Point loc = Main.frame.getLocationOnScreen();
-			Rectangle bounds = Main.frame.getGraphicsConfiguration().getBounds();	
-			Main.frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
-				Math.abs((loc.x + Main.frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - Main.frame.getWidth() : loc.x, 
+			JFrame frame = (JFrame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+			Point loc = frame.getLocationOnScreen();
+			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
+			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
+				Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
 						Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
-							Math.abs((loc.y + Main.frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - Main.frame.getHeight() : loc.y);
+							Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
 		});
 		exit.addActionListener((e)->{
 			Main.exit();
@@ -207,6 +212,7 @@ public class Menu {
 		overlay.addActionListener((e)->{
 			Main.config.overlay = overlay.isSelected();
 			Main.frame.setAlwaysOnTop(Main.config.overlay);
+			Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
 		});
 		precision.add(p0);
 		precision.add(p1);
@@ -325,6 +331,12 @@ public class Menu {
 			double old = Main.config.size;
 			Main.configureSize();
 			SizeManager.scale(Main.config.size / old);
+			Main.reconfigure();
+		});
+		layout.addActionListener((e)->{
+			RenderingMode m = Main.config.mode;
+			Main.configureLayout();
+			SizeManager.setLayoutMode(m, Main.config.mode);
 			Main.reconfigure();
 		});
 		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.updateRate == 1000);
@@ -481,6 +493,7 @@ public class Menu {
 		configure.add(precision);
 		configure.add(size);
 		configure.add(commandkeys);
+		configure.add(layout);
 
 		menu.add(configure);
 		menu.add(snap);
@@ -509,6 +522,7 @@ public class Menu {
 		Main.resetStats();
 		Main.reconfigure();
 		Main.mainLoop();
+		Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
 		Main.frame.setAlwaysOnTop(Main.config.overlay);
 	}
 

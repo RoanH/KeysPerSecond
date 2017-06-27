@@ -32,6 +32,10 @@ public class SizeManager {
 	 * Height of the data / count in a key panel
 	 */
 	protected static int keyDataTextOffset = 55;
+	/**
+	 * Horizontal offset for the title text from the right side
+	 */
+	protected static int horizontalTextOffset = 6;
 	
 	//Fonts
 	/**
@@ -49,29 +53,21 @@ public class SizeManager {
 	/**
 	 * Font size for a medium key count value (n >= 100 && n < 1000)
 	 */
-	protected static int keyPanelFont2smallSize = 14;
+	protected static int keyPanelFont2smallSize = 13;
 	/**
 	 * Font size for a huge key count value (n >= 1000)
 	 */
-	protected static int keyPanelFont2smallestSize = 11;
+	protected static int keyPanelFont2smallestSize = 10;
 	
 	//Graph
 	/**
-	 * Width of the left & right graph images
+	 * Smallest size of graph images
 	 */
-	protected static int graphImageLeftRightWidth = 42;
-	/**
-	 * Height of the graph border
-	 */
-	protected static int graphImageHeight = 64;
-	/**
-	 * Width of a single middle image for the graph
-	 */
-	protected static int graphImageMiddleWidth = 46;
+	protected static int graphImageSize = 4;
 	/**
 	 * Graph offset from the sides of the panel
 	 */
-	protected static int graphOffset = 4;
+	protected static int graphOffset = 5;
 	
 	/**
 	 * Multiplier all constants by the given factor
@@ -88,10 +84,9 @@ public class SizeManager {
 		keyPanelFont2Size         = (int)Math.floor(factor * keyPanelFont2Size);
 		keyPanelFont2smallSize    = (int)Math.floor(factor * keyPanelFont2smallSize);
 		keyPanelFont2smallestSize = (int)Math.floor(factor * keyPanelFont2smallestSize);
-		graphImageLeftRightWidth  = (int)Math.ceil(factor * graphImageLeftRightWidth);
-		graphImageHeight          = (int)Math.ceil(factor * graphImageHeight);
-		graphImageMiddleWidth     = (int)Math.ceil(factor * graphImageMiddleWidth);
+		graphImageSize            = (int)Math.ceil(factor * graphImageSize);
 		graphOffset               = (int)Math.ceil(factor * graphOffset);
+		horizontalTextOffset      = (int)Math.ceil(factor * horizontalTextOffset);
 		setFonts();
 	}
 	
@@ -104,5 +99,22 @@ public class SizeManager {
 		KeyPanel.font2 = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);                		                                                                                         		                                                                                         		                                                                                         
 		KeyPanel.font2small = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);      		                                                                                                                                                                         
 		KeyPanel.font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
+	}
+	
+	/**
+	 * Changes the component width & height values depending
+	 * on the rendering mode
+	 * @param oldMode The old rendering mode
+	 * @param newMode The new rendering mode
+	 * @see RenderingMode
+	 */
+	protected static final void setLayoutMode(RenderingMode oldMode, RenderingMode newMode){
+		if(oldMode == newMode){
+			return;
+		}else{
+			int tmp = subComponentHeight;
+			subComponentHeight = keyPanelWidth;
+			keyPanelWidth = tmp;
+		}
 	}
 }

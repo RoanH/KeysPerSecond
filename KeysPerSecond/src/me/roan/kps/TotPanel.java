@@ -24,4 +24,9 @@ public final class TotPanel extends BasePanel {
 	protected String getValue() {
 		return String.valueOf(hits);
 	}
+	
+	@Override
+	public int getIndex() {
+		return Main.config.posTot;
+	}
 }

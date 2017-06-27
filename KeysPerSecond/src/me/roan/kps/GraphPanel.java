@@ -2,6 +2,7 @@ package me.roan.kps;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -37,22 +38,6 @@ public class GraphPanel extends JPanel{
 	 * Stroke used to draw average line
 	 */
 	private static final Stroke avgstroke = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0F, null, 0);
-	/**
-	 * Number of frames, this is used to determine
-	 * the width of the graph and it equal
-	 * to the number of keys being tracked +
-	 * the number of informative keys being
-	 * displayed (avg, max, cur)
-	 */
-	protected static int frames = 0;
-	
-	/**
-	 * Constructs a new GraphPanel
-	 */
-	protected GraphPanel(){
-		this.addMouseListener(Listener.INSTANCE);
-		this.addMouseMotionListener(Listener.INSTANCE);
-	}
 	
 	/**
 	 * Resets the graph
@@ -60,6 +45,11 @@ public class GraphPanel extends JPanel{
 	protected final void reset(){
 		values.clear();
 		maxval = 1;
+	}
+	
+	@Override
+	public Dimension getPreferredSize(){
+		return new Dimension(Main.config.graphWidth, Main.config.graphHeight);
 	}
 	
 	@Override
@@ -103,13 +93,14 @@ public class GraphPanel extends JPanel{
 				g.fillPolygon(poly);
 				g.setColor(Main.config.getForegroundColor());
 				g.drawPolygon(poly);
-				if(frames > 1){
-					g.drawImage(ColorManager.gleft, 3, 2, 2 + SizeManager.graphImageLeftRightWidth, this.getHeight() - 2, 0, 0, 42, 64, null);
-					g.drawImage(ColorManager.gmid, SizeManager.graphImageLeftRightWidth + 2, 2, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2), this.getHeight() - 2, 0, 0, 46, 64, null);
-					g.drawImage(ColorManager.gright, SizeManager.graphImageLeftRightWidth + 2 + SizeManager.graphImageMiddleWidth * (frames - 2),2, this.getWidth() - 4, this.getHeight() - 2, 0, 0, 42, 64, null);
-				}else{
-					g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
-				}
+				g.drawImage(ColorManager.graph_upper_left,   2, 2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_lower_left,   2, this.getHeight() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 3, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 3 - SizeManager.graphImageSize, 2, this.getWidth() - 3, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 3 - SizeManager.graphImageSize, this.getHeight() - 3 - SizeManager.graphImageSize, this.getWidth() - 3, this.getHeight() - 3, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_side_left,    2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 3 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+				g.drawImage(ColorManager.graph_upper_middle, 2 + SizeManager.graphImageSize, 2, this.getWidth() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 46, 4, this);
+				g.drawImage(ColorManager.graph_lower_middle, 2 + SizeManager.graphImageSize, this.getHeight() - 3 - SizeManager.graphImageSize, this.getWidth() - 3 - SizeManager.graphImageSize, this.getHeight() - 3, 0, 0, 46, 4, this);
+				g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getWidth() - 3, this.getHeight() - 3 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
 			}catch(NullPointerException e){
 				//catch but do not solve, this is caused by the race
 				//condition. However adding synchronisation would impact

@@ -54,6 +54,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -158,6 +159,10 @@ public class Main {
 	 * The loop timer task
 	 */
 	protected static ScheduledFuture<?> future = null;
+	/**
+	 * Frame for the graph
+	 */
+	protected static JFrame graphFrame = new JFrame("Keys per second");
 	
 	/**
 	 * Main method
@@ -560,7 +565,7 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(9, 0));
+		JPanel buttons = new JPanel(new GridLayout(10, 1));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
@@ -580,6 +585,7 @@ public class Main {
 		});
 		JButton precision = new JButton("Precision");
 		JButton size = new JButton("Size");
+		JButton layout = new JButton("Layout");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
@@ -589,6 +595,7 @@ public class Main {
 		buttons.add(precision);
 		buttons.add(size);
 		buttons.add(cmdkeys);
+		buttons.add(layout);
 		form.add(options, BorderLayout.CENTER);
 		options.setBorder(BorderFactory.createTitledBorder("General"));
 		buttons.setBorder(BorderFactory.createTitledBorder("Configuration"));
@@ -596,6 +603,10 @@ public class Main {
 		all.add(options, BorderLayout.LINE_START);
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
+		layout.addActionListener((e)->{
+			configureLayout();
+			save.setEnabled(true);
+		});
 		size.addActionListener((e)->{
 			configureSize();
 			save.setEnabled(true);
@@ -720,7 +731,7 @@ public class Main {
 			}
 		});
 		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v6.2, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v6.3, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>", SwingConstants.CENTER);
 		ver.addMouseListener(new MouseListener(){
 
@@ -762,6 +773,7 @@ public class Main {
 			System.exit(0);
 		}
 		frame.setAlwaysOnTop(config.overlay);
+		graphFrame.setAlwaysOnTop(config.overlay);
 	}
 
 	/**
@@ -948,6 +960,98 @@ public class Main {
 		});
 
 		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, content, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
+	}
+	
+	/**
+	 * Shows the layout configuration dialog
+	 */
+	protected static final void configureLayout(){
+		JPanel config = new JPanel(new BorderLayout());
+		JPanel mode = new JPanel(new GridLayout(0, 2, 0, 5));
+		//Text mode (horizontal / vertical)
+		mode.add(new JLabel("Text mode: "));
+		JComboBox<RenderingMode> textMode = new JComboBox<RenderingMode>(RenderingMode.values());
+		textMode.setSelectedItem(Main.config.mode);
+		mode.add(textMode);
+		mode.add(new JLabel("Rows (0=infinite): "));
+		JSpinner rows = new JSpinner(new SpinnerNumberModel(Main.config.rows, 0, Integer.MAX_VALUE, 1));
+		mode.add(rows);
+		mode.add(new JLabel("Columns (0=infinite): "));
+		JSpinner cols = new JSpinner(new SpinnerNumberModel(Main.config.columns, 0, Integer.MAX_VALUE, 1));
+		mode.add(cols);
+		ChangeListener cl = (e)->{
+			if((int)rows.getValue() == 0 && (int)cols.getValue() == 0){
+				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "Rows & Columns cannot both be zero!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				rows.setValue(1);
+			}
+		};
+		rows.addChangeListener(cl);
+		cols.addChangeListener(cl);
+		
+		JPanel panel = new JPanel(new GridLayout(0, 2, 0, 5));
+		//max position
+		panel.add(new JLabel("'Max' position: "));
+		JSpinner posMax = new JSpinner(new SpinnerNumberModel(Main.config.posMax, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posMax);
+		//avg pos
+		panel.add(new JLabel("'Avg' position: "));
+		JSpinner posAvg = new JSpinner(new SpinnerNumberModel(Main.config.posAvg, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posAvg);
+		//cur pos
+		panel.add(new JLabel("'Cur' position: "));
+		JSpinner posCur = new JSpinner(new SpinnerNumberModel(Main.config.posCur, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posCur);
+		//tot pos
+		panel.add(new JLabel("'Tot' position: "));
+		JSpinner posTot = new JSpinner(new SpinnerNumberModel(Main.config.posTot, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+		panel.add(posTot);
+		
+		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));
+		//Graph mode (left, right, top, bottom, detached)
+		graphLayout.add(new JLabel("Graph mode: "));
+		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
+		graphMode.setSelectedItem(Main.config.graphMode);
+		graphLayout.add(graphMode);
+		graphLayout.add(new JLabel("Graph width: "));
+		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, 1, Integer.MAX_VALUE, 1));
+		graphLayout.add(gw);
+		graphLayout.add(new JLabel("Graph height: "));
+		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, 1, Integer.MAX_VALUE, 1));
+		graphLayout.add(gh);
+		
+		graphMode.addActionListener((event)->{
+			if(graphMode.getSelectedItem() == GraphMode.Detached){
+				gw.setEnabled(true);
+				gh.setEnabled(true);
+			}else if(graphMode.getSelectedItem() == GraphMode.Bottom || graphMode.getSelectedItem() == GraphMode.Top){
+				gw.setEnabled(false);
+				gh.setEnabled(true);
+			}else{
+				gw.setEnabled(true);
+				gh.setEnabled(false);
+			}
+		});
+		graphMode.setSelectedItem(Main.config.graphMode);
+		
+		mode.setBorder(BorderFactory.createTitledBorder("Layout"));
+		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
+		panel.setBorder(BorderFactory.createTitledBorder("Positions"));
+		config.add(panel, BorderLayout.CENTER);
+		config.add(graphLayout, BorderLayout.PAGE_END);
+		config.add(mode, BorderLayout.PAGE_START);
+		
+		if(0 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, config, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			Main.config.graphMode = (GraphMode) graphMode.getSelectedItem();
+			Main.config.graphWidth = (int)gw.getValue();
+			Main.config.graphHeight = (int)gh.getValue();
+			Main.config.posAvg = (int) posAvg.getValue();
+			Main.config.posMax = (int) posMax.getValue();
+			Main.config.posCur = (int) posCur.getValue();
+			Main.config.posTot = (int) posTot.getValue();
+			Main.config.rows = (int) rows.getValue();
+			Main.config.columns = (int) cols.getValue();
+			Main.config.mode = (RenderingMode) textMode.getSelectedItem();
+		}
 	}
 
 	/**
@@ -1190,9 +1294,49 @@ public class Main {
 			public void windowDeactivated(WindowEvent e) {				
 			}
 		});
-		frame.addMouseMotionListener(Listener.INSTANCE);
-		frame.addMouseListener(Listener.INSTANCE);
+		new Listener(frame);
+		graphFrame.setResizable(false);
+		graphFrame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
+		graphFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		graphFrame.setUndecorated(true);
+		graphFrame.addWindowListener(new WindowListener(){
+
+			@Override
+			public void windowOpened(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				try {
+					GlobalScreen.unregisterNativeHook();
+				} catch (NativeHookException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {				
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {				
+			}
+		});
+		new Listener(graphFrame);
 		SizeManager.scale(config.size);
+		SizeManager.setLayoutMode(RenderingMode.Vertical, Main.config.mode);
 		reconfigure();
 	}
 
@@ -1202,13 +1346,13 @@ public class Main {
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
-			content = new JPanel(new GridLayout(1, 0, 0, 0));
+			content = new JPanel();
 			try {
 				ColorManager.prepareImages(config.showGraph, config.customColors);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			config.keyinfo.sort((KeyInformation left, KeyInformation right) -> (left.index > right.index ? 1 : -1));
+			List<LayoutPosition> components = new ArrayList<LayoutPosition>();
 			Key k;
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
@@ -1225,25 +1369,29 @@ public class Main {
 					k = keys.get(code);
 				}
 				if(config.showKeys && i.visible){
-					content.add(k.getPanel());
+					components.add(k.getPanel(i));
 					panels++;
 				}
 			}
 			if(config.showMax){
-				content.add(new MaxPanel());
+				components.add(new MaxPanel());
 				panels++;
 			}
 			if(config.showAvg){
-				content.add(new AvgPanel());
+				components.add(new AvgPanel());
 				panels++;
 			}
 			if(config.showCur){
-				content.add(new NowPanel());
+				components.add(new NowPanel());
 				panels++;
 			}
 			if(config.showTotal){
-				content.add(new TotPanel());
+				components.add(new TotPanel());
 				panels++;
+			}
+			components.sort((LayoutPosition left, LayoutPosition right) -> (left.getIndex() > right.getIndex() ? 1 : -1));
+			for(LayoutPosition c : components){
+				content.add((Component) c);
 			}
 			if(panels == 0 && !config.showGraph){
 				frame.setVisible(false);
@@ -1252,21 +1400,43 @@ public class Main {
 
 			Menu.repaint();
 
-			JPanel allcontent = new JPanel(new GridLayout((config.showGraph ? 1 : 0) + (panels > 0 ? 1 : 0), 1, 0, 0));
-			allcontent.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
-			if(panels > 0){
-				allcontent.add(content);
-			}
+			JPanel all = new JPanel(new BorderLayout());
+			all.add(content, BorderLayout.CENTER);
+			JPanel gpanel = new JPanel(new BorderLayout());
+			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+			gpanel.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+			gpanel.add(graph, BorderLayout.CENTER);
 			if(config.showGraph){
-				allcontent.add(graph);
-				GraphPanel.frames = panels > 0 ? panels : 5;
+				if(config.graphMode != GraphMode.Detached){
+					all.add(gpanel, config.graphMode.layoutPosition);
+					graphFrame.setVisible(false);
+				}else{
+					graphFrame.add(gpanel);
+					graphFrame.setSize(config.graphWidth, config.graphHeight);
+					graphFrame.setVisible(true);
+				}
+			}else{
+				graphFrame.setVisible(false);
 			}
-			frame.setSize((panels == 0 && config.showGraph) ? SizeManager.defaultGraphWidth : (panels * SizeManager.keyPanelWidth), (panels > 0 ? SizeManager.subComponentHeight : 0) + (config.showGraph ? SizeManager.subComponentHeight : 0));
+			int r = config.rows;
+			int c = config.columns;
+			if(r == 0){
+				r = (int) Math.ceil((double)panels / (double)c);
+			}else if(c == 0){
+				c = (int) Math.ceil((double)panels / (double)r);
+			}
+			content.setLayout(new GridLayout(r, c, 0, 0));
+			frame.setSize(c * SizeManager.keyPanelWidth + (config.showGraph ? config.graphMode.getAddedWidth() : 0), 
+					      SizeManager.subComponentHeight * r + (config.showGraph ? config.graphMode.getAddedHeight() : 0));
 			if(ColorManager.transparency){
 				frame.setBackground(ColorManager.transparent);
 			}
-			frame.add(allcontent);
-			frame.setVisible(true);
+			frame.add(all);
+			if(panels > 0){
+				frame.setVisible(true);
+			}else{
+				frame.setVisible(false);
+			}
 		});
 	}
 
@@ -1473,10 +1643,11 @@ public class Main {
 		/**
 		 * Creates a new KeyPanel with this
 		 * objects as its data source
+		 * @param i The information object about this key
 		 * @return A new KeyPanel
 		 */
-		private KeyPanel getPanel() {
-			return panel != null ? panel : (panel = new KeyPanel(this));
+		private KeyPanel getPanel(KeyInformation i) {
+			return panel != null ? panel : (panel = new KeyPanel(this, i));
 		}
 
 		/**

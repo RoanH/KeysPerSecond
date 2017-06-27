@@ -24,4 +24,9 @@ public final class NowPanel extends BasePanel {
 	protected String getValue() {
 		return String.valueOf((int)Main.prev);
 	}
+	
+	@Override
+	public int getIndex() {
+		return Main.config.posCur;
+	}
 }
