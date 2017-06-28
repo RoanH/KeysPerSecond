@@ -108,12 +108,12 @@ public class Menu {
 		JMenuItem size = new JMenuItem("Size");
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
-		JMenuItem sreset = new JMenuItem("Reset stats");
+		JMenuItem sreset = new JMenuItem("Reset statistics");
 		JMenuItem sresetmax = new JMenuItem("Reset maximum");
 		JMenuItem sresetavg = new JMenuItem("Reset average");
 		JMenuItem sresettot = new JMenuItem("Reset total");
 		JMenuItem sresetgraph = new JMenuItem("Reset graph");
-		JMenuItem treset = new JMenuItem("Reset totals");
+		JMenuItem treset = new JMenuItem("Reset key totals");
 		JMenuItem configkeys = new JMenuItem("Keys");
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
 		JMenuItem backlog = new JMenuItem("Backlog");
