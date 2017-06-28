@@ -983,6 +983,12 @@ public class Main {
 			if((int)rows.getValue() == 0 && (int)cols.getValue() == 0){
 				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "Rows & Columns cannot both be zero!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 				rows.setValue(1);
+			}else if(((int)rows.getValue() * (int)cols.getValue() != 0)){
+				int n = getTotalAmountOfVisiblePanels();
+				if(n > (int)rows.getValue() * (int)cols.getValue()){
+					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "There aren't enough rows & columns to fit all the panels!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					cols.setValue(0);
+				}
 			}
 		};
 		rows.addChangeListener(cl);
@@ -1052,6 +1058,20 @@ public class Main {
 			Main.config.columns = (int) cols.getValue();
 			Main.config.mode = (RenderingMode) textMode.getSelectedItem();
 		}
+	}
+	
+	/**
+	 * Gets the total amount of visible panels
+	 * @return The total amount of visible panels
+	 */
+	private static final int getTotalAmountOfVisiblePanels(){
+		int n = (Main.config.showAvg ? 1 : 0) + (Main.config.showMax ? 1 : 0) + (Main.config.showCur ? 1 : 0) + (Main.config.showTotal ? 1 : 0);
+		for(KeyInformation info : Main.config.keyinfo){
+			if(info.visible){
+				n++;
+			}
+		}
+		return n;
 	}
 
 	/**
@@ -1131,6 +1151,10 @@ public class Main {
 						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 					}
 				}else if(col == 2){
+					if(config.rows * config.columns >= getTotalAmountOfVisiblePanels()){
+						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
+						return;
+					}
 					config.keyinfo.get(row).visible = (boolean)value;
 				}else{
 					if((boolean)value == true){
@@ -1148,6 +1172,10 @@ public class Main {
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
+			if(config.rows * config.columns >= getTotalAmountOfVisiblePanels()){
+				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
+				return;
+			}
 			JPanel form = new JPanel(new GridLayout(4, 1));
 			JLabel txt = new JLabel("Press a key and click 'OK' to add it.");
 			JPanel a = new JPanel(new BorderLayout());
