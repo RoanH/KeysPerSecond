@@ -53,10 +53,6 @@ public class Menu {
 	 */
 	protected static final JPopupMenu menu = new JPopupMenu();
 	/**
-	 * Menu component
-	 */
-	private static final List<JMenuItem> components = new ArrayList<JMenuItem>();
-	/**
 	 * The configuration menu
 	 */
 	private static final JMenu configure = new JMenu("Configure");
@@ -108,6 +104,7 @@ public class Menu {
 	 * Creates the popup menu
 	 */
 	protected static final void createMenu(){
+		List<JMenuItem> components = new ArrayList<JMenuItem>();
 		JMenuItem size = new JMenuItem("Size");
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
