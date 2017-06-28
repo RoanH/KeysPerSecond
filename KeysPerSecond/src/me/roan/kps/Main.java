@@ -101,7 +101,7 @@ public class Main {
 	 * The number of keys pressed in the
 	 * ongoing second
 	 */
-	private static int tmp = 0;
+	protected static int tmp = 0;
 	/**
 	 * The average keys per second
 	 */

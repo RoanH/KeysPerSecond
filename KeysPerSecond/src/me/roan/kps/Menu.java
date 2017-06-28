@@ -81,6 +81,10 @@ public class Menu {
 	 */
 	private static final JMenu rate = new JMenu("Update rate");
 	/**
+	 * Reset menu
+	 */
+	private static final JMenu reset = new JMenu("Reset");
+	/**
 	 * The pause menu item
 	 */
 	protected static final JCheckBoxMenuItem pause = new JCheckBoxMenuItem("Pause");
@@ -97,6 +101,7 @@ public class Menu {
 		configcolors.getPopupMenu().setBorder(border);
 		mgraph.getPopupMenu().setBorder(border);
 		rate.getPopupMenu().setBorder(border);
+		reset.getPopupMenu().setBorder(border);
 	}
 
 	/**
@@ -107,6 +112,10 @@ public class Menu {
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
 		JMenuItem sreset = new JMenuItem("Reset stats");
+		JMenuItem sresetmax = new JMenuItem("Reset maximum");
+		JMenuItem sresetavg = new JMenuItem("Reset average");
+		JMenuItem sresettot = new JMenuItem("Reset total");
+		JMenuItem sresetgraph = new JMenuItem("Reset graph");
 		JMenuItem treset = new JMenuItem("Reset totals");
 		JMenuItem configkeys = new JMenuItem("Keys");
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
@@ -138,6 +147,10 @@ public class Menu {
 		components.add(exit);
 		components.add(pause);
 		components.add(sreset);
+		components.add(sresetmax);
+		components.add(sresetavg);
+		components.add(sresettot);
+		components.add(sresetgraph);
 		components.add(treset);
 		components.add(configkeys);
 		components.add(colorcustom);
@@ -163,6 +176,7 @@ public class Menu {
 		configcolors.setUI(new MenuUI());
 		mgraph.setUI(new MenuUI());
 		rate.setUI(new MenuUI());
+		reset.setUI(new MenuUI());
 		for(JMenuItem e : components){
 			e.setUI(new MenuItemUI());
 		}
@@ -184,6 +198,21 @@ public class Menu {
 		});
 		sreset.addActionListener((e)->{
 			Main.resetStats();
+			
+		});
+		sresetmax.addActionListener((e)->{
+			Main.max = 0;
+		});
+		sresetavg.addActionListener((e)->{
+			Main.n = 0;
+			Main.avg = 0;
+			Main.tmp = 0;
+		});
+		sresettot.addActionListener((e)->{
+			TotPanel.hits = 0;
+		});
+		sresetgraph.addActionListener((e)->{
+			Main.graph.reset();
 		});
 		commandkeys.addActionListener((e)->{
 			Main.configureCommandKeys();
@@ -472,6 +501,13 @@ public class Menu {
 				resetData(oldScale);
 			}
 		});
+		
+		reset.add(treset);
+		reset.add(sreset);
+		reset.add(sresetmax);
+		reset.add(sresetavg);
+		reset.add(sresettot);
+		reset.add(sresetgraph);
 
 		mgraph.add(graph);
 		mgraph.add(graphavg);
@@ -497,8 +533,7 @@ public class Menu {
 
 		menu.add(configure);
 		menu.add(snap);
-		menu.add(treset);
-		menu.add(sreset);
+		menu.add(reset);
 		menu.add(pause);
 		menu.add(load);
 		menu.add(save);
