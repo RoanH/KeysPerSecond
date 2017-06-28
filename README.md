@@ -10,13 +10,14 @@ I could however not find a program that worked on my computer so I decided to wr
 
 The program when active looks like this:<br>
 ![Interface](http://i.imgur.com/9cCzB0Q.png)<br>
+![Interface](http://i.imgur.com/bLQXABw.png)<br>
 ![Menu](http://i.imgur.com/stzF9YR.png)<br>
 Accessible by right clicking on the program.
 
 For each configured key it shows how many times it is pressed. By default it also shows the maximum, average and current number of keys pressed per second.
 When enabled it can also show a graph of the number of keys pressed per second over time. The horizontal line in the graph represents the average number of keys pressed per second.
 
-Everything shown in the picture above can be toggled on or off.<br>
+Everything shown in the picture above can be toggled on or off and all the panels can be arranged in a lot of different ways.<br>
 ![Config](http://i.imgur.com/u7obayv.png)
 ![Key config](http://i.imgur.com/N6JOCJk.png)
 
@@ -42,6 +43,7 @@ And if you find any bugs feel free to report them.
 - The snap to screen edge function work on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
 - You can also track mouse buttons with this program.
+- The order for positions is from the top left to the bottom right.
 
 ## Updates
 2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
@@ -67,10 +69,11 @@ And if you find any bugs feel free to report them.
 16 April 2017: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
 17 April 2017: Rendering fixes & fix the counters being reset when the color is changed.<br>
 19 April 2017: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.<br>
-29 April 2017: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs<br>
-30 April 2017: Fix an opacity bug that causes the window to be invisible with certain settings<br>
-28 May 2017: Fix a localization bug & add the option to track key-modifier combinations<br>
-28 June 2017: Added a lot of layout options
+29 April 2017: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs.<br>
+30 April 2017: Fix an opacity bug that causes the window to be invisible with certain settings.<br>
+28 May 2017: Fix a localization bug & add the option to track key-modifier combinations.<br>
+28 June 2017: Added a lot of layout options.<br>
+28 June 2017: Fix the position/index feature for keys not working.
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
@@ -78,8 +81,8 @@ It's kinda empty here right now :c, so please suggest things c:
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
 **Note these download links are not actively being updated. For the latest release check the releases section.**<br>
-![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v6.3/KeysPerSecond-v6.3.exe)<br>
-![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v6.3/KeysPerSecond-v6.3.jar)
+![Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v6.4/KeysPerSecond-v6.4.exe)<br>
+![Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v6.4/KeysPerSecond-v6.4.jar)
 
 All releases: ![releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: ![the page you're looking at O.o](https://github.com/RoanH/KeysPerSecond)
