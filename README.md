@@ -71,6 +71,7 @@ And if you find any bugs feel free to report them.
 30 April 2017: Fix an opacity bug that causes the window to be invisible with certain settings<br>
 28 May 2017: Fix a localization bug & add the option to track key-modifier combinations<br>
 28 June 2017: Added a lot of layout options
+28 June 2017: Fix the position/index feature for keys not working.
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
