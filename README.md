@@ -43,6 +43,7 @@ And if you find any bugs feel free to report them.
 - The snap to screen edge function work on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
 - You can also track mouse buttons with this program.
+- The order for positions is from the top left to the bottom right.
 
 ## Updates
 2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
