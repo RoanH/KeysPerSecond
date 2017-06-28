@@ -39,7 +39,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setColor(Main.config.getBackgroundColor());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
-		if(Main.config.mode == RenderingMode.Vertical){
+		if(Main.config.mode == RenderingMode.VERTICAL){
 			verticalRenderer(g);
 		}else{
 			horizontalRenderer(g);

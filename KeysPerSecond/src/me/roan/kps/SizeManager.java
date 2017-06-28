@@ -33,7 +33,7 @@ public class SizeManager {
 	 */
 	protected static int keyDataTextOffset = 55;
 	/**
-	 * Horizontal offset for the title text from the right side
+	 * HORIZONTAL offset for the title text from the right side
 	 */
 	protected static int horizontalTextOffset = 6;
 	
@@ -109,7 +109,7 @@ public class SizeManager {
 	 * @see RenderingMode
 	 */
 	protected static final void setLayoutMode(RenderingMode oldMode, RenderingMode newMode){
-		if(oldMode == newMode){
+		if(oldMode == newMode || (oldMode != RenderingMode.VERTICAL && newMode != RenderingMode.VERTICAL)){
 			return;
 		}else{
 			int tmp = subComponentHeight;

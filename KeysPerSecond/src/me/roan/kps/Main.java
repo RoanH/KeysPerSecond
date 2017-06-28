@@ -1364,7 +1364,7 @@ public class Main {
 		});
 		new Listener(graphFrame);
 		SizeManager.scale(config.size);
-		SizeManager.setLayoutMode(RenderingMode.Vertical, Main.config.mode);
+		SizeManager.setLayoutMode(RenderingMode.VERTICAL, Main.config.mode);
 		reconfigure();
 	}
 

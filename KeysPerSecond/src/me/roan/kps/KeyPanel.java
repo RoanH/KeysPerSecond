@@ -67,7 +67,7 @@ public final class KeyPanel extends JPanel implements LayoutPosition{
 	@Override
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
-		if(Main.config.mode == RenderingMode.Vertical){
+		if(Main.config.mode == RenderingMode.VERTICAL){
 			verticalRenderer(g);
 		}else{
 			horizontalRenderer(g);
@@ -87,22 +87,33 @@ public final class KeyPanel extends JPanel implements LayoutPosition{
 		}else{
 			g.setColor(Main.config.getForegroundColor());
 		}
-		if(key.name.length() == 1){
-			g.setFont(font1);
+		Font nameFont = key.name.length() == 1 ? font1 : BasePanel.font1;
+		int baseline = (this.getHeight() / 2) - ((g.getFontMetrics(nameFont).getAscent() + g.getFontMetrics(nameFont).getDescent()) / 2) + g.getFontMetrics(nameFont).getAscent();
+		if(Main.config.mode == RenderingMode.HORIZONTAL_NT){
+			if(key.count >= 10000){
+				g.setFont(font2smallest);
+			}else if(key.count >= 1000){
+				g.setFont(font2small);
+			}else{
+				g.setFont(font2);
+			}
+			String str = String.valueOf(key.count);
+			g.drawString(str, SizeManager.horizontalTextOffset, baseline);
+			g.setFont(nameFont);
+			g.drawString(key.name, this.getWidth() - SizeManager.horizontalTextOffset - g.getFontMetrics().stringWidth(key.name), baseline);
 		}else{
-			g.setFont(BasePanel.font1);
+			g.setFont(nameFont);
+			g.drawString(key.name, SizeManager.horizontalTextOffset, baseline);
+			if(key.count >= 10000){
+				g.setFont(font2smallest);
+			}else if(key.count >= 1000){
+				g.setFont(font2small);
+			}else{
+				g.setFont(font2);
+			}
+			String str = String.valueOf(key.count);
+			g.drawString(str, this.getWidth() - SizeManager.horizontalTextOffset - g.getFontMetrics().stringWidth(str), baseline);
 		}
-		int baseline = (this.getHeight() / 2) - ((g.getFontMetrics().getAscent() + g.getFontMetrics().getDescent()) / 2) + g.getFontMetrics().getAscent();
-		g.drawString(key.name, SizeManager.horizontalTextOffset, baseline);
-		if(key.count >= 10000){
-			g.setFont(font2smallest);
-		}else if(key.count >= 1000){
-			g.setFont(font2small);
-		}else{
-			g.setFont(font2);
-		}
-		String str = String.valueOf(key.count);
-		g.drawString(str, this.getWidth() - SizeManager.horizontalTextOffset - g.getFontMetrics().stringWidth(str), baseline);
 	}
 	
 	private final void verticalRenderer(Graphics2D g){

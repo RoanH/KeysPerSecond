@@ -7,11 +7,35 @@ package me.roan.kps;
  */
 public enum RenderingMode {
 	/**
-	 * Horizontal text rendering
+	 * HORIZONTAL text rendering
 	 */
-	Horizontal,
+	HORIZONTAL_TN("Horizontal (text - value)"),
 	/**
-	 * Vertical text rendering
+	 * HORIZONTAL text rendering
 	 */
-	Vertical;
+	HORIZONTAL_NT("Horizontal (value - text)"),
+	/**
+	 * VERTICAL text rendering
+	 */
+	VERTICAL("Vertical");
+	
+	/**
+	 * The display name of the
+	 * enum constant, used in dialogs
+	 */
+	private String name;
+	
+	/**
+	 * Constructs a new RenderingMode
+	 * with the given name
+	 * @param n The display name of the mode
+	 */
+	private RenderingMode(String n){
+		name = n;
+	}
+	
+	@Override
+	public String toString(){
+		return name;
+	}
 }

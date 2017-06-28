@@ -156,7 +156,7 @@ public class Configuration {
 	/**
 	 * Mode in which text is rendered
 	 */
-	protected RenderingMode mode = RenderingMode.Vertical;
+	protected RenderingMode mode = RenderingMode.VERTICAL;
 	/**
 	 * Position the graph is rendered in
 	 */
@@ -486,12 +486,18 @@ public class Configuration {
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
 				case "textMode":
-					switch(args[1]){
+					switch(args[1].toLowerCase()){
 					case "Vertical":
-						mode = RenderingMode.Vertical;
+						mode = RenderingMode.VERTICAL;
 						break;
 					case "Horizontal":
-						mode = RenderingMode.Horizontal;
+						mode = RenderingMode.HORIZONTAL_TN;
+						break;
+					case "Horizontal_TN":
+						mode = RenderingMode.HORIZONTAL_TN;
+						break;
+					case "Horizontal_NT":
+						mode = RenderingMode.HORIZONTAL_NT;
 						break;
 						default:
 							modified = true;
@@ -830,7 +836,7 @@ public class Configuration {
 				out.println("keyReload: " + CR.toSaveString());
 				out.println();
 				out.println("# Layout");
-				out.println("textMode: " + mode);
+				out.println("textMode: " + mode.name());
 				out.println("rows: " + rows);
 				out.println("columns: " + columns);
 				out.println("maxPos: " + posMax);
