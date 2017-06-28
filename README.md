@@ -10,6 +10,7 @@ I could however not find a program that worked on my computer so I decided to wr
 
 The program when active looks like this:<br>
 ![Interface](http://i.imgur.com/9cCzB0Q.png)<br>
+![Interface](http://i.imgur.com/bLQXABw.png)<br>
 ![Menu](http://i.imgur.com/stzF9YR.png)<br>
 Accessible by right clicking on the program.
 
