@@ -134,6 +134,7 @@ public class Menu {
 		JCheckBoxMenuItem keys = new JCheckBoxMenuItem("Show keys");
 		JCheckBoxMenuItem graphavg = new JCheckBoxMenuItem("Show average");
 		JCheckBoxMenuItem[] rates = new JCheckBoxMenuItem[12];
+		JCheckBoxMenuItem modifiers = new JCheckBoxMenuItem("Key-modifier tracking");
 		JMenuItem save = new JMenuItem("Save config");
 		JMenuItem load = new JMenuItem("Load config");
 		components.add(load);
@@ -167,6 +168,7 @@ public class Menu {
 		components.add(graph);
 		components.add(keys);
 		components.add(graphavg);
+		components.add(modifiers);
 		configure.setUI(new MenuUI());
 		general.setUI(new MenuUI());
 		precision.setUI(new MenuUI());
@@ -332,6 +334,9 @@ public class Menu {
 				Main.config.customColors = colorenable.isSelected();
 				Main.reconfigure();
 			});
+		});
+		modifiers.addActionListener((e)->{
+			Main.config.enableModifiers = modifiers.isSelected();
 		});
 		configcolors.add(colorenable);
 		configcolors.add(colorcustom);
@@ -517,6 +522,7 @@ public class Menu {
 		general.add(keys);
 		general.add(overlay);
 		general.add(tAll);
+		general.add(modifiers);
 
 		configure.add(general);
 		configure.add(configkeys);
