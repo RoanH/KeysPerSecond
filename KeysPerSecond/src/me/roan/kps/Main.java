@@ -406,7 +406,7 @@ public class Main {
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		int code = nevent instanceof NativeKeyEvent ? ((NativeKeyEvent)nevent).getKeyCode() : -((NativeMouseEvent)nevent).getButton();
-		if(nevent instanceof NativeKeyEvent){
+		if(config.enableModifiers && nevent instanceof NativeKeyEvent){
 			code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
 		}
 		if(config.trackAll && !keys.containsKey(code)){
@@ -421,34 +421,36 @@ public class Main {
 		}
 		if(nevent instanceof NativeKeyEvent){
 			NativeKeyEvent event = (NativeKeyEvent)nevent;
-			if(event.getKeyCode() == NativeKeyEvent.VC_ALT){
-				Key ak = keys.get(event.getKeyCode());
-				if(!CommandKeys.isAltDown){
-					for(Key k : keys.values()){
-						if(!k.alt && !k.equals(ak)){
-							k.keyReleased();
+			if(config.enableModifiers){
+				if(event.getKeyCode() == NativeKeyEvent.VC_ALT){
+					Key ak = keys.get(event.getKeyCode());
+					if(!CommandKeys.isAltDown){
+						for(Key k : keys.values()){
+							if(!k.alt && !k.equals(ak)){
+								k.keyReleased();
+							}
 						}
 					}
-				}
-				CommandKeys.isAltDown = true;
-			}else if(event.getKeyCode() == NativeKeyEvent.VC_CONTROL){
-				if(!CommandKeys.isCtrlDown){
-					for(Key k : keys.values()){
-						if(!k.ctrl){
-							k.keyReleased();
+					CommandKeys.isAltDown = true;
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+					if(!CommandKeys.isCtrlDown){
+						for(Key k : keys.values()){
+							if(!k.ctrl){
+								k.keyReleased();
+							}
 						}
 					}
-				}
-				CommandKeys.isCtrlDown = true;
-			}else if(event.getKeyCode() == NativeKeyEvent.VC_SHIFT){
-				if(!CommandKeys.isShiftDown){
-					for(Key k : keys.values()){
-						if(!k.shift){
-							k.keyReleased();
+					CommandKeys.isCtrlDown = true;
+				}else if(event.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+					if(!CommandKeys.isShiftDown){
+						for(Key k : keys.values()){
+							if(!k.shift){
+								k.keyReleased();
+							}
 						}
 					}
+					CommandKeys.isShiftDown = true;
 				}
-				CommandKeys.isShiftDown = true;
 			}
 			lastevent = event;
 			if(config.CP.matches(event.getKeyCode())){
@@ -481,8 +483,8 @@ public class Main {
 	 */
 	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(9, 0));
-		JPanel labels = new JPanel(new GridLayout(9, 0));
+		JPanel boxes = new JPanel(new GridLayout(10, 0));
+		JPanel labels = new JPanel(new GridLayout(10, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
@@ -492,6 +494,7 @@ public class Main {
 		JCheckBox ccol = new JCheckBox();
 		JCheckBox call = new JCheckBox();
 		JCheckBox ctot = new JCheckBox();
+		JCheckBox cmod = new JCheckBox();
 		cmax.setSelected(true);
 		cavg.setSelected(true);
 		ccur.setSelected(true);
@@ -505,6 +508,7 @@ public class Main {
 		JLabel lcol = new JLabel("Custom colours: ");
 		JLabel lall = new JLabel("Track all keys");
 		JLabel ltot = new JLabel("Show total");
+		JLabel lmod = new JLabel("Key-modifier tracking");
 		ltop.setToolTipText("Requires you to run osu! out of full screen mode, known to not (always) work with the wine version of osu!");
 		boxes.add(cmax);
 		boxes.add(cavg);
@@ -515,6 +519,7 @@ public class Main {
 		boxes.add(ctop);
 		boxes.add(ccol);
 		boxes.add(call);
+		boxes.add(cmod);
 		labels.add(lmax);
 		labels.add(lavg);
 		labels.add(lcur);
@@ -524,6 +529,7 @@ public class Main {
 		labels.add(ltop);
 		labels.add(lcol);
 		labels.add(lall);
+		labels.add(lmod);
 		JButton save = new JButton("Save config");
 		ctop.addActionListener((e)->{
 			config.overlay = ctop.isSelected();
@@ -559,6 +565,10 @@ public class Main {
 		});
 		ctot.addActionListener((e)->{
 			config.showTotal = ctot.isSelected();
+			save.setEnabled(true);
+		});
+		cmod.addActionListener((e)->{
+			config.enableModifiers = cmod.isSelected();
 			save.setEnabled(true);
 		});
 		JPanel options = new JPanel();
@@ -1012,7 +1022,7 @@ public class Main {
 		JSpinner posTot = new JSpinner(new SpinnerNumberModel(Main.config.posTot, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 		panel.add(posTot);
 		
-		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));
+		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));                    
 		//Graph mode (left, right, top, bottom, detached)
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
@@ -1176,31 +1186,35 @@ public class Main {
 				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 				return;
 			}
-			JPanel form = new JPanel(new GridLayout(4, 1));
+			JPanel form = new JPanel(new GridLayout(config.enableModifiers ? 4 : 1, 1));
 			JLabel txt = new JLabel("Press a key and click 'OK' to add it.");
-			JPanel a = new JPanel(new BorderLayout());
-			JPanel c = new JPanel(new BorderLayout());
-			JPanel s = new JPanel(new BorderLayout());
+			form.add(txt);
 			JCheckBox ctrl = new JCheckBox();
 			JCheckBox alt = new JCheckBox();
 			JCheckBox shift = new JCheckBox();
-			c.add(ctrl, BorderLayout.LINE_START);
-			c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
-			a.add(alt, BorderLayout.LINE_START);
-			a.add(new JLabel("Alt"), BorderLayout.CENTER);
-			s.add(shift, BorderLayout.LINE_START);
-			s.add(new JLabel("Shift"), BorderLayout.CENTER);
-			form.add(txt);
-			form.add(c);
-			form.add(a);
-			form.add(s);
+			if(config.enableModifiers){
+				JPanel a = new JPanel(new BorderLayout());
+				JPanel c = new JPanel(new BorderLayout());
+				JPanel s = new JPanel(new BorderLayout());
+				c.add(ctrl, BorderLayout.LINE_START);
+				c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
+				a.add(alt, BorderLayout.LINE_START);
+				a.add(new JLabel("Alt"), BorderLayout.CENTER);
+				s.add(shift, BorderLayout.LINE_START);
+				s.add(new JLabel("Shift"), BorderLayout.CENTER);
+				form.add(c);
+				form.add(a);
+				form.add(s);
+			}
 			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, form, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){ 	
 				if(lastevent == null){ 				
 					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 					return; 	
 				} 			
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), alt.isSelected() || CommandKeys.isAltDown, ctrl.isSelected() || CommandKeys.isCtrlDown, shift.isSelected() || CommandKeys.isShiftDown, false); 
-				info.keycode += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false); 
+				if(config.enableModifiers){
+					info.keycode += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
+				}
 				int n  = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
 				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
 					config.keyinfo.add(info); 			

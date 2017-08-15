@@ -65,6 +65,10 @@ public class Configuration {
 	 * Whether or not to show the total number of hits
 	 */
 	protected boolean showTotal = false;
+	/**
+	 * Whether or not the enable tracking key-modifier combinations
+	 */
+	protected boolean enableModifiers = false;
 	
 	//keys
 	/**
@@ -582,6 +586,9 @@ public class Configuration {
 						modified = true;
 					}
 					break;
+				case "enableKeyModifierCombinations":
+					enableModifiers = Boolean.parseBoolean(args[1]);
+					break;
 				}
 			}
 			in.close();
@@ -807,6 +814,7 @@ public class Configuration {
 				out.println("updateRate: " + updateRate);
 				out.println("precision: " + precision);
 				out.println("size: " + size);
+				out.println("enableKeyModifierCombinations: " + enableModifiers);
 				out.println();
 				//advanced
 				out.println("# Graph");
