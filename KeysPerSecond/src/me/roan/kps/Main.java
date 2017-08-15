@@ -1199,7 +1199,7 @@ public class Main {
 					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 					return; 	
 				} 			
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), alt.isSelected() || CommandKeys.isAltDown, ctrl.isSelected() || CommandKeys.isCtrlDown, shift.isSelected() || CommandKeys.isShiftDown); 
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), alt.isSelected() || CommandKeys.isAltDown, ctrl.isSelected() || CommandKeys.isCtrlDown, shift.isSelected() || CommandKeys.isShiftDown, false); 
 				info.keycode += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
 				int n  = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
 				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
@@ -1250,19 +1250,19 @@ public class Main {
 
 			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
 				if(cm1.isSelected()){
-					config.keyinfo.add(new KeyInformation("M1", -NativeMouseEvent.BUTTON1, false, false, false));
+					config.keyinfo.add(new KeyInformation("M1", -NativeMouseEvent.BUTTON1, false, false, false, true));
 				}
 				if(cm2.isSelected()){
-					config.keyinfo.add(new KeyInformation("M2", -NativeMouseEvent.BUTTON2, false, false, false));
+					config.keyinfo.add(new KeyInformation("M2", -NativeMouseEvent.BUTTON2, false, false, false, true));
 				}
 				if(cm3.isSelected()){
-					config.keyinfo.add(new KeyInformation("M3", -NativeMouseEvent.BUTTON3, false, false, false));
+					config.keyinfo.add(new KeyInformation("M3", -NativeMouseEvent.BUTTON3, false, false, false, true));
 				}
 				if(cm4.isSelected()){
-					config.keyinfo.add(new KeyInformation("M4", -NativeMouseEvent.BUTTON4, false, false, false));
+					config.keyinfo.add(new KeyInformation("M4", -NativeMouseEvent.BUTTON4, false, false, false, true));
 				}
 				if(cm5.isSelected()){
-					config.keyinfo.add(new KeyInformation("M5", -NativeMouseEvent.BUTTON5, false, false, false));
+					config.keyinfo.add(new KeyInformation("M5", -NativeMouseEvent.BUTTON5, false, false, false, true));
 				}
 				model.fireTableDataChanged();
 			}
@@ -1761,14 +1761,18 @@ public class Main {
 		 * object with the given information
 		 * @param name The name of the key
 		 * @param code The virtual key code of the key
+		 * @param Whether or not alt is down
+		 * @param Whether or not ctrl is down
+		 * @param Whether or not shift is down
+		 * @param Whether or not this is a mouse button
 		 * @see #name
-		 * @see #keycode
+		 * @see #keycode 
 		 */
-		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift){
+		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
 			this.alt = alt;
 			this.ctrl = ctrl;
 			this.shift = shift;
-			this.name = ((alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "")) + (name.length() == 1 ? name.toUpperCase() : getKeyText(code));
+			this.name = mouse ? name : (((alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "")) + (name.length() == 1 ? name.toUpperCase() : getKeyText(code)));
 			this.keycode = code;
 		}
 
