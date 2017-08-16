@@ -74,7 +74,8 @@ And if you find any bugs feel free to report them.
 28 May 2017: Fix a localization bug & add the option to track key-modifier combinations.<br>
 28 June 2017: Added a lot of layout options.<br>
 28 June 2017: Fix the position/index feature for keys not working.<br>
-28 June 2017: Add warning for invalid key/row/columns combinations, improve reset menu, add a value-text horizontal rendering mode.
+28 June 2017: Add warning for invalid key/row/columns combinations, improve reset menu, add a value-text horizontal rendering mode.<br>
+16 August 2017: Fix several bug involving key-modifier combinations & a bug showing weird mouse button text.
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
