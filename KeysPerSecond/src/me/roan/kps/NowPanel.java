@@ -22,7 +22,7 @@ public final class NowPanel extends BasePanel {
 
 	@Override
 	protected String getValue() {
-		return String.valueOf((int)Main.prev);
+		return String.valueOf(Main.prev);
 	}
 	
 	@Override

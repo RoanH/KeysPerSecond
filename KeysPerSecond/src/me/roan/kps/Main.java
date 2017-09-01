@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -102,11 +103,11 @@ public class Main {
 	 * The number of keys pressed in the
 	 * ongoing second
 	 */
-	protected static int tmp = 0;
+	protected static AtomicInteger tmp = new AtomicInteger();
 	/**
-	 * The average keys per second
+	 * The total keys pressed
 	 */
-	protected static double avg;
+	protected static int total;
 	/**
 	 * The maximum keys per second value reached so far
 	 */
@@ -257,6 +258,10 @@ public class Main {
 		mainLoop();
 	}
 
+	protected static double getAvg(){
+		return total == 0 ? 0.0 : (double)total / n;
+	}
+
 	/**
 	 * Main loop of the program
 	 * this loop updates the
@@ -272,31 +277,32 @@ public class Main {
 		future = timer.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				if(!suspended){
-					int totaltmp = tmp;
-					for(int i : timepoints){
-						totaltmp += i;
-					}
-					if(totaltmp > max){
-						max = totaltmp;
-					}
-					if(totaltmp != 0){
-						avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
-						n++;
-						TotPanel.hits += tmp;
-						System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
-					}
-					graph.addPoint(totaltmp);
-					graph.repaint();
-					content.repaint();
-					prev = totaltmp;
-					timepoints.addFirst(tmp);
-					if(timepoints.size() >= 1000 / config.updateRate){
-						timepoints.removeLast();
-					}
-					tmp = 0;
-				}else{
-					tmp = 0;
+				int currtmp = tmp.getAndSet(0);
+
+				if(suspended) return;
+
+				int totaltmp = timepoints.stream().reduce(currtmp, Integer::sum);
+
+				prev = totaltmp;
+				max = Math.max(max, totaltmp);
+
+				if(totaltmp > 0){
+					total += totaltmp;
+					n++;
+					System.out.println("Current keys per second: " + totaltmp + " time frame: " + currtmp);
+				}
+
+				graph.addPoint(totaltmp);
+				graph.repaint();
+				content.repaint();
+
+				int maxtimepoints = 1000 / config.updateRate - 1;
+				while(timepoints.size() >= maxtimepoints){
+					timepoints.removeLast();
+				}
+
+				if (maxtimepoints > 0) {
+					timepoints.addFirst(currtmp);
 				}
 			}
 		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
@@ -1539,11 +1545,11 @@ public class Main {
 	 * Reset avg, max & cur
 	 */
 	protected static final void resetStats(){
-		System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
+		System.out.println("Reset max & avg | max: " + max + " avg: " + getAvg());
 		n = 0;
-		avg = 0;
+		total = 0;
 		max = 0;
-		tmp = 0;
+		tmp.set(0);
 		graph.reset();
 	}
 
@@ -1704,7 +1710,7 @@ public class Main {
 			if (!down) {
 				count++;
 				down = true;
-				tmp++;
+				tmp.incrementAndGet();
 				if(panel != null){
 					panel.repaint();
 				}
