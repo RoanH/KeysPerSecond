@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -490,22 +491,11 @@ public class Configuration {
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
 				case "textMode":
-					switch(args[1].toLowerCase()){
-					case "Vertical":
-						mode = RenderingMode.VERTICAL;
-						break;
-					case "Horizontal":
-						mode = RenderingMode.HORIZONTAL_TN;
-						break;
-					case "Horizontal_TN":
-						mode = RenderingMode.HORIZONTAL_TN;
-						break;
-					case "Horizontal_NT":
-						mode = RenderingMode.HORIZONTAL_NT;
-						break;
-						default:
-							modified = true;
-							break;
+					try{
+						String modeString = args[1].toUpperCase(Locale.ROOT);
+						mode = modeString.equals("HORIZONTAL") ? RenderingMode.HORIZONTAL_TN : RenderingMode.valueOf(modeString);
+					}catch(IllegalArgumentException e){
+						modified = true;
 					}
 					break;
 				case "rows":
