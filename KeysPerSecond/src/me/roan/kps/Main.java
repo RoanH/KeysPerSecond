@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -1784,7 +1785,7 @@ public class Main {
 			this.alt = alt;
 			this.ctrl = ctrl;
 			this.shift = shift;
-			this.name = mouse ? name : (((alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "")) + (name.length() == 1 ? name.toUpperCase() : getKeyText(code)));
+			this.name = mouse ? name : (((alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code)));
 			this.keycode = code;
 		}
 
