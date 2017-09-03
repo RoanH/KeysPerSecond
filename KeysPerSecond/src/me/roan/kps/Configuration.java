@@ -541,25 +541,10 @@ public class Configuration {
 					}
 					break;
 				case "graphMode":
-					switch(args[1]){
-					case "Bottom":
-						graphMode = GraphMode.Bottom;
-						break;
-					case "Detached":
-						graphMode = GraphMode.Detached;
-						break;
-					case "Left":
-						graphMode = GraphMode.Left;
-						break;
-					case "Right":
-						graphMode = GraphMode.Right;
-						break;
-					case "Top":
-						graphMode = GraphMode.Top;
-						break;
-						default:
-							modified = true;
-							break;
+					try{
+						graphMode = GraphMode.valueOf(args[1]);
+					}catch(IllegalArgumentException e){
+						modified = true;
 					}
 					break;
 				case "graphWidth":
