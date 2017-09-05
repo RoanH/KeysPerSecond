@@ -741,9 +741,13 @@ public class Main {
 				save.setEnabled(true);
 			}
 		});
-		String version = checkVersion();//XXX the version number 
-		JLabel ver = new JLabel("<html><center><i>Version: v6.6, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v6.6, latest version: <font color=gray>loading</font><br>"
 				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>", SwingConstants.CENTER);
+		new Thread(()->{
+			String version = checkVersion();//XXX the version number 
+			ver.setText("<html><center><i>Version: v6.6, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>");
+		}, "Version Checker").start();
 		ver.addMouseListener(new MouseListener(){
 
 			@Override
