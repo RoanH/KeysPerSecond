@@ -96,9 +96,9 @@ public class SizeManager {
 	private static final void setFonts(){
 		BasePanel.font1 = new Font("Dialog", Font.BOLD, SizeManager.basePanelTitleTextSize);
 		KeyPanel.font1 = new Font("Dialog", Font.BOLD, SizeManager.keyPanelFont1Size);                          		                                                                                         
-		KeyPanel.font2 = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);                		                                                                                         		                                                                                         		                                                                                         
-		KeyPanel.font2small = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);      		                                                                                                                                                                         
-		KeyPanel.font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
+		BasePanel.font2 = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);
+		BasePanel.font2small = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);
+		BasePanel.font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
 	}
 	
 	/**
