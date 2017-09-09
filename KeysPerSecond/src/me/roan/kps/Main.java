@@ -259,7 +259,7 @@ public class Main {
 	}
 
 	protected static double getAvg(){
-		return total == 0 ? 0.0 : (double)total / n;
+		return n == 0 ? 0.0 : (double)total / n;
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class Main {
 				content.repaint();
 
 				int maxtimepoints = 1000 / config.updateRate - 1;
-				while(timepoints.size() >= maxtimepoints){
+				while(timepoints.size() >= maxtimepoints) {
 					timepoints.removeLast();
 				}
 
