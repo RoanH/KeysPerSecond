@@ -47,7 +47,7 @@ public final class KeyPanel extends BasePanel {
 
 	@Override
 	protected Font getTitleFont(String title) {
-		return title.length() == 1 ? font1 : super.font1;
+		return title.length() == 1 ? font1 : BasePanel.font1;
 	}
 
 	@Override
