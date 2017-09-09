@@ -58,47 +58,16 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setColor(drawColor);
 
 		String titleString = getTitle();
-		Point namePos = getTitleDrawPosition(g, Main.config.mode, titleString);
-		g.setFont(getTitleFont(titleString));
+		Font titleFont = getTitleFont(titleString);
+		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, titleString, titleFont);
+		g.setFont(titleFont);
 		g.drawString(titleString, namePos.x, namePos.y);
 
 		String valueString = getValue();
-		Point keyCountPos = getValueDrawPosition(g, Main.config.mode, valueString);
-		g.setFont(getValueFont(valueString));
+		Font valueFont = getValueFont(valueString);
+		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, valueString, valueFont);
+		g.setFont(valueFont);
 		g.drawString(valueString, keyCountPos.x, keyCountPos.y);
-	}
-
-	private Point getTitleDrawPosition(Graphics2D g, RenderingMode renderingMode, String titleString) {
-		FontMetrics metrics = g.getFontMetrics(getTitleFont(titleString));
-		int baseline = getHorizontalBaseline(g);
-
-		switch (renderingMode) {
-			case HORIZONTAL_NT:
-				return new Point(this.getWidth() - SizeManager.horizontalTextOffset - metrics.stringWidth(titleString), baseline);
-			case HORIZONTAL_TN:
-				return new Point(SizeManager.horizontalTextOffset, baseline);
-			default:
-				return new Point((this.getWidth() - metrics.stringWidth(titleString)) / 2, SizeManager.keyTitleTextOffset);
-		}
-	}
-
-	private Point getValueDrawPosition(Graphics2D g, RenderingMode renderingMode, String valueString) {
-		FontMetrics metrics = g.getFontMetrics(getValueFont(valueString));
-		int baseline = getHorizontalBaseline(g);
-
-		switch (renderingMode) {
-			case HORIZONTAL_NT:
-				return new Point(SizeManager.horizontalTextOffset, baseline);
-			case HORIZONTAL_TN:
-				return new Point(this.getWidth() - SizeManager.horizontalTextOffset - metrics.stringWidth(valueString), baseline);
-			default:
-				return new Point((this.getWidth() - metrics.stringWidth(valueString)) / 2, SizeManager.keyDataTextOffset);
-		}
-	}
-
-	private int getHorizontalBaseline(Graphics2D g) {
-		FontMetrics metrics = g.getFontMetrics(getTitleFont(getTitle()));
-		return (this.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
 	}
 
 	/**
