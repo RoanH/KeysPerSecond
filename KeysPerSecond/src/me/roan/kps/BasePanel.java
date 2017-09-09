@@ -108,6 +108,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	protected Font getValueFont(String value) {
 		return value.length() >= 5 ? font2smallest : (value.length() >= 4 ? font2small : font2);
 	}
+	
 	/**
 	 * @param title The title to be drawn
 	 * @return The font to use for title text
@@ -115,12 +116,14 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	protected Font getTitleFont(String title) {
 		return font1;
 	}
+	
 	/**
 	 * @return Whether the panel is "active" or not
 	 */
 	protected boolean isActive() {
 		return false;
 	}
+	
 	/**
 	 * @return The title of this panel
 	 */
