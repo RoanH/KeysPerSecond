@@ -1,6 +1,7 @@
 package me.roan.kps;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -50,9 +51,8 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		Image colorImage = isActive() ? ColorManager.pressed : ColorManager.unpressed;
-		Point imageSize = Main.config.mode == RenderingMode.VERTICAL ? new Point(40, 64) : new Point(64, 40);
-		g.drawImage(colorImage, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, imageSize.x, imageSize.y, this);
+		BufferedImage colorImage = isActive() ? ColorManager.pressed : ColorManager.unpressed;
+		g.drawImage(colorImage, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, colorImage.getWidth(), colorImage.getHeight(), this);
 
 		Color drawColor = isActive() ? Main.config.getBackgroundColor() : Main.config.getForegroundColor();
 		g.setColor(drawColor);
