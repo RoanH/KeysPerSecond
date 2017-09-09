@@ -54,8 +54,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		BufferedImage colorImage = isActive() ? ColorManager.pressed : ColorManager.unpressed;
 		g.drawImage(colorImage, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, colorImage.getWidth(), colorImage.getHeight(), this);
 
-		Color drawColor = isActive() ? Main.config.getBackgroundColor() : Main.config.getForegroundColor();
-		g.setColor(drawColor);
+		g.setColor(isActive() ? Main.config.getBackgroundColor() : Main.config.getForegroundColor());
 
 		String titleString = getTitle();
 		Font titleFont = getTitleFont(titleString);
