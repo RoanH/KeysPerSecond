@@ -1,10 +1,7 @@
 package me.roan.kps;
 
-import java.awt.AlphaComposite;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -24,6 +21,18 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * Font 1 used to draw the title of the panel
 	 */
 	protected static Font font1;
+	/**
+	 * Font 2 used to display the value of this panel
+	 */
+	protected static Font font2;
+	/**
+	 * Font 2 but smaller
+	 */
+	protected static Font font2small;
+	/**
+	 * Font 2 small but smaller
+	 */
+	protected static Font font2smallest;
 	
 	/**
 	 * Constructs a new BasePanel
@@ -35,52 +44,54 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	@Override
 	public void paintComponent(Graphics g1) {
 		Graphics2D g = (Graphics2D) g1;
+
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, Main.config.getBackgroundOpacity()));
 		g.setColor(Main.config.getBackgroundColor());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
-		if(Main.config.mode == RenderingMode.VERTICAL){
-			verticalRenderer(g);
-		}else{
-			horizontalRenderer(g);
-		}
-	}
-	
-	private final void horizontalRenderer(Graphics2D g){
-		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 64, 40, null);
-		g.setColor(Main.config.getForegroundColor());
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.setFont(font1);
-		int baseline = (this.getHeight() / 2) - ((g.getFontMetrics().getAscent() + g.getFontMetrics().getDescent()) / 2) + g.getFontMetrics().getAscent();
-		g.drawString(getTitle(), SizeManager.horizontalTextOffset, baseline);
-		String str = getValue();
-		if(str.length() >= 5){
-			g.setFont(KeyPanel.font2smallest);
-		}else if(str.length() >= 3){
-			g.setFont(KeyPanel.font2small);
-		}else{
-			g.setFont(KeyPanel.font2);
-		}
-		g.drawString(str, this.getWidth() - SizeManager.horizontalTextOffset - g.getFontMetrics().stringWidth(str), baseline);
-	}
-	
-	private final void verticalRenderer(Graphics2D g){
-		g.drawImage(ColorManager.unpressed, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 40, 64, null);
-		g.setColor(Main.config.getForegroundColor());
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.setFont(font1);
-		g.drawString(getTitle(), (this.getWidth() - g.getFontMetrics().stringWidth(getTitle())) / 2, SizeManager.keyTitleTextOffset);
-		String str = getValue();
-		if(str.length() >= 5){
-			g.setFont(KeyPanel.font2smallest);
-		}else if(str.length() >= 4){
-			g.setFont(KeyPanel.font2small);
-		}else{
-			g.setFont(KeyPanel.font2);
-		}
-		g.drawString(str, (this.getWidth() - g.getFontMetrics().stringWidth(str)) / 2, SizeManager.keyDataTextOffset);
+
+		BufferedImage colorImage = isActive() ? ColorManager.pressed : ColorManager.unpressed;
+		g.drawImage(colorImage, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, colorImage.getWidth(), colorImage.getHeight(), this);
+
+		g.setColor(isActive() ? Main.config.getBackgroundColor() : Main.config.getForegroundColor());
+
+		String titleString = getTitle();
+		Font titleFont = getTitleFont(titleString);
+		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, titleString, titleFont);
+		g.setFont(titleFont);
+		g.drawString(titleString, namePos.x, namePos.y);
+
+		String valueString = getValue();
+		Font valueFont = getValueFont(valueString);
+		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, valueString, valueFont);
+		g.setFont(valueFont);
+		g.drawString(valueString, keyCountPos.x, keyCountPos.y);
 	}
 
+	/**
+	 * @param value The value to be drawn
+	 * @return the font to use for value text
+	 */
+	protected Font getValueFont(String value) {
+		return value.length() >= 5 ? font2smallest : (value.length() >= 4 ? font2small : font2);
+	}
+	
+	/**
+	 * @param title The title to be drawn
+	 * @return The font to use for title text
+	 */
+	protected Font getTitleFont(String title) {
+		return font1;
+	}
+	
+	/**
+	 * @return Whether the panel is "active" or not
+	 */
+	protected boolean isActive() {
+		return false;
+	}
+	
 	/**
 	 * @return The title of this panel
 	 */

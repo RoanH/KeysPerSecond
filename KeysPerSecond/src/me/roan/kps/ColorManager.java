@@ -18,13 +18,13 @@ public class ColorManager {
 	 * Image taken from osu!lazer
 	 * https://cloud.githubusercontent.com/assets/191335/16511435/17acd2f2-3f8b-11e6-8b50-5fccba819ce5.png
 	 */
-	protected static Image pressed;
+	protected static BufferedImage pressed;
 	/**
 	 * Image for an unpressed key<br>
 	 * Image taken from osu!lazer
 	 * https://cloud.githubusercontent.com/assets/191335/16511432/17ac5232-3f8b-11e6-95b7-33f9a4df0b7c.png
 	 */
-	protected static Image unpressed;
+	protected static BufferedImage unpressed;
 	/**
 	 * Graph image segment 'lower right'
 	 */
@@ -140,7 +140,7 @@ public class ColorManager {
 	 * @param img The image to parse
 	 * @return The recoloured image
 	 */
-	private static final Image dye(BufferedImage img){
+	private static final BufferedImage dye(BufferedImage img){
 		for(int x = 0; x < img.getWidth(); x++){
 			for(int y = 0; y < img.getHeight(); y++){
 				img.setRGB(x, y, repaintPixel(img.getRGB(x, y), Main.config.getForegroundColor()));
