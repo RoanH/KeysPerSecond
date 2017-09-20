@@ -10,10 +10,6 @@ public final class TotPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 5628759695450014071L;
-	/**
-	 * Total number of hits
-	 */
-	protected static int hits;
 
 	@Override
 	protected String getTitle() {
@@ -22,7 +18,7 @@ public final class TotPanel extends BasePanel {
 
 	@Override
 	protected String getValue() {
-		return String.valueOf(hits);
+		return String.valueOf(Main.total);
 	}
 	
 	@Override

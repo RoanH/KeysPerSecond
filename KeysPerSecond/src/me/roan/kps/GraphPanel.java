@@ -83,7 +83,7 @@ public class GraphPanel extends JPanel{
 				}
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 				if(Main.config.graphAvg){
-					int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.avg / (float)maxval)));
+					int y = (int) (this.getHeight() - SizeManager.graphOffset - ((float)(this.getHeight() - SizeManager.graphOffset * 2) * (Main.getAvg() / (float)maxval)));
 					g.setColor(Main.config.getForegroundColor().darker());
 					g.setStroke(avgstroke);
 					g.drawLine(SizeManager.graphOffset + 2, y, this.getWidth() - SizeManager.graphOffset - 2, y);
