@@ -165,6 +165,12 @@ public class Main {
 	 * Frame for the graph
 	 */
 	protected static JFrame graphFrame = new JFrame("Keys per second");
+	/**
+	 * @return The average number of key presses in a time interval
+	 */
+	protected static double getAvg() {
+		return n == 0 ? 0.0 : (double)total / n;
+	}
 	
 	/**
 	 * Main method
@@ -258,10 +264,6 @@ public class Main {
 		mainLoop();
 	}
 
-	protected static double getAvg(){
-		return n == 0 ? 0.0 : (double)total / n;
-	}
-
 	/**
 	 * Main loop of the program
 	 * this loop updates the
@@ -286,7 +288,7 @@ public class Main {
 				prev = totaltmp;
 				max = Math.max(max, totaltmp);
 
-				if(totaltmp > 0){
+				if(totaltmp > 0) {
 					total += totaltmp;
 					n++;
 					System.out.println("Current keys per second: " + totaltmp + " time frame: " + currtmp);
