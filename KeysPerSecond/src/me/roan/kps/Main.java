@@ -31,7 +31,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -103,7 +102,7 @@ public class Main {
 	 * The number of keys pressed in the
 	 * ongoing second
 	 */
-	protected static AtomicInteger tmp = new AtomicInteger(0);
+	protected static int tmp = 0;
 	/**
 	 * The average keys per second
 	 */
@@ -272,8 +271,7 @@ public class Main {
 		}
 		future = timer.scheduleAtFixedRate(()->{
 			if(!suspended){
-				int currentTmp = tmp.getAndSet(0);
-				int totaltmp = currentTmp;
+				int totaltmp = tmp;
 				for(int i : timepoints){
 					totaltmp += i;
 				}
@@ -283,18 +281,19 @@ public class Main {
 				if(totaltmp != 0){
 					avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
 					n++;
-					TotPanel.hits += currentTmp;
+					TotPanel.hits += tmp;
 					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
 				}
 				graph.addPoint(totaltmp);
 				graph.repaint();
 				content.repaint();
 				prev = totaltmp;
-				timepoints.addFirst(currentTmp);
+				timepoints.addFirst(tmp);
 				if(timepoints.size() >= 1000 / config.updateRate){
 					timepoints.removeLast();
 				}
 			}
+			tmp = 0;
 		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
 	}
 
@@ -1539,7 +1538,7 @@ public class Main {
 		n = 0;
 		avg = 0;
 		max = 0;
-		tmp.set(0);
+		tmp = 0;
 		graph.reset();
 	}
 
@@ -1698,7 +1697,7 @@ public class Main {
 			if (!down) {
 				count++;
 				down = true;
-				tmp.incrementAndGet();
+				tmp++;
 				if(panel != null){
 					panel.repaint();
 				}
