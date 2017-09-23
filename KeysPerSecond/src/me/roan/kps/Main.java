@@ -269,36 +269,31 @@ public class Main {
 		}else{
 			future.cancel(false);
 		}
-		future = timer.scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if(!suspended){
-					int totaltmp = tmp;
-					for(int i : timepoints){
-						totaltmp += i;
-					}
-					if(totaltmp > max){
-						max = totaltmp;
-					}
-					if(totaltmp != 0){
-						avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
-						n++;
-						TotPanel.hits += tmp;
-						System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
-					}
-					graph.addPoint(totaltmp);
-					graph.repaint();
-					content.repaint();
-					prev = totaltmp;
-					timepoints.addFirst(tmp);
-					if(timepoints.size() >= 1000 / config.updateRate){
-						timepoints.removeLast();
-					}
-					tmp = 0;
-				}else{
-					tmp = 0;
+		future = timer.scheduleAtFixedRate(()->{
+			if(!suspended){
+				int totaltmp = tmp;
+				for(int i : timepoints){
+					totaltmp += i;
+				}
+				if(totaltmp > max){
+					max = totaltmp;
+				}
+				if(totaltmp != 0){
+					avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
+					n++;
+					TotPanel.hits += tmp;
+					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
+				}
+				graph.addPoint(totaltmp);
+				graph.repaint();
+				content.repaint();
+				prev = totaltmp;
+				timepoints.addFirst(tmp);
+				if(timepoints.size() >= 1000 / config.updateRate){
+					timepoints.removeLast();
 				}
 			}
+			tmp = 0;
 		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
 	}
 
