@@ -71,7 +71,7 @@ import me.roan.kps.CommandKeys.CMD;
 /**
  * This program can be used to display
  * information about how many times
- * certain keys are pressed and what
+ * certain keys are pressed and what the
  * average, maximum and current
  * amount of keys pressed per second is
  * <pre>
@@ -87,7 +87,7 @@ import me.roan.kps.CommandKeys.CMD;
  * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol></pre>
  * The program also constantly prints the current keys per second to
  * the standard output.<br>
- * And key is only counted as being pressed if the key has been released before
+ * A key is only counted as being pressed if the key has been released before
  * this deals with the issue of holding a key firing multiple key press events<br>
  * This program also has support for saving and loading configurations
  * @author Roan
@@ -1291,7 +1291,7 @@ public class Main {
 	/**
 	 * Builds the main GUI of the program
 	 * @throws IOException When an IO Exception occurs, this can be thrown
-	 *         when the program fails the load its resources
+	 *         when the program fails to load its resources
 	 */
 	protected static final void buildGUI() throws IOException {
 		Menu.createMenu();
@@ -1481,7 +1481,7 @@ public class Main {
 	}
 
 	/**
-	 * Check the KeysPerSecond version to see
+	 * Checks the KeysPerSecond version to see
 	 * if we are running the latest version
 	 * @return The latest version
 	 */
@@ -1531,7 +1531,7 @@ public class Main {
 	}
 
 	/**
-	 * Reset avg, max & cur
+	 * Resets avg, max & cur
 	 */
 	protected static final void resetStats(){
 		System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
@@ -1543,7 +1543,7 @@ public class Main {
 	}
 
 	/**
-	 * Rest key count totals
+	 * Resets key count totals
 	 */
 	protected static final void resetTotals(){
 		System.out.print("Reset key counts | ");
@@ -1558,7 +1558,7 @@ public class Main {
 	 * Re-launches the program from the temp directory
 	 * if the program path contains a ! this fixes a
 	 * bug in the native library loading
-	 * @param args
+	 * @param args The original command line arguments
 	 */
 	private static final void relaunchFromTemp(String args){
 		URL url = Main.class.getProtectionDomain().getCodeSource().getLocation(); 	
@@ -1683,7 +1683,7 @@ public class Main {
 		/**
 		 * Creates a new KeyPanel with this
 		 * objects as its data source
-		 * @param i The information object about this key
+		 * @param i The information object for this key
 		 * @return A new KeyPanel
 		 */
 		private KeyPanel getPanel(KeyInformation i) {
@@ -1692,8 +1692,6 @@ public class Main {
 
 		/**
 		 * Called when a key is pressed
-		 * @return Whether or not this was a key press
-		 *         to register
 		 */
 		private void keyPressed() {
 			if (!down) {
@@ -1722,10 +1720,7 @@ public class Main {
 	/**
 	 * Simple class that holds all
 	 * the essential information 
-	 * about a key<br>This class
-	 * is mainly used for serialisation
-	 * which allows for easy saving and
-	 * loading of configurations
+	 * about a key.
 	 * @author Roan
 	 */
 	protected static final class KeyInformation implements Serializable{
@@ -1750,7 +1745,7 @@ public class Main {
 		/**
 		 * Auto-increment for #index
 		 */
-		protected static transient int autoIndex = 0; 
+		protected static transient volatile int autoIndex = 0; 
 		/**
 		 * Whether or not this key is displayed
 		 */
