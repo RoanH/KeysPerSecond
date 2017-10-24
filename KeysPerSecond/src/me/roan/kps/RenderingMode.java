@@ -16,13 +16,13 @@ public enum RenderingMode {
 	 */
 	HORIZONTAL_TN("Horizontal (text - value)") {
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String title) {
-			point.move(SizeManager.horizontalTextOffset, baseline);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
+			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String value) {
-			point.move(width - SizeManager.horizontalTextOffset - metrics.stringWidth(value), baseline);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
+			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), getHorizontalBaseline(panel, metrics));
 		}
 	},
 	/**
@@ -30,13 +30,13 @@ public enum RenderingMode {
 	 */
 	HORIZONTAL_NT("Horizontal (value - text)") {
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String title) {
-			point.move(width - SizeManager.horizontalTextOffset - metrics.stringWidth(title), baseline);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
+			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), getHorizontalBaseline(panel, metrics));
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String value) {
-			point.move(SizeManager.horizontalTextOffset, baseline);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
+			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
 		}
 	},
 	/**
@@ -44,13 +44,18 @@ public enum RenderingMode {
 	 */
 	HORIZONTAL_TAN("Horizontal (text above value)") {
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String title) {
-			point.move((width - metrics.stringWidth(title)) / 2, metrics.getAscent() + 1);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
+			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, metrics.getAscent() + 1);
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String value) {
-			point.move((width - metrics.stringWidth(value)) / 2, height - 1);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
+			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, panel.getHeight() - SizeManager.sideTextOffset - 1);
+		}
+		
+		@Override
+		public Font getTitleFont(String title){
+			return font1small;
 		}
 	},
 	/**
@@ -58,13 +63,13 @@ public enum RenderingMode {
 	 */
 	VERTICAL("Vertical") {
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String title) {
-			point.move((width - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
+			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String value) {
-			point.move((width - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
+			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
 		}
 	};
 	
@@ -139,7 +144,7 @@ public enum RenderingMode {
 	 * @param title The title that will be drawn
 	 * @return The location at which the title should be drawn
 	 */
-	protected abstract void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String title);
+	protected abstract void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title);
 	
 	/**
 	 * Mode specific logic for the value position
@@ -150,7 +155,7 @@ public enum RenderingMode {
 	 * @param value The value that will be drawn
 	 * @return The location at which the value should be drawn
 	 */
-	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, int height, String value);
+	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value);
 	
 	/**
 	 * Gets the location at which the panel title should be drawn
@@ -162,7 +167,7 @@ public enum RenderingMode {
 	 * @return The location at which the title should be drawn
 	 */
 	public Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
-		setTitleDrawPositionImpl(g.getFontMetrics(font), getHorizontalBaseline(g, panel, font), panel.getWidth(), panel.getHeight(), title);
+		setTitleDrawPositionImpl(g.getFontMetrics(font), panel, title);
 		return point;
 	}
 	
@@ -176,19 +181,17 @@ public enum RenderingMode {
 	 * @return The location at which the value should be drawn
 	 */
 	public Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
-		setValueDrawPositionImpl(g.getFontMetrics(font), getHorizontalBaseline(g, panel, font), panel.getWidth(), panel.getHeight(), value);
+		setValueDrawPositionImpl(g.getFontMetrics(font), panel, value);
 		return point;
 	}
 	
 	/**
 	 * Gets the baseline to draw text in the panel
-	 * @param g The graphics used for drawing
 	 * @param panel The panel
 	 * @param font The font used for drawing
 	 * @return The horizontal baseline to use for drawing
 	 */
-	private int getHorizontalBaseline(Graphics2D g, BasePanel panel, Font font) {
-		FontMetrics metrics = g.getFontMetrics(font);
+	private static int getHorizontalBaseline(BasePanel panel, FontMetrics metrics) {
 		return (panel.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
 	}
 	

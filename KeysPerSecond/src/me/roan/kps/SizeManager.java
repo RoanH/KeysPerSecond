@@ -35,7 +35,7 @@ public class SizeManager {
 	/**
 	 * HORIZONTAL offset for the title text from the right side
 	 */
-	protected static int horizontalTextOffset = 6;
+	protected static int sideTextOffset = 6;
 	
 	//Fonts
 	/**
@@ -86,7 +86,7 @@ public class SizeManager {
 		keyPanelFont2smallestSize = (int)Math.floor(factor * keyPanelFont2smallestSize);
 		graphImageSize            = (int)Math.ceil(factor * graphImageSize);
 		graphOffset               = (int)Math.ceil(factor * graphOffset);
-		horizontalTextOffset      = (int)Math.ceil(factor * horizontalTextOffset);
+		sideTextOffset      = (int)Math.ceil(factor * sideTextOffset);
 		setFonts();
 	}
 	
