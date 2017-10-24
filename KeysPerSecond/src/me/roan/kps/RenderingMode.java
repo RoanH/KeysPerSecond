@@ -16,13 +16,13 @@ public enum RenderingMode {
 	 */
 	HORIZONTAL_TN("Horizontal (text - value)") {
 		@Override
-		protected Point getTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title) {
-			return new Point(SizeManager.horizontalTextOffset, baseline);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title) {
+			point.move(SizeManager.horizontalTextOffset, baseline);
 		}
 
 		@Override
-		protected Point getValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value) {
-			return new Point(width - SizeManager.horizontalTextOffset - metrics.stringWidth(value), baseline);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value) {
+			point.move(width - SizeManager.horizontalTextOffset - metrics.stringWidth(value), baseline);
 		}
 	},
 	/**
@@ -30,13 +30,13 @@ public enum RenderingMode {
 	 */
 	HORIZONTAL_NT("Horizontal (value - text)") {
 		@Override
-		protected Point getTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title) {
-			return new Point(width - SizeManager.horizontalTextOffset - metrics.stringWidth(title), baseline);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title) {
+			point.move(width - SizeManager.horizontalTextOffset - metrics.stringWidth(title), baseline);
 		}
 
 		@Override
-		protected Point getValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value) {
-			return new Point(SizeManager.horizontalTextOffset, baseline);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value) {
+			point.move(SizeManager.horizontalTextOffset, baseline);
 		}
 	},
 	/**
@@ -44,13 +44,13 @@ public enum RenderingMode {
 	 */
 	VERTICAL("Vertical") {
 		@Override
-		protected Point getTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title) {
-			return new Point((width - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title) {
+			point.move((width - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
 		}
 
 		@Override
-		protected Point getValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value) {
-			return new Point((width - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value) {
+			point.move((width - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
 		}
 	};
 	
@@ -59,6 +59,13 @@ public enum RenderingMode {
 	 * enum constant, used in dialogs
 	 */
 	private String name;
+	/**
+	 * Cache point that is constantly being reused and
+	 * returned by the methods from this enum. This prevents
+	 * the creation of a lot of extra objects. But prevents
+	 * multiple points from this class existing at the same time.
+	 */
+	private static final Point point = new Point();
 	
 	/**
 	 * Constructs a new RenderingMode
@@ -82,7 +89,7 @@ public enum RenderingMode {
 	 * @param title The title that will be drawn
 	 * @return The location at which the title should be drawn
 	 */
-	protected abstract Point getTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title);
+	protected abstract void setTitleDrawPositionImpl(FontMetrics metrics, int baseline, int width, String title);
 	
 	/**
 	 * Mode specific logic for the value position
@@ -92,10 +99,11 @@ public enum RenderingMode {
 	 * @param value The value that will be drawn
 	 * @return The location at which the value should be drawn
 	 */
-	protected abstract Point getValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value);
+	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, int baseline, int width, String value);
 	
 	/**
 	 * Gets the location at which the panel title should be drawn
+	 * Points returned by this class are not static
 	 * @param g The graphics used for drawing
 	 * @param panel The panel
 	 * @param title The title
@@ -103,11 +111,13 @@ public enum RenderingMode {
 	 * @return The location at which the title should be drawn
 	 */
 	public Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
-		return getTitleDrawPositionImpl(g.getFontMetrics(font), getHorizontalBaseline(g, panel, font), panel.getWidth(), title);
+		setTitleDrawPositionImpl(g.getFontMetrics(font), getHorizontalBaseline(g, panel, font), panel.getWidth(), title);
+		return point;
 	}
 	
 	/**
 	 * Gets the location at which the panel value should be drawn
+	 * Points returned by this class are not static
 	 * @param g The graphics used for drawing
 	 * @param panel The panel
 	 * @param title The value
@@ -115,7 +125,8 @@ public enum RenderingMode {
 	 * @return The location at which the value should be drawn
 	 */
 	public Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
-		return getValueDrawPositionImpl(g.getFontMetrics(font), getHorizontalBaseline(g, panel, font), panel.getWidth(), value);
+		setValueDrawPositionImpl(g.getFontMetrics(font), getHorizontalBaseline(g, panel, font), panel.getWidth(), value);
+		return point;
 	}
 	
 	/**
