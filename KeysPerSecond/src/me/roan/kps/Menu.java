@@ -205,7 +205,7 @@ public class Menu {
 		sresetavg.addActionListener((e)->{
 			Main.n = 0;
 			Main.avg = 0;
-			Main.tmp = 0;
+			Main.tmp.set(0);
 		});
 		sresettot.addActionListener((e)->{
 			TotPanel.hits = 0;
