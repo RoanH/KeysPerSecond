@@ -91,5 +91,8 @@ GitHub repository: ![here](https://github.com/RoanH/KeysPerSecond)
 ## Dependencies
 https://github.com/kwhat/jnativehook
 
+## Donate
+If you really like KeysPerSecond, you can consider making [donation](https://www.paypal.me/KeysPerSecond).
+
 ## History
 Project development started: 23 January 2017
