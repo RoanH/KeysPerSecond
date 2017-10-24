@@ -974,6 +974,18 @@ public class Main {
 	}
 	
 	/**
+	 * Changes the update rate
+	 * @param newRate The new update rate
+	 */
+	protected static final void changeUpdateRate(int newRate){
+		n *= (double)config.updateRate / (double)newRate;
+		tmp.set(0);
+		timepoints.clear();
+		config.updateRate = newRate;
+		mainLoop();
+	}
+	
+	/**
 	 * Shows the layout configuration dialog
 	 */
 	protected static final void configureLayout(){

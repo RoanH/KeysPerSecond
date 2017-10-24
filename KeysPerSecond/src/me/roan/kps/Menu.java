@@ -375,8 +375,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 1000;
-			Main.mainLoop();
+			Main.changeUpdateRate(1000);
 			rates[0].setSelected(true);
 		});
 		rate.add(rates[0]);
@@ -385,8 +384,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 500;
-			Main.mainLoop();
+			Main.changeUpdateRate(500);
 			rates[1].setSelected(true);
 		});
 		rate.add(rates[1]);
@@ -395,8 +393,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 250;
-			Main.mainLoop();
+			Main.changeUpdateRate(250);
 			rates[2].setSelected(true);
 		});
 		rate.add(rates[2]);
@@ -405,8 +402,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 200;
-			Main.mainLoop();
+			Main.changeUpdateRate(200);
 			rates[3].setSelected(true);
 		});
 		rate.add(rates[3]);
@@ -415,8 +411,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 125;
-			Main.mainLoop();
+			Main.changeUpdateRate(125);
 			rates[4].setSelected(true);
 		});
 		rate.add(rates[4]);
@@ -425,8 +420,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 100;
-			Main.mainLoop();
+			Main.changeUpdateRate(100);
 			rates[5].setSelected(true);
 		});
 		rate.add(rates[5]);
@@ -435,8 +429,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 50;
-			Main.mainLoop();
+			Main.changeUpdateRate(50);
 			rates[6].setSelected(true);
 		});
 		rate.add(rates[6]);
@@ -445,8 +438,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 25;
-			Main.mainLoop();
+			Main.changeUpdateRate(25);
 			rates[7].setSelected(true);
 		});
 		rate.add(rates[7]);
@@ -455,8 +447,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 20;
-			Main.mainLoop();
+			Main.changeUpdateRate(20);
 			rates[8].setSelected(true);
 		});
 		rate.add(rates[8]);
@@ -465,8 +456,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 10;
-			Main.mainLoop();
+			Main.changeUpdateRate(10);
 			rates[9].setSelected(true);
 		});
 		rate.add(rates[9]);
@@ -475,8 +465,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 5;
-			Main.mainLoop();
+			Main.changeUpdateRate(5);
 			rates[10].setSelected(true);
 		});
 		rate.add(rates[10]);
@@ -485,8 +474,7 @@ public class Menu {
 			for(JCheckBoxMenuItem item : rates){
 				item.setSelected(false);
 			}
-			Main.config.updateRate = 1;
-			Main.mainLoop();
+			Main.changeUpdateRate(1);
 			rates[11].setSelected(true);
 		});
 		rate.add(rates[11]);
