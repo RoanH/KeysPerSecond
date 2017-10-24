@@ -1659,7 +1659,7 @@ public class Main {
 		/**
 		 * The total number of times this key has been pressed
 		 */
-		protected int count = 99999;
+		protected int count = 0;
 		/**
 		 * The key in string form<br>
 		 * For example: X
