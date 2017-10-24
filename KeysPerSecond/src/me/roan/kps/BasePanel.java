@@ -1,6 +1,11 @@
 package me.roan.kps;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -17,22 +22,6 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
-	/**
-	 * Font 1 used to draw the title of the panel
-	 */
-	protected static Font font1;
-	/**
-	 * Font 2 used to display the value of this panel
-	 */
-	protected static Font font2;
-	/**
-	 * Font 2 but smaller
-	 */
-	protected static Font font2small;
-	/**
-	 * Font 2 small but smaller
-	 */
-	protected static Font font2smallest;
 	
 	/**
 	 * Constructs a new BasePanel
@@ -57,32 +46,16 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setColor(isActive() ? Main.config.getBackgroundColor() : Main.config.getForegroundColor());
 
 		String titleString = getTitle();
-		Font titleFont = getTitleFont(titleString);
+		Font titleFont = Main.config.mode.getTitleFont(titleString);
 		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, titleString, titleFont);
 		g.setFont(titleFont);
 		g.drawString(titleString, namePos.x, namePos.y);
 
 		String valueString = getValue();
-		Font valueFont = getValueFont(valueString);
+		Font valueFont = Main.config.mode.getValueFont(valueString);
 		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, valueString, valueFont);
 		g.setFont(valueFont);
 		g.drawString(valueString, keyCountPos.x, keyCountPos.y);
-	}
-
-	/**
-	 * @param value The value to be drawn
-	 * @return the font to use for value text
-	 */
-	protected Font getValueFont(String value) {
-		return value.length() >= 5 ? font2smallest : (value.length() >= 4 ? font2small : font2);
-	}
-	
-	/**
-	 * @param title The title to be drawn
-	 * @return The font to use for title text
-	 */
-	protected Font getTitleFont(String title) {
-		return font1;
 	}
 	
 	/**

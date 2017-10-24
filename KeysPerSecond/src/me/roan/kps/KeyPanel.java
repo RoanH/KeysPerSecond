@@ -1,7 +1,5 @@
 package me.roan.kps;
 
-import java.awt.*;
-
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
 
@@ -23,10 +21,6 @@ public final class KeyPanel extends BasePanel {
 	 */
 	private Key key;
 	/**
-	 * Font 1 used to display the title of the panel
-	 */
-	protected static Font font1;
-	/**
 	 * The key information object
 	 * for this key
 	 */
@@ -43,11 +37,6 @@ public final class KeyPanel extends BasePanel {
 	protected KeyPanel(Key key, KeyInformation i) {
 		this.key = key;
 		info = i;
-	}
-
-	@Override
-	protected Font getTitleFont(String title) {
-		return title.length() == 1 ? font1 : BasePanel.font1;
 	}
 
 	@Override
