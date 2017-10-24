@@ -57,6 +57,11 @@ public enum RenderingMode {
 		public Font getTitleFont(String title){
 			return font1small;
 		}
+		
+		@Override
+		public Font getValueFont(String value) {
+			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
+		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -71,6 +76,11 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
+		
+		@Override
+		public Font getValueFont(String value) {
+			return value.length() >= 9 ? font2smallest : (value.length() >= 5 ? font2small : font2);
+		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -84,6 +94,11 @@ public enum RenderingMode {
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
+		}
+		
+		@Override
+		public Font getValueFont(String value) {
+			return value.length() >= 9 ? font2smallest : (value.length() >= 5 ? font2small : font2);
 		}
 	},
 	/**
@@ -104,6 +119,11 @@ public enum RenderingMode {
 		public Font getTitleFont(String title){
 			return font1small;
 		}
+		
+		@Override
+		public Font getValueFont(String value) {
+			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
+		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -122,6 +142,11 @@ public enum RenderingMode {
 		@Override
 		public Font getTitleFont(String title){
 			return font1small;
+		}
+		
+		@Override
+		public Font getValueFont(String value) {
+			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
 		}
 	},
 	/**
@@ -222,7 +247,7 @@ public enum RenderingMode {
 	 * @param value The value to be drawn
 	 * @return the font to use for the value text
 	 */
-	protected Font getValueFont(String value) {
+	public Font getValueFont(String value) {
 		return value.length() >= 5 ? font2smallest : (value.length() >= 4 ? font2small : font2);
 	}
 	
