@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import me.roan.kps.RenderingMode.Orientation;
+
 /**
  * Central class for managing
  * colours and resources
@@ -91,7 +93,7 @@ public class ColorManager {
 				transparency = true;
 			}
 			alphaAqua = new Color(Main.config.getForegroundColor().getRed(), Main.config.getForegroundColor().getGreen(), Main.config.getForegroundColor().getBlue(), 51);
-			if(Main.config.mode == RenderingMode.VERTICAL){
+			if(Main.config.mode.orientation == Orientation.VERTICAL){
 				pressed = dye(ImageIO.read(ClassLoader.getSystemResource("hit.png")));
 				unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key.png")));
 			}else{
@@ -110,7 +112,7 @@ public class ColorManager {
 			}
 		}else{
 			alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
-			if(Main.config.mode == RenderingMode.VERTICAL){
+			if(Main.config.mode.orientation == Orientation.VERTICAL){
 				pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
 				unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
 			}else{

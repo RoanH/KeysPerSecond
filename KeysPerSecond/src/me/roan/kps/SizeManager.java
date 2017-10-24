@@ -109,7 +109,7 @@ public class SizeManager {
 	 * @see RenderingMode
 	 */
 	protected static final void setLayoutMode(RenderingMode oldMode, RenderingMode newMode){
-		if(oldMode == newMode || (oldMode != RenderingMode.VERTICAL && newMode != RenderingMode.VERTICAL)){
+		if(oldMode.orientation == newMode.orientation){
 			return;
 		}else{
 			int tmp = subComponentHeight;
