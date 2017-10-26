@@ -78,7 +78,7 @@ And if you find any bugs feel free to report them.
 16 August 2017: Fix several bug involving key-modifier combinations & a bug showing weird mouse button text.
 
 ## Todo list / working on
-Lots of new features an fixes coming soon!
+Lots of new features and fixes coming soon!
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
