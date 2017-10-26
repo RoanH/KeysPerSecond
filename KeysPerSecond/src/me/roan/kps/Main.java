@@ -1174,7 +1174,7 @@ public class Main {
 						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 					}
 				}else if(col == 2){
-					if(config.rows * config.columns >= getTotalAmountOfVisiblePanels()){
+					if(config.rows * config.columns <= getTotalAmountOfVisiblePanels() && config.rows != 0 && config.columns != 0 && (boolean)value){
 						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 						return;
 					}
@@ -1195,7 +1195,7 @@ public class Main {
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
-			if(config.rows * config.columns >= getTotalAmountOfVisiblePanels()){
+			if(config.rows * config.columns <= getTotalAmountOfVisiblePanels() && config.rows != 0 && config.columns != 0){
 				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
 				return;
 			}
