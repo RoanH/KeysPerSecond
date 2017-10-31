@@ -31,7 +31,7 @@ Lastly, there are also some commands that can be sent to the program:<br>
 
 You can also move the program using the arrow keys this makes pixel perfect positioning possible :D .
 
-Well I hope some of you find this program usefull and/or will use it for your streams (I would love to see that happen  :) ).
+Well I hope some of you find this program useful and/or will use it for your streams (I would love to see that happen  :) ).
 And if you find any bugs feel free to report them.
 
 ## Notes
