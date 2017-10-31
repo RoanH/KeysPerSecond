@@ -40,7 +40,7 @@ And if you find any bugs feel free to report them.
 - When changing the key order, the keys are ordered from lowest value to highest value (negative values & skipping indices is allowed).
 - To change a GUI colour in the colours menu, click on the current colour
 - An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
-- The snap to screen edge function work on multi-monitor setups.
+- The snap to screen edge function works on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
 - You can also track mouse buttons with this program.
 - The order for positions is from the top left to the bottom right.
