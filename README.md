@@ -63,7 +63,7 @@ And if you find any bugs feel free to report them.
 30 March 2017: Implemented a right click dialog, pause functionality & a snap to screen edge function.<br>
 31 March 2017: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.<br>
 1 April 2017: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
-8 April 2017: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.
+8 April 2017: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.<br>
 12 April 2017: Fix checkmark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
 13 April 2017: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
 16 April 2017: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
