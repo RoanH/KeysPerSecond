@@ -81,7 +81,7 @@ And if you find any bugs feel free to report them.
 Lots of new features and fixes coming soon!
 
 ## Downloads (Java 8 required)
-Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7 & 8)<br>
+Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)<br>
 [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v6.6/KeysPerSecond-v6.6.exe)<br>
 [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v6.6/KeysPerSecond-v6.6.jar)
 
