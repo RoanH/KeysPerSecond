@@ -1,7 +1,7 @@
 # Keys Per Second
 
 A program that counts how many times a certain key is pressed. And shows what the average, maximum and current keys pressed per second is. Also show a nice graph of the key presses over time.
-This programm is also fully configurable.<br>
+This program is also fully configurable.<br>
 osu! forum post: [post](https://osu.ppy.sh/forum/p/5789644/)<br>
 
 # Forum post
