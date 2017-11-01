@@ -1640,6 +1640,14 @@ public class Main {
 		tmp.delete();
 		System.exit(0);
 	}
+	
+	protected static void saveStats(){
+		
+	}
+	
+	protected static void loadStats(){
+		
+	}
 
 	//=================================================================================================
 	//================== NESTED CLASSES ===============================================================
