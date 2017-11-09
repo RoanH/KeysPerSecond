@@ -12,9 +12,14 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -27,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -1641,12 +1647,57 @@ public class Main {
 		System.exit(0);
 	}
 	
+	//TODO stats
+	
 	protected static void saveStats(){
-		
+		//total,avg,keys,max,n,prev,tmp
+		File file = null;
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+			out.writeInt(TotPanel.hits);
+			out.writeDouble(avg);
+			out.writeInt(max);
+			out.writeLong(n);
+			out.writeInt(prev);
+			out.writeInt(tmp.get());
+			for(Entry<Integer, Key> key : keys.entrySet()){
+				out.writeObject(key);
+			}
+			out.flush();
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	protected static void loadStats(){
 		
+		File file = null;
+		try{
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+			TotPanel.hits = in.readInt();
+			avg = in.readDouble();
+			max = in.readInt();
+			n = in.readLong();
+			prev = in.readInt();
+			tmp.set(in.readInt());
+			while(in.available() > 0){
+				@SuppressWarnings("unchecked")
+				Entry<Integer, Key> entry = (Entry<Integer, Key>) in.readObject();
+				keys.get(entry.getKey()).count = entry.getValue().count;
+			}
+			in.close();
+		}catch(IOException e){
+			//TODO
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//=================================================================================================
@@ -1659,11 +1710,15 @@ public class Main {
 	 * is pressed
 	 * @author Roan
 	 */
-	protected static final class Key {
+	protected static final class Key implements Serializable{
+		/**
+		 * Serial ID
+		 */
+		private static final long serialVersionUID = 1263090697516120354L;
 		/**
 		 * Whether or not this key is currently pressed
 		 */
-		protected boolean down = false;
+		protected transient boolean down = false;
 		/**
 		 * The total number of times this key has been pressed
 		 */
@@ -1672,23 +1727,23 @@ public class Main {
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		protected final String name;
+		protected transient final String name;
 		/**
 		 * The graphical display for this key
 		 */
-		private KeyPanel panel = null;
+		private transient KeyPanel panel = null;
 		/**
 		 * Whether or not alt has to be down
 		 */
-		protected boolean alt;
+		protected transient boolean alt;
 		/**
 		 * Whether or not ctrl has to be down
 		 */
-		protected boolean ctrl;
+		protected transient boolean ctrl;
 		/**
 		 * Whether or not shift has to be down
 		 */
-		protected boolean shift;
+		protected transient boolean shift;
 
 		/**
 		 * Constructs a new Key object
