@@ -13,7 +13,6 @@ import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -48,6 +47,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -63,6 +63,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -1647,38 +1648,52 @@ public class Main {
 		System.exit(0);
 	}
 	
-	//TODO stats
-	
+	/**
+	 * Saves the statistics logged so far
+	 */
 	protected static void saveStats(){
-		//total,avg,keys,max,n,prev,tmp
-		File file = null;
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-			out.writeInt(TotPanel.hits);
-			out.writeDouble(avg);
-			out.writeInt(max);
-			out.writeLong(n);
-			out.writeInt(prev);
-			out.writeInt(tmp.get());
-			for(Entry<Integer, Key> key : keys.entrySet()){
-				out.writeObject(key);
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
+			return;
+		}
+		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
+		if(!file.exists() || (file.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
+			try {
+				file.createNewFile();
+				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+				out.writeInt(TotPanel.hits);
+				out.writeDouble(avg);
+				out.writeInt(max);
+				out.writeLong(n);
+				out.writeInt(prev);
+				out.writeInt(tmp.get());
+				for(Entry<Integer, Key> key : keys.entrySet()){
+					out.writeInt(key.getKey());
+					out.writeObject(key.getValue());
+				}
+				out.flush();
+				out.close();
+				JOptionPane.showMessageDialog(null, "Statistics succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException e) {e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Failed to save the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 			}
-			out.flush();
-			out.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Loads the statistics from a file
+	 */
 	protected static void loadStats(){
-		
-		File file = null;
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+			return;
+		}
 		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
 			TotPanel.hits = in.readInt();
 			avg = in.readDouble();
 			max = in.readInt();
@@ -1686,17 +1701,18 @@ public class Main {
 			prev = in.readInt();
 			tmp.set(in.readInt());
 			while(in.available() > 0){
-				@SuppressWarnings("unchecked")
-				Entry<Integer, Key> entry = (Entry<Integer, Key>) in.readObject();
-				keys.get(entry.getKey()).count = entry.getValue().count;
+				Key key = keys.get(in.readInt());
+				Key obj = ((Key)in.readObject());
+				if(key != null){
+					key.count = obj.count;
+				}
 			}
 			in.close();
-		}catch(IOException e){
-			//TODO
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			frame.repaint();
+			graphFrame.repaint();
+			JOptionPane.showMessageDialog(null, "Statistics succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+		}catch(IOException | ClassNotFoundException e){
+			JOptionPane.showMessageDialog(null, "Failed to load the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

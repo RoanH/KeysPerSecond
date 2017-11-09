@@ -81,6 +81,10 @@ public class Menu {
 	 */
 	private static final JMenu reset = new JMenu("Reset");
 	/**
+	 * Load/Save menu
+	 */
+	private static final JMenu saveLoad = new JMenu("Save / Load");
+	/**
 	 * The pause menu item
 	 */
 	protected static final JCheckBoxMenuItem pause = new JCheckBoxMenuItem("Pause");
@@ -98,6 +102,7 @@ public class Menu {
 		mgraph.getPopupMenu().setBorder(border);
 		rate.getPopupMenu().setBorder(border);
 		reset.getPopupMenu().setBorder(border);
+		saveLoad.getPopupMenu().setBorder(border);
 	}
 
 	/**
@@ -137,6 +142,10 @@ public class Menu {
 		JCheckBoxMenuItem modifiers = new JCheckBoxMenuItem("Key-modifier tracking");
 		JMenuItem save = new JMenuItem("Save config");
 		JMenuItem load = new JMenuItem("Load config");
+		JMenuItem saveStats = new JMenuItem("Save stats");
+		JMenuItem loadStats = new JMenuItem("Load stats");
+		components.add(saveStats);
+		components.add(loadStats);
 		components.add(load);
 		components.add(layout);
 		components.add(save);
@@ -176,6 +185,7 @@ public class Menu {
 		mgraph.setUI(new MenuUI());
 		rate.setUI(new MenuUI());
 		reset.setUI(new MenuUI());
+		saveLoad.setUI(new MenuUI());
 		for(JMenuItem e : components){
 			e.setUI(new MenuItemUI());
 		}
@@ -491,6 +501,12 @@ public class Menu {
 				resetData(oldScale);
 			}
 		});
+		saveStats.addActionListener((e)->{
+			Main.saveStats();
+		});
+		loadStats.addActionListener((e)->{
+			Main.loadStats();
+		});
 		
 		reset.add(treset);
 		reset.add(sreset);
@@ -521,13 +537,17 @@ public class Menu {
 		configure.add(size);
 		configure.add(commandkeys);
 		configure.add(layout);
+		
+		saveLoad.add(load);
+		saveLoad.add(save);
+		saveLoad.add(loadStats);
+		saveLoad.add(saveStats);
 
 		menu.add(configure);
 		menu.add(snap);
 		menu.add(reset);
 		menu.add(pause);
-		menu.add(load);
-		menu.add(save);
+		menu.add(saveLoad);
 		menu.add(exit);
 	}
 
