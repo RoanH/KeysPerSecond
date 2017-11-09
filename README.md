@@ -75,15 +75,16 @@ And if you find any bugs feel free to report them.
 28 June 2017: Added a lot of layout options.<br>
 28 June 2017: Fix the position/index feature for keys not working.<br>
 28 June 2017: Add warning for invalid key/row/columns combinations, improve reset menu, add a value-text horizontal rendering mode.<br>
-16 August 2017: Fix several bug involving key-modifier combinations & a bug showing weird mouse button text.
+16 August 2017: Fix several bug involving key-modifier combinations & a bug showing weird mouse button text.<br>
+9 November 2017: Implement save stats feature & 6 additional rendering modes. Fix key capacity checks, changing the update rate messing up the average, fix a multi-threading issue, fix a mode loading bug. Improve startup times & overall performance. Lots of internal refactoring & optimizations.
 
 ## Todo list / working on
-Lots of new features and fixes coming soon!
+It's kinda empty here right now :c, so please suggest things c:
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)<br>
-[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v6.6/KeysPerSecond-v6.6.exe)<br>
-[Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v6.6/KeysPerSecond-v6.6.jar)
+[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v7.0/KeysPerSecond-v7.0.exe)<br>
+[Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v7.0/KeysPerSecond-v7.0.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)
