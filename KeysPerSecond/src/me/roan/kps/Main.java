@@ -12,9 +12,13 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -27,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -42,6 +47,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -57,6 +63,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -1640,6 +1647,74 @@ public class Main {
 		tmp.delete();
 		System.exit(0);
 	}
+	
+	/**
+	 * Saves the statistics logged so far
+	 */
+	protected static void saveStats(){
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
+			return;
+		}
+		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
+		if(!file.exists() || (file.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
+			try {
+				file.createNewFile();
+				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+				out.writeInt(TotPanel.hits);
+				out.writeDouble(avg);
+				out.writeInt(max);
+				out.writeLong(n);
+				out.writeInt(prev);
+				out.writeInt(tmp.get());
+				for(Entry<Integer, Key> key : keys.entrySet()){
+					out.writeInt(key.getKey());
+					out.writeObject(key.getValue());
+				}
+				out.flush();
+				out.close();
+				JOptionPane.showMessageDialog(null, "Statistics succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException e) {e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Failed to save the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	/**
+	 * Loads the statistics from a file
+	 */
+	protected static void loadStats(){
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+			return;
+		}
+		try{
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+			TotPanel.hits = in.readInt();
+			avg = in.readDouble();
+			max = in.readInt();
+			n = in.readLong();
+			prev = in.readInt();
+			tmp.set(in.readInt());
+			while(in.available() > 0){
+				Key key = keys.get(in.readInt());
+				Key obj = ((Key)in.readObject());
+				if(key != null){
+					key.count = obj.count;
+				}
+			}
+			in.close();
+			frame.repaint();
+			graphFrame.repaint();
+			JOptionPane.showMessageDialog(null, "Statistics succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+		}catch(IOException | ClassNotFoundException e){
+			JOptionPane.showMessageDialog(null, "Failed to load the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
 	//=================================================================================================
 	//================== NESTED CLASSES ===============================================================
@@ -1651,11 +1726,15 @@ public class Main {
 	 * is pressed
 	 * @author Roan
 	 */
-	protected static final class Key {
+	protected static final class Key implements Serializable{
+		/**
+		 * Serial ID
+		 */
+		private static final long serialVersionUID = 1263090697516120354L;
 		/**
 		 * Whether or not this key is currently pressed
 		 */
-		protected boolean down = false;
+		protected transient boolean down = false;
 		/**
 		 * The total number of times this key has been pressed
 		 */
@@ -1664,23 +1743,23 @@ public class Main {
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		protected final String name;
+		protected transient final String name;
 		/**
 		 * The graphical display for this key
 		 */
-		private KeyPanel panel = null;
+		private transient KeyPanel panel = null;
 		/**
 		 * Whether or not alt has to be down
 		 */
-		protected boolean alt;
+		protected transient boolean alt;
 		/**
 		 * Whether or not ctrl has to be down
 		 */
-		protected boolean ctrl;
+		protected transient boolean ctrl;
 		/**
 		 * Whether or not shift has to be down
 		 */
-		protected boolean shift;
+		protected transient boolean shift;
 
 		/**
 		 * Constructs a new Key object
