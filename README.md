@@ -19,8 +19,9 @@ When enabled it can also show a graph of the number of keys pressed per second o
 
 Everything shown in the picture above can be toggled on or off and all the panels can be arranged in a lot of different ways.<br>
 ![Config](http://i.imgur.com/u7obayv.png)
-![Key config](http://i.imgur.com/N6JOCJk.png)
+![Key config](http://i.imgur.com/N6JOCJk.png)  
 ![Modes](https://i.imgur.com/gNYCSb9.png)  
+
 Lastly, there are also some commands that can be sent to the program:<br>
 **Ctrl + P**: Causes the program to reset the average and maximum value.<br>
 **Ctrl + U**: Terminates the program.<br>
