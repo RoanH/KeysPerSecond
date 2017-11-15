@@ -455,6 +455,16 @@ public class Main {
 					}
 					CommandKeys.isShiftDown = true;
 				}
+			}else{
+				if(!CommandKeys.isAltDown){
+					CommandKeys.isAltDown = event.getKeyCode() == NativeKeyEvent.VC_ALT;
+				}
+				if(!CommandKeys.isCtrlDown){
+					CommandKeys.isCtrlDown = event.getKeyCode() == NativeKeyEvent.VC_CONTROL;
+				}
+				if(!CommandKeys.isShiftDown){
+					CommandKeys.isShiftDown = event.getKeyCode() == NativeKeyEvent.VC_SHIFT;
+				}
 			}
 			lastevent = event;
 			if(config.CP.matches(event.getKeyCode())){
