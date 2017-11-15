@@ -77,7 +77,8 @@ And if you find any bugs feel free to report them.
 28 June 2017: Fix the position/index feature for keys not working.<br>
 28 June 2017: Add warning for invalid key/row/columns combinations, improve reset menu, add a value-text horizontal rendering mode.<br>
 16 August 2017: Fix several bug involving key-modifier combinations & a bug showing weird mouse button text.<br>
-9 November 2017: Implement save stats feature & 6 additional rendering modes. Fix key capacity checks, changing the update rate messing up the average, fix a multi-threading issue, fix a mode loading bug. Improve startup times & overall performance. Lots of internal refactoring & optimizations.
+9 November 2017: Implement save stats feature & 6 additional rendering modes. Fix key capacity checks, changing the update rate messing up the average, fix a multi-threading issue, fix a mode loading bug. Improve startup times & overall performance. Lots of internal refactoring & optimizations.<br>
+15 November 2017: Fix command keys with modefiers not working & visual enhancements for resetting.
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
