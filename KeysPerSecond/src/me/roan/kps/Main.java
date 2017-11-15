@@ -1570,6 +1570,8 @@ public class Main {
 		max = 0;
 		tmp.set(0);
 		graph.reset();
+		frame.repaint();
+		graphFrame.repaint();
 	}
 
 	/**
@@ -1582,6 +1584,7 @@ public class Main {
 			k.count = 0;
 		}
 		System.out.println();
+		frame.repaint();
 	}
 
 	/**
