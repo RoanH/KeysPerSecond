@@ -754,11 +754,11 @@ public class Main {
 				save.setEnabled(true);
 			}
 		});
-		JLabel ver = new JLabel("<html><center><i>Version: v7.0, latest version: <font color=gray>loading</font><br>"
+		JLabel ver = new JLabel("<html><center><i>Version: v7.1, latest version: <font color=gray>loading</font><br>"
 				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>", SwingConstants.CENTER);
 		new Thread(()->{
 			String version = checkVersion();//XXX the version number 
-			ver.setText("<html><center><i>Version: v7.0, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
+			ver.setText("<html><center><i>Version: v7.1, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
 				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>");
 		}, "Version Checker").start();
 		ver.addMouseListener(new MouseListener(){
