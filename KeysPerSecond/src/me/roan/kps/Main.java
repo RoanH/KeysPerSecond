@@ -368,29 +368,27 @@ public class Main {
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
 		int code = getExtendedKeyCode(event);
-		if(event instanceof NativeKeyEvent){
+		if(event instanceof NativeKeyEvent && config.enableModifiers){
 			NativeKeyEvent evt = ((NativeKeyEvent)event);
-			if(config.enableModifiers){
-				if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
-					CommandKeys.isAltDown = false;
-					for(Key k : keys.values()){
-						if(k.alt){
-							k.keyReleased();
-						}
+			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
+				CommandKeys.isAltDown = false;
+				for(Key k : keys.values()){
+					if(k.alt){
+						k.keyReleased();
 					}
-				}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
-					CommandKeys.isCtrlDown = false;
-					for(Key k : keys.values()){
-						if(k.ctrl){
-							k.keyReleased();
-						}
+				}
+			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+				CommandKeys.isCtrlDown = false;
+				for(Key k : keys.values()){
+					if(k.ctrl){
+						k.keyReleased();
 					}
-				}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
-					CommandKeys.isShiftDown = false;
-					for(Key k : keys.values()){
-						if(k.shift){
-							k.keyReleased();
-						}
+				}
+			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+				CommandKeys.isShiftDown = false;
+				for(Key k : keys.values()){
+					if(k.shift){
+						k.keyReleased();
 					}
 				}
 			}
@@ -408,7 +406,7 @@ public class Main {
 		int code = getExtendedKeyCode(nevent);
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode())));
+				keys.put(code, new Key(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode())));//TODO
 			}else{
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
@@ -489,14 +487,23 @@ public class Main {
 	 */
 	private static final int getExtendedKeyCode(NativeInputEvent event){
 		if(event instanceof NativeKeyEvent){
-			int code = ((NativeKeyEvent)event).getKeyCode();
-			if(config.enableModifiers){
-				return code + (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
-			}else{
-				return code;
-			}
+			return getExtendedKeyCode(((NativeKeyEvent)event).getKeyCode());
 		}else{
 			return -((NativeMouseEvent)event).getButton();
+		}
+	}
+	
+	/**
+	 * Gets the extended key code for this event, this key code
+	 * includes modifiers
+	 * @param code The original key code
+	 * @return The extended key code for this event
+	 */
+	private static final int getExtendedKeyCode(int code){
+		if(config.enableModifiers){
+			return code + (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
+		}else{
+			return code;
 		}
 	}
 
@@ -913,8 +920,8 @@ public class Main {
 		}else{
 			config.foreground = cfg.getBackground();
 			config.background = cbg.getBackground();
-			config.opacitybg = (float)(double)((int)sbg.getValue() / 100.0D);
-			config.opacityfg = (float)(double)((int)sfg.getValue() / 100.0D);
+			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
+			config.opacityfg = (float)((int)sfg.getValue() / 100.0D);
 		}
 		frame.repaint();
 	}
@@ -1439,17 +1446,13 @@ public class Main {
 			Key k;
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
-				int code = i.keycode;
-				if(code >= 0){
-					code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
-				}
-				if(!keys.containsKey(code)){
-					keys.put(code, k = new Key(i.name));
+				if(!keys.containsKey(i.keycode)){
+					keys.put(i.keycode, k = new Key(i.name));
 					k.alt = i.alt;
 					k.ctrl = i.ctrl;
 					k.shift = i.shift;
 				}else{
-					k = keys.get(code);
+					k = keys.get(i.keycode);
 				}
 				if(config.showKeys && i.visible){
 					components.add(k.getPanel(i));
