@@ -371,33 +371,33 @@ public class Main {
 		if(event instanceof NativeKeyEvent){
 			NativeKeyEvent evt = ((NativeKeyEvent)event);
 			code = evt.getKeyCode();
-			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
-				CommandKeys.isAltDown = false;
-				for(Key k : keys.values()){
-					if(k.alt){
-						k.keyReleased();
+			if(config.enableModifiers){
+				if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
+					CommandKeys.isAltDown = false;
+					for(Key k : keys.values()){
+						if(k.alt){
+							k.keyReleased();
+						}
+					}
+				}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+					CommandKeys.isCtrlDown = false;
+					for(Key k : keys.values()){
+						if(k.ctrl){
+							k.keyReleased();
+						}
+					}
+				}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+					CommandKeys.isShiftDown = false;
+					for(Key k : keys.values()){
+						if(k.shift){
+							k.keyReleased();
+						}
 					}
 				}
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
-				CommandKeys.isCtrlDown = false;
-				for(Key k : keys.values()){
-					if(k.ctrl){
-						k.keyReleased();
-					}
-				}
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
-				CommandKeys.isShiftDown = false;
-				for(Key k : keys.values()){
-					if(k.shift){
-						k.keyReleased();
-					}
-				}
+				code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
 			}
 		}else{
 			code = -((NativeMouseEvent)event).getButton();
-		}
-		if(event instanceof NativeKeyEvent){
-			code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
 		}
 		if(keys.containsKey(code)){
 			keys.get(code).keyReleased();
