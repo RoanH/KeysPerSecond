@@ -86,7 +86,7 @@ public class SizeManager {
 		keyPanelFont2smallestSize = (int)Math.floor(factor * keyPanelFont2smallestSize);
 		graphImageSize            = (int)Math.ceil(factor * graphImageSize);
 		graphOffset               = (int)Math.ceil(factor * graphOffset);
-		sideTextOffset      = (int)Math.ceil(factor * sideTextOffset);
+		sideTextOffset            = (int)Math.ceil(factor * sideTextOffset);
 		setFonts();
 	}
 	

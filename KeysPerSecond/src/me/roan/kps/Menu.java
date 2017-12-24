@@ -194,9 +194,9 @@ public class Menu {
 			Point loc = frame.getLocationOnScreen();
 			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
 			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
-				Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
-						Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
-							Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
+				              Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
+						      Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
+							  Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
 		});
 		exit.addActionListener((e)->{
 			Main.exit();

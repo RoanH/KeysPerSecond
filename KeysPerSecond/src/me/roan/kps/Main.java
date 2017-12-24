@@ -367,7 +367,7 @@ public class Main {
 	 * @param event The event that occurred
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
-		int code = getExtendedKeyCode(event);
+		Integer code = getExtendedKeyCode(event);
 		if(event instanceof NativeKeyEvent){
 			NativeKeyEvent evt = ((NativeKeyEvent)event);
 			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
@@ -416,7 +416,7 @@ public class Main {
 	 * @param event The event that occurred
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
-		int code = getExtendedKeyCode(nevent);
+		Integer code = getExtendedKeyCode(nevent);
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
 				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), ((NativeKeyEvent)nevent).getKeyCode(), CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
@@ -1124,16 +1124,16 @@ public class Main {
 		config.add(mode, BorderLayout.PAGE_START);
 		
 		if(0 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, config, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			Main.config.graphMode = (GraphMode) graphMode.getSelectedItem();
-			Main.config.graphWidth = (int)gw.getValue();
+			Main.config.graphMode   = (GraphMode)graphMode.getSelectedItem();
+			Main.config.graphWidth  = (int)gw.getValue();
 			Main.config.graphHeight = (int)gh.getValue();
-			Main.config.posAvg = (int) posAvg.getValue();
-			Main.config.posMax = (int) posMax.getValue();
-			Main.config.posCur = (int) posCur.getValue();
-			Main.config.posTot = (int) posTot.getValue();
-			Main.config.rows = (int) rows.getValue();
-			Main.config.columns = (int) cols.getValue();
-			Main.config.mode = (RenderingMode) textMode.getSelectedItem();
+			Main.config.posAvg      = (int)posAvg.getValue();
+			Main.config.posMax      = (int)posMax.getValue();
+			Main.config.posCur      = (int)posCur.getValue();
+			Main.config.posTot      = (int)posTot.getValue();
+			Main.config.rows        = (int)rows.getValue();
+			Main.config.columns     = (int)cols.getValue();
+			Main.config.mode        = (RenderingMode)textMode.getSelectedItem();
 		}
 	}
 	

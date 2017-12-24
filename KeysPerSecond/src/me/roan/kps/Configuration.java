@@ -196,7 +196,6 @@ public class Configuration {
 	 */
 	private File data;
 	
-	
 	/**
 	 * Constructs a new configuration object
 	 * @param data The data file
@@ -319,7 +318,7 @@ public class Configuration {
 						try{
 							keyinfo.add(parseKey(line.substring(1)));
 						}catch(Exception e){
-							modified = true;;
+							modified = true;
 						}
 					}
 				}
@@ -603,7 +602,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * Parses the text representatation of a key
+	 * Parses the text representation of a key
 	 * to it's actual data
 	 * @param arg The text data
 	 * @return The key data
@@ -772,7 +771,7 @@ public class Configuration {
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
 			return;
-		};
+		}
 		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf2") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf2"));
 		if(!saveloc.exists() || (saveloc.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
 			try{
