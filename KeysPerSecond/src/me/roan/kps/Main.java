@@ -410,7 +410,7 @@ public class Main {
 		int code = getExtendedKeyCode(nevent);
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode())));//TODO
+				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), ((NativeKeyEvent)nevent).getKeyCode(), CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));//TODO
 			}else{
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
@@ -1889,8 +1889,22 @@ public class Main {
 				this.ctrl = ctrl;
 				this.shift = shift;
 			}
-			this.name = mouse ? name : (((this.alt ? "a" : "") + (this.ctrl ? "c" : "") + (this.shift ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code)));
+			this.name = mouse ? name : getKeyName(name, code, this.alt, this.ctrl, this.shift);
 			this.keycode = mouse ? code : getExtendedKeyCode(code, shift, ctrl, alt);
+		}
+		
+		/**
+		 * Constructs the key name from the key
+		 * and modifiers
+		 * @param name The name of the key
+		 * @param code The virtual key code of the key
+		 * @param Whether or not alt is down
+		 * @param Whether or not ctrl is down
+		 * @param Whether or not shift is down
+		 * @return The full name of this given key
+		 */
+		private static final String getKeyName(String name, int code, boolean alt, boolean ctrl, boolean shift){
+			return (alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code));
 		}
 
 		/**
