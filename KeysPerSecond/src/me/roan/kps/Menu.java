@@ -207,7 +207,6 @@ public class Menu {
 		});
 		sreset.addActionListener((e)->{
 			Main.resetStats();
-			
 		});
 		sresetmax.addActionListener((e)->{
 			Main.max = 0;
@@ -345,6 +344,7 @@ public class Menu {
 				Main.reconfigure();
 			});
 		});
+		modifiers.setSelected(Main.config.enableModifiers);
 		modifiers.addActionListener((e)->{
 			Main.config.enableModifiers = modifiers.isSelected();
 		});
@@ -562,6 +562,8 @@ public class Menu {
 		configcolors.removeAll();
 		mgraph.removeAll();
 		rate.removeAll();
+		reset.removeAll();
+		saveLoad.removeAll();
 		createMenu();
 		SizeManager.scale(Main.config.size / oldScale);
 		Main.keys.clear();
