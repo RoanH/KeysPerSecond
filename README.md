@@ -45,6 +45,7 @@ And if you find any bugs feel free to report them.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
 - You can also track mouse buttons with this program.
 - The order for positions is from the top left to the bottom right.
+- You can pass the path to the config file to load via the commandline or a short cut so you can skip the configuration step.
 
 ## Updates
 2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
