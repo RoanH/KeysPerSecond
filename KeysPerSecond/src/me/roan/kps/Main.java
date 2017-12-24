@@ -730,6 +730,7 @@ public class Main {
 			ckey.setSelected(config.showKeys);
 			ctop.setSelected(config.overlay);
 			ctot.setSelected(config.showTotal);
+			cmod.setSelected(config.enableModifiers);
 			save.setEnabled(true);
 		});
 		updaterate.addActionListener((e)->{
