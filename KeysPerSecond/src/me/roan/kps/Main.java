@@ -368,24 +368,31 @@ public class Main {
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
 		int code = getExtendedKeyCode(event);
-		if(event instanceof NativeKeyEvent && config.enableModifiers){
+		if(event instanceof NativeKeyEvent){
 			NativeKeyEvent evt = ((NativeKeyEvent)event);
 			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
 				CommandKeys.isAltDown = false;
+			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+				CommandKeys.isCtrlDown = false;
+			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+				CommandKeys.isShiftDown = false;
+			}
+		}
+		if(config.enableModifiers && event instanceof NativeKeyEvent){
+			NativeKeyEvent evt = ((NativeKeyEvent)event);
+			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
 				for(Key k : keys.values()){
 					if(k.alt){
 						k.keyReleased();
 					}
 				}
 			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
-				CommandKeys.isCtrlDown = false;
 				for(Key k : keys.values()){
 					if(k.ctrl){
 						k.keyReleased();
 					}
 				}
 			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
-				CommandKeys.isShiftDown = false;
 				for(Key k : keys.values()){
 					if(k.shift){
 						k.keyReleased();
@@ -397,8 +404,10 @@ public class Main {
 					k.getValue().keyReleased();
 				}
 			}
-		}else if(keys.containsKey(code)){
-			keys.get(code).keyReleased();
+		}else{
+			if(keys.containsKey(code)){
+				keys.get(code).keyReleased();
+			}
 		}
 	}
 
@@ -1499,8 +1508,13 @@ public class Main {
 			content.setLayout(new GridLayout(r, c, 0, 0));
 			frame.setSize(c * SizeManager.keyPanelWidth + (config.showGraph ? config.graphMode.getAddedWidth() : 0), 
 					      SizeManager.subComponentHeight * r + (config.showGraph ? config.graphMode.getAddedHeight() : 0));
-			if(ColorManager.transparency){
+			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
+				content.setOpaque(false);
+				content.setBackground(ColorManager.transparent);
+			}else{
+				content.setOpaque(true);
+				content.setBackground(config.background);
 			}
 			frame.add(all);
 			if(panels > 0){
