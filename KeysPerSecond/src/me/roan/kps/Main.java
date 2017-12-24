@@ -415,20 +415,18 @@ public class Main {
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
 		}
-		if(!suspended){
-			if(keys.containsKey(code)){
-				Key key = keys.get(code);
-				key.keyPressed();
-				if(config.enableModifiers){
-					if(key.alt && keys.containsKey(NativeKeyEvent.VC_ALT)){
-						keys.get(NativeKeyEvent.VC_ALT).keyReleased();
-					}
-					if(key.ctrl && keys.containsKey(NativeKeyEvent.VC_CONTROL)){
-						keys.get(NativeKeyEvent.VC_CONTROL).keyReleased();
-					}
-					if(key.shift && keys.containsKey(NativeKeyEvent.VC_SHIFT)){
-						keys.get(NativeKeyEvent.VC_SHIFT).keyReleased();
-					}
+		if(!suspended && keys.containsKey(code)){
+			Key key = keys.get(code);
+			key.keyPressed();
+			if(config.enableModifiers){
+				if(key.alt && keys.containsKey(NativeKeyEvent.VC_ALT)){
+					keys.get(NativeKeyEvent.VC_ALT).keyReleased();
+				}
+				if(key.ctrl && keys.containsKey(NativeKeyEvent.VC_CONTROL)){
+					keys.get(NativeKeyEvent.VC_CONTROL).keyReleased();
+				}
+				if(key.shift && keys.containsKey(NativeKeyEvent.VC_SHIFT)){
+					keys.get(NativeKeyEvent.VC_SHIFT).keyReleased();
 				}
 			}
 		}
