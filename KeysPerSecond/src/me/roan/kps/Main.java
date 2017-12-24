@@ -1289,79 +1289,28 @@ public class Main {
 			addform.add(new JLabel("Select the mouse buttons to add:"), BorderLayout.PAGE_START);
 
 			JPanel buttons = new JPanel(new GridLayout(5, 1, 2, 0));
-
-			JPanel m1 = new JPanel(new BorderLayout());
-			JCheckBox cm1 = new JCheckBox();
-			m1.add(cm1, BorderLayout.LINE_START);
-			m1.add(new JLabel("M1 (left click)"), BorderLayout.CENTER);
-
-			JPanel m2 = new JPanel(new BorderLayout());
-			JCheckBox cm2 = new JCheckBox();
-			m2.add(cm2, BorderLayout.LINE_START);
-			m2.add(new JLabel("M2 (right click)"), BorderLayout.CENTER);
-
-			JPanel m3 = new JPanel(new BorderLayout());
-			JCheckBox cm3 = new JCheckBox();
-			m3.add(cm3, BorderLayout.LINE_START);
-			m3.add(new JLabel("M3 (mouse wheel)"), BorderLayout.CENTER);
-
-			JPanel m4 = new JPanel(new BorderLayout());
-			JCheckBox cm4 = new JCheckBox();
-			m4.add(cm4, BorderLayout.LINE_START);
-			m4.add(new JLabel("M4"), BorderLayout.CENTER);
-
-			JPanel m5 = new JPanel(new BorderLayout());
-			JCheckBox cm5 = new JCheckBox();
-			m5.add(cm5, BorderLayout.LINE_START);
-			m5.add(new JLabel("M5"), BorderLayout.CENTER);
-
-			buttons.add(m1);
-			buttons.add(m2);
-			buttons.add(m3);
-			buttons.add(m4);
-			buttons.add(m5);
+			String[] names = new String[]{"M1", "M2", "M3", "M4", "M5"};
+			JCheckBox[] boxes = new JCheckBox[]{new JCheckBox(names[0] + " (left click)"), 
+					                            new JCheckBox(names[1] + " (left click)"), 
+					                            new JCheckBox(names[2] + " (mouse wheel)"), 
+					                            new JCheckBox(names[3]),
+					                            new JCheckBox(names[4])};
+			
+			for(JCheckBox box : boxes){
+				buttons.add(box);
+			}
 
 			addform.add(buttons, BorderLayout.CENTER);
 
 			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
-				if(cm1.isSelected()){
-					KeyInformation key = new KeyInformation("M1", -NativeMouseEvent.BUTTON1, false, false, false, true);
-					if(config.keyinfo.contains(key)){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The M1 button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-					}else{
-						config.keyinfo.add(key);
-					}
-				}
-				if(cm2.isSelected()){
-					KeyInformation key = new KeyInformation("M2", -NativeMouseEvent.BUTTON2, false, false, false, true);
-					if(config.keyinfo.contains(key)){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The M2 button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-					}else{
-						config.keyinfo.add(key);
-					}
-				}
-				if(cm3.isSelected()){
-					KeyInformation key = new KeyInformation("M3", -NativeMouseEvent.BUTTON3, false, false, false, true);
-					if(config.keyinfo.contains(key)){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The M3 button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-					}else{
-						config.keyinfo.add(key);
-					}
-				}
-				if(cm4.isSelected()){
-					KeyInformation key = new KeyInformation("M4", -NativeMouseEvent.BUTTON4, false, false, false, true);
-					if(config.keyinfo.contains(key)){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The M4 button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-					}else{
-						config.keyinfo.add(key);
-					}
-				}
-				if(cm5.isSelected()){
-					KeyInformation key = new KeyInformation("M5", -NativeMouseEvent.BUTTON5, false, false, false, true);
-					if(config.keyinfo.contains(key)){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The M5 button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-					}else{
-						config.keyinfo.add(key);
+				for(int i = 0; i < boxes.length; i++){
+					if(boxes[i].isSelected()){
+						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
+						if(config.keyinfo.contains(key)){
+							JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The " + names[i] + " button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+						}else{
+							config.keyinfo.add(key);
+						}
 					}
 				}
 				model.fireTableDataChanged();
