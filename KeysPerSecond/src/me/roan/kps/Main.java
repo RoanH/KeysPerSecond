@@ -367,10 +367,9 @@ public class Main {
 	 * @param event The event that occurred
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
-		int code;
+		int code = getExtendedKeyCode(event);
 		if(event instanceof NativeKeyEvent){
 			NativeKeyEvent evt = ((NativeKeyEvent)event);
-			code = evt.getKeyCode();
 			if(config.enableModifiers){
 				if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
 					CommandKeys.isAltDown = false;
@@ -394,10 +393,7 @@ public class Main {
 						}
 					}
 				}
-				code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
 			}
-		}else{
-			code = -((NativeMouseEvent)event).getButton();
 		}
 		if(keys.containsKey(code)){
 			keys.get(code).keyReleased();
@@ -409,10 +405,7 @@ public class Main {
 	 * @param event The event that occurred
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
-		int code = nevent instanceof NativeKeyEvent ? ((NativeKeyEvent)nevent).getKeyCode() : -((NativeMouseEvent)nevent).getButton();
-		if(config.enableModifiers && nevent instanceof NativeKeyEvent){
-			code += (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
-		}
+		int code = getExtendedKeyCode(nevent);
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
 				keys.put(code, new Key(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode())));
@@ -485,6 +478,25 @@ public class Main {
 				config.reloadConfig();
 				Menu.resetData(oldScale);
 			}
+		}
+	}
+	
+	/**
+	 * Gets the extended key code for this event, this key code
+	 * includes modifiers
+	 * @param event The event that occurred
+	 * @return The extended key code for this event
+	 */
+	private static final int getExtendedKeyCode(NativeInputEvent event){
+		if(event instanceof NativeKeyEvent){
+			int code = ((NativeKeyEvent)event).getKeyCode();
+			if(config.enableModifiers){
+				return code + (CommandKeys.isShiftDown ? 100000 : 0) + (CommandKeys.isCtrlDown ? 10000 : 0) + (CommandKeys.isAltDown ? 1000 : 0);
+			}else{
+				return code;
+			}
+		}else{
+			return -((NativeMouseEvent)event).getButton();
 		}
 	}
 
