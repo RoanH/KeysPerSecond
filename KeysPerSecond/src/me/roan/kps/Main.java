@@ -391,14 +391,14 @@ public class Main {
 						k.keyReleased();
 					}
 				}
-			}else if(keys.containsKey(getBaseKeyCode(code))){
-				keys.get(getBaseKeyCode(code)).keyReleased();
 			}
-		}
-		for(Entry<Integer, Key> k : keys.entrySet()){
-			if(getBaseKeyCode(code) == getBaseKeyCode(k.getKey())){
-				k.getValue().keyReleased();
+			for(Entry<Integer, Key> k : keys.entrySet()){
+				if(getBaseKeyCode(code) == getBaseKeyCode(k.getKey())){
+					k.getValue().keyReleased();
+				}
 			}
+		}else if(keys.containsKey(code)){
+			keys.get(code).keyReleased();
 		}
 	}
 
@@ -410,7 +410,7 @@ public class Main {
 		int code = getExtendedKeyCode(nevent);
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), ((NativeKeyEvent)nevent).getKeyCode(), CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));//TODO
+				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), ((NativeKeyEvent)nevent).getKeyCode(), CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
 			}else{
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
