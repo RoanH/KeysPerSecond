@@ -46,6 +46,7 @@ And if you find any bugs feel free to report them.
 - You can also track mouse buttons with this program.
 - The order for positions is from the top left to the bottom right.
 - You can pass the path to the config file to load via the commandline or a shortcut so you can skip the configuration step.
+- When resetting something it will also be printed to the console if this program is run using cmd/shell.
 
 ## Updates
 2 February 2017: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
