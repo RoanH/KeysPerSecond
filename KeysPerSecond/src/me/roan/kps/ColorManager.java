@@ -7,26 +7,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import me.roan.kps.RenderingMode.Orientation;
-
 /**
  * Central class for managing
  * colours and resources
  * @author Roan
  */
 public class ColorManager {
-	/**
-	 * Image for a pressed key
-	 * Image taken from osu!lazer
-	 * https://cloud.githubusercontent.com/assets/191335/16511435/17acd2f2-3f8b-11e6-8b50-5fccba819ce5.png
-	 */
-	protected static BufferedImage pressed;
-	/**
-	 * Image for an unpressed key<br>
-	 * Image taken from osu!lazer
-	 * https://cloud.githubusercontent.com/assets/191335/16511432/17ac5232-3f8b-11e6-95b7-33f9a4df0b7c.png
-	 */
-	protected static BufferedImage unpressed;
 	/**
 	 * Graph image segment 'lower right'
 	 */
@@ -93,42 +79,24 @@ public class ColorManager {
 				transparency = true;
 			}
 			alphaAqua = new Color(Main.config.getForegroundColor().getRed(), Main.config.getForegroundColor().getGreen(), Main.config.getForegroundColor().getBlue(), 51);
-			if(Main.config.mode.orientation == Orientation.VERTICAL){
-				pressed = dye(ImageIO.read(ClassLoader.getSystemResource("hit.png")));
-				unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key.png")));
-			}else{
-				pressed = dye(ImageIO.read(ClassLoader.getSystemResource("hit_horizontal.png")));
-				unpressed = dye(ImageIO.read(ClassLoader.getSystemResource("key_horizontal.png")));
-			}
-			if(graph){
-				graph_lower_right  = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_right.png")));
-				graph_lower_left   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_left.png")));
-				graph_lower_middle = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_middle.png")));
-				graph_side_left    = dye(ImageIO.read(ClassLoader.getSystemResource("graph_side_left.png")));
-				graph_side_right   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_side_right.png")));
-				graph_upper_right  = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png")));
-				graph_upper_left   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png")));
-				graph_upper_middle = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png")));
-			}
+			graph_lower_right  = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_right.png")));
+			graph_lower_left   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_left.png")));
+			graph_lower_middle = dye(ImageIO.read(ClassLoader.getSystemResource("graph_lower_middle.png")));
+			graph_side_left    = dye(ImageIO.read(ClassLoader.getSystemResource("graph_side_left.png")));
+			graph_side_right   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_side_right.png")));
+			graph_upper_right  = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png")));
+			graph_upper_left   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png")));
+			graph_upper_middle = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png")));
 		}else{
 			alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
-			if(Main.config.mode.orientation == Orientation.VERTICAL){
-				pressed = ImageIO.read(ClassLoader.getSystemResource("hit.png"));
-				unpressed = ImageIO.read(ClassLoader.getSystemResource("key.png"));
-			}else{
-				pressed = ImageIO.read(ClassLoader.getSystemResource("hit_horizontal.png"));
-				unpressed = ImageIO.read(ClassLoader.getSystemResource("key_horizontal.png"));
-			}
-			if(graph){
-				graph_lower_right  = ImageIO.read(ClassLoader.getSystemResource("graph_lower_right.png"));
-				graph_lower_left   = ImageIO.read(ClassLoader.getSystemResource("graph_lower_left.png"));
-				graph_lower_middle = ImageIO.read(ClassLoader.getSystemResource("graph_lower_middle.png"));
-				graph_side_left    = ImageIO.read(ClassLoader.getSystemResource("graph_side_left.png"));
-				graph_side_right   = ImageIO.read(ClassLoader.getSystemResource("graph_side_right.png"));
-				graph_upper_right  = ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png"));
-				graph_upper_left   = ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png"));
-				graph_upper_middle = ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png"));
-			}
+			graph_lower_right  = ImageIO.read(ClassLoader.getSystemResource("graph_lower_right.png"));
+			graph_lower_left   = ImageIO.read(ClassLoader.getSystemResource("graph_lower_left.png"));
+			graph_lower_middle = ImageIO.read(ClassLoader.getSystemResource("graph_lower_middle.png"));
+			graph_side_left    = ImageIO.read(ClassLoader.getSystemResource("graph_side_left.png"));
+			graph_side_right   = ImageIO.read(ClassLoader.getSystemResource("graph_side_right.png"));
+			graph_upper_right  = ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png"));
+			graph_upper_left   = ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png"));
+			graph_upper_middle = ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png"));
 		}
 		checkmark = dye(ImageIO.read(ClassLoader.getSystemResource("checkmark.png")));
 		arrow = dye(ImageIO.read(ClassLoader.getSystemResource("arrow.png")));

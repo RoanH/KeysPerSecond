@@ -6,9 +6,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -42,13 +42,44 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
-		RoundRectangle2D rect = new RoundRectangle2D.Double(2, 2, this.getWidth() - 4, this.getHeight() - 4, 2, 2);
+		//RoundRectangle2D rect = new RoundRectangle2D.Double(2 + SizeManager.graphImageSize - 2, 
+		//		                                            2 + SizeManager.graphImageSize - 2, 
+		//		                                            this.getWidth() - 5 - SizeManager.graphImageSize, 
+		//		                                            this.getHeight() - 5 - SizeManager.graphImageSize, 
+		//		                                            5, 5);
+		
+		int[] x = new int[]{
+			2 + SizeManager.graphImageSize/4*3 + SizeManager.graphImageSize/4,
+			this.getWidth() - SizeManager.graphImageSize/2 - 2 - 1 - SizeManager.graphImageSize/4,
+			this.getWidth() - 2 - 1 - SizeManager.graphImageSize/2,
+			this.getWidth() - 2 - 1 -SizeManager.graphImageSize/2,
+			this.getWidth() - SizeManager.graphImageSize/2 - 2 - 1 - SizeManager.graphImageSize/4,
+			2 + SizeManager.graphImageSize/4*3 + SizeManager.graphImageSize/4,
+			2 + SizeManager.graphImageSize/4*3,
+			2 + SizeManager.graphImageSize/4*3
+		};
+		int[] y = new int[]{
+			2 + SizeManager.graphImageSize/4*3,
+			2 + SizeManager.graphImageSize/4*3,
+			2 + SizeManager.graphImageSize/4*3 + SizeManager.graphImageSize/4,
+			this.getHeight() - SizeManager.graphImageSize/2 - 2 - 1 - SizeManager.graphImageSize/4,
+			this.getHeight() - 2 - 1 - SizeManager.graphImageSize/2,
+			this.getHeight() - 2 - 1 - SizeManager.graphImageSize/2,
+			this.getHeight() - SizeManager.graphImageSize/2 - 2 - 1 - SizeManager.graphImageSize/4,
+			2 + SizeManager.graphImageSize/4*3 + SizeManager.graphImageSize/4
+		};
 
 		//BufferedImage colorImage = isActive() ? ColorManager.pressed : ColorManager.unpressed;
 		//g.drawImage(colorImage, 2, 2, this.getWidth() - 2, this.getHeight() - 2, 0, 0, colorImage.getWidth(), colorImage.getHeight(), this);
 
-		g.setColor(new Color(221, 255, 255));
-		g.fill(rect);
+		if(isActive()){
+			g.setColor(new Color(221, 255, 255));
+			//g.fill(new Polygon(x, y, 8));
+			g.fillRect(2 + SizeManager.graphImageSize/4*3, 
+					2 + SizeManager.graphImageSize/4*3, 
+					this.getWidth() - 2 - 1 - SizeManager.graphImageSize/2 - (2 + SizeManager.graphImageSize/4*3), 
+					this.getHeight() - 2 - 1 - SizeManager.graphImageSize/2 - (2 + SizeManager.graphImageSize/4*3));
+		}
 		
 		g.drawImage(ColorManager.graph_upper_left,   2, 2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
 		g.drawImage(ColorManager.graph_lower_left,   2, this.getHeight() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 3, 0, 0, 4, 4, this);
