@@ -65,6 +65,10 @@ public class ColorManager {
 	 * Arrow icon
 	 */
 	protected static Image arrow;
+	/**
+	 * Active panel color
+	 */
+	protected static Color activeColor;
 	
 	/**
 	 * Prepares the colours and images
@@ -87,6 +91,7 @@ public class ColorManager {
 			graph_upper_right  = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png")));
 			graph_upper_left   = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png")));
 			graph_upper_middle = dye(ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png")));
+			activeColor = new Color(repaintPixel(new Color(221, 255, 255).getRGB(), Main.config.getForegroundColor()));
 		}else{
 			alphaAqua = new Color(0.0F, 1.0F, 1.0F, 0.2F);
 			graph_lower_right  = ImageIO.read(ClassLoader.getSystemResource("graph_lower_right.png"));
@@ -97,6 +102,7 @@ public class ColorManager {
 			graph_upper_right  = ImageIO.read(ClassLoader.getSystemResource("graph_upper_right.png"));
 			graph_upper_left   = ImageIO.read(ClassLoader.getSystemResource("graph_upper_left.png"));
 			graph_upper_middle = ImageIO.read(ClassLoader.getSystemResource("graph_upper_middle.png"));
+			activeColor = new Color(221, 255, 255);
 		}
 		checkmark = dye(ImageIO.read(ClassLoader.getSystemResource("checkmark.png")));
 		arrow = dye(ImageIO.read(ClassLoader.getSystemResource("arrow.png")));
