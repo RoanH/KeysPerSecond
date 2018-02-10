@@ -1,8 +1,7 @@
 package me.roan.kps;
 
 /**
- * Interface used to sort both
- * base panels and key panels
+ * //TODO
  * @author Roan
  */
 public abstract interface LayoutPosition {
@@ -10,5 +9,14 @@ public abstract interface LayoutPosition {
 	 * Returns the layout index of the component
 	 * @return The layout index
 	 */
+	@Deprecated
 	public abstract int getIndex();
+	
+	public abstract int getX();
+	
+	public abstract int getY();
+	
+	public abstract int getWidth();
+	
+	public abstract int getHeight();
 }
