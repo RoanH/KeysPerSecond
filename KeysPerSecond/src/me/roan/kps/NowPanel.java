@@ -26,7 +26,25 @@ public final class NowPanel extends BasePanel {
 	}
 	
 	@Override
-	public int getIndex() {
-		return Main.config.posCur;
+	public int getLayoutX() {
+		return 0;
+	}
+
+	@Override
+	public int getLayoutY() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutWidth() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
+	@Override
+	public int getLayoutHeight() {
+		// TODO Auto-generated method stub
+		return 1;
 	}
 }

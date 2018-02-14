@@ -24,9 +24,28 @@ public final class TotPanel extends BasePanel {
 	protected String getValue() {
 		return String.valueOf(hits);
 	}
-	
+
 	@Override
-	public int getIndex() {
-		return Main.config.posTot;
+	public int getLayoutX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutY() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutHeight() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

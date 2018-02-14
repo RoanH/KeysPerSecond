@@ -55,7 +55,22 @@ public final class KeyPanel extends BasePanel {
 	}
 
 	@Override
-	public int getIndex() {
-		return info.index;
+	public int getLayoutX() {
+		return info.x;
+	}
+
+	@Override
+	public int getLayoutY() {
+		return info.y;
+	}
+
+	@Override
+	public int getLayoutWidth() {
+		return info.width;
+	}
+
+	@Override
+	public int getLayoutHeight() {
+		return info.height;
 	}
 }

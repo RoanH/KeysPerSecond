@@ -153,10 +153,12 @@ public class Configuration {
 	/**
 	 * Number of rows in the layout
 	 */
+	@Deprecated
 	protected int rows = 1;
 	/**
 	 * Number of columns in the layout
 	 */
+	@Deprecated
 	protected int columns = 0;
 	/**
 	 * Mode in which text is rendered
@@ -177,18 +179,22 @@ public class Configuration {
 	/**
 	 * Position of the maximum
 	 */
+	@Deprecated
 	protected int posMax = 101;
 	/**
 	 * Position of the average
 	 */
+	@Deprecated
 	protected int posAvg = 102;
 	/**
 	 * Position of current
 	 */
+	@Deprecated
 	protected int posCur = 103;
 	/**
 	 * Position of the total
 	 */
+	@Deprecated
 	protected int posTot = 104;
 	
 	/**
@@ -610,7 +616,7 @@ public class Configuration {
 	private final KeyInformation parseKey(String arg){
 		String[] args = arg.substring(1, arg.length() - 1).split(",", 7);
 		String name = null;
-		int index = -1;
+		int index = -1;//TODO parse index using formula
 		int code = -1;
 		boolean visible = false;
 		boolean ctrl = false;
@@ -642,7 +648,7 @@ public class Configuration {
 				break;
 			}
 		}
-		KeyInformation kinfo = new KeyInformation(name, code, visible, index);
+		KeyInformation kinfo = new KeyInformation(name, code, visible);
 		kinfo.alt = alt;
 		kinfo.shift = shift;
 		kinfo.ctrl = ctrl;
@@ -747,9 +753,7 @@ public class Configuration {
 				if(version < 3.7D){
 					info.visible = true;
 				}
-				if(info.index > KeyInformation.autoIndex){
-					KeyInformation.autoIndex = info.index + 1;
-				}
+				KeyInformation.autoIndex = keyinfo.size() * 2 + 2;
 			}
 			return true;
 		} catch (Exception e1) {

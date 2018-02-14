@@ -69,6 +69,8 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, valueString, valueFont);
 		g.setFont(valueFont);
 		g.drawString(valueString, keyCountPos.x, keyCountPos.y);
+		
+		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);//TODO debug only
 	}
 	
 	/**

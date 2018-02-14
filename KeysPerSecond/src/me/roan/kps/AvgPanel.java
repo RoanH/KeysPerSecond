@@ -20,9 +20,27 @@ public final class AvgPanel extends BasePanel {
 	protected String getValue() {
 		return Main.config.precision == 0 ? String.valueOf((int)Main.avg) : String.valueOf(String.format("%1$." + Main.config.precision + "f", (double)((int)(Main.avg * Math.pow(10, Main.config.precision)) / Math.pow(10, Main.config.precision))));
 	}
-	
+
 	@Override
-	public int getIndex() {
-		return Main.config.posAvg;
+	public int getLayoutX() {
+		return 1;
+	}
+
+	@Override
+	public int getLayoutY() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
+	@Override
+	public int getLayoutWidth() {
+		// TODO Auto-generated method stub
+		return 2;
+	}
+
+	@Override
+	public int getLayoutHeight() {
+		// TODO Auto-generated method stub
+		return 1;
 	}
 }

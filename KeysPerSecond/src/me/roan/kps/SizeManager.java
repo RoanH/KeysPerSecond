@@ -12,16 +12,21 @@ public class SizeManager {
 	/**
 	 * Height of the graph or a key panel
 	 */
+	@Deprecated
 	protected static int subComponentHeight = 68;
 	/**
 	 * Width of a key panel
 	 */
-	protected static int keyPanelWidth = 44;
+	@Deprecated
+	private static int keyPanelWidth = 44;
 	/**
 	 * Width of the graph when there are no
 	 * panels configured (only a graph)
 	 */
+	@Deprecated
 	protected static int defaultGraphWidth = 228;
+	//TODO
+	protected static int cellSize = 22;
 	
 	//BasePanel & KeyPanel data
 	/**

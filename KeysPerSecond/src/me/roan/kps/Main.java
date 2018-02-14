@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -139,7 +140,7 @@ public class Main {
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
-	private static JPanel content = new JPanel(new GridLayout(1, 0, 2, 0));
+	private static final JPanel content = new JPanel();
 	/**
 	 * Graph panel
 	 */
@@ -172,6 +173,8 @@ public class Main {
 	 * Frame for the graph
 	 */
 	protected static JFrame graphFrame = new JFrame("Keys per second");
+	//TODO javadoc
+	private static final Layout layout = new Layout(content);
 	
 	/**
 	 * Main method
@@ -1179,7 +1182,8 @@ public class Main {
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				switch(columnIndex){
 				case 0:
-					return config.keyinfo.get(rowIndex).index;
+					//return config.keyinfo.get(rowIndex).index;//TODO not a thing anymore
+					return 0;
 				case 1:
 					int n = (config.keyinfo.get(rowIndex).alt ? 1 : 0) + (config.keyinfo.get(rowIndex).ctrl ? 1 : 0) + (config.keyinfo.get(rowIndex).shift ? 1 : 0);
 					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
@@ -1221,12 +1225,12 @@ public class Main {
 
 			@Override
 			public void setValueAt(Object value, int row, int col){
-				if(col == 0){
-					try{
-						config.keyinfo.get(row).index = Integer.parseInt((String)value);
-					}catch(NumberFormatException | NullPointerException e){
-						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-					}
+				if(col == 0){//TODO clean
+//					try{
+//						config.keyinfo.get(row).index = Integer.parseInt((String)value);
+//					}catch(NumberFormatException | NullPointerException e){
+//						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+//					}
 				}else if(col == 2){
 					if(config.rows * config.columns <= getTotalAmountOfVisiblePanels() && config.rows != 0 && config.columns != 0 && (boolean)value){
 						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
@@ -1430,7 +1434,8 @@ public class Main {
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
-			content = new JPanel();
+			//content = new JPanel(); //TODO clean
+			//content.setLayout(new Layout(content));
 			try {
 				ColorManager.prepareImages(config.showGraph, config.customColors);
 			} catch (IOException e) {
@@ -1469,7 +1474,7 @@ public class Main {
 				components.add(new TotPanel());
 				panels++;
 			}
-			components.sort((LayoutPosition left, LayoutPosition right) -> (left.getIndex() > right.getIndex() ? 1 : -1));
+			//components.sort((LayoutPosition left, LayoutPosition right) -> (left.getIndex() > right.getIndex() ? 1 : -1));
 			for(LayoutPosition c : components){
 				content.add((Component) c);
 			}
@@ -1498,16 +1503,10 @@ public class Main {
 			}else{
 				graphFrame.setVisible(false);
 			}
-			int r = config.rows;
-			int c = config.columns;
-			if(r == 0){
-				r = (int) Math.ceil((double)panels / (double)c);
-			}else if(c == 0){
-				c = (int) Math.ceil((double)panels / (double)r);
-			}
-			content.setLayout(new GridLayout(r, c, 0, 0));
-			frame.setSize(c * SizeManager.keyPanelWidth + (config.showGraph ? config.graphMode.getAddedWidth() : 0), 
-					      SizeManager.subComponentHeight * r + (config.showGraph ? config.graphMode.getAddedHeight() : 0));
+			//TODO
+			System.out.println(layout);
+			frame.setSize(layout.getWidth() + (config.showGraph ? config.graphMode.getAddedWidth() : 0), 
+					      layout.getHeight() + (config.showGraph ? config.graphMode.getAddedHeight() : 0));
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
 				content.setOpaque(false);
@@ -1859,14 +1858,6 @@ public class Main {
 		 */
 		protected int keycode;
 		/**
-		 * Index of the key
-		 */
-		protected int index = autoIndex++;
-		/**
-		 * Auto-increment for #index
-		 */
-		protected static transient volatile int autoIndex = 0; 
-		/**
 		 * Whether or not this key is displayed
 		 */
 		protected boolean visible = true;
@@ -1882,6 +1873,17 @@ public class Main {
 		 * Whether or not shift is down
 		 */
 		protected boolean shift = false;
+		/**
+		 * Auto-increment for #x
+		 */
+		protected static transient volatile int autoIndex = -2; 
+		//TODO javadoc
+		protected int x = autoIndex += 2;
+		protected int y = new Random().nextInt(5);
+		protected int width = 2;
+		protected int height = 3;
+		@Deprecated
+		private int index;
 		
 		/**
 		 * Constructs a new KeyInformation
@@ -1929,11 +1931,11 @@ public class Main {
 		 * @see #name
 		 * @see #keycode
 		 */
-		protected KeyInformation(String name, int code, boolean visible, int index){
+		protected KeyInformation(String name, int code, boolean visible){
 			this.name = name;
 			this.keycode = code;
 			this.visible = visible;
-			this.index = index;
+			
 		}
 		
 		/**
@@ -1947,7 +1949,7 @@ public class Main {
 
 		@Override
 		public String toString(){
-			return "[keycode=" + keycode + ",index=" + index + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
+			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
 		}
 		
 		@Override
@@ -1958,6 +1960,21 @@ public class Main {
 		@Override
 		public boolean equals(Object other){
 			return other instanceof KeyInformation && keycode == ((KeyInformation)other).keycode;
+		}
+		
+		/**
+		 * Legacy object initialisation
+		 * @see ObjectInputStream#defaultReadObject()
+		 * @param stream The object input stream
+		 * @throws IOException When an IOException occurs
+		 * @throws ClassNotFoundException When this class cannot be found
+		 */
+		private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+			stream.defaultReadObject();
+			x = index * 2;
+			y = 0;
+			width = 2;
+			height = 3;
 		}
 		
 		/**

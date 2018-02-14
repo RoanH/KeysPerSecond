@@ -22,7 +22,26 @@ public final class MaxPanel extends BasePanel {
 	}
 
 	@Override
-	public int getIndex() {
-		return Main.config.posMax;
+	public int getLayoutX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutY() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutHeight() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
