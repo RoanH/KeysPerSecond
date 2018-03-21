@@ -196,6 +196,22 @@ public class Configuration {
 	 */
 	@Deprecated
 	protected int posTot = 104;
+	protected int avg_x = -1;
+	protected int avg_y = 0;
+	protected int avg_w = 2;
+	protected int avg_h = 3;
+	protected int max_x = -1;
+	protected int max_y = 0;
+	protected int max_w = 2;
+	protected int max_h = 3;
+	protected int cur_x = -1;
+	protected int cur_y = 0;
+	protected int cur_w = 2;
+	protected int cur_h = 3;
+	protected int tot_x = -1;
+	protected int tot_y = 0;
+	protected int tot_w = 2;
+	protected int tot_h = 3;
 	
 	/**
 	 * The original configuration file

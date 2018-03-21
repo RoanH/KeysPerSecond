@@ -176,7 +176,7 @@ public class Main {
 	 */
 	protected static JFrame graphFrame = new JFrame("Keys per second");
 	//TODO javadoc
-	private static final Layout layout = new Layout(content);
+	protected static final Layout layout = new Layout(content);
 	
 	/**
 	 * Main method
@@ -1069,8 +1069,37 @@ public class Main {
 		pane.setPreferredSize(new Dimension(250, 200));
 
 		form.add(pane, BorderLayout.CENTER);
+		
+		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));                    
+		//Graph mode (left, right, top, bottom, detached)
+		graphLayout.add(new JLabel("Graph mode: "));
+		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
+		graphMode.setSelectedItem(Main.config.graphMode);
+		graphLayout.add(graphMode);
+		graphLayout.add(new JLabel("Graph width: "));
+		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, 1, Integer.MAX_VALUE, 1));
+		graphLayout.add(gw);
+		graphLayout.add(new JLabel("Graph height: "));
+		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, 1, Integer.MAX_VALUE, 1));
+		graphLayout.add(gh);
+		
+		graphMode.addActionListener((event)->{
+			if(graphMode.getSelectedItem() == GraphMode.Detached){
+				gw.setEnabled(true);//TODO
+				gh.setEnabled(true);
+			}else if(graphMode.getSelectedItem() == GraphMode.Bottom || graphMode.getSelectedItem() == GraphMode.Top){
+				gw.setEnabled(false);
+				gh.setEnabled(true);
+			}else{
+				gw.setEnabled(true);
+				gh.setEnabled(false);
+			}
+		});
+		graphMode.setSelectedItem(Main.config.graphMode);
+		
+		form.add(graphLayout, BorderLayout.PAGE_END);
 
-		JOptionPane.showMessageDialog(frame, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
+		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
 	}
 	
 	private static class ListItem extends JPanel{
@@ -1078,38 +1107,45 @@ public class Main {
 		 * Serial ID
 		 */
 		private static final long serialVersionUID = -3750764949517577166L;
+		
+		@Override
+		public Dimension getPreferredSize(){
+			return new Dimension(0, 20);//TODO
+		}
 
 		private ListItem(KeyInformation info){
 			super(new GridLayout(1, 1, 2, 0));
-			this.add(new JLabel(info.name));
+			this.add(new JLabel(info.name, SwingConstants.CENTER));
 			Dimension dim = this.getPreferredSize();
 			dim = new Dimension(dim.width / 5, dim.height / 5);
-
+			
+			//this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+			
 			JSpinner x = new JSpinner(new SpinnerNumberModel(info.x, 0, Integer.MAX_VALUE, 1));
 			x.setPreferredSize(dim);
 			x.addChangeListener((event)->{
-				//TODO
+				info.x = (int)x.getValue();
 			});
 			this.add(x);
 			
 			JSpinner y = new JSpinner(new SpinnerNumberModel(info.y, 0, Integer.MAX_VALUE, 1));
 			y.setPreferredSize(dim);
 			y.addChangeListener((event)->{
-				//TODO
+				info.y = (int)y.getValue();
 			});
 			this.add(y);
 			
 			JSpinner w = new JSpinner(new SpinnerNumberModel(info.width, 0, Integer.MAX_VALUE, 1));
 			w.setPreferredSize(dim);
 			w.addChangeListener((event)->{
-				//TODO
+				info.width = (int)w.getValue();
 			});
 			this.add(w);
 			
 			JSpinner h = new JSpinner(new SpinnerNumberModel(info.height, 0, Integer.MAX_VALUE, 1));
 			h.setPreferredSize(dim);
 			h.addChangeListener((event)->{
-				//TODO
+				info.height = (int)h.getValue();
 			});
 			this.add(h);
 		}
@@ -1222,6 +1258,7 @@ public class Main {
 	 * Gets the total amount of visible panels
 	 * @return The total amount of visible panels
 	 */
+	@Deprecated
 	private static final int getTotalAmountOfVisiblePanels(){
 		int n = (Main.config.showAvg ? 1 : 0) + (Main.config.showMax ? 1 : 0) + (Main.config.showCur ? 1 : 0) + (Main.config.showTotal ? 1 : 0);
 		for(KeyInformation info : Main.config.keyinfo){
@@ -1519,7 +1556,6 @@ public class Main {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			List<LayoutPosition> components = new ArrayList<LayoutPosition>();
 			Key k;
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
@@ -1532,29 +1568,25 @@ public class Main {
 					k = keys.get(i.keycode);
 				}
 				if(config.showKeys && i.visible){
-					components.add(k.getPanel(i));
+					content.add(k.getPanel(i));
 					panels++;
 				}
 			}
 			if(config.showMax){
-				components.add(new MaxPanel());
+				content.add(new MaxPanel());
 				panels++;
 			}
 			if(config.showAvg){
-				components.add(new AvgPanel());
+				content.add(new AvgPanel());
 				panels++;
 			}
 			if(config.showCur){
-				components.add(new NowPanel());
+				content.add(new NowPanel());
 				panels++;
 			}
 			if(config.showTotal){
-				components.add(new TotPanel());
+				content.add(new TotPanel());
 				panels++;
-			}
-			//components.sort((LayoutPosition left, LayoutPosition right) -> (left.getIndex() > right.getIndex() ? 1 : -1));
-			for(LayoutPosition c : components){
-				content.add((Component) c);
 			}
 			if(panels == 0 && !config.showGraph){
 				frame.setVisible(false);

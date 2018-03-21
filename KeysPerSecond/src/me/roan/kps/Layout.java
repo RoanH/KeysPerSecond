@@ -21,6 +21,10 @@ public class Layout implements LayoutManager, LayoutManager2{
 		parent.setLayout(this);
 	}
 	
+	public int getLayoutWidth(){
+		return maxw;
+	}
+	
 	public int getWidth(){
 		return SizeManager.cellSize * maxw;
 	}
@@ -129,7 +133,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 			for(Component component : parent.getComponents()){
 				lp = (LayoutPosition)component;
 				component.setBounds((int)Math.floor(dx * lp.getLayoutX()), 
-						            (int)Math.floor(dy * lp.getLayoutY()), 
+						            (int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
 						            (int)Math.ceil(dx * lp.getLayoutWidth()), 
 									(int)Math.ceil(dy * lp.getLayoutHeight()));
 			}

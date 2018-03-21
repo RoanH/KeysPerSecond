@@ -1,5 +1,8 @@
 package me.roan.kps;
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 /**
  * Panel used to display the
  * average keys pressed per second
@@ -23,24 +26,21 @@ public final class AvgPanel extends BasePanel {
 
 	@Override
 	public int getLayoutX() {
-		return 1;
+		return Main.config.avg_x == -1 ? 0 : Main.config.avg_x;//TODO
 	}
 
 	@Override
 	public int getLayoutY() {
-		// TODO Auto-generated method stub
-		return 1;
+		return Main.config.avg_y;
 	}
 
 	@Override
 	public int getLayoutWidth() {
-		// TODO Auto-generated method stub
-		return 2;
+		return Main.config.avg_w;
 	}
 
 	@Override
 	public int getLayoutHeight() {
-		// TODO Auto-generated method stub
-		return 1;
+		return Main.config.avg_h;
 	}
 }
