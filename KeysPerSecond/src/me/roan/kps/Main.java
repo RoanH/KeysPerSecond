@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -58,6 +59,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -1042,10 +1044,86 @@ public class Main {
 		mainLoop();
 	}
 	
+	protected static final void configureLayoutNew(){
+		JPanel form = new JPanel(new BorderLayout());
+		JPanel list = new JPanel();
+		list.setLayout(new GridLayout(0, 1, 0, 2));
+		JPanel info = new JPanel(new GridLayout(1, 5, 0, 2));
+		info.add(new JLabel("Key", SwingConstants.CENTER));
+		info.add(new JLabel("X", SwingConstants.CENTER));
+		info.add(new JLabel("Y", SwingConstants.CENTER));
+		info.add(new JLabel("Width", SwingConstants.CENTER));
+		info.add(new JLabel("Height", SwingConstants.CENTER));
+		list.add(info);
+		
+		for(KeyInformation i : config.keyinfo){
+			list.add(new ListItem(i));
+		}
+
+		JPanel view = new JPanel();
+		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
+		view.add(list);
+		view.add(new JPanel(new BorderLayout()));
+		JScrollPane pane = new JScrollPane(view);
+		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		pane.setPreferredSize(new Dimension(250, 200));
+
+		form.add(pane, BorderLayout.CENTER);
+
+		JOptionPane.showMessageDialog(frame, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
+	}
+	
+	private static class ListItem extends JPanel{
+		/**
+		 * Serial ID
+		 */
+		private static final long serialVersionUID = -3750764949517577166L;
+
+		private ListItem(KeyInformation info){
+			super(new GridLayout(1, 1, 2, 0));
+			this.add(new JLabel(info.name));
+			Dimension dim = this.getPreferredSize();
+			dim = new Dimension(dim.width / 5, dim.height / 5);
+
+			JSpinner x = new JSpinner(new SpinnerNumberModel(info.x, 0, Integer.MAX_VALUE, 1));
+			x.setPreferredSize(dim);
+			x.addChangeListener((event)->{
+				//TODO
+			});
+			this.add(x);
+			
+			JSpinner y = new JSpinner(new SpinnerNumberModel(info.y, 0, Integer.MAX_VALUE, 1));
+			y.setPreferredSize(dim);
+			y.addChangeListener((event)->{
+				//TODO
+			});
+			this.add(y);
+			
+			JSpinner w = new JSpinner(new SpinnerNumberModel(info.width, 0, Integer.MAX_VALUE, 1));
+			w.setPreferredSize(dim);
+			w.addChangeListener((event)->{
+				//TODO
+			});
+			this.add(w);
+			
+			JSpinner h = new JSpinner(new SpinnerNumberModel(info.height, 0, Integer.MAX_VALUE, 1));
+			h.setPreferredSize(dim);
+			h.addChangeListener((event)->{
+				//TODO
+			});
+			this.add(h);
+		}
+	}
+	
 	/**
 	 * Shows the layout configuration dialog
 	 */
+	@Deprecated
 	protected static final void configureLayout(){
+		configureLayoutNew();
+		if(frame != null){//TODO
+			return;
+		}
 		JPanel config = new JPanel(new BorderLayout());
 		JPanel mode = new JPanel(new GridLayout(0, 2, 0, 5));
 		//Text mode (horizontal / vertical)
