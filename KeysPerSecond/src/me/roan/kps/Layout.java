@@ -14,6 +14,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	
 	private int maxw;
 	private int maxh;
+	private int extraWidth = 0;
 	private final Container parent;
 	
 	protected Layout(Container parent){
@@ -26,7 +27,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	}
 	
 	public int getWidth(){
-		return SizeManager.cellSize * maxw;
+		return SizeManager.cellSize * (maxw + extraWidth);
 	}
 	
 	public int getHeight(){
@@ -36,7 +37,11 @@ public class Layout implements LayoutManager, LayoutManager2{
 	public void add(Component comp) throws InvalidLayoutException{
 		LayoutPosition lp = (LayoutPosition)comp;
 		System.out.println("Adding component: " + lp.getLayoutLocation());
-		maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
+		if(lp.getLayoutX() != -1){
+			maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
+		}else{
+			extraWidth += lp.getLayoutWidth();
+		}
 		maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		if(lp.getLayoutWidth() == 0 || lp.getLayoutHeight() == 0){
 			throw new NoAreaException();
@@ -44,7 +49,8 @@ public class Layout implements LayoutManager, LayoutManager2{
 		LayoutPosition other;
 		for(Component component : parent.getComponents()){
 			other = (LayoutPosition)component;
-			if(((other.getLayoutX() < lp.getLayoutX() && lp.getLayoutX() < other.getXWidth())  ||
+			if(lp.getLayoutX() != -1 &&
+			   ((other.getLayoutX() < lp.getLayoutX() && lp.getLayoutX() < other.getXWidth())  ||
 			    (other.getLayoutX() < lp.getXWidth()  && lp.getXWidth()  < other.getXWidth())) &&
 			   ((other.getLayoutY() < lp.getLayoutY() && lp.getLayoutY() < other.getYHeight()) ||
 			    (other.getLayoutY() < lp.getYHeight() && lp.getYHeight() < other.getYHeight()))){
@@ -126,16 +132,25 @@ public class Layout implements LayoutManager, LayoutManager2{
 
 	@Override
 	public void layoutContainer(Container parent) {
-		if(maxw != 0 && maxh != 0){
-			double dx = parent.getWidth() / maxw;
+		if(!(maxw == 0 && extraWidth == 0) && maxh != 0){
+			double dx = parent.getWidth() / (maxw + extraWidth);
 			double dy = parent.getHeight() / maxh;
 			LayoutPosition lp;
+			int width = maxw;
 			for(Component component : parent.getComponents()){
 				lp = (LayoutPosition)component;
-				component.setBounds((int)Math.floor(dx * lp.getLayoutX()), 
-						            (int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
-						            (int)Math.ceil(dx * lp.getLayoutWidth()), 
-									(int)Math.ceil(dy * lp.getLayoutHeight()));
+				if(lp.getLayoutX() != -1){
+					component.setBounds((int)Math.floor(dx * lp.getLayoutX()), 
+				                        (int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
+				                        (int)Math.ceil(dx * lp.getLayoutWidth()), 
+					                    (int)Math.ceil(dy * lp.getLayoutHeight()));
+				}else{
+					component.setBounds((int)Math.floor(dx * width), 
+				                        (int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
+				                        (int)Math.ceil(dx * lp.getLayoutWidth()), 
+					                    (int)Math.ceil(dy * lp.getLayoutHeight()));
+					width += lp.getLayoutWidth();
+				}
 			}
 		}
 	}
@@ -149,14 +164,14 @@ public class Layout implements LayoutManager, LayoutManager2{
 	
 	public static final class LayoutOverlapException extends InvalidLayoutException{
 		/**
-		 * 
+		 * Serial ID
 		 */
 		private static final long serialVersionUID = -4501441399333364320L;
 	}
 	
 	public static final class NoAreaException extends InvalidLayoutException{
 		/**
-		 * 
+		 * Serial ID
 		 */
 		private static final long serialVersionUID = 4640131353893912934L;
 	}

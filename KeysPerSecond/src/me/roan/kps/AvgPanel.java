@@ -26,7 +26,7 @@ public final class AvgPanel extends BasePanel {
 
 	@Override
 	public int getLayoutX() {
-		return Main.config.avg_x == -1 ? 0 : Main.config.avg_x;//TODO
+		return Main.config.avg_x;//TODO
 	}
 
 	@Override
