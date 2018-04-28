@@ -23,25 +23,21 @@ public final class MaxPanel extends BasePanel {
 
 	@Override
 	public int getLayoutX() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.max_x;
 	}
 
 	@Override
 	public int getLayoutY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.max_y;
 	}
 
 	@Override
 	public int getLayoutWidth() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.max_w;
 	}
 
 	@Override
 	public int getLayoutHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.max_h;
 	}
 }

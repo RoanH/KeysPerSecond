@@ -1125,6 +1125,7 @@ public class Main {
 			x.setPreferredSize(dim);
 			x.addChangeListener((event)->{
 				info.x = (int)x.getValue();
+				reconfigure();
 			});
 			this.add(x);
 			
@@ -1132,6 +1133,7 @@ public class Main {
 			y.setPreferredSize(dim);
 			y.addChangeListener((event)->{
 				info.y = (int)y.getValue();
+				reconfigure();
 			});
 			this.add(y);
 			
@@ -1139,6 +1141,7 @@ public class Main {
 			w.setPreferredSize(dim);
 			w.addChangeListener((event)->{
 				info.width = (int)w.getValue();
+				reconfigure();
 			});
 			this.add(w);
 			
@@ -1146,6 +1149,7 @@ public class Main {
 			h.setPreferredSize(dim);
 			h.addChangeListener((event)->{
 				info.height = (int)h.getValue();
+				reconfigure();
 			});
 			this.add(h);
 		}
@@ -1549,8 +1553,7 @@ public class Main {
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
-			//content = new JPanel(); //TODO clean
-			//content.setLayout(new Layout(content));
+			layout.removeAll();
 			try {
 				ColorManager.prepareImages(config.showGraph, config.customColors);
 			} catch (IOException e) {

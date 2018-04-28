@@ -27,25 +27,21 @@ public final class TotPanel extends BasePanel {
 
 	@Override
 	public int getLayoutX() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.tot_x;
 	}
 
 	@Override
 	public int getLayoutY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.tot_y;
 	}
 
 	@Override
 	public int getLayoutWidth() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.tot_w;
 	}
 
 	@Override
 	public int getLayoutHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.tot_h;
 	}
 }

@@ -27,24 +27,21 @@ public final class NowPanel extends BasePanel {
 	
 	@Override
 	public int getLayoutX() {
-		return 0;
+		return Main.config.cur_x;
 	}
 
 	@Override
 	public int getLayoutY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Main.config.cur_y;
 	}
 
 	@Override
 	public int getLayoutWidth() {
-		// TODO Auto-generated method stub
-		return 1;
+		return Main.config.cur_w;
 	}
 
 	@Override
 	public int getLayoutHeight() {
-		// TODO Auto-generated method stub
-		return 1;
+		return Main.config.cur_h;
 	}
 }

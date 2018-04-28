@@ -22,6 +22,11 @@ public class Layout implements LayoutManager, LayoutManager2{
 		parent.setLayout(this);
 	}
 	
+	public void removeAll(){
+		parent.removeAll();
+		extraWidth = 0;
+	}
+	
 	public int getLayoutWidth(){
 		return maxw;
 	}
@@ -37,30 +42,35 @@ public class Layout implements LayoutManager, LayoutManager2{
 	public void add(Component comp) throws InvalidLayoutException{
 		LayoutPosition lp = (LayoutPosition)comp;
 		System.out.println("Adding component: " + lp.getLayoutLocation());
+		//validate(lp.getLayoutX(), lp.getLayoutY(), lp.getLayoutWidth(), lp.getLayoutHeight(), lp);
 		if(lp.getLayoutX() != -1){
 			maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
 		}else{
 			extraWidth += lp.getLayoutWidth();
 		}
 		maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
-		if(lp.getLayoutWidth() == 0 || lp.getLayoutHeight() == 0){
-			throw new NoAreaException();
-		}
-		LayoutPosition other;
-		for(Component component : parent.getComponents()){
-			other = (LayoutPosition)component;
-			if(lp.getLayoutX() != -1 &&
-			   ((other.getLayoutX() < lp.getLayoutX() && lp.getLayoutX() < other.getXWidth())  ||
-			    (other.getLayoutX() < lp.getXWidth()  && lp.getXWidth()  < other.getXWidth())) &&
-			   ((other.getLayoutY() < lp.getLayoutY() && lp.getLayoutY() < other.getYHeight()) ||
-			    (other.getLayoutY() < lp.getYHeight() && lp.getYHeight() < other.getYHeight()))){
-				throw new LayoutOverlapException();
-			}
-		}
 		if(comp.getParent() == null){
 			parent.add(comp);
 		}
 	}
+	
+//	public void validate(int x, int y, int w, int h, LayoutPosition except) throws NoAreaException, LayoutOverlapException{
+//		if(w == 0 || h == 0){
+//			throw new NoAreaException();
+//		}
+//		LayoutPosition other;
+//		for(Component component : parent.getComponents()){
+//			other = (LayoutPosition)component;
+//			if(x != -1 &&
+//			   ((other.getLayoutX() < x     && x     < other.getXWidth())  ||
+//			    (other.getLayoutX() < x + w && x + w < other.getXWidth())) &&
+//			   ((other.getLayoutY() < y     && y     < other.getYHeight()) ||
+//			    (other.getLayoutY() < y + h && y + h < other.getYHeight()))){
+//				throw new LayoutOverlapException();
+//			}
+//		}
+//		
+//	}
 	
 	private void recomputeGrid(){
 		LayoutPosition lp;
