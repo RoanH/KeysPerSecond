@@ -1087,12 +1087,6 @@ public class Main {
 			if(graphMode.getSelectedItem() == GraphMode.Detached){
 				gw.setEnabled(true);//TODO
 				gh.setEnabled(true);
-			}else if(graphMode.getSelectedItem() == GraphMode.Bottom || graphMode.getSelectedItem() == GraphMode.Top){
-				gw.setEnabled(false);
-				gh.setEnabled(true);
-			}else{
-				gw.setEnabled(true);
-				gh.setEnabled(false);
 			}
 		});
 		graphMode.setSelectedItem(Main.config.graphMode);
@@ -1227,12 +1221,6 @@ public class Main {
 			if(graphMode.getSelectedItem() == GraphMode.Detached){
 				gw.setEnabled(true);
 				gh.setEnabled(true);
-			}else if(graphMode.getSelectedItem() == GraphMode.Bottom || graphMode.getSelectedItem() == GraphMode.Top){
-				gw.setEnabled(false);
-				gh.setEnabled(true);
-			}else{
-				gw.setEnabled(true);
-				gh.setEnabled(false);
 			}
 		});
 		graphMode.setSelectedItem(Main.config.graphMode);
@@ -1600,16 +1588,14 @@ public class Main {
 
 			JPanel all = new JPanel(new BorderLayout());
 			all.add(content, BorderLayout.CENTER);
-			JPanel gpanel = new JPanel(new BorderLayout());
 			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
-			gpanel.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
-			gpanel.add(graph, BorderLayout.CENTER);
 			if(config.showGraph){
 				if(config.graphMode != GraphMode.Detached){
-					all.add(gpanel, config.graphMode.layoutPosition);
+					content.add(graph);
 					graphFrame.setVisible(false);
 				}else{
-					graphFrame.add(gpanel);
+					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+					graphFrame.add(graph);
 					graphFrame.setSize(config.graphWidth, config.graphHeight);
 					graphFrame.setVisible(true);
 				}
@@ -1618,8 +1604,7 @@ public class Main {
 			}
 			//TODO
 			System.out.println(layout);
-			frame.setSize(layout.getWidth() + (config.showGraph ? config.graphMode.getAddedWidth() : 0), 
-					      layout.getHeight() + (config.showGraph ? config.graphMode.getAddedHeight() : 0));
+			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
 				content.setOpaque(false);

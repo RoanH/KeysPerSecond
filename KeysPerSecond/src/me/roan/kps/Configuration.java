@@ -167,7 +167,7 @@ public class Configuration {
 	/**
 	 * Position the graph is rendered in
 	 */
-	protected GraphMode graphMode = GraphMode.Bottom;
+	protected GraphMode graphMode = GraphMode.Inline;
 	/**
 	 * Width of the graph
 	 */
@@ -212,6 +212,10 @@ public class Configuration {
 	protected int tot_y = 0;
 	protected int tot_w = 2;
 	protected int tot_h = 3;
+	protected int graph_x = 0;
+	protected int graph_y = -1;
+	protected int graph_w = -1;
+	protected int graph_h = 3;
 	
 	/**
 	 * The original configuration file

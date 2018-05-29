@@ -15,6 +15,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	private int maxw;
 	private int maxh;
 	private int extraWidth = 0;
+	private int extraHeight = 0;
 	private final Container parent;
 	
 	protected Layout(Container parent){
@@ -25,6 +26,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	public void removeAll(){
 		parent.removeAll();
 		extraWidth = 0;
+		extraHeight = 0;
 	}
 	
 	public int getLayoutWidth(){
@@ -36,7 +38,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	}
 	
 	public int getHeight(){
-		return SizeManager.cellSize * maxh;
+		return SizeManager.cellSize * (maxh + extraHeight);
 	}
 	
 	public void add(Component comp) throws InvalidLayoutException{
@@ -48,7 +50,11 @@ public class Layout implements LayoutManager, LayoutManager2{
 		}else{
 			extraWidth += lp.getLayoutWidth();
 		}
-		maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
+		if(lp.getLayoutY() != -1){
+			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
+		}else{
+			extraHeight += lp.getLayoutHeight();
+		}
 		if(comp.getParent() == null){
 			parent.add(comp);
 		}
@@ -142,24 +148,31 @@ public class Layout implements LayoutManager, LayoutManager2{
 
 	@Override
 	public void layoutContainer(Container parent) {
-		if(!(maxw == 0 && extraWidth == 0) && maxh != 0){
+		if(!(maxw == 0 && extraWidth == 0) && !(maxh == 0 && extraHeight == 0)){
 			double dx = parent.getWidth() / (maxw + extraWidth);
-			double dy = parent.getHeight() / maxh;
+			double dy = parent.getHeight() / (maxh + extraHeight);
 			LayoutPosition lp;
 			int width = maxw;
+			int height = maxh;
 			for(Component component : parent.getComponents()){
 				lp = (LayoutPosition)component;
-				if(lp.getLayoutX() != -1){
-					component.setBounds((int)Math.floor(dx * lp.getLayoutX()), 
-				                        (int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
-				                        (int)Math.ceil(dx * lp.getLayoutWidth()), 
-					                    (int)Math.ceil(dy * lp.getLayoutHeight()));
-				}else{
+				if(lp.getLayoutX() == -1){
 					component.setBounds((int)Math.floor(dx * width), 
-				                        (int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
-				                        (int)Math.ceil(dx * lp.getLayoutWidth()), 
-					                    (int)Math.ceil(dy * lp.getLayoutHeight()));
+	                        			(int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
+	                        			(int)Math.ceil(dx * lp.getLayoutWidth()), 
+	                        			(int)Math.ceil(dy * lp.getLayoutHeight()));
 					width += lp.getLayoutWidth();
+				}else if(lp.getLayoutY() == -1){
+					component.setBounds((int)Math.floor(dx * lp.getLayoutX()), 
+                						(int)Math.floor(dy * height), 
+                						(int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? width : lp.getLayoutWidth())), 
+                						(int)Math.ceil(dy * lp.getLayoutHeight()));
+					height += lp.getLayoutHeight();
+				}else{
+					component.setBounds((int)Math.floor(dx * lp.getLayoutX()), 
+	                        			(int)Math.floor(dy * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
+	                        			(int)Math.ceil(dx * lp.getLayoutWidth()), 
+	                        			(int)Math.ceil(dy * lp.getLayoutHeight()));
 				}
 			}
 		}

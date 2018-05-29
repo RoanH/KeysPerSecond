@@ -16,7 +16,7 @@ import javax.swing.JPanel;
  * Panel to draw continuous graphs
  * @author Roan
  */
-public class GraphPanel extends JPanel{
+public class GraphPanel extends JPanel implements LayoutPosition{
 	/**
 	 * Serial ID
 	 */
@@ -45,11 +45,6 @@ public class GraphPanel extends JPanel{
 	protected final void reset(){
 		values.clear();
 		maxval = 1;
-	}
-	
-	@Override
-	public Dimension getPreferredSize(){
-		return new Dimension(Main.config.graphWidth, Main.config.graphHeight);
 	}
 	
 	@Override
@@ -123,5 +118,25 @@ public class GraphPanel extends JPanel{
 				values.removeLast();
 			}
 		}
+	}
+
+	@Override
+	public int getLayoutX() {
+		return Main.config.graph_x;
+	}
+
+	@Override
+	public int getLayoutY() {
+		return Main.config.graph_y;
+	}
+
+	@Override
+	public int getLayoutWidth() {
+		return Main.config.graph_w;
+	}
+
+	@Override
+	public int getLayoutHeight() {
+		return Main.config.graph_h;
 	}
 }
