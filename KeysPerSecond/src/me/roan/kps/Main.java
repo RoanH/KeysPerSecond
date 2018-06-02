@@ -2066,15 +2066,15 @@ public class Main {
 				return "\u2193";
 			// Begin Cursor Key Zone
 			case NativeKeyEvent.VC_UP:
-				return "\u2BC5";
+				return "\u25B4";
 			case NativeKeyEvent.VC_LEFT:
-				return "\u2BC7";
+				return "\u25C2";
 			case NativeKeyEvent.VC_CLEAR:
 				return "Clr";
 			case NativeKeyEvent.VC_RIGHT:
-				return "\u2BC8";
+				return "\u25B8";
 			case NativeKeyEvent.VC_DOWN:
-				return "\u2BC6";
+				return "\u25BE";
 			// Begin Modifier and Control Keys
 			case NativeKeyEvent.VC_SHIFT:
 				return	"\u21D1";
