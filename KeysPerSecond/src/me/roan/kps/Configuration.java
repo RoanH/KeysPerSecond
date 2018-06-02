@@ -8,7 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -306,7 +308,7 @@ public class Configuration {
 	private final boolean loadNewFormat(File saveloc){
 		boolean modified = false;
 		try{
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc)));
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc), StandardCharsets.UTF_8));
 			String line;
 			while((line = in.readLine()) != null){
 				if(line.startsWith("#") || line.isEmpty()){
@@ -775,7 +777,7 @@ public class Configuration {
 		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf2") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf2"));
 		if(!saveloc.exists() || (saveloc.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
 			try{
-				PrintWriter out = new PrintWriter(new FileOutputStream(saveloc));
+				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
 				out.println("# General");
 				out.println("showMax: " + showMax);
@@ -838,6 +840,7 @@ public class Configuration {
 				out.flush();
 				JOptionPane.showMessageDialog(null, "Configuration succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Failed to save the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 			}
 		}
