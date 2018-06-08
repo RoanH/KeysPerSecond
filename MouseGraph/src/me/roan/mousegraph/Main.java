@@ -1,9 +1,6 @@
 package me.roan.mousegraph;
 
-import java.awt.Point;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -54,7 +51,7 @@ public class Main {
 				System.out.println("loop: " + path.size());
 				long time = System.currentTimeMillis();
 				while(true){
-					if(path.size() > 0 && time - path.getLast().time > 10000){
+					if(path.size() > 0 && time - path.getLast().time > 1000){
 						path.removeLast();
 						System.out.println("remove");
 					}else{
