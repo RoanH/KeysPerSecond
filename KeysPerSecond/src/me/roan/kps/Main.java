@@ -1302,7 +1302,7 @@ public class Main {
 	protected static final void configureKeys(){
 		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
 		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
+		keyform.add(new JLabel("Currently added keys (you hide or remove them):"), BorderLayout.PAGE_START);
 		JTable keys = new JTable();
 		DefaultTableModel model = new DefaultTableModel(){
 			/**
@@ -1317,21 +1317,18 @@ public class Main {
 
 			@Override
 			public int getColumnCount() {
-				return 4;
+				return 3;
 			}
 
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				switch(columnIndex){
 				case 0:
-					//return config.keyinfo.get(rowIndex).index;//TODO not a thing anymore
-					return 0;
-				case 1:
 					int n = (config.keyinfo.get(rowIndex).alt ? 1 : 0) + (config.keyinfo.get(rowIndex).ctrl ? 1 : 0) + (config.keyinfo.get(rowIndex).shift ? 1 : 0);
 					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
-				case 2:
+				case 1:
 					return config.keyinfo.get(rowIndex).visible;
-				case 3:
+				case 2:
 					return false;
 				}
 				return null;
@@ -1341,12 +1338,10 @@ public class Main {
 			public String getColumnName(int col) {
 				switch(col){
 				case 0:
-					return "Position";
-				case 1:
 					return "Key";
-				case 2:
+				case 1:
 					return "Visible";
-				case 3:
+				case 2:
 					return "Remove";
 				}
 				return null;
@@ -1354,7 +1349,7 @@ public class Main {
 
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 2 || columnIndex ==3){
+				if (columnIndex == 1 || columnIndex == 2){
 					return Boolean.class;
 				}
 				return super.getColumnClass(columnIndex);
@@ -1362,22 +1357,12 @@ public class Main {
 
 			@Override
 			public boolean isCellEditable(int row, int col){
-				return col != 1;
+				return col != 0;
 			}
 
 			@Override
 			public void setValueAt(Object value, int row, int col){
-				if(col == 0){//TODO clean
-//					try{
-//						config.keyinfo.get(row).index = Integer.parseInt((String)value);
-//					}catch(NumberFormatException | NullPointerException e){
-//						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-//					}
-				}else if(col == 2){
-					if(config.rows * config.columns <= getTotalAmountOfVisiblePanels() && config.rows != 0 && config.columns != 0 && (boolean)value){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
-						return;
-					}
+				if(col == 1){
 					config.keyinfo.get(row).visible = (boolean)value;
 				}else{
 					if((boolean)value == true){
