@@ -796,14 +796,19 @@ public class Main {
 				save.setEnabled(true);
 			}
 		});
-		JLabel ver = new JLabel("<html><center><i>Version: v7.2, latest version: <font color=gray>loading</font><br>"
-				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>", SwingConstants.CENTER);
+		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
+		JLabel ver = new JLabel("<html><center><i>Version: v7.4, latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
+		info.add(ver);
 		new Thread(()->{
 			String version = checkVersion();//XXX the version number 
-			ver.setText("<html><center><i>Version: v7.2, latest version: " + (version == null ? "unknown :(" : version) + "<br>"
-				+ "<u><font color=blue> https://osu.ppy.sh/community/forums/topics/552405 </font></u></i></center></html>");
+			ver.setText("<html><center><i>Version: v7.4, latest version: " + (version == null ? "unknown :(" : version) + "</i></center></html>");
 		}, "Version Checker").start();
-		ver.addMouseListener(new MouseListener(){
+		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
+		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
+		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
+		links.add(forum);
+		links.add(git);
+		forum.addMouseListener(new MouseListener(){
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -832,8 +837,38 @@ public class Main {
 			public void mouseExited(MouseEvent e) {
 			}
 		});
-		form.add(ver, BorderLayout.PAGE_END);
-		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
+		git.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(Desktop.isDesktopSupported()){
+					try {
+						Desktop.getDesktop().browse(new URL("https://github.com/RoanH/KeysPerSecond").toURI());
+					} catch (IOException | URISyntaxException e1) {
+						//pity
+					}
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+		info.add(links);
+		form.add(info, BorderLayout.PAGE_END);
+		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.PLAIN_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
 		if(1 == option || option == JOptionPane.CLOSED_OPTION){
 			try {
 				GlobalScreen.unregisterNativeHook();
@@ -2181,15 +2216,15 @@ public class Main {
 				return "\u2193";
 			// Begin Cursor Key Zone
 			case NativeKeyEvent.VC_UP:
-				return "\u25B2";
+				return "\u25B4";
 			case NativeKeyEvent.VC_LEFT:
-				return "\u25B0";
+				return "\u25C2";
 			case NativeKeyEvent.VC_CLEAR:
 				return "Clr";
 			case NativeKeyEvent.VC_RIGHT:
-				return "\u25B6";
+				return "\u25B8";
 			case NativeKeyEvent.VC_DOWN:
-				return "\u25BC";
+				return "\u25BE";
 			// Begin Modifier and Control Keys
 			case NativeKeyEvent.VC_SHIFT:
 				return	"\u21D1";
