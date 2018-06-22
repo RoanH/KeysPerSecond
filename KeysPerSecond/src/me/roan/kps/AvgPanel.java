@@ -1,8 +1,5 @@
 package me.roan.kps;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 /**
  * Panel used to display the
  * average keys pressed per second
