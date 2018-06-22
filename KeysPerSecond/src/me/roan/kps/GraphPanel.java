@@ -2,7 +2,6 @@ package me.roan.kps;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -97,7 +96,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				g.drawImage(ColorManager.graph_lower_middle, 2 + SizeManager.graphImageSize, this.getHeight() - 3 - SizeManager.graphImageSize, this.getWidth() - 3 - SizeManager.graphImageSize, this.getHeight() - 3, 0, 0, 46, 4, this);
 				g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getWidth() - 3, this.getHeight() - 3 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
 			}catch(NullPointerException e){
-				//catch but do not solve, this is caused by the race
+				//catch but do not solve, this is caused by a race
 				//condition. However adding synchronisation would impact
 				//performance more then it is worth
 			}
