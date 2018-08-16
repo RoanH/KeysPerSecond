@@ -25,6 +25,30 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), getHorizontalBaseline(panel, metrics));
 		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -38,6 +62,30 @@ public enum RenderingMode {
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	},
 	/**
@@ -53,6 +101,30 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -66,6 +138,30 @@ public enum RenderingMode {
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	},
 	/**
@@ -81,6 +177,30 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -94,6 +214,30 @@ public enum RenderingMode {
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	},
 	/**
@@ -109,6 +253,30 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	},
 	/**
 	 * VERTICAL text rendering
@@ -123,6 +291,26 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, ((((panel.getHeight() - SizeManager.borderSize()) * 7) / 8)));
 		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			return (panel.getHeight() * 3) / 8 - 3 + SizeManager.graphImageSize;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			return panel.getWidth() - (2 + SizeManager.graphImageSize) * 2;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			return (panel.getHeight() * 2) / 8 - 1 + SizeManager.graphImageSize;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			return panel.getWidth() - (2 + SizeManager.graphImageSize) * 2;
+		}
 	},
 	/**
 	 * VERTICAL text rendering
@@ -136,6 +324,30 @@ public enum RenderingMode {
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	};
 	
@@ -189,6 +401,14 @@ public enum RenderingMode {
 	 */
 	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value);
 	
+	protected abstract int getEffectiveTitleHeight(BasePanel panel);
+	
+	protected abstract int getEffectiveTitleWidth(BasePanel panel);
+	
+	protected abstract int getEffectiveValueHeight(BasePanel panel);
+	
+	protected abstract int getEffectiveValueWidth(BasePanel panel);
+	
 	/**
 	 * Gets the location at which the panel title should be drawn
 	 * Points returned by this class are not static
@@ -227,7 +447,15 @@ public enum RenderingMode {
 		return (panel.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
 	}
 	
-	protected static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont){
+	public Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
+		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont);
+	}
+	
+	public Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
+		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont);
+	}
+	
+	private static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont){
 		FontMetrics fm;
 		if(currentFont != null){
 			fm = g.getFontMetrics(currentFont);

@@ -67,18 +67,18 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 			g.setColor(Main.config.getForegroundColor());
 		}
 		
-		String titleString = getTitle();
+		String title = getTitle();
 		//TODO just for testing if the mode is horizontal max width and height are different.
-		titleFont = RenderingMode.resolveFont(titleString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, this.getHeight() / 2 - (3 + SizeManager.graphImageSize), Font.BOLD, titleFont);
-		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, titleString, titleFont);
+		titleFont = Main.config.mode.getTitleFont(title, g, this, titleFont);
+		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, title, titleFont);
 		g.setFont(titleFont);
-		g.drawString(titleString, namePos.x, namePos.y);
+		g.drawString(title, namePos.x, namePos.y);
 
-		String valueString = getValue();
-		valueFont = RenderingMode.resolveFont(valueString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, (this.getHeight() * 3) / 8 - (1 + SizeManager.graphImageSize), Font.PLAIN, valueFont);
-		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, valueString, valueFont);
+		String value = getValue();
+		valueFont = Main.config.mode.getValueFont(value, g, this, valueFont);
+		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, value, valueFont);
 		g.setFont(valueFont);
-		g.drawString(valueString, keyCountPos.x, keyCountPos.y);
+		g.drawString(value, keyCountPos.x, keyCountPos.y);
 		
 		//TODO debug only
 		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
