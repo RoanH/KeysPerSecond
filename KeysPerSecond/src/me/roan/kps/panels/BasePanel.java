@@ -1,4 +1,4 @@
-package me.roan.kps;
+package me.roan.kps.panels;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -8,6 +8,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import javax.swing.JPanel;
+
+import me.roan.kps.ColorManager;
+import me.roan.kps.LayoutPosition;
+import me.roan.kps.Main;
+import me.roan.kps.SizeManager;
 
 /**
  * Abstract base class for the 
@@ -25,7 +30,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	private Font titleFont;
 	private Font valueFont;
 	
-	protected void sizeChanged(){
+	public void sizeChanged(){
 		titleFont = null;
 		valueFont = null;
 	}

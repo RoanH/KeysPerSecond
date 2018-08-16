@@ -16,47 +16,47 @@ public class ColorManager {
 	/**
 	 * Graph image segment 'lower right'
 	 */
-	protected static Image graph_lower_right;
+	public static Image graph_lower_right;
 	/**
 	 * Graph image segment 'lower left'
 	 */
-	protected static Image graph_lower_left;
+	public static Image graph_lower_left;
 	/**
 	 * Graph image segment 'lower middle'
 	 */
-	protected static Image graph_lower_middle;
+	public static Image graph_lower_middle;
 	/**
 	 * Graph image segment 'side left'
 	 */
-	protected static Image graph_side_left;
+	public static Image graph_side_left;
 	/**
 	 * Graph image segment 'side right'
 	 */
-	protected static Image graph_side_right;
+	public static Image graph_side_right;
 	/**
 	 * Graph image segment 'upper right'
 	 */
-	protected static Image graph_upper_right;
+	public static Image graph_upper_right;
 	/**
 	 * Graph image segment 'upper left'
 	 */
-	protected static Image graph_upper_left;
+	public static Image graph_upper_left;
 	/**
 	 * Graph image segment 'upper middle'
 	 */
-	protected static Image graph_upper_middle;
+	public static Image graph_upper_middle;
 	/**
 	 * Color used to fill the area underneath the graph
 	 */
-	protected static Color alphaAqua;
+	public static Color alphaAqua;
 	/**
 	 * Whether or not transparency is enabled
 	 */
-	protected static boolean transparency = false;
+	public static boolean transparency = false;
 	/**
 	 * Transparent color
 	 */
-	protected static final Color transparent = new Color(0.0F, 0.0F, 0.0F, 0.0F);
+	public static final Color transparent = new Color(0.0F, 0.0F, 0.0F, 0.0F);
 	/**
 	 * Checkmark icon
 	 */
@@ -68,7 +68,7 @@ public class ColorManager {
 	/**
 	 * Active panel color
 	 */
-	protected static Color activeColor;
+	public static Color activeColor;
 	
 	/**
 	 * Prepares the colours and images

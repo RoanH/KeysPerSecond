@@ -51,7 +51,7 @@ public class Configuration {
 	/**
 	 * Whether or not to show the graph
 	 */
-	protected boolean showGraph = false;
+	public boolean showGraph = false;
 	/**
 	 * Whether or not the frame forces itself to be the top window
 	 */
@@ -83,11 +83,11 @@ public class Configuration {
 	/**
 	 * Number of points the graph consists of
 	 */
-	protected int backlog = 30;
+	public int backlog = 30;
 	/**
 	 * Draw the horizontal average line
 	 */
-	protected boolean graphAvg = true;
+	public boolean graphAvg = true;
 
 	//update rate
 	/**
@@ -117,7 +117,7 @@ public class Configuration {
 	/**
 	 * How many digits to display for avg
 	 */
-	protected int precision = 0;
+	public int precision = 0;
 
 	//size
 	/**
@@ -165,7 +165,8 @@ public class Configuration {
 	/**
 	 * Mode in which text is rendered
 	 */
-	protected RenderingMode mode = RenderingMode.VERTICAL;
+	@Deprecated
+	public RenderingMode mode = RenderingMode.VERTICAL;
 	/**
 	 * Position the graph is rendered in
 	 */
@@ -173,10 +174,12 @@ public class Configuration {
 	/**
 	 * Width of the graph
 	 */
+	@Deprecated
 	protected int graphWidth = SizeManager.defaultGraphWidth;
 	/**
 	 * Height of the graph
 	 */
+	@Deprecated
 	protected int graphHeight = SizeManager.subComponentHeight;
 	/**
 	 * Position of the maximum
@@ -198,26 +201,26 @@ public class Configuration {
 	 */
 	@Deprecated
 	protected int posTot = 104;
-	protected int avg_x = -1;
-	protected int avg_y = 0;
-	protected int avg_w = 2;
-	protected int avg_h = 3;
-	protected int max_x = -1;
-	protected int max_y = 0;
-	protected int max_w = 2;
-	protected int max_h = 3;
-	protected int cur_x = -1;
-	protected int cur_y = 0;
-	protected int cur_w = 2;
-	protected int cur_h = 3;
-	protected int tot_x = -1;
-	protected int tot_y = 0;
-	protected int tot_w = 2;
-	protected int tot_h = 3;
-	protected int graph_x = 0;
-	protected int graph_y = -1;
-	protected int graph_w = -1;
-	protected int graph_h = 3;
+	public int avg_x = -1;
+	public int avg_y = 0;
+	public int avg_w = 2;
+	public int avg_h = 3;
+	public int max_x = -1;
+	public int max_y = 0;
+	public int max_w = 2;
+	public int max_h = 3;
+	public int cur_x = -1;
+	public int cur_y = 0;
+	public int cur_w = 2;
+	public int cur_h = 3;
+	public int tot_x = -1;
+	public int tot_y = 0;
+	public int tot_w = 2;
+	public int tot_h = 3;
+	public int graph_x = 0;
+	public int graph_y = -1;
+	public int graph_w = -1;
+	public int graph_h = 3;
 	
 	/**
 	 * The original configuration file
@@ -235,28 +238,28 @@ public class Configuration {
 	/**
 	 * @return The background opacity
 	 */
-	protected final float getBackgroundOpacity(){
+	public final float getBackgroundOpacity(){
 		return customColors ? opacitybg : 1.0F;
 	}
 	
 	/**
 	 * @return The foreground opacity
 	 */
-	protected final float getForegroundOpacity(){
+	public final float getForegroundOpacity(){
 		return customColors ? opacityfg : 1.0F;
 	}
 	
 	/**
 	 * @return The background color
 	 */
-	protected final Color getBackgroundColor(){
+	public final Color getBackgroundColor(){
 		return customColors ? background : Color.BLACK;
 	}
 	
 	/**
 	 * @return The foreground color
 	 */
-	protected final Color getForegroundColor(){
+	public final Color getForegroundColor(){
 		return customColors ? foreground : Color.CYAN;
 	}
 	

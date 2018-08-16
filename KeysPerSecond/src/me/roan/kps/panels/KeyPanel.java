@@ -1,5 +1,6 @@
-package me.roan.kps;
+package me.roan.kps.panels;
 
+import me.roan.kps.Main;
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
 
@@ -34,7 +35,7 @@ public final class KeyPanel extends BasePanel {
 	 * @see Key
 	 * @see #key
 	 */
-	protected KeyPanel(Key key, KeyInformation i) {
+	public KeyPanel(Key key, KeyInformation i) {
 		this.key = key;
 		info = i;
 	}

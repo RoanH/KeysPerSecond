@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 
+import me.roan.kps.panels.BasePanel;
+
 /**
  * An enum specifying the different
  * text rendering modes
@@ -15,7 +17,7 @@ public enum RenderingMode {
 	/**
 	 * HORIZONTAL text rendering
 	 */
-	HORIZONTAL_TN("Horizontal (text - value)", Orientation.HORIZONTAL) {
+	HORIZONTAL_TN("Text - value") {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
 			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
@@ -53,7 +55,7 @@ public enum RenderingMode {
 	/**
 	 * HORIZONTAL text rendering
 	 */
-	HORIZONTAL_NT("Horizontal (value - text)", Orientation.HORIZONTAL) {
+	HORIZONTAL_NT("Value - text") {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), getHorizontalBaseline(panel, metrics));
@@ -91,45 +93,7 @@ public enum RenderingMode {
 	/**
 	 * HORIZONTAL text rendering
 	 */
-	HORIZONTAL_TAN("Horizontal (text above value)", Orientation.HORIZONTAL) {
-		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, metrics.getAscent() + 1);
-		}
-
-		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, panel.getHeight() - SizeManager.sideTextOffset - 1);
-		}
-
-		@Override
-		protected int getEffectiveTitleHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveTitleWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-	},
-	/**
-	 * HORIZONTAL text rendering
-	 */
-	HORIZONTAL_TDAN("Horizontal (text / value)", Orientation.HORIZONTAL) {
+	HORIZONTAL_TDAN("Text diagonally above value") {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), metrics.getAscent() + 1);
@@ -167,83 +131,7 @@ public enum RenderingMode {
 	/**
 	 * HORIZONTAL text rendering
 	 */
-	HORIZONTAL_TDAN2("Horizontal (text \\ value)", Orientation.HORIZONTAL) {
-		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
-		}
-
-		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
-		}
-
-		@Override
-		protected int getEffectiveTitleHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveTitleWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-	},
-	/**
-	 * HORIZONTAL text rendering
-	 */
-	HORIZONTAL_TDANS("Horizontal (small text / value)", Orientation.HORIZONTAL) {
-		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), metrics.getAscent() + 1);
-		}
-
-		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
-		}
-
-		@Override
-		protected int getEffectiveTitleHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveTitleWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-	},
-	/**
-	 * HORIZONTAL text rendering
-	 */
-	HORIZONTAL_TDAN2S("Horizontal (small text \\ value)", Orientation.HORIZONTAL) {
+	HORIZONTAL_TDAN2("Text diagonally under value") {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
 			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
@@ -281,7 +169,7 @@ public enum RenderingMode {
 	/**
 	 * VERTICAL text rendering
 	 */
-	VERTICAL("Vertical", Orientation.VERTICAL) {
+	VERTICAL("Text above value") {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
 			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, (panel.getHeight() - SizeManager.borderSize()) / 2);
@@ -311,44 +199,6 @@ public enum RenderingMode {
 		protected int getEffectiveValueWidth(BasePanel panel) {
 			return panel.getWidth() - (2 + SizeManager.graphImageSize) * 2;
 		}
-	},
-	/**
-	 * VERTICAL text rendering
-	 */
-	VERTICALS("Vertical small text", Orientation.VERTICAL) {
-		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
-		}
-
-		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
-		}
-
-		@Override
-		protected int getEffectiveTitleHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveTitleWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		protected int getEffectiveValueWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
 	};
 	
 	/**
@@ -356,10 +206,6 @@ public enum RenderingMode {
 	 * enum constant, used in dialogs
 	 */
 	private String name;
-	/**
-	 * Panel orientation
-	 */
-	public final Orientation orientation;
 	/**
 	 * Cache point that is constantly being reused and
 	 * returned by the methods from this enum. This prevents
@@ -372,11 +218,9 @@ public enum RenderingMode {
 	 * Constructs a new RenderingMode
 	 * with the given name
 	 * @param n The display name of the mode
-	 * @param orientation The orientation of the panel
 	 */
-	private RenderingMode(String n, Orientation orientation){
+	private RenderingMode(String n){
 		name = n;
-		this.orientation = orientation;
 	}
 	
 	/**
@@ -486,6 +330,7 @@ public enum RenderingMode {
 	 * panel orientations
 	 * @author Roan
 	 */
+	@Deprecated
 	public static enum Orientation{
 		/**
 		 * Horizontal panel orientation

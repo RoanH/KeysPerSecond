@@ -1,4 +1,6 @@
-package me.roan.kps;
+package me.roan.kps.panels;
+
+import me.roan.kps.Main;
 
 /**
  * Panel used to display the

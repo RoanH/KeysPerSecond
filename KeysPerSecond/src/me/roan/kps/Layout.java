@@ -185,6 +185,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 		private static final long serialVersionUID = -6137260732635701944L;	
 	}
 	
+	@Deprecated
 	public static final class LayoutOverlapException extends InvalidLayoutException{
 		/**
 		 * Serial ID
@@ -192,6 +193,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 		private static final long serialVersionUID = -4501441399333364320L;
 	}
 	
+	@Deprecated
 	public static final class NoAreaException extends InvalidLayoutException{
 		/**
 		 * Serial ID

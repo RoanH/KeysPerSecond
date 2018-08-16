@@ -1,4 +1,4 @@
-package me.roan.kps;
+package me.roan.kps.panels;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -10,6 +10,11 @@ import java.awt.Stroke;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
+
+import me.roan.kps.ColorManager;
+import me.roan.kps.LayoutPosition;
+import me.roan.kps.Main;
+import me.roan.kps.SizeManager;
 
 /**
  * Panel to draw continuous graphs
@@ -41,7 +46,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	/**
 	 * Resets the graph
 	 */
-	protected final void reset(){
+	public final void reset(){
 		values.clear();
 		maxval = 1;
 	}

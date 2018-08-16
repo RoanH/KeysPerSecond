@@ -78,6 +78,12 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseListener;
 
 import me.roan.kps.CommandKeys.CMD;
+import me.roan.kps.panels.AvgPanel;
+import me.roan.kps.panels.GraphPanel;
+import me.roan.kps.panels.KeyPanel;
+import me.roan.kps.panels.MaxPanel;
+import me.roan.kps.panels.NowPanel;
+import me.roan.kps.panels.TotPanel;
 
 /**
  * This program can be used to display
@@ -117,16 +123,16 @@ public class Main {
 	/**
 	 * The average keys per second
 	 */
-	protected static double avg;
+	public static double avg;
 	/**
 	 * The maximum keys per second value reached so far
 	 */
-	protected static int max;
+	public static int max;
 	/**
 	 * The keys per second of the previous second
 	 * used for displaying the current keys per second value
 	 */
-	protected static int prev;
+	public static int prev;
 	/**
 	 * HashMap containing all the tracked keys and their
 	 * virtual codes<br>Used to increment the count for the
@@ -162,7 +168,7 @@ public class Main {
 	/**
 	 * The configuration
 	 */
-	protected static Configuration config = new Configuration(null);
+	public static Configuration config = new Configuration(null);
 	/**
 	 * The loop timer
 	 */
@@ -1083,12 +1089,13 @@ public class Main {
 		JPanel form = new JPanel(new BorderLayout());
 		JPanel list = new JPanel();
 		list.setLayout(new GridLayout(0, 1, 0, 2));
-		JPanel info = new JPanel(new GridLayout(1, 5, 0, 2));
+		JPanel info = new JPanel(new GridLayout(1, 6, 0, 2));
 		info.add(new JLabel("Key", SwingConstants.CENTER));
 		info.add(new JLabel("X", SwingConstants.CENTER));
 		info.add(new JLabel("Y", SwingConstants.CENTER));
 		info.add(new JLabel("Width", SwingConstants.CENTER));
 		info.add(new JLabel("Height", SwingConstants.CENTER));
+		info.add(new JLabel("Mode", SwingConstants.CENTER));
 		list.add(info);
 		
 		for(KeyInformation i : config.keyinfo){
@@ -1181,6 +1188,9 @@ public class Main {
 				reconfigure();
 			});
 			this.add(h);
+			
+			JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
+			this.add(mode);
 		}
 	}
 	
@@ -1872,7 +1882,7 @@ public class Main {
 	 * is pressed
 	 * @author Roan
 	 */
-	protected static final class Key implements Serializable{
+	public static final class Key implements Serializable{
 		/**
 		 * Serial ID
 		 */
@@ -1880,16 +1890,16 @@ public class Main {
 		/**
 		 * Whether or not this key is currently pressed
 		 */
-		protected transient boolean down = false;
+		public transient boolean down = false;
 		/**
 		 * The total number of times this key has been pressed
 		 */
-		protected int count = 0;
+		public int count = 0;
 		/**
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		protected transient final String name;
+		public transient final String name;
 		/**
 		 * The graphical display for this key
 		 */
@@ -1961,7 +1971,7 @@ public class Main {
 	 * about a key.
 	 * @author Roan
 	 */
-	protected static final class KeyInformation implements Serializable{
+	public static final class KeyInformation implements Serializable{
 		/**
 		 * Serial ID
 		 */
@@ -1997,10 +2007,10 @@ public class Main {
 		 */
 		protected static transient volatile int autoIndex = -2; 
 		//TODO javadoc
-		protected int x = autoIndex += 2;
-		protected int y = new Random().nextInt(5);
-		protected int width = 2;
-		protected int height = 3;
+		public int x = autoIndex += 2;
+		public int y = new Random().nextInt(5);
+		public int width = 2;
+		public int height = 3;
 		@Deprecated
 		private int index;
 		

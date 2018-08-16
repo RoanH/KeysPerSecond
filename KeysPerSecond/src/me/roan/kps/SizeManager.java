@@ -68,16 +68,17 @@ public class SizeManager {
 	/**
 	 * Smallest size of graph images
 	 */
-	protected static int graphImageSize = 4;
+	public static int graphImageSize = 4;
 	/**
 	 * Graph offset from the sides of the panel
 	 */
-	protected static int graphOffset = 5;
+	public static int graphOffset = 5;
 	
 	/**
 	 * Multiplier all constants by the given factor
 	 * @param factor The factor
 	 */
+	@Deprecated
 	protected static final void scale(double factor){
 		subComponentHeight        = (int)Math.ceil(factor * subComponentHeight);
 		keyPanelWidth             = (int)Math.ceil(factor * keyPanelWidth);
@@ -114,17 +115,19 @@ public class SizeManager {
 	 * @param newMode The new rendering mode
 	 * @see RenderingMode
 	 */
+	@Deprecated
 	protected static final void setLayoutMode(RenderingMode oldMode, RenderingMode newMode){
-		if(oldMode.orientation == newMode.orientation){
-			return;
-		}else{
-			int tmp = subComponentHeight;
-			subComponentHeight = keyPanelWidth;
-			keyPanelWidth = tmp;
-		}
+//		if(oldMode.orientation == newMode.orientation){
+//			return;
+//		}else{
+//			int tmp = subComponentHeight;
+//			subComponentHeight = keyPanelWidth;
+//			keyPanelWidth = tmp;
+//		}
 	}
 	
-	protected static final int borderSize(){
+	//TODO javadoc
+	public static final int borderSize(){
 		return 2 + graphImageSize;
 	}
 }

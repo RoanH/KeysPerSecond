@@ -1,4 +1,6 @@
-package me.roan.kps;
+package me.roan.kps.panels;
+
+import me.roan.kps.Main;
 
 /**
  * Panel used to display the
@@ -13,7 +15,7 @@ public final class TotPanel extends BasePanel {
 	/**
 	 * Total number of hits
 	 */
-	protected static int hits;
+	public static int hits;
 
 	@Override
 	protected String getTitle() {

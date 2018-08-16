@@ -39,7 +39,7 @@ import javax.swing.plaf.basic.BasicMenuUI;
 
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
-
+import me.roan.kps.panels.TotPanel;
 import sun.swing.SwingUtilities2;
 
 /**
@@ -190,7 +190,7 @@ public class Menu {
 			e.setUI(new MenuItemUI());
 		}
 		snap.addActionListener((e)->{
-			JFrame frame = (JFrame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+			JFrame frame = (JFrame)KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 			Point loc = frame.getLocationOnScreen();
 			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
 			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
