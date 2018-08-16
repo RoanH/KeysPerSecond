@@ -1580,6 +1580,7 @@ public class Main {
 				}
 				if(config.showKeys && i.visible){
 					content.add(k.getPanel(i));
+					k.getPanel(i).sizeChanged();
 					panels++;
 				}
 			}

@@ -1,6 +1,7 @@
 package me.roan.kps;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,6 +21,14 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
+	
+	private Font titleFont;
+	private Font valueFont;
+	
+	protected void sizeChanged(){
+		titleFont = null;
+		valueFont = null;
+	}
 	
 	/**
 	 * Constructs a new BasePanel
@@ -59,18 +68,22 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		}
 		
 		String titleString = getTitle();
-		Font titleFont = Main.config.mode.getTitleFont(titleString);
+		//TODO just for testing if the mode is horizontal max width and height are different.
+		titleFont = RenderingMode.resolveFont(titleString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, this.getHeight() / 2 - (2 + SizeManager.graphImageSize), Font.BOLD, titleFont);
 		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, titleString, titleFont);
 		g.setFont(titleFont);
 		g.drawString(titleString, namePos.x, namePos.y);
 
 		String valueString = getValue();
-		Font valueFont = Main.config.mode.getValueFont(valueString);
+		valueFont = RenderingMode.resolveFont(valueString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, this.getHeight() / 2 - (2 + SizeManager.graphImageSize), Font.PLAIN, valueFont);
 		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, valueString, valueFont);
 		g.setFont(valueFont);
 		g.drawString(valueString, keyCountPos.x, keyCountPos.y);
 		
 		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);//TODO debug only
+		
+		g.setColor(new Color(0, 255, 255, 100));
+		g.drawRect((2 + SizeManager.graphImageSize), (2 + SizeManager.graphImageSize), this.getWidth() - 2 * (2 + SizeManager.graphImageSize), this.getHeight() - 2 * (2 + SizeManager.graphImageSize));
 	}
 	
 	/**

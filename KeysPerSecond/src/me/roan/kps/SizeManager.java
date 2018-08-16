@@ -98,12 +98,13 @@ public class SizeManager {
 	/**
 	 * Sets the fonts
 	 */
+	@Deprecated
 	private static final void setFonts(){
-		RenderingMode.font1small    = new Font("Dialog", Font.BOLD,  SizeManager.basePanelTitleTextSize);
-		RenderingMode.font1         = new Font("Dialog", Font.BOLD,  SizeManager.keyPanelFont1Size);                          		                                                                                         
-		RenderingMode.font2         = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);
-		RenderingMode.font2small    = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);
-		RenderingMode.font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
+//		RenderingMode.font1small    = new Font("Dialog", Font.BOLD,  SizeManager.basePanelTitleTextSize);
+//		RenderingMode.font1         = new Font("Dialog", Font.BOLD,  SizeManager.keyPanelFont1Size);                          		                                                                                         
+//		RenderingMode.font2         = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2Size);
+//		RenderingMode.font2small    = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallSize);
+//		RenderingMode.font2smallest = new Font("Dialog", Font.PLAIN, SizeManager.keyPanelFont2smallestSize);
 	}
 	
 	/**

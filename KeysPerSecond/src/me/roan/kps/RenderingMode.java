@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Toolkit;
 
 /**
  * An enum specifying the different
@@ -52,16 +53,6 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
-		
-		@Override
-		public Font getTitleFont(String title){
-			return font1small;
-		}
-		
-		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
-		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -75,11 +66,6 @@ public enum RenderingMode {
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
-		}
-		
-		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 5 ? font2small : font2);
 		}
 	},
 	/**
@@ -95,11 +81,6 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
-		
-		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 5 ? font2small : font2);
-		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -114,16 +95,6 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
-		
-		@Override
-		public Font getTitleFont(String title){
-			return font1small;
-		}
-		
-		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
-		}
 	},
 	/**
 	 * HORIZONTAL text rendering
@@ -137,16 +108,6 @@ public enum RenderingMode {
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
-		}
-		
-		@Override
-		public Font getTitleFont(String title){
-			return font1small;
-		}
-		
-		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
 		}
 	},
 	/**
@@ -176,11 +137,6 @@ public enum RenderingMode {
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
 		}
-		
-		@Override
-		public Font getTitleFont(String title){
-			return font1small;
-		}
 	};
 	
 	/**
@@ -199,26 +155,6 @@ public enum RenderingMode {
 	 * multiple points from this class existing at the same time.
 	 */
 	private static final Point point = new Point();
-	/**
-	 * Font 1 used to display the title of the panel
-	 */
-	protected static Font font1;
-	/**
-	 * Font 1 used to draw the title of the panel but smaller
-	 */
-	protected static Font font1small;
-	/**
-	 * Font 2 used to display the value of this panel
-	 */
-	protected static Font font2;
-	/**
-	 * Font 2 but smaller
-	 */
-	protected static Font font2small;
-	/**
-	 * Font 2 small but smaller
-	 */
-	protected static Font font2smallest;
 	
 	/**
 	 * Constructs a new RenderingMode
@@ -229,26 +165,6 @@ public enum RenderingMode {
 	private RenderingMode(String n, Orientation orientation){
 		name = n;
 		this.orientation = orientation;
-	}
-	
-	/**
-	 * Gets the font to be used to draw
-	 * the given title
-	 * @param title The title to draw
-	 * @return The font to use for drawing the title
-	 */
-	public Font getTitleFont(String title){
-		return title.length() == 1 ? font1 : font1small;
-	}
-	
-	/**
-	 * Gets the font to be used to draw
-	 * the given value
-	 * @param value The value to be drawn
-	 * @return the font to use for the value text
-	 */
-	public Font getValueFont(String value) {
-		return value.length() >= 5 ? font2smallest : (value.length() >= 4 ? font2small : font2);
 	}
 	
 	/**
@@ -309,6 +225,27 @@ public enum RenderingMode {
 	 */
 	private static int getHorizontalBaseline(BasePanel panel, FontMetrics metrics) {
 		return (panel.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
+	}
+	
+	protected static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont){
+		FontMetrics fm;
+		if(currentFont != null){
+			fm = g.getFontMetrics(currentFont);
+			if((fm.getAscent() + fm.getDescent()) <= maxHeight && fm.stringWidth(text) <= maxWidth){
+				return currentFont;
+			}
+		}
+		
+		int size = (int)(maxHeight * (Toolkit.getDefaultToolkit().getScreenResolution() / 72.0));
+		Font font;
+		do{
+			font = new Font("Dialog", properties, size);
+			fm = g.getFontMetrics(font);
+			System.out.println("loop with size " + size + " for " + text + ": " + (fm.getAscent() + fm.getDescent()) + " <= " + maxHeight + " | " + fm.stringWidth(text) + " <= " + maxWidth);
+			size--;
+		}while(!((fm.getAscent() + fm.getDescent()) <= maxHeight && fm.stringWidth(text) <= maxWidth));
+		
+		return font;
 	}
 	
 	@Override
