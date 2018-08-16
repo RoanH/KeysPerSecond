@@ -116,12 +116,12 @@ public enum RenderingMode {
 	VERTICAL("Vertical", Orientation.VERTICAL) {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
+			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, (panel.getHeight() - SizeManager.borderSize()) / 2);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
+			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, ((((panel.getHeight() - SizeManager.borderSize()) * 7) / 8)));
 		}
 	},
 	/**
@@ -231,7 +231,7 @@ public enum RenderingMode {
 		FontMetrics fm;
 		if(currentFont != null){
 			fm = g.getFontMetrics(currentFont);
-			if((fm.getAscent() + fm.getDescent()) <= maxHeight && fm.stringWidth(text) <= maxWidth){
+			if(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth){
 				return currentFont;
 			}
 		}
@@ -241,9 +241,9 @@ public enum RenderingMode {
 		do{
 			font = new Font("Dialog", properties, size);
 			fm = g.getFontMetrics(font);
-			System.out.println("loop with size " + size + " for " + text + ": " + (fm.getAscent() + fm.getDescent()) + " <= " + maxHeight + " | " + fm.stringWidth(text) + " <= " + maxWidth);
+			System.out.println("loop with size " + size + " for " + text + ": " + fm.getMaxAscent() + " <= " + maxHeight + " | " + fm.stringWidth(text) + " <= " + maxWidth);
 			size--;
-		}while(!((fm.getAscent() + fm.getDescent()) <= maxHeight && fm.stringWidth(text) <= maxWidth));
+		}while(!(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth));
 		
 		return font;
 	}

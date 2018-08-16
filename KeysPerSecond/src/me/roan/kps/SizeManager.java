@@ -123,4 +123,8 @@ public class SizeManager {
 			keyPanelWidth = tmp;
 		}
 	}
+	
+	protected static final int borderSize(){
+		return 2 + graphImageSize;
+	}
 }

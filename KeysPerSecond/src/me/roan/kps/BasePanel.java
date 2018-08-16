@@ -69,21 +69,26 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		
 		String titleString = getTitle();
 		//TODO just for testing if the mode is horizontal max width and height are different.
-		titleFont = RenderingMode.resolveFont(titleString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, this.getHeight() / 2 - (2 + SizeManager.graphImageSize), Font.BOLD, titleFont);
+		titleFont = RenderingMode.resolveFont(titleString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, this.getHeight() / 2 - (3 + SizeManager.graphImageSize), Font.BOLD, titleFont);
 		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, titleString, titleFont);
 		g.setFont(titleFont);
 		g.drawString(titleString, namePos.x, namePos.y);
 
 		String valueString = getValue();
-		valueFont = RenderingMode.resolveFont(valueString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, this.getHeight() / 2 - (2 + SizeManager.graphImageSize), Font.PLAIN, valueFont);
+		valueFont = RenderingMode.resolveFont(valueString, g, this.getWidth() - (2 + SizeManager.graphImageSize) * 2, (this.getHeight() * 3) / 8 - (1 + SizeManager.graphImageSize), Font.PLAIN, valueFont);
 		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, valueString, valueFont);
 		g.setFont(valueFont);
 		g.drawString(valueString, keyCountPos.x, keyCountPos.y);
 		
-		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);//TODO debug only
-		
+		//TODO debug only
+		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 		g.setColor(new Color(0, 255, 255, 100));
 		g.drawRect((2 + SizeManager.graphImageSize), (2 + SizeManager.graphImageSize), this.getWidth() - 2 * (2 + SizeManager.graphImageSize), this.getHeight() - 2 * (2 + SizeManager.graphImageSize));
+		int u = ((this.getHeight() - SizeManager.borderSize()) / 4);
+		g.drawLine(0, u, this.getWidth(), u);
+		g.drawLine(0, u * 2, this.getWidth(), u * 2);
+		g.drawLine(0, u * 3, this.getWidth(), u * 3);
+		g.drawLine(0, u * 4, this.getWidth(), u * 4);
 	}
 	
 	/**
