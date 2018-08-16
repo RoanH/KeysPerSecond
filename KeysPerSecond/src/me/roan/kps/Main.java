@@ -56,7 +56,6 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
@@ -476,9 +475,8 @@ public class Main {
 				suspended = !suspended;
 				Menu.pause.setSelected(suspended);
 			}else if(config.CR.matches(event.getKeyCode())){
-				double oldScale = config.size;
 				config.reloadConfig();
-				Menu.resetData(oldScale);
+				Menu.resetData();
 			}
 		}
 	}
@@ -655,7 +653,6 @@ public class Main {
 			color.repaint();
 		});
 		JButton precision = new JButton("Precision");
-		JButton size = new JButton("Size");
 		JButton layout = new JButton("Layout");
 		buttons.add(addkey);
 		buttons.add(load);
@@ -664,7 +661,6 @@ public class Main {
 		buttons.add(updaterate);
 		buttons.add(color);
 		buttons.add(precision);
-		buttons.add(size);
 		buttons.add(cmdkeys);
 		buttons.add(layout);
 		form.add(options, BorderLayout.CENTER);
@@ -676,10 +672,6 @@ public class Main {
 		form.add(all, BorderLayout.CENTER);
 		layout.addActionListener((e)->{
 			configureLayout();
-			save.setEnabled(true);
-		});
-		size.addActionListener((e)->{
-			configureSize();
 			save.setEnabled(true);
 		});
 		cmdkeys.addActionListener((e)->{
@@ -885,27 +877,6 @@ public class Main {
 		}
 		frame.setAlwaysOnTop(config.overlay);
 		graphFrame.setAlwaysOnTop(config.overlay);
-	}
-
-	/**
-	 * Shows the size configuration dialog
-	 */
-	protected static final void configureSize(){
-		JPanel pconfig = new JPanel(new BorderLayout());
-		JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, Integer.MAX_VALUE, 1));
-		JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
-				+ "The precentage specifies how big the window is in<br>"
-				+ "comparison to the default size of the window.<html>");
-		pconfig.add(info, BorderLayout.PAGE_START);
-		pconfig.add(new JSeparator(), BorderLayout.CENTER);
-		JPanel line = new JPanel();
-		line.add(new JLabel("Size: "));
-		line.add(s);
-		line.add(new JLabel("%"));
-		pconfig.add(line, BorderLayout.PAGE_END);
-		if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			config.size = ((double)s.getValue()) / 100.0D;
-		}
 	}
 
 	/**
@@ -1560,8 +1531,6 @@ public class Main {
 			}
 		});
 		new Listener(graphFrame);
-		SizeManager.scale(config.size);
-		SizeManager.setLayoutMode(RenderingMode.VERTICAL, Main.config.mode);
 		reconfigure();
 	}
 

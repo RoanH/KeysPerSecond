@@ -123,6 +123,7 @@ public class Configuration {
 	/**
 	 * The factor to multiply the frame size with
 	 */
+	@Deprecated
 	protected double size = 1.0D;
 	
 	//command keys
