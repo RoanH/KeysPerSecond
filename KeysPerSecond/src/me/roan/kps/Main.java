@@ -77,13 +77,16 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseListener;
 
 import me.roan.kps.CommandKeys.CMD;
+import me.roan.kps.layout.Layout;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.GraphPanel;
 import me.roan.kps.panels.KeyPanel;
 import me.roan.kps.panels.MaxPanel;
 import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
-import me.roan.kps.ui.Layout;
+import me.roan.kps.ui.model.EndNumberModel;
+import me.roan.kps.ui.model.MaxNumberModel;
+import me.roan.kps.ui.model.SpecialNumberModel;
 
 /**
  * This program can be used to display
@@ -1105,32 +1108,28 @@ public class Main {
 		});
 		graphMode.setSelectedItem(Main.config.graphMode);
 		
-		JSpinner x = new JSpinner(new SpinnerNumberModel(Main.config.graph_x, 0, Integer.MAX_VALUE, 1));
-		x.addChangeListener((event)->{
-			Main.config.graph_x = (int)x.getValue();//TODO negative values mean 'end' (error for now)
+		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, (val)->{
+			Main.config.graph_x = val;
 			reconfigure();
-		});
+		}));
 		graphLayout.add(x);
 		
-		JSpinner y = new JSpinner(new SpinnerNumberModel(Main.config.graph_y, 0, Integer.MAX_VALUE, 1));
-		y.addChangeListener((event)->{
-			Main.config.graph_y = (int)y.getValue();
+		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, (val)->{
+			Main.config.graph_y = val;
 			reconfigure();
-		});
+		}));
 		graphLayout.add(y);
 		
-		JSpinner w = new JSpinner(new SpinnerNumberModel(Main.config.graph_w, 0, Integer.MAX_VALUE, 1));
-		w.addChangeListener((event)->{
-			Main.config.graph_w = (int)w.getValue();
+		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, (val)->{
+			Main.config.graph_w = val;
 			reconfigure();
-		});
+		}));
 		graphLayout.add(w);
 		
-		JSpinner h = new JSpinner(new SpinnerNumberModel(Main.config.graph_h, 0, Integer.MAX_VALUE, 1));
-		h.addChangeListener((event)->{
-			Main.config.graph_h = (int)h.getValue();
+		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, (val)->{
+			Main.config.graph_h = val;
 			reconfigure();
-		});
+		}));
 		graphLayout.add(h);
 		
 		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());

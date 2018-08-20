@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import me.roan.kps.ColorManager;
 import me.roan.kps.Main;
 import me.roan.kps.SizeManager;
-import me.roan.kps.ui.LayoutPosition;
+import me.roan.kps.layout.LayoutPosition;
 
 /**
  * Abstract base class for the 
