@@ -12,9 +12,9 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 
 import me.roan.kps.ColorManager;
-import me.roan.kps.LayoutPosition;
 import me.roan.kps.Main;
 import me.roan.kps.SizeManager;
+import me.roan.kps.ui.LayoutPosition;
 
 /**
  * Panel to draw continuous graphs

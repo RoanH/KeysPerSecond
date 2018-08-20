@@ -83,6 +83,7 @@ import me.roan.kps.panels.KeyPanel;
 import me.roan.kps.panels.MaxPanel;
 import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
+import me.roan.kps.ui.Layout;
 
 /**
  * This program can be used to display

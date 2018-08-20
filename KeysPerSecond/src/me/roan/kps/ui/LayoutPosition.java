@@ -1,4 +1,4 @@
-package me.roan.kps;
+package me.roan.kps.ui;
 
 /**
  * //TODO

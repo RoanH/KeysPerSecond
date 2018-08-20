@@ -19,7 +19,7 @@ public class SizeManager {
 	@Deprecated
 	protected static int defaultGraphWidth = 228;
 	//TODO
-	protected final static int cellSize = 22;
+	public final static int cellSize = 22;
 	
 	//BasePanel & KeyPanel data
 	/**

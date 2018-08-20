@@ -1,10 +1,12 @@
-package me.roan.kps;
+package me.roan.kps.ui;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
+
+import me.roan.kps.SizeManager;
 
 /**
  * 
@@ -18,7 +20,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	private int extraHeight = 0;
 	private final Container parent;
 	
-	protected Layout(Container parent){
+	public Layout(Container parent){
 		this.parent = parent;
 		parent.setLayout(this);
 	}
