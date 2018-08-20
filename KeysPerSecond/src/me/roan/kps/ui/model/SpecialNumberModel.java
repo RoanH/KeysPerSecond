@@ -21,13 +21,13 @@ public class SpecialNumberModel extends AbstractSpinnerModel{
 	@Override
 	public void setValue(Object value) {
 		this.value = value instanceof String ? -1 : (int)value;
+		System.out.println("set val: " + value + " new: " + this.value);
 		listener.valueChanged(this.value);
 		fireStateChanged();
 	}
 
 	@Override
 	public Object getNextValue() {
-		System.out.println("next called: " + (value + 1));
 		return value + 1;
 	}
 

@@ -1087,7 +1087,7 @@ public class Main {
 
 		form.add(pane, BorderLayout.CENTER);
 		
-		JPanel graphLayout = new JPanel(new GridLayout(8, 2, 0, 5));                    
+		JPanel graphLayout = new JPanel(new GridLayout(7, 2, 0, 5));                    
 		//Graph mode (left, right, top, bottom, detached)
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
@@ -1108,32 +1108,33 @@ public class Main {
 		});
 		graphMode.setSelectedItem(Main.config.graphMode);
 		
+		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, (val)->{
 			Main.config.graph_x = val;
 			reconfigure();
 		}));
 		graphLayout.add(x);
 		
+		graphLayout.add(new JLabel("Graph y position: "));
 		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, (val)->{
 			Main.config.graph_y = val;
 			reconfigure();
 		}));
 		graphLayout.add(y);
 		
+		graphLayout.add(new JLabel("Graph width: "));
 		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, (val)->{
 			Main.config.graph_w = val;
 			reconfigure();
 		}));
 		graphLayout.add(w);
 		
+		graphLayout.add(new JLabel("Graph height: "));
 		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, (val)->{
 			Main.config.graph_h = val;
 			reconfigure();
 		}));
 		graphLayout.add(h);
-		
-		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
-		graphLayout.add(mode);
 		
 		form.add(graphLayout, BorderLayout.PAGE_END);
 

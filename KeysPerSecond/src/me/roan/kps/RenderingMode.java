@@ -313,7 +313,7 @@ public enum RenderingMode {
 		do{
 			font = new Font("Dialog", properties, size);
 			fm = g.getFontMetrics(font);
-			System.out.println("loop with size " + size + " for " + text + ": " + fm.getMaxAscent() + " <= " + maxHeight + " | " + fm.stringWidth(text) + " <= " + maxWidth);
+			//System.out.println("loop with size " + size + " for " + text + ": " + fm.getMaxAscent() + " <= " + maxHeight + " | " + fm.stringWidth(text) + " <= " + maxWidth);
 			size--;
 		}while(!(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth));
 		
