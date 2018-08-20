@@ -1083,7 +1083,7 @@ public class Main {
 
 		form.add(pane, BorderLayout.CENTER);
 		
-		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));                    
+		JPanel graphLayout = new JPanel(new GridLayout(8, 2, 0, 5));                    
 		//Graph mode (left, right, top, bottom, detached)
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
@@ -1103,6 +1103,37 @@ public class Main {
 			}
 		});
 		graphMode.setSelectedItem(Main.config.graphMode);
+		
+		JSpinner x = new JSpinner(new SpinnerNumberModel(Main.config.graph_x, 0, Integer.MAX_VALUE, 1));
+		x.addChangeListener((event)->{
+			Main.config.graph_x = (int)x.getValue();//TODO negative values mean 'end' (error for now)
+			reconfigure();
+		});
+		graphLayout.add(x);
+		
+		JSpinner y = new JSpinner(new SpinnerNumberModel(Main.config.graph_y, 0, Integer.MAX_VALUE, 1));
+		y.addChangeListener((event)->{
+			Main.config.graph_y = (int)y.getValue();
+			reconfigure();
+		});
+		graphLayout.add(y);
+		
+		JSpinner w = new JSpinner(new SpinnerNumberModel(Main.config.graph_w, 0, Integer.MAX_VALUE, 1));
+		w.addChangeListener((event)->{
+			Main.config.graph_w = (int)w.getValue();
+			reconfigure();
+		});
+		graphLayout.add(w);
+		
+		JSpinner h = new JSpinner(new SpinnerNumberModel(Main.config.graph_h, 0, Integer.MAX_VALUE, 1));
+		h.addChangeListener((event)->{
+			Main.config.graph_h = (int)h.getValue();
+			reconfigure();
+		});
+		graphLayout.add(h);
+		
+		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
+		graphLayout.add(mode);
 		
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
