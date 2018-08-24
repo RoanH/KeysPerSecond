@@ -78,6 +78,7 @@ import org.jnativehook.mouse.NativeMouseListener;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.layout.Layout;
+import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.GraphPanel;
 import me.roan.kps.panels.KeyPanel;
@@ -86,7 +87,6 @@ import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
-import me.roan.kps.ui.model.SpecialNumberModel;
 
 /**
  * This program can be used to display
@@ -1076,6 +1076,7 @@ public class Main {
 		for(KeyInformation i : config.keyinfo){
 			list.add(new ListItem(i));
 		}
+		
 
 		JPanel view = new JPanel();
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
@@ -1152,42 +1153,42 @@ public class Main {
 			return new Dimension(0, 20);//TODO
 		}
 
-		private ListItem(KeyInformation info){
+		private ListItem(Positionable info){
 			super(new GridLayout(1, 1, 2, 0));
-			this.add(new JLabel(info.name, SwingConstants.CENTER));
+			this.add(new JLabel(info.getName(), SwingConstants.CENTER));
 			Dimension dim = this.getPreferredSize();
 			dim = new Dimension(dim.width / 5, dim.height / 5);
 			
 			//this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 			
-			JSpinner x = new JSpinner(new SpinnerNumberModel(info.x, 0, Integer.MAX_VALUE, 1));
+			JSpinner x = new JSpinner(new SpinnerNumberModel(info.getX(), 0, Integer.MAX_VALUE, 1));
 			x.setPreferredSize(dim);
 			x.addChangeListener((event)->{
-				info.x = (int)x.getValue();
+				info.setX((int)x.getValue());
 				reconfigure();
 			});
 			this.add(x);
 			
-			JSpinner y = new JSpinner(new SpinnerNumberModel(info.y, 0, Integer.MAX_VALUE, 1));
+			JSpinner y = new JSpinner(new SpinnerNumberModel(info.getY(), 0, Integer.MAX_VALUE, 1));
 			y.setPreferredSize(dim);
 			y.addChangeListener((event)->{
-				info.y = (int)y.getValue();
+				info.setY((int)y.getValue());
 				reconfigure();
 			});
 			this.add(y);
 			
-			JSpinner w = new JSpinner(new SpinnerNumberModel(info.width, 0, Integer.MAX_VALUE, 1));
+			JSpinner w = new JSpinner(new SpinnerNumberModel(info.getWidth(), 0, Integer.MAX_VALUE, 1));
 			w.setPreferredSize(dim);
 			w.addChangeListener((event)->{
-				info.width = (int)w.getValue();
+				info.setWidth((int)w.getValue());
 				reconfigure();
 			});
 			this.add(w);
 			
-			JSpinner h = new JSpinner(new SpinnerNumberModel(info.height, 0, Integer.MAX_VALUE, 1));
+			JSpinner h = new JSpinner(new SpinnerNumberModel(info.getHeight(), 0, Integer.MAX_VALUE, 1));
 			h.setPreferredSize(dim);
 			h.addChangeListener((event)->{
-				info.height = (int)h.getValue();
+				info.setHeight((int)h.getValue());
 				reconfigure();
 			});
 			this.add(h);
@@ -1972,7 +1973,7 @@ public class Main {
 	 * about a key.
 	 * @author Roan
 	 */
-	public static final class KeyInformation implements Serializable{
+	public static final class KeyInformation implements Serializable, Positionable{
 		/**
 		 * Serial ID
 		 */
@@ -2234,6 +2235,51 @@ public class Main {
 			default: 
 				return NativeKeyEvent.getKeyText(keyCode);
 			}
+		}
+
+		@Override
+		public void setX(int x) {
+			this.x = x;
+		}
+
+		@Override
+		public void setY(int y) {
+			this.y = y;
+		}
+
+		@Override
+		public void setWidth(int w) {
+			width = w;
+		}
+
+		@Override
+		public void setHeight(int h) {
+			height = h;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public int getX() {
+			return x;
+		}
+
+		@Override
+		public int getY() {
+			return y;
+		}
+
+		@Override
+		public int getWidth() {
+			return width;
+		}
+
+		@Override
+		public int getHeight() {
+			return height;
 		}
 	}
 }
