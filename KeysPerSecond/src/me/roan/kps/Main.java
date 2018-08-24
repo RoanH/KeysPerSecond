@@ -1076,7 +1076,202 @@ public class Main {
 		for(KeyInformation i : config.keyinfo){
 			list.add(new ListItem(i));
 		}
-		
+		if(config.showAvg){
+			list.add(new ListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.avg_x = x;
+				}
+
+				@Override
+				public void setY(int y) {
+					config.avg_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.avg_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.avg_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "AVG";
+				}
+
+				@Override
+				public int getX() {
+					return config.avg_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.avg_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.avg_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.avg_h;
+				}
+			}));
+		}
+		if(config.showMax){
+			list.add(new ListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.max_x = x;
+				}
+
+				@Override
+				public void setY(int y) {
+					config.max_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.max_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.max_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "MAX";
+				}
+
+				@Override
+				public int getX() {
+					return config.max_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.max_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.max_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.max_h;
+				}
+			}));
+		}
+		if(config.showCur){
+			list.add(new ListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.cur_x = x;
+				}
+
+				@Override
+				public void setY(int y) {
+					config.cur_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.cur_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.cur_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "CUR";
+				}
+
+				@Override
+				public int getX() {
+					return config.cur_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.cur_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.cur_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.cur_h;
+				}
+			}));
+		}
+		if(config.showTotal){
+			list.add(new ListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.tot_x = x;
+				}
+
+				@Override
+				public void setY(int y) {
+					config.tot_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.tot_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.tot_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "TOT";
+				}
+
+				@Override
+				public int getX() {
+					return config.tot_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.tot_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.tot_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.tot_h;
+				}
+			}));
+		}
 
 		JPanel view = new JPanel();
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
@@ -1161,7 +1356,7 @@ public class Main {
 			
 			//this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 			
-			JSpinner x = new JSpinner(new SpinnerNumberModel(info.getX(), 0, Integer.MAX_VALUE, 1));
+			JSpinner x = new JSpinner(new SpinnerNumberModel(info.getX(), -1, Integer.MAX_VALUE, 1));//TODO Only -1 for now
 			x.setPreferredSize(dim);
 			x.addChangeListener((event)->{
 				info.setX((int)x.getValue());
@@ -1169,7 +1364,7 @@ public class Main {
 			});
 			this.add(x);
 			
-			JSpinner y = new JSpinner(new SpinnerNumberModel(info.getY(), 0, Integer.MAX_VALUE, 1));
+			JSpinner y = new JSpinner(new SpinnerNumberModel(info.getY(), -1, Integer.MAX_VALUE, 1));
 			y.setPreferredSize(dim);
 			y.addChangeListener((event)->{
 				info.setY((int)y.getValue());
@@ -1177,7 +1372,7 @@ public class Main {
 			});
 			this.add(y);
 			
-			JSpinner w = new JSpinner(new SpinnerNumberModel(info.getWidth(), 0, Integer.MAX_VALUE, 1));
+			JSpinner w = new JSpinner(new SpinnerNumberModel(info.getWidth(), -1, Integer.MAX_VALUE, 1));
 			w.setPreferredSize(dim);
 			w.addChangeListener((event)->{
 				info.setWidth((int)w.getValue());
@@ -1185,7 +1380,7 @@ public class Main {
 			});
 			this.add(w);
 			
-			JSpinner h = new JSpinner(new SpinnerNumberModel(info.getHeight(), 0, Integer.MAX_VALUE, 1));
+			JSpinner h = new JSpinner(new SpinnerNumberModel(info.getHeight(), -1, Integer.MAX_VALUE, 1));
 			h.setPreferredSize(dim);
 			h.addChangeListener((event)->{
 				info.setHeight((int)h.getValue());
@@ -1194,6 +1389,7 @@ public class Main {
 			this.add(h);
 			
 			JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
+			//TODO finish rendering mode implementation
 			this.add(mode);
 		}
 	}
