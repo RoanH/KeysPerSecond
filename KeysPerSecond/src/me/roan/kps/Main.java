@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -1062,22 +1064,22 @@ public class Main {
 	
 	protected static final void configureLayoutNew(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel list = new JPanel();
-		list.setLayout(new GridLayout(0, 1, 0, 2));
-		JPanel info = new JPanel(new GridLayout(1, 6, 0, 2));
-		info.add(new JLabel("Key", SwingConstants.CENTER));
-		info.add(new JLabel("X", SwingConstants.CENTER));
-		info.add(new JLabel("Y", SwingConstants.CENTER));
-		info.add(new JLabel("Width", SwingConstants.CENTER));
-		info.add(new JLabel("Height", SwingConstants.CENTER));
-		info.add(new JLabel("Mode", SwingConstants.CENTER));
-		list.add(info);
+		
+		JPanel fields = new JPanel(new GridLayout(0, 5, 2, 2));
+		JPanel modes = new JPanel(new GridLayout(0, 1, 0, 2));
+		
+		fields.add(new JLabel("Key", SwingConstants.CENTER));
+		fields.add(new JLabel("X", SwingConstants.CENTER));
+		fields.add(new JLabel("Y", SwingConstants.CENTER));
+		fields.add(new JLabel("Width", SwingConstants.CENTER));
+		fields.add(new JLabel("Height", SwingConstants.CENTER));
+		modes.add(new JLabel("Mode", SwingConstants.CENTER));
 		
 		for(KeyInformation i : config.keyinfo){
-			list.add(new ListItem(i));
+			createListItem(i, fields, modes);
 		}
 		if(config.showAvg){
-			list.add(new ListItem(new Positionable(){
+			createListItem(new Positionable(){
 
 				@Override
 				public void setX(int x) {
@@ -1123,10 +1125,10 @@ public class Main {
 				public int getHeight() {
 					return config.avg_h;
 				}
-			}));
+			}, fields, modes);
 		}
 		if(config.showMax){
-			list.add(new ListItem(new Positionable(){
+			createListItem(new Positionable(){
 
 				@Override
 				public void setX(int x) {
@@ -1172,10 +1174,10 @@ public class Main {
 				public int getHeight() {
 					return config.max_h;
 				}
-			}));
+			}, fields, modes);
 		}
 		if(config.showCur){
-			list.add(new ListItem(new Positionable(){
+			createListItem(new Positionable(){
 
 				@Override
 				public void setX(int x) {
@@ -1221,10 +1223,10 @@ public class Main {
 				public int getHeight() {
 					return config.cur_h;
 				}
-			}));
+			}, fields, modes);
 		}
 		if(config.showTotal){
-			list.add(new ListItem(new Positionable(){
+			createListItem(new Positionable(){
 
 				@Override
 				public void setX(int x) {
@@ -1270,16 +1272,25 @@ public class Main {
 				public int getHeight() {
 					return config.tot_h;
 				}
-			}));
+			}, fields, modes);
 		}
-
-		JPanel view = new JPanel();
-		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
-		view.add(list);
-		view.add(new JPanel(new BorderLayout()));
+		
+		JPanel keys = new JPanel(new BorderLayout());
+		keys.add(fields, BorderLayout.CENTER);
+		keys.add(modes, BorderLayout.LINE_END);
+		
+		
+		
+		JPanel view = new JPanel(new BorderLayout());
+		view.add(keys, BorderLayout.PAGE_START);
+		view.add(new JPanel(), BorderLayout.CENTER);
+		
+		//c.weighty = 1.0;
+		//view.add(new JPanel(new BorderLayout()), c);
+		
 		JScrollPane pane = new JScrollPane(view);
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.setPreferredSize(new Dimension(250, 200));
+		pane.setPreferredSize(new Dimension(400, 200));
 
 		form.add(pane, BorderLayout.CENTER);
 		
@@ -1337,63 +1348,38 @@ public class Main {
 		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
 	}
 	
-	private static class ListItem extends JPanel{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = -3750764949517577166L;
-		
-		@Override
-		public Dimension getPreferredSize(){
-			return new Dimension(0, 20);//TODO
-		}
+	private static final void createListItem(Positionable info, JPanel fields, JPanel modes){							
+		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
 
-		private ListItem(Positionable info){
-			super(new GridLayout(1, 1, 2, 0));
-			this.add(new JLabel(info.getName(), SwingConstants.CENTER));
-			Dimension dim = this.getPreferredSize();
-			dim = new Dimension(dim.width / 5, dim.height / 5);
-			
-			//this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-			
-			JSpinner x = new JSpinner(new SpinnerNumberModel(info.getX(), -1, Integer.MAX_VALUE, 1));//TODO Only -1 for now
-			x.setPreferredSize(dim);
-			x.addChangeListener((event)->{
-				info.setX((int)x.getValue());
-				reconfigure();
-			});
-			this.add(x);
-			
-			JSpinner y = new JSpinner(new SpinnerNumberModel(info.getY(), -1, Integer.MAX_VALUE, 1));
-			y.setPreferredSize(dim);
-			y.addChangeListener((event)->{
-				info.setY((int)y.getValue());
-				reconfigure();
-			});
-			this.add(y);
-			
-			JSpinner w = new JSpinner(new SpinnerNumberModel(info.getWidth(), -1, Integer.MAX_VALUE, 1));
-			w.setPreferredSize(dim);
-			w.addChangeListener((event)->{
-				info.setWidth((int)w.getValue());
-				reconfigure();
-			});
-			this.add(w);
-			
-			JSpinner h = new JSpinner(new SpinnerNumberModel(info.getHeight(), -1, Integer.MAX_VALUE, 1));
-			h.setPreferredSize(dim);
-			h.addChangeListener((event)->{
-				info.setHeight((int)h.getValue());
-				reconfigure();
-			});
-			this.add(h);
-			
-			JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
-			//TODO finish rendering mode implementation
-			this.add(mode);
-		}
+		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), (val)->{
+			info.setX(val);
+			reconfigure();
+		}));
+		fields.add(x);
+
+		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), (val)->{
+			info.setY(val);
+			reconfigure();
+		}));
+		fields.add(y);
+
+		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), (val)->{
+			info.setWidth(val);
+			reconfigure();
+		}));
+		fields.add(w);
+
+		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), (val)->{
+			info.setHeight(val);
+			reconfigure();
+		}));
+		fields.add(h);
+
+		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
+		//TODO finish rendering mode implementation
+		modes.add(mode);
 	}
-	
+
 	/**
 	 * Shows the layout configuration dialog
 	 */
