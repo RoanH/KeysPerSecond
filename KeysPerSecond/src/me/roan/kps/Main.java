@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -45,7 +43,6 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -1278,15 +1275,10 @@ public class Main {
 		JPanel keys = new JPanel(new BorderLayout());
 		keys.add(fields, BorderLayout.CENTER);
 		keys.add(modes, BorderLayout.LINE_END);
-		
-		
-		
+
 		JPanel view = new JPanel(new BorderLayout());
 		view.add(keys, BorderLayout.PAGE_START);
 		view.add(new JPanel(), BorderLayout.CENTER);
-		
-		//c.weighty = 1.0;
-		//view.add(new JPanel(new BorderLayout()), c);
 		
 		JScrollPane pane = new JScrollPane(view);
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
