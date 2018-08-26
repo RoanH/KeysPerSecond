@@ -367,7 +367,6 @@ public class Menu {
 			Main.config.backlog = (int)sbacklog.getValue();
 		});
 		layout.addActionListener((e)->{
-			RenderingMode m = Main.config.mode;
 			Main.configureLayout();
 			Main.reconfigure();
 		});

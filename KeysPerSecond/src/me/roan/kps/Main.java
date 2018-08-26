@@ -1408,21 +1408,6 @@ public class Main {
 		});
 		modes.add(mode);
 	}
-	
-	/**
-	 * Gets the total amount of visible panels
-	 * @return The total amount of visible panels
-	 */
-	@Deprecated
-	private static final int getTotalAmountOfVisiblePanels(){
-		int n = (Main.config.showAvg ? 1 : 0) + (Main.config.showMax ? 1 : 0) + (Main.config.showCur ? 1 : 0) + (Main.config.showTotal ? 1 : 0);
-		for(KeyInformation info : Main.config.keyinfo){
-			if(info.visible){
-				n++;
-			}
-		}
-		return n;
-	}
 
 	/**
 	 * Shows the key configuration dialog
@@ -1508,10 +1493,6 @@ public class Main {
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
-			if(config.rows * config.columns <= getTotalAmountOfVisiblePanels() && config.rows != 0 && config.columns != 0){
-				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
-				return;
-			}
 			JPanel form = new JPanel(new GridLayout(config.enableModifiers ? 4 : 1, 1));
 			JLabel txt = new JLabel("Press a key and click 'OK' to add it.");
 			form.add(txt);

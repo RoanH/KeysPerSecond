@@ -313,7 +313,6 @@ public enum RenderingMode {
 		do{
 			font = new Font("Dialog", properties, size);
 			fm = g.getFontMetrics(font);
-			//System.out.println("loop with size " + size + " for " + text + ": " + fm.getMaxAscent() + " <= " + maxHeight + " | " + fm.stringWidth(text) + " <= " + maxWidth);
 			size--;
 		}while(!(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth));
 		
@@ -323,22 +322,5 @@ public enum RenderingMode {
 	@Override
 	public String toString(){
 		return name;
-	}
-	
-	/**
-	 * Simple enum specifying the possible
-	 * panel orientations
-	 * @author Roan
-	 */
-	@Deprecated
-	public static enum Orientation{
-		/**
-		 * Horizontal panel orientation
-		 */
-		HORIZONTAL,
-		/**
-		 * Vertical panel orientation
-		 */
-		VERTICAL;
 	}
 }
