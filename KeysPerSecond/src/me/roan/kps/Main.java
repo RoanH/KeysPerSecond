@@ -1286,26 +1286,16 @@ public class Main {
 
 		form.add(pane, BorderLayout.CENTER);
 		
-		JPanel graphLayout = new JPanel(new GridLayout(7, 2, 0, 5));                    
+		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));                    
 		//Graph mode (left, right, top, bottom, detached)
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
 		graphMode.setSelectedItem(Main.config.graphMode);
-		graphLayout.add(graphMode);
-		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, 1, Integer.MAX_VALUE, 1));
-		graphLayout.add(gw);
-		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, 1, Integer.MAX_VALUE, 1));
-		graphLayout.add(gh);
-		
-		graphMode.addActionListener((event)->{
-			if(graphMode.getSelectedItem() == GraphMode.Detached){
-				gw.setEnabled(true);//TODO
-				gh.setEnabled(true);
-			}
+		graphMode.addActionListener((e)->{
+			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
+			reconfigure();
 		});
-		graphMode.setSelectedItem(Main.config.graphMode);
+		graphLayout.add(graphMode);
 		
 		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, (val)->{
@@ -1439,13 +1429,6 @@ public class Main {
 		graphLayout.add(new JLabel("Graph height: "));
 		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, 1, Integer.MAX_VALUE, 1));
 		graphLayout.add(gh);
-		
-		graphMode.addActionListener((event)->{
-			if(graphMode.getSelectedItem() == GraphMode.Detached){
-				gw.setEnabled(true);
-				gh.setEnabled(true);
-			}
-		});
 		graphMode.setSelectedItem(Main.config.graphMode);
 		
 		mode.setBorder(BorderFactory.createTitledBorder("Layout"));
@@ -1797,13 +1780,13 @@ public class Main {
 			all.add(content, BorderLayout.CENTER);
 			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 			if(config.showGraph){
-				if(config.graphMode != GraphMode.Detached){
+				if(config.graphMode == GraphMode.INLINE){
 					content.add(graph);
 					graphFrame.setVisible(false);
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.graphWidth, config.graphHeight);
+					graphFrame.setSize(config.graph_w * SizeManager.cellSize, config.graph_h * SizeManager.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{

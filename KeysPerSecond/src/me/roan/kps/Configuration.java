@@ -171,7 +171,7 @@ public class Configuration {
 	/**
 	 * Position the graph is rendered in
 	 */
-	protected GraphMode graphMode = GraphMode.Inline;
+	protected GraphMode graphMode = GraphMode.INLINE;
 	/**
 	 * Width of the graph
 	 */
@@ -573,7 +573,7 @@ public class Configuration {
 					break;
 				case "graphMode":
 					try{
-						graphMode = GraphMode.valueOf(args[1]);
+						graphMode = GraphMode.valueOf(args[1]);//TODO capitalization changed
 					}catch(IllegalArgumentException e){
 						modified = true;
 					}
@@ -859,7 +859,7 @@ public class Configuration {
 				out.println("avgPos: " + posAvg);
 				out.println("curPos: " + posCur);
 				out.println("totPos: " + posTot);
-				out.println("graphMode: " + graphMode);
+				out.println("graphMode: " + graphMode);//TODO write as .name() to avoid future confllict? backward issue though
 				out.println("graphWidth: " + graphWidth);
 				out.println("graphHeight: " + graphHeight);
 				out.println();
