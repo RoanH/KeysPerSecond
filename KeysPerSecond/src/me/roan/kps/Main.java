@@ -63,7 +63,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -1125,6 +1124,16 @@ public class Main {
 				public int getHeight() {
 					return config.avg_h;
 				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.avg_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.avg_mode = mode;
+				}
 			}, fields, modes);
 		}
 		if(config.showMax){
@@ -1173,6 +1182,16 @@ public class Main {
 				@Override
 				public int getHeight() {
 					return config.max_h;
+				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.max_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.max_mode = mode;
 				}
 			}, fields, modes);
 		}
@@ -1223,6 +1242,16 @@ public class Main {
 				public int getHeight() {
 					return config.cur_h;
 				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.cur_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.cur_mode = mode;
+				}
 			}, fields, modes);
 		}
 		if(config.showTotal){
@@ -1271,6 +1300,16 @@ public class Main {
 				@Override
 				public int getHeight() {
 					return config.tot_h;
+				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.tot_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.tot_mode = mode;
 				}
 			}, fields, modes);
 		}
@@ -1362,7 +1401,11 @@ public class Main {
 		fields.add(h);
 
 		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
-		//TODO finish rendering mode implementation
+		mode.setSelectedItem(info.getRenderingMode());
+		mode.addActionListener((e)->{
+			info.setRenderingMode((RenderingMode)mode.getSelectedItem());
+			reconfigure();
+		});
 		modes.add(mode);
 	}
 	
@@ -2080,10 +2123,11 @@ public class Main {
 		 */
 		protected static transient volatile int autoIndex = -2; 
 		//TODO javadoc
-		public int x = autoIndex += 2;
-		public int y = new Random().nextInt(5);
-		public int width = 2;
-		public int height = 3;
+		private int x = autoIndex += 2;
+		private int y = new Random().nextInt(5);
+		private int width = 2;
+		private int height = 3;
+		private RenderingMode mode = RenderingMode.VERTICAL;
 		@Deprecated
 		private int index;
 		
@@ -2351,6 +2395,16 @@ public class Main {
 		@Override
 		public int getHeight() {
 			return height;
+		}
+
+		@Override
+		public RenderingMode getRenderingMode() {
+			return mode;
+		}
+
+		@Override
+		public void setRenderingMode(RenderingMode mode) {
+			this.mode = mode;
 		}
 	}
 }

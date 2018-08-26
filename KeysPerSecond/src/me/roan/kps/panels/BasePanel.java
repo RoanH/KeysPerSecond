@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import me.roan.kps.ColorManager;
 import me.roan.kps.Main;
+import me.roan.kps.RenderingMode;
 import me.roan.kps.SizeManager;
 import me.roan.kps.layout.LayoutPosition;
 
@@ -72,16 +73,17 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 			g.setColor(Main.config.getForegroundColor());
 		}
 		
+		RenderingMode mode = getRenderingMode();
+		
 		String title = getTitle();
-		//TODO just for testing if the mode is horizontal max width and height are different.
-		titleFont = Main.config.mode.getTitleFont(title, g, this, titleFont);
-		Point namePos = Main.config.mode.getTitleDrawPosition(g, this, title, titleFont);
+		titleFont = mode.getTitleFont(title, g, this, titleFont);
+		Point namePos = mode.getTitleDrawPosition(g, this, title, titleFont);
 		g.setFont(titleFont);
 		g.drawString(title, namePos.x, namePos.y);
 
 		String value = getValue();
-		valueFont = Main.config.mode.getValueFont(value, g, this, valueFont);
-		Point keyCountPos = Main.config.mode.getValueDrawPosition(g, this, value, valueFont);
+		valueFont = mode.getValueFont(value, g, this, valueFont);
+		Point keyCountPos = mode.getValueDrawPosition(g, this, value, valueFont);
 		g.setFont(valueFont);
 		g.drawString(value, keyCountPos.x, keyCountPos.y);
 		
@@ -97,6 +99,8 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	}
 	
 	/**
+	 * Gets whether or not this panel
+	 * should be highlighted
 	 * @return Whether the panel is "active" or not
 	 */
 	protected boolean isActive() {
@@ -104,12 +108,20 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	}
 	
 	/**
-	 * @return The title of this panel
+	 * Gets the title for this panel
+	 * @return The title for this panel
 	 */
 	protected abstract String getTitle();
 	
 	/**
+	 * Gets the value for this panel
 	 * @return The value for this panel
 	 */
 	protected abstract String getValue();
+	
+	/**
+	 * Gets the rendering mode for this panel
+	 * @return The rendering mode for this panel
+	 */
+	protected abstract RenderingMode getRenderingMode();
 }

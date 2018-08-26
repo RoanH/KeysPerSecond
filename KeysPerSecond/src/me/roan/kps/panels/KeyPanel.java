@@ -1,8 +1,8 @@
 package me.roan.kps.panels;
 
-import me.roan.kps.Main;
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
+import me.roan.kps.RenderingMode;
 
 /**
  * Panel to display the number
@@ -57,21 +57,26 @@ public final class KeyPanel extends BasePanel {
 
 	@Override
 	public int getLayoutX() {
-		return info.x;
+		return info.getX();
 	}
 
 	@Override
 	public int getLayoutY() {
-		return info.y;
+		return info.getY();
 	}
 
 	@Override
 	public int getLayoutWidth() {
-		return info.width;
+		return info.getWidth();
 	}
 
 	@Override
 	public int getLayoutHeight() {
-		return info.height;
+		return info.getHeight();
+	}
+
+	@Override
+	protected RenderingMode getRenderingMode() {
+		return info.getRenderingMode();
 	}
 }

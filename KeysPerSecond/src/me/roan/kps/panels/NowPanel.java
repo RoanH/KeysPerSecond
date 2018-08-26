@@ -1,6 +1,7 @@
 package me.roan.kps.panels;
 
 import me.roan.kps.Main;
+import me.roan.kps.RenderingMode;
 
 /**
  * Panel used to display the
@@ -45,5 +46,10 @@ public final class NowPanel extends BasePanel {
 	@Override
 	public int getLayoutHeight() {
 		return Main.config.cur_h;
+	}
+
+	@Override
+	protected RenderingMode getRenderingMode() {
+		return Main.config.cur_mode;
 	}
 }
