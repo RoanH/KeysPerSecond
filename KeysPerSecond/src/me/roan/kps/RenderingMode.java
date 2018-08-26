@@ -20,7 +20,7 @@ public enum RenderingMode {
 	HORIZONTAL_TN("Text - value") {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
+			point.move(2 + SizeManager.graphImageSize, getHorizontalBaseline(panel, metrics));
 		}
 
 		@Override
@@ -30,26 +30,22 @@ public enum RenderingMode {
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
+			return panel.getHeight() - (2 + SizeManager.graphImageSize) * 2;
 		}
 
 		@Override
 		protected int getEffectiveTitleWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
+			return panel.getWidth() / 2 - 2 - SizeManager.graphImageSize;
 		}
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
+			return panel.getHeight() - (2 + SizeManager.graphImageSize) * 2;
 		}
 
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel) {
-			// TODO Auto-generated method stub
-			return 0;
+			return panel.getWidth() / 2 - 2 - SizeManager.graphImageSize;
 		}
 	},
 	/**
@@ -172,9 +168,9 @@ public enum RenderingMode {
 	VERTICAL("Text above value") {
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, (panel.getHeight() - SizeManager.borderSize()) / 2);
+			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, (panel.getHeight() - SizeManager.borderSize() * 2) / 2);
 		}
-
+		//TODO probably want to change the position, like text at 3/8 title height and value at 7/8 ?
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
 			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, ((((panel.getHeight() - SizeManager.borderSize()) * 7) / 8)));
