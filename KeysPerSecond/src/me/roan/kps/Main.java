@@ -1059,7 +1059,10 @@ public class Main {
 		mainLoop();
 	}
 	
-	protected static final void configureLayoutNew(){
+	/**
+	 * Shows the layout configuration dialog
+	 */
+	protected static final void configureLayout(){
 		JPanel form = new JPanel(new BorderLayout());
 		
 		JPanel fields = new JPanel(new GridLayout(0, 5, 2, 2));
@@ -1281,13 +1284,14 @@ public class Main {
 		view.add(new JPanel(), BorderLayout.CENTER);
 		
 		JScrollPane pane = new JScrollPane(view);
+		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.setPreferredSize(new Dimension(400, 200));
+		pane.setPreferredSize(new Dimension(450, 200));
 
 		form.add(pane, BorderLayout.CENTER);
 		
-		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));                    
-		//Graph mode (left, right, top, bottom, detached)
+		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));
+		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
 		graphMode.setSelectedItem(Main.config.graphMode);
@@ -1360,96 +1364,6 @@ public class Main {
 		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
 		//TODO finish rendering mode implementation
 		modes.add(mode);
-	}
-
-	/**
-	 * Shows the layout configuration dialog
-	 */
-	@Deprecated
-	protected static final void configureLayout(){
-		configureLayoutNew();
-		if(frame != null){//TODO
-			return;
-		}
-		JPanel config = new JPanel(new BorderLayout());
-		JPanel mode = new JPanel(new GridLayout(0, 2, 0, 5));
-		//Text mode (horizontal / vertical)
-		mode.add(new JLabel("Text mode: "));
-		JComboBox<RenderingMode> textMode = new JComboBox<RenderingMode>(RenderingMode.values());
-		textMode.setSelectedItem(Main.config.mode);
-		mode.add(textMode);
-		mode.add(new JLabel("Rows (0=infinite): "));
-		JSpinner rows = new JSpinner(new SpinnerNumberModel(Main.config.rows, 0, Integer.MAX_VALUE, 1));
-		mode.add(rows);
-		mode.add(new JLabel("Columns (0=infinite): "));
-		JSpinner cols = new JSpinner(new SpinnerNumberModel(Main.config.columns, 0, Integer.MAX_VALUE, 1));
-		mode.add(cols);
-		ChangeListener cl = (e)->{
-			if((int)rows.getValue() == 0 && (int)cols.getValue() == 0){
-				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "Rows & Columns cannot both be zero!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-				rows.setValue(1);
-			}else if(((int)rows.getValue() * (int)cols.getValue() != 0)){
-				int n = getTotalAmountOfVisiblePanels();
-				if(n > (int)rows.getValue() * (int)cols.getValue()){
-					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "There aren't enough rows & columns to fit all the panels!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-					cols.setValue(0);
-				}
-			}
-		};
-		rows.addChangeListener(cl);
-		cols.addChangeListener(cl);
-		
-		JPanel panel = new JPanel(new GridLayout(0, 2, 0, 5));
-		//max position
-		panel.add(new JLabel("'Max' position: "));
-		JSpinner posMax = new JSpinner(new SpinnerNumberModel(Main.config.posMax, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posMax);
-		//avg pos
-		panel.add(new JLabel("'Avg' position: "));
-		JSpinner posAvg = new JSpinner(new SpinnerNumberModel(Main.config.posAvg, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posAvg);
-		//cur pos
-		panel.add(new JLabel("'Cur' position: "));
-		JSpinner posCur = new JSpinner(new SpinnerNumberModel(Main.config.posCur, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posCur);
-		//tot pos
-		panel.add(new JLabel("'Tot' position: "));
-		JSpinner posTot = new JSpinner(new SpinnerNumberModel(Main.config.posTot, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posTot);
-		
-		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));                    
-		//Graph mode (left, right, top, bottom, detached)
-		graphLayout.add(new JLabel("Graph mode: "));
-		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
-		graphMode.setSelectedItem(Main.config.graphMode);
-		graphLayout.add(graphMode);
-		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, 1, Integer.MAX_VALUE, 1));
-		graphLayout.add(gw);
-		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, 1, Integer.MAX_VALUE, 1));
-		graphLayout.add(gh);
-		graphMode.setSelectedItem(Main.config.graphMode);
-		
-		mode.setBorder(BorderFactory.createTitledBorder("Layout"));
-		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
-		panel.setBorder(BorderFactory.createTitledBorder("Positions"));
-		config.add(panel, BorderLayout.CENTER);
-		config.add(graphLayout, BorderLayout.PAGE_END);
-		config.add(mode, BorderLayout.PAGE_START);
-		
-		if(0 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, config, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			Main.config.graphMode   = (GraphMode)graphMode.getSelectedItem();
-			Main.config.graphWidth  = (int)gw.getValue();
-			Main.config.graphHeight = (int)gh.getValue();
-			Main.config.posAvg      = (int)posAvg.getValue();
-			Main.config.posMax      = (int)posMax.getValue();
-			Main.config.posCur      = (int)posCur.getValue();
-			Main.config.posTot      = (int)posTot.getValue();
-			Main.config.rows        = (int)rows.getValue();
-			Main.config.columns     = (int)cols.getValue();
-			Main.config.mode        = (RenderingMode)textMode.getSelectedItem();
-		}
 	}
 	
 	/**
