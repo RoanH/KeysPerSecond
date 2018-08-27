@@ -1758,7 +1758,8 @@ public class Main {
 	private static final String checkVersion(){
 		try{ 			
 			HttpURLConnection con = (HttpURLConnection) new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection(); 			
-			con.setRequestMethod("GET"); 		
+			con.setRequestMethod("GET"); 
+			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
 			con.setConnectTimeout(10000); 					   
 			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream())); 	
 			String line = reader.readLine(); 		
