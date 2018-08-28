@@ -54,13 +54,13 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		g.drawImage(ColorManager.graph_upper_left,   2, 2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_left,   2, this.getHeight() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 3, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 3 - SizeManager.graphImageSize, 2, this.getWidth() - 3, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 3 - SizeManager.graphImageSize, this.getHeight() - 3 - SizeManager.graphImageSize, this.getWidth() - 3, this.getHeight() - 3, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_side_left,    2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 3 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
-		g.drawImage(ColorManager.graph_upper_middle, 2 + SizeManager.graphImageSize, 2, this.getWidth() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_lower_middle, 2 + SizeManager.graphImageSize, this.getHeight() - 3 - SizeManager.graphImageSize, this.getWidth() - 3 - SizeManager.graphImageSize, this.getHeight() - 3, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 3 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getWidth() - 3, this.getHeight() - 3 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_lower_left,   2, this.getHeight() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 2, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 2 - SizeManager.graphImageSize, 2, this.getWidth() - 2, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 2 - SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, this.getWidth() - 2, this.getHeight() - 3, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_side_left,    2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_upper_middle, 2 + SizeManager.graphImageSize, 2, this.getWidth() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_lower_middle, 2 + SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, this.getWidth() - 2 - SizeManager.graphImageSize, this.getHeight() - 2, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getWidth() - 2, this.getHeight() - 2 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
 		
 		if(isActive()){
 			g.setColor(ColorManager.activeColor);
@@ -82,23 +82,30 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.drawString(title, namePos.x, namePos.y);
 
 		String value = getValue();
-		valueFont = mode.getValueFont(value, g, this, valueFont);
+		valueFont = mode.getValueFont(value, g, this, valueFont, titleFont.getSize());
 		Point keyCountPos = mode.getValueDrawPosition(g, this, value, valueFont);
 		g.setFont(valueFont);
 		g.drawString(value, keyCountPos.x, keyCountPos.y);
 		
 		//TODO debug only
-		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
-		g.setColor(new Color(0, 255, 255, 100));
-		g.drawRect((2 + SizeManager.graphImageSize), (2 + SizeManager.graphImageSize), this.getWidth() - 2 * (2 + SizeManager.graphImageSize), this.getHeight() - 2 * (2 + SizeManager.graphImageSize));
-		int u = ((this.getHeight() - SizeManager.borderSize() * 2) / 3);
-		g.drawLine(0, u, this.getWidth(), u);
-		g.drawLine(0, u * 2, this.getWidth(), u * 2);
-		g.drawLine(0, u * 3, this.getWidth(), u * 3);
-		u = (this.getWidth() - SizeManager.borderSize() * 2) / 3;
-		g.drawLine(u, 0, u, this.getHeight());
-		g.drawLine(u * 2, 0, u * 2, this.getHeight());
-		g.drawLine(u * 3, 0, u * 3, this.getHeight());
+		//TODO not all images are 100% right yet
+		// - lower right
+		// - sync top left and top right
+//		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
+//		g.setColor(new Color(0, 255, 255, 100));
+//		g.drawLine(0, SizeManager.borderSize(), this.getWidth(), SizeManager.borderSize());
+//		g.drawLine(SizeManager.borderSize(), 0, SizeManager.borderSize(), this.getHeight());
+//		g.drawLine(0, this.getHeight() - SizeManager.borderSize() - 1, this.getWidth(), this.getHeight() - SizeManager.borderSize() - 1);
+//		g.drawLine(this.getWidth() - SizeManager.borderSize() - 1, 0, this.getWidth() - SizeManager.borderSize() - 1, this.getHeight());
+//		
+//		int u = ((this.getHeight() - SizeManager.borderSize() * 2) / 3);
+//		g.drawLine(0, u, this.getWidth(), u);
+//		g.drawLine(0, u * 2, this.getWidth(), u * 2);
+//		g.drawLine(0, u * 3, this.getWidth(), u * 3);
+//		u = (this.getWidth() - SizeManager.borderSize() * 2) / 3;
+//		g.drawLine(u, 0, u, this.getHeight());
+//		g.drawLine(u * 2, 0, u * 2, this.getHeight());
+//		g.drawLine(u * 3, 0, u * 3, this.getHeight());
 	}
 	
 	/**

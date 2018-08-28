@@ -288,23 +288,23 @@ public enum RenderingMode {
 	}
 	
 	public Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
-		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont);
+		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont, Integer.MAX_VALUE);
 	}
 	
-	public Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
-		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont);
+	public Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont, int maxsize){
+		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont, maxsize);
 	}
 	
-	private static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont){
+	private static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont, int maxsize){
 		FontMetrics fm;
 		if(currentFont != null){
 			fm = g.getFontMetrics(currentFont);
-			if(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth){
+			if(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth && currentFont.getSize() <= maxsize){
 				return currentFont;
 			}
 		}
 		
-		int size = (int)(maxHeight * (Toolkit.getDefaultToolkit().getScreenResolution() / 72.0));
+		int size = Math.min((int)(maxHeight * (Toolkit.getDefaultToolkit().getScreenResolution() / 72.0)), maxsize);
 		Font font;
 		do{
 			font = new Font("Dialog", properties, size);
