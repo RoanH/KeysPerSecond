@@ -88,21 +88,34 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.drawString(value, keyCountPos.x, keyCountPos.y);
 		
 		//TODO debug only
+		int xs = SizeManager.borderSize() - 1;
+		int xe = this.getWidth() - SizeManager.borderSize();
+		int ys = SizeManager.borderSize() - 1;
+		int ye = this.getHeight() - SizeManager.borderSize();
 		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 		g.setColor(new Color(0, 255, 255, 100));
-		g.drawLine(0, SizeManager.borderSize() - 1, this.getWidth(), SizeManager.borderSize() - 1);
-		g.drawLine(SizeManager.borderSize() - 1, 0, SizeManager.borderSize() - 1, this.getHeight());
-		g.drawLine(0, this.getHeight() - SizeManager.borderSize(), this.getWidth(), this.getHeight() - SizeManager.borderSize());
-		g.drawLine(this.getWidth() - SizeManager.borderSize(), 0, this.getWidth() - SizeManager.borderSize(), this.getHeight());
-//		
-//		int u = ((this.getHeight() - SizeManager.borderSize() * 2) / 3);
-//		g.drawLine(0, u, this.getWidth(), u);
-//		g.drawLine(0, u * 2, this.getWidth(), u * 2);
-//		g.drawLine(0, u * 3, this.getWidth(), u * 3);
-//		u = (this.getWidth() - SizeManager.borderSize() * 2) / 3;
-//		g.drawLine(u, 0, u, this.getHeight());
-//		g.drawLine(u * 2, 0, u * 2, this.getHeight());
-//		g.drawLine(u * 3, 0, u * 3, this.getHeight());
+		g.drawLine(0, ys, this.getWidth(), ys);
+		g.drawLine(xs, 0, xs, this.getHeight());
+		g.drawLine(0, ye, this.getWidth(), ye);
+		g.drawLine(xe, 0, xe, this.getHeight());
+		
+		System.out.println("ys | ye | ys + ye: " + ys + " | " + ye + " | " + (ye - ys));
+		System.out.println("xs | xe | xs + xe: " + xs + " | " + xe + " | " + (xe - xs));
+		
+		g.drawLine(0, (ys + ye) / 2, this.getWidth(), (ys + ye) / 2);
+		g.drawLine(0, (ys + ye) / 2 + 1, this.getWidth(), (ys + ye) / 2 + 1);
+		
+		g.drawLine((xs + xe) / 2, 0, (xs + xe) / 2, this.getHeight());
+		g.drawLine((xs + xe) / 2 + 1, 0, (xs + xe) / 2 + 1, this.getHeight());
+		
+		g.drawLine(xs + (xe - xs) / 4, 0, xs + (xe - xs) / 4, this.getHeight());
+		g.drawLine(xs + ((xe - xs) * 3) / 4 + 1, 0, xs + ((xe - xs) * 3) / 4 + 1, this.getHeight());
+		
+		g.drawLine(0, ys + (ye - ys) / 4, this.getWidth(), ys + (ye - ys) / 4);
+		g.drawLine(0, ys + (ye - ys) / 4 + 1, this.getWidth(), ys + (ye - ys) / 4 + 1);
+
+		g.drawLine(0, ys + ((ye - ys) * 3) / 4, this.getWidth(), ys + ((ye - ys) * 3) / 4);
+		g.drawLine(0, ys + ((ye - ys) * 3) / 4 + 1, this.getWidth(), ys + ((ye - ys) * 3) / 4 + 1);
 	}
 	
 	/**
