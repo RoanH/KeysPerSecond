@@ -67,7 +67,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 			g.fillRect(2 + (SizeManager.graphImageSize / 4) * 3, 
 					   2 + (SizeManager.graphImageSize / 4) * 2, 
 					   this.getWidth() - 5 - (SizeManager.graphImageSize / 4) * 5, 
-					   this.getHeight() - 5 - (SizeManager.graphImageSize / 4) * 4);
+					   this.getHeight() - 4 - (SizeManager.graphImageSize / 4) * 4);
 			g.setColor(Main.config.getBackgroundColor());
 		}else{
 			g.setColor(Main.config.getForegroundColor());
