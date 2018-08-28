@@ -1063,6 +1063,7 @@ public class Main {
 	 * Shows the layout configuration dialog
 	 */
 	protected static final void configureLayout(){
+		content.showGrid();
 		JPanel form = new JPanel(new BorderLayout());
 		
 		JPanel fields = new JPanel(new GridLayout(0, 5, 2, 2));
@@ -1372,6 +1373,7 @@ public class Main {
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
 		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
+		content.hideGrid();
 	}
 	
 	private static final void createListItem(Positionable info, JPanel fields, JPanel modes){							
