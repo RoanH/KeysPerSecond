@@ -1,6 +1,7 @@
 package me.roan.kps.panels;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -87,12 +88,12 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.drawString(value, keyCountPos.x, keyCountPos.y);
 		
 		//TODO debug only
-//		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
-//		g.setColor(new Color(0, 255, 255, 100));
-//		g.drawLine(0, SizeManager.borderSize(), this.getWidth(), SizeManager.borderSize());
-//		g.drawLine(SizeManager.borderSize(), 0, SizeManager.borderSize(), this.getHeight());
-//		g.drawLine(0, this.getHeight() - SizeManager.borderSize() - 1, this.getWidth(), this.getHeight() - SizeManager.borderSize() - 1);
-//		g.drawLine(this.getWidth() - SizeManager.borderSize() - 1, 0, this.getWidth() - SizeManager.borderSize() - 1, this.getHeight());
+		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
+		g.setColor(new Color(0, 255, 255, 100));
+		g.drawLine(0, SizeManager.borderSize() - 1, this.getWidth(), SizeManager.borderSize() - 1);
+		g.drawLine(SizeManager.borderSize() - 1, 0, SizeManager.borderSize() - 1, this.getHeight());
+		g.drawLine(0, this.getHeight() - SizeManager.borderSize(), this.getWidth(), this.getHeight() - SizeManager.borderSize());
+		g.drawLine(this.getWidth() - SizeManager.borderSize(), 0, this.getWidth() - SizeManager.borderSize(), this.getHeight());
 //		
 //		int u = ((this.getHeight() - SizeManager.borderSize() * 2) / 3);
 //		g.drawLine(0, u, this.getWidth(), u);
