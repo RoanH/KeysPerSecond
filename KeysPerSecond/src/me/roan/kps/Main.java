@@ -75,6 +75,7 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseListener;
 
 import me.roan.kps.CommandKeys.CMD;
+import me.roan.kps.layout.GridPanel;
 import me.roan.kps.layout.Layout;
 import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.AvgPanel;
@@ -149,7 +150,7 @@ public class Main {
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
-	private static final JPanel content = new JPanel();
+	private static final GridPanel content = new GridPanel();
 	/**
 	 * Graph panel
 	 */
