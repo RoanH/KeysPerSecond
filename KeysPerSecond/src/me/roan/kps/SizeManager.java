@@ -20,6 +20,7 @@ public class SizeManager {
 	protected static int defaultGraphWidth = 228;
 	//TODO
 	public final static int cellSize = 22;
+	protected final static int insideOffset = 5;
 	
 	//BasePanel & KeyPanel data
 	/**
