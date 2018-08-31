@@ -32,7 +32,5 @@ compile:
     - cd ..
     - cd bin
     - jar cvf ${PROJECTNAME}.jar ./*
-    - cd ../../
-    - mv ./${PROJECTNAME}/bin/${PROJECTNAME}.jar ./${PROJECTNAME}.jar
   stage: compile
   environment: builds
