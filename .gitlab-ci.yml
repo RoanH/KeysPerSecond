@@ -1,7 +1,6 @@
 image: openjdk:8
 
 variables:
-   NAME: "${CI_PROJECT_NAME}-${CI_PIPELINE_ID}-${CI_BUILD_REF_NAME}"
    GIT_STRATEGY: clone
    SSL_SELF_SIGNED: "true"
    PROJECTNAME: "KeysPerSecond"
@@ -32,13 +31,8 @@ compile:
     - while read res; do cp --parents $res ../bin; done <../resources.txt
     - cd ..
     - cd bin
-    - jar cvfe ${PROJECTNAME}.jar Main ./*
+    - jar cvf ${PROJECTNAME}.jar ./*
     - cd ../../
     - mv ./${PROJECTNAME}/bin/${PROJECTNAME}.jar ./${PROJECTNAME}.jar
   stage: compile
   environment: builds
-  artifacts:
-    name: "${NAME}"
-    expire_in: 1 week
-    paths:
-      - ${PROJECTNAME}.jar
