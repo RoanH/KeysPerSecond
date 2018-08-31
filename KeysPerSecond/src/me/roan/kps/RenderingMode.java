@@ -188,7 +188,7 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			return getPanelInsideHeight(panel) / 4;
+			return (getPanelInsideHeight(panel) * 11) / 32;
 		}
 
 		@Override
@@ -288,11 +288,11 @@ public enum RenderingMode{
 	}
 
 	public Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
-		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont, Integer.MAX_VALUE);
+		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont);
 	}
 
 	public Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont, int maxsize){
-		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont, maxsize);
+		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont);
 	}
 
 	private static final int getPanelInsideHeight(BasePanel panel){
@@ -303,24 +303,28 @@ public enum RenderingMode{
 		return panel.getWidth() - SizeManager.insideOffset * 2;
 	}
 
-	private static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont, int maxsize){
+	private static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont){
 		FontMetrics fm;
 		if(currentFont != null){
 			fm = g.getFontMetrics(currentFont);
-			if(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth && currentFont.getSize() <= maxsize){
+			if(fm.getMaxAscent() <= maxHeight && stringWidth(text, fm) <= maxWidth){
 				return currentFont;
 			}
 		}
 
-		int size = Math.min((int)(maxHeight * (Toolkit.getDefaultToolkit().getScreenResolution() / 72.0)), maxsize);
+		int size = (int)(maxHeight * (Toolkit.getDefaultToolkit().getScreenResolution() / 72.0));
 		Font font;
 		do{
 			font = new Font("Dialog", properties, size);
 			fm = g.getFontMetrics(font);
 			size--;
-		}while(!(fm.getMaxAscent() <= maxHeight && fm.stringWidth(text) <= maxWidth));
+		}while(!(fm.getMaxAscent() <= maxHeight && stringWidth(text, fm) <= maxWidth));
 
 		return font;
+	}
+	
+	private static final int stringWidth(String text, FontMetrics fm){
+		return fm.charWidth('R') * text.length();
 	}
 
 	@Override
