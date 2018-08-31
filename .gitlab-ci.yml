@@ -20,17 +20,9 @@ compile:
     - mkdir bin
     - find src -name "*.java" > sources.txt
     - find lib -name "*.jar" > libs.txt
-    - cd src
-    - find -type f \( -name "*.*" ! -name "*.java" \) > ../resources.txt
-    - cd ..
     - libs=""
     - while read line; do libs=$libs./$line:; done <libs.txt
     - libs=$libs.
     - javac -cp $libs -d ./bin -g -verbose -version -encoding "UTF-8" @sources.txt
-    - cd src
-    - while read res; do cp --parents $res ../bin; done <../resources.txt
-    - cd ..
-    - cd bin
-    - jar cvf ${PROJECTNAME}.jar ./*
   stage: compile
   environment: builds
