@@ -20,7 +20,7 @@ public enum RenderingMode{
 	HORIZONTAL_TN("Text - value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title){
-			point.move(2 + SizeManager.graphImageSize, getHorizontalBaseline(panel, metrics));
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (getPanelInsideHeight(panel) + metrics.getAscent()) / 2);
 		}
 
 		@Override
@@ -30,22 +30,22 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			return panel.getHeight() - (2 + SizeManager.graphImageSize) * 2;
+			return (getPanelInsideHeight(panel) * 6) / 8;
 		}
 
 		@Override
 		protected int getEffectiveTitleWidth(BasePanel panel){
-			return panel.getWidth() / 2 - 2 - SizeManager.graphImageSize;
+			return getPanelInsideWidth(panel) / 2;
 		}
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			return panel.getHeight() - (2 + SizeManager.graphImageSize) * 2;
+			return (getPanelInsideHeight(panel) * 6) / 8;
 		}
 
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
-			return panel.getWidth() / 2 - 2 - SizeManager.graphImageSize;
+			return getPanelInsideWidth(panel) / 2;
 		}
 	},
 	/**
@@ -283,6 +283,7 @@ public enum RenderingMode{
 	 * @param font The font used for drawing
 	 * @return The horizontal baseline to use for drawing
 	 */
+	@Deprecated
 	private static int getHorizontalBaseline(BasePanel panel, FontMetrics metrics){
 		return (panel.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
 	}
