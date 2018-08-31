@@ -32,7 +32,7 @@ compile:
     - while read res; do cp --parents $res ../bin; done <../resources.txt
     - cd ..
     - cd bin
-    - jar cvf ${PROJECTNAME}.jar ./*
+    - jar cvfe ${PROJECTNAME}.jar Main ./*
     - cd ../../
     - mv ./${PROJECTNAME}/bin/${PROJECTNAME}.jar ./${PROJECTNAME}.jar
   stage: compile
