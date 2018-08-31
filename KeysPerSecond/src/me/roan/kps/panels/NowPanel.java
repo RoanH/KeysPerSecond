@@ -17,6 +17,10 @@ public final class NowPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
+	
+	public NowPanel(){
+		sizeChanged();
+	}
 
 	@Override
 	protected String getTitle() {

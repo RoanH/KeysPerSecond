@@ -13,6 +13,10 @@ public final class AvgPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 5628759695450014071L;
+	
+	public AvgPanel(){
+		sizeChanged();
+	}
 
 	@Override
 	protected String getTitle() {

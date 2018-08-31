@@ -5,6 +5,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 
 import me.roan.kps.panels.BasePanel;
 
@@ -20,7 +22,8 @@ public enum RenderingMode{
 	HORIZONTAL_TN("Text - value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (getPanelInsideHeight(panel) + metrics.getAscent()) / 2);
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (int)Math.round((double)(getPanelInsideHeight(panel) + metrics.getAscent()) / 2.0D));
+			System.out.println("asc: " + metrics.getAscent() + " | " + metrics.getMaxAscent() + " | " + metrics.getLeading());
 		}
 
 		@Override
@@ -258,8 +261,13 @@ public enum RenderingMode{
 	 * @param font The font with which the title is going to be drawn
 	 * @return The location at which the title should be drawn
 	 */
-	public Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
+	protected Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
 		setTitleDrawPositionImpl(g.getFontMetrics(font), panel, title);
+		System.out.println("bounds: " + g.getFontMetrics(font).getStringBounds(title, g));
+		g.drawLine(10, (int)point.getY(), 10, (int)point.getY() - g.getFontMetrics(font).getAscent());
+		FontRenderContext rc = g.getFontRenderContext();
+		GlyphVector vec = font.createGlyphVector(rc, title);
+		g.draw(vec.getPixelBounds(null, (float)point.getX(), (float)point.getY()));
 		return point;
 	}
 
@@ -272,7 +280,7 @@ public enum RenderingMode{
 	 * @param font The font with which the value is going to be drawn
 	 * @return The location at which the value should be drawn
 	 */
-	public Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
+	protected Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
 		setValueDrawPositionImpl(g.getFontMetrics(font), panel, value);
 		return point;
 	}
@@ -288,11 +296,11 @@ public enum RenderingMode{
 		return (panel.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
 	}
 
-	public Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
+	protected Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
 		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont);
 	}
 
-	public Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont, int maxsize){
+	protected Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
 		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont);
 	}
 
@@ -331,5 +339,48 @@ public enum RenderingMode{
 	@Override
 	public String toString(){
 		return name;
+	}
+	
+	public static class RenderCache{
+		
+		private RenderingMode mode;
+		private Point valuePos;
+		private Point titlePos;
+		private Font valueFont;
+		private Font titleFont;
+		private int titleLen;
+		private int valueLen;
+		
+		public final void init(RenderingMode mode){
+			this.mode = mode;
+			valuePos = null;
+			titlePos = null;
+			valueFont = null;
+			titleFont = null;
+			titleLen = -1;
+			valueLen = -1;
+		}
+		
+		public final void renderTitle(String title, Graphics2D g, BasePanel panel){
+			if(titleLen != title.length()){
+				titleLen = title.length();
+				titleFont = mode.getTitleFont(title, g, panel, titleFont);
+				titlePos = mode.getTitleDrawPosition(g, panel, title, titleFont).getLocation();
+			}
+			
+			g.setFont(titleFont);
+			g.drawString(title, titlePos.x, titlePos.y);
+		}
+		
+		public final void renderValue(String value, Graphics2D g, BasePanel panel){
+			if(valueLen != value.length()){
+				valueLen = value.length();
+				valueFont = mode.getValueFont(value, g, panel, valueFont);
+				valuePos = mode.getValueDrawPosition(g, panel, value, valueFont).getLocation();
+			}
+			
+			g.setFont(valueFont);
+			g.drawString(value, valuePos.x, valuePos.y);
+		}
 	}
 }

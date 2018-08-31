@@ -14,6 +14,7 @@ import me.roan.kps.Main;
 import me.roan.kps.RenderingMode;
 import me.roan.kps.SizeManager;
 import me.roan.kps.layout.LayoutPosition;
+import me.roan.kps.RenderingMode.RenderCache;
 
 /**
  * Abstract base class for the 
@@ -28,12 +29,10 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
 	
-	private Font titleFont;
-	private Font valueFont;
+	private RenderCache cache = new RenderCache();
 	
 	public void sizeChanged(){
-		titleFont = null;
-		valueFont = null;
+		cache.init(getRenderingMode());
 	}
 	
 	/**
@@ -72,20 +71,10 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		}else{
 			g.setColor(Main.config.getForegroundColor());
 		}
+				
+		cache.renderTitle(getTitle(), g, this);
 		
-		RenderingMode mode = getRenderingMode();
-		
-		String title = getTitle();
-		titleFont = mode.getTitleFont(title, g, this, titleFont);
-		Point namePos = mode.getTitleDrawPosition(g, this, title, titleFont);
-		g.setFont(titleFont);
-		g.drawString(title, namePos.x, namePos.y);
-
-		String value = getValue();
-		valueFont = mode.getValueFont(value, g, this, valueFont, titleFont.getSize());
-		Point keyCountPos = mode.getValueDrawPosition(g, this, value, valueFont);
-		g.setFont(valueFont);
-		g.drawString(value, keyCountPos.x, keyCountPos.y);
+		cache.renderValue(getValue(), g, this);
 		
 		//TODO debug only
 		int xs = SizeManager.borderSize() - 1;

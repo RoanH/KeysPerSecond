@@ -13,6 +13,10 @@ public final class MaxPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
+	
+	public MaxPanel(){
+		sizeChanged();
+	}
 
 	@Override
 	protected String getTitle() {

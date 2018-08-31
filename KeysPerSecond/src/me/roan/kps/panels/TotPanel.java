@@ -18,6 +18,10 @@ public final class TotPanel extends BasePanel {
 	 */
 	public static int hits;
 
+	public TotPanel(){
+		sizeChanged();
+	}
+	
 	@Override
 	protected String getTitle() {
 		return "TOT";
