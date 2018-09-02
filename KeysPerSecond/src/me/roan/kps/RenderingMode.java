@@ -54,36 +54,32 @@ public enum RenderingMode{
 	HORIZONTAL_NT("Value - text"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), getHorizontalBaseline(panel, metrics));
+			point.move(panel.getWidth() - SizeManager.insideOffset - 1 - metrics.stringWidth(title), SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return (getPanelInsideHeight(panel) * 6) / 8;
 		}
 
 		@Override
 		protected int getEffectiveTitleWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) / 2;
 		}
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return (getPanelInsideHeight(panel) * 5) / 8;
 		}
 
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) / 2;
 		}
 	},
 	/**
