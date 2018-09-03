@@ -190,12 +190,12 @@ public enum RenderingMode{
 	DIAGONAL4("Text diagonally right under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
