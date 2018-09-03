@@ -20,25 +20,24 @@ public class SpecialNumberModel extends AbstractSpinnerModel{
 
 	@Override
 	public void setValue(Object value) {
-		this.value = value instanceof String ? -1 : (int)value;
-		System.out.println("set val: " + value + " new: " + this.value);
+		this.value = ((String)value).equals(special) ? -1 : Integer.valueOf((String)value);
 		listener.valueChanged(this.value);
 		fireStateChanged();
 	}
 
 	@Override
 	public Object getNextValue() {
-		return value + 1;
+		return String.valueOf(value + 1);
 	}
 
 	@Override
 	public Object getPreviousValue() {
-		return value <= 0 ? special : (value - 1);
+		return value <= 0 ? special : String.valueOf(value - 1);
 	}
 
 	@Override
 	public Object getValue() {
-		return value == -1 ? special : value;
+		return value == -1 ? special : String.valueOf(value);
 	}
 	
 	@FunctionalInterface
