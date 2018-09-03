@@ -77,6 +77,7 @@ import org.jnativehook.mouse.NativeMouseListener;
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.layout.GridPanel;
 import me.roan.kps.layout.Layout;
+import me.roan.kps.layout.LayoutValidator;
 import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.GraphPanel;
@@ -1342,29 +1343,31 @@ public class Main {
 		});
 		graphLayout.add(graphMode);
 		
+		LayoutValidator validator = new LayoutValidator();
+		
 		graphLayout.add(new JLabel("Graph x position: "));
-		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, (val)->{
+		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, validator.getXField(), (val)->{
 			Main.config.graph_x = val;
 			reconfigure();
 		}));
 		graphLayout.add(x);
 		
 		graphLayout.add(new JLabel("Graph y position: "));
-		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, (val)->{
+		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, validator.getYField(), (val)->{
 			Main.config.graph_y = val;
 			reconfigure();
 		}));
 		graphLayout.add(y);
 		
 		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, (val)->{
+		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), (val)->{
 			Main.config.graph_w = val;
 			reconfigure();
 		}));
 		graphLayout.add(w);
 		
 		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, (val)->{
+		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), (val)->{
 			Main.config.graph_h = val;
 			reconfigure();
 		}));
@@ -1378,26 +1381,28 @@ public class Main {
 	
 	private static final void createListItem(Positionable info, JPanel fields, JPanel modes){							
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
+		
+		LayoutValidator validator = new LayoutValidator();
 
-		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), (val)->{
+		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), validator.getXField(), (val)->{
 			info.setX(val);
 			reconfigure();
 		}));
 		fields.add(x);
 
-		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), (val)->{
+		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), validator.getYField(), (val)->{
 			info.setY(val);
 			reconfigure();
 		}));
 		fields.add(y);
 
-		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), (val)->{
+		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), validator.getWidthField(), (val)->{
 			info.setWidth(val);
 			reconfigure();
 		}));
 		fields.add(w);
 
-		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), (val)->{
+		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), validator.getHeightField(), (val)->{
 			info.setHeight(val);
 			reconfigure();
 		}));
