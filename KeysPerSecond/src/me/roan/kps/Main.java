@@ -1339,12 +1339,6 @@ public class Main {
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
 		graphMode.setSelectedItem(Main.config.graphMode);
-		graphMode.addActionListener((e)->{
-			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
-			if(live){
-				reconfigure();
-			}
-		});
 		graphLayout.add(graphMode);
 		
 		LayoutValidator validator = new LayoutValidator();
@@ -1356,6 +1350,7 @@ public class Main {
 				reconfigure();
 			}
 		}));
+		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(x);
 		
 		graphLayout.add(new JLabel("Graph y position: "));
@@ -1365,6 +1360,7 @@ public class Main {
 				reconfigure();
 			}
 		}));
+		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(y);
 		
 		graphLayout.add(new JLabel("Graph width: "));
@@ -1384,6 +1380,20 @@ public class Main {
 			}
 		}));
 		graphLayout.add(h);
+		
+		graphMode.addActionListener((e)->{
+			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
+			if(graphMode.getSelectedItem() == GraphMode.INLINE){
+				x.setEnabled(true);
+				y.setEnabled(true);
+			}else{
+				x.setEnabled(false);
+				y.setEnabled(false);
+			}
+			if(live){
+				reconfigure();
+			}
+		});
 		
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
