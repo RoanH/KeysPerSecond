@@ -338,17 +338,6 @@ public enum RenderingMode{
 		return point;
 	}
 
-	/**
-	 * Gets the baseline to draw text in the panel
-	 * @param panel The panel
-	 * @param font The font used for drawing
-	 * @return The horizontal baseline to use for drawing
-	 */
-	@Deprecated
-	private static int getHorizontalBaseline(BasePanel panel, FontMetrics metrics){
-		return (panel.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
-	}
-
 	protected Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
 		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont);
 	}
