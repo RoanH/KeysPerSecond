@@ -122,36 +122,32 @@ public enum RenderingMode{
 	DIAGONAL2("Text diagonally right under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
 		}
-
+		
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.sideTextOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
 
 		@Override
 		protected int getEffectiveTitleWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) - 2;
 		}
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
 
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) - 2;
 		}
 	},
 	/**
@@ -170,26 +166,22 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
 
 		@Override
 		protected int getEffectiveTitleWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) - 2;
 		}
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
 
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) - 2;
 		}
 	},
 	/**
@@ -208,26 +200,22 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
 
 		@Override
 		protected int getEffectiveTitleWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) - 2;
 		}
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
 
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
-			// TODO Auto-generated method stub
-			return 0;
+			return getPanelInsideWidth(panel) - 2;
 		}
 	},
 	/**
