@@ -675,7 +675,7 @@ public class Main {
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
 		layout.addActionListener((e)->{
-			configureLayout();
+			configureLayout(false);
 			save.setEnabled(true);
 		});
 		cmdkeys.addActionListener((e)->{
@@ -1062,8 +1062,10 @@ public class Main {
 	
 	/**
 	 * Shows the layout configuration dialog
+	 * @param live Whether or not changes should be
+	 *        applied in real time
 	 */
-	protected static final void configureLayout(){
+	protected static final void configureLayout(boolean live){
 		content.showGrid();
 		JPanel form = new JPanel(new BorderLayout());
 		
@@ -1078,7 +1080,7 @@ public class Main {
 		modes.add(new JLabel("Mode", SwingConstants.CENTER));
 		
 		for(KeyInformation i : config.keyinfo){
-			createListItem(i, fields, modes);
+			createListItem(i, fields, modes, live);
 		}
 		if(config.showAvg){
 			createListItem(new Positionable(){
@@ -1137,7 +1139,7 @@ public class Main {
 				public void setRenderingMode(RenderingMode mode) {
 					config.avg_mode = mode;
 				}
-			}, fields, modes);
+			}, fields, modes, live);
 		}
 		if(config.showMax){
 			createListItem(new Positionable(){
@@ -1196,7 +1198,7 @@ public class Main {
 				public void setRenderingMode(RenderingMode mode) {
 					config.max_mode = mode;
 				}
-			}, fields, modes);
+			}, fields, modes, live);
 		}
 		if(config.showCur){
 			createListItem(new Positionable(){
@@ -1255,7 +1257,7 @@ public class Main {
 				public void setRenderingMode(RenderingMode mode) {
 					config.cur_mode = mode;
 				}
-			}, fields, modes);
+			}, fields, modes, live);
 		}
 		if(config.showTotal){
 			createListItem(new Positionable(){
@@ -1314,7 +1316,7 @@ public class Main {
 				public void setRenderingMode(RenderingMode mode) {
 					config.tot_mode = mode;
 				}
-			}, fields, modes);
+			}, fields, modes, live);
 		}
 		
 		JPanel keys = new JPanel(new BorderLayout());
@@ -1339,7 +1341,9 @@ public class Main {
 		graphMode.setSelectedItem(Main.config.graphMode);
 		graphMode.addActionListener((e)->{
 			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		});
 		graphLayout.add(graphMode);
 		
@@ -1348,28 +1352,36 @@ public class Main {
 		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, validator.getXField(), (val)->{
 			Main.config.graph_x = val;
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		graphLayout.add(x);
 		
 		graphLayout.add(new JLabel("Graph y position: "));
 		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, validator.getYField(), (val)->{
 			Main.config.graph_y = val;
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		graphLayout.add(y);
 		
 		graphLayout.add(new JLabel("Graph width: "));
 		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), (val)->{
 			Main.config.graph_w = val;
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		graphLayout.add(w);
 		
 		graphLayout.add(new JLabel("Graph height: "));
 		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), (val)->{
 			Main.config.graph_h = val;
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		graphLayout.add(h);
 		
@@ -1379,32 +1391,40 @@ public class Main {
 		content.hideGrid();
 	}
 	
-	private static final void createListItem(Positionable info, JPanel fields, JPanel modes){							
+	private static final void createListItem(Positionable info, JPanel fields, JPanel modes, boolean live){							
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
 		
 		LayoutValidator validator = new LayoutValidator();
 
 		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), validator.getXField(), (val)->{
 			info.setX(val);
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		fields.add(x);
 
 		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), validator.getYField(), (val)->{
 			info.setY(val);
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		fields.add(y);
 
 		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), validator.getWidthField(), (val)->{
 			info.setWidth(val);
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		fields.add(w);
 
 		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), validator.getHeightField(), (val)->{
 			info.setHeight(val);
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		}));
 		fields.add(h);
 
@@ -1412,7 +1432,9 @@ public class Main {
 		mode.setSelectedItem(info.getRenderingMode());
 		mode.addActionListener((e)->{
 			info.setRenderingMode((RenderingMode)mode.getSelectedItem());
-			reconfigure();
+			if(live){
+				reconfigure();
+			}
 		});
 		modes.add(mode);
 	}

@@ -367,7 +367,7 @@ public class Menu {
 			Main.config.backlog = (int)sbacklog.getValue();
 		});
 		layout.addActionListener((e)->{
-			Main.configureLayout();
+			Main.configureLayout(true);
 			Main.reconfigure();
 		});
 		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.updateRate == 1000);
