@@ -85,7 +85,7 @@ public enum RenderingMode{
 	/**
 	 * DIAGONAL text rendering
 	 */
-	DIAGONAL1("Text diagonally left above value"){
+	DIAGONAL1("Text diagonally right above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
 			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.sideTextOffset + 1 + getHeight(g, font));
@@ -119,7 +119,7 @@ public enum RenderingMode{
 	/**
 	 * DIAGONAL text rendering
 	 */
-	DIAGONAL2("Text diagonally right under value"){
+	DIAGONAL2("Text diagonally left under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
 			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
@@ -153,15 +153,15 @@ public enum RenderingMode{
 	/**
 	 * DIAGONAL text rendering
 	 */
-	DIAGONAL3("Text diagonally right above value"){
+	DIAGONAL3("Text diagonally left above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
@@ -187,7 +187,7 @@ public enum RenderingMode{
 	/**
 	 * DIAGONAL text rendering
 	 */
-	DIAGONAL4("Text diagonally left under value"){
+	DIAGONAL4("Text diagonally right under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
 			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
