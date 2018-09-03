@@ -30,7 +30,7 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			return (getPanelInsideHeight(panel) * 6) / 8;
+			return (getPanelInsideHeight(panel) * 5) / 8;
 		}
 
 		@Override
@@ -40,7 +40,7 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			return (getPanelInsideHeight(panel) * 5) / 8;
+			return getPanelInsideHeight(panel) / 2;
 		}
 
 		@Override
@@ -64,7 +64,7 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			return (getPanelInsideHeight(panel) * 6) / 8;
+			return (getPanelInsideHeight(panel) * 5) / 8;
 		}
 
 		@Override
@@ -74,7 +74,7 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			return (getPanelInsideHeight(panel) * 5) / 8;
+			return getPanelInsideHeight(panel) / 2;
 		}
 
 		@Override
@@ -83,17 +83,51 @@ public enum RenderingMode{
 		}
 	},
 	/**
-	 * HORIZONTAL text rendering
+	 * DIAGONAL text rendering
 	 */
-	HORIZONTAL_TDAN("Text diagonally above value"){
+	DIAGONAL1("Text diagonally left above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), metrics.getAscent() + 1);
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.sideTextOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
+		}
+	},
+	/**
+	 * DIAGONAL text rendering
+	 */
+	DIAGONAL2("Text diagonally right under value"){
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
+		}
+
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
 		}
 
 		@Override
@@ -121,9 +155,47 @@ public enum RenderingMode{
 		}
 	},
 	/**
-	 * HORIZONTAL text rendering
+	 * DIAGONAL text rendering
 	 */
-	HORIZONTAL_TDAN2("Text diagonally under value"){
+	DIAGONAL3("Text diagonally right above value"){
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
+		}
+
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			// TODO Auto-generated method stub
+			return 0;
+		}
+	},
+	/**
+	 * DIAGONAL text rendering
+	 */
+	DIAGONAL4("Text diagonally left under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
 			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
@@ -164,7 +236,7 @@ public enum RenderingMode{
 	VERTICAL("Text above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), SizeManager.insideOffset + getEffectiveTitleHeight(panel) + 1);
+			point.move(SizeManager.insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), SizeManager.insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
 		}
 
 		@Override
@@ -174,7 +246,7 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			return (getPanelInsideHeight(panel) * 3) / 8;
+			return (getPanelInsideHeight(panel) * 11) / 32;
 		}
 
 		@Override
@@ -184,7 +256,7 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			return (getPanelInsideHeight(panel) * 11) / 32;
+			return (getPanelInsideHeight(panel) * 9) / 32;
 		}
 
 		@Override
@@ -309,7 +381,7 @@ public enum RenderingMode{
 		FontMetrics fm;
 		if(currentFont != null){
 			fm = g.getFontMetrics(currentFont);
-			if(fm.getMaxAscent() <= maxHeight && stringWidth(text, fm) <= maxWidth){
+			if(getHeight(g, currentFont) <= maxHeight && stringWidth(text, fm) <= maxWidth){
 				return currentFont;
 			}
 		}
@@ -320,7 +392,7 @@ public enum RenderingMode{
 			font = new Font("Dialog", properties, size);
 			fm = g.getFontMetrics(font);
 			size--;
-		}while(!(fm.getMaxAscent() <= maxHeight && stringWidth(text, fm) <= maxWidth));
+		}while(!(getHeight(g, font) <= maxHeight && stringWidth(text, fm) <= maxWidth));
 
 		return font;
 	}
