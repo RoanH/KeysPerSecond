@@ -1732,19 +1732,23 @@ public class Main {
 				}
 			}
 			if(config.showMax){
-				content.add(new MaxPanel());
+				content.add(MaxPanel.INSTANCE);
+				MaxPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showAvg){
-				content.add(new AvgPanel());
+				content.add(AvgPanel.INSTANCE);
+				AvgPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showCur){
-				content.add(new NowPanel());
+				content.add(NowPanel.INSTANCE);
+				NowPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showTotal){
-				content.add(new TotPanel());
+				content.add(TotPanel.INSTANCE);
+				TotPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(panels == 0 && !config.showGraph){

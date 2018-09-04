@@ -13,8 +13,9 @@ public final class MaxPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
+	public static final MaxPanel INSTANCE = new MaxPanel();
 	
-	public MaxPanel(){
+	private MaxPanel(){
 		sizeChanged();
 	}
 

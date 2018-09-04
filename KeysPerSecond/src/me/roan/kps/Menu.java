@@ -39,6 +39,7 @@ import javax.swing.plaf.basic.BasicMenuUI;
 
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
+import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.TotPanel;
 import sun.swing.SwingUtilities2;
 
@@ -259,6 +260,7 @@ public class Menu {
 			p1.setSelected(false);
 			p2.setSelected(false);
 			p3.setSelected(false);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		p1.addActionListener((e)->{
 			Main.config.precision = 1;
@@ -266,6 +268,7 @@ public class Menu {
 			p1.setSelected(true);
 			p2.setSelected(false);
 			p3.setSelected(false);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		p2.addActionListener((e)->{
 			Main.config.precision = 2;
@@ -273,6 +276,7 @@ public class Menu {
 			p1.setSelected(false);
 			p2.setSelected(true);
 			p3.setSelected(false);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		p3.addActionListener((e)->{
 			Main.config.precision = 3;
@@ -280,6 +284,7 @@ public class Menu {
 			p1.setSelected(false);
 			p2.setSelected(false);
 			p3.setSelected(true);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		switch(Main.config.precision){
 		case 0:

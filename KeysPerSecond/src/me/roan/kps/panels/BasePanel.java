@@ -30,6 +30,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	
 	public void sizeChanged(){
 		cache.init(getRenderingMode());
+		this.repaint();
 	}
 	
 	/**

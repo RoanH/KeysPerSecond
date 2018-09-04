@@ -17,8 +17,9 @@ public final class NowPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
+	public static final NowPanel INSTANCE = new NowPanel();
 	
-	public NowPanel(){
+	private NowPanel(){
 		sizeChanged();
 	}
 

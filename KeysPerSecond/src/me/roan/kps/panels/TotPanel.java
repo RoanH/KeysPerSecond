@@ -17,8 +17,9 @@ public final class TotPanel extends BasePanel {
 	 * Total number of hits
 	 */
 	public static int hits;
+	public static final TotPanel INSTANCE = new TotPanel();
 
-	public TotPanel(){
+	private TotPanel(){
 		sizeChanged();
 	}
 	
