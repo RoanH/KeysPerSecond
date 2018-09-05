@@ -8,7 +8,7 @@ package me.roan.kps;
 public class SizeManager {
 	//TODO
 	public final static int cellSize = 22;
-	protected final static int insideOffset = 5;
+	public final static int insideOffset = 5;
 	
 	//BasePanel & KeyPanel data
 	/**
@@ -32,7 +32,7 @@ public class SizeManager {
 	/**
 	 * Graph offset from the sides of the panel
 	 */
-	public static int graphOffset = 5;
+	//public static int graphOffset = 5;
 	
 	//TODO javadoc
 	public static final int borderSize(){
