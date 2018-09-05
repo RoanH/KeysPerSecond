@@ -62,24 +62,6 @@ public class Layout implements LayoutManager, LayoutManager2{
 		}
 	}
 	
-//	public void validate(int x, int y, int w, int h, LayoutPosition except) throws NoAreaException, LayoutOverlapException{
-//		if(w == 0 || h == 0){
-//			throw new NoAreaException();
-//		}
-//		LayoutPosition other;
-//		for(Component component : parent.getComponents()){
-//			other = (LayoutPosition)component;
-//			if(x != -1 &&
-//			   ((other.getLayoutX() < x     && x     < other.getXWidth())  ||
-//			    (other.getLayoutX() < x + w && x + w < other.getXWidth())) &&
-//			   ((other.getLayoutY() < y     && y     < other.getYHeight()) ||
-//			    (other.getLayoutY() < y + h && y + h < other.getYHeight()))){
-//				throw new LayoutOverlapException();
-//			}
-//		}
-//		
-//	}
-	
 	private void recomputeGrid(){
 		LayoutPosition lp;
 		maxw = 0;
@@ -104,6 +86,15 @@ public class Layout implements LayoutManager, LayoutManager2{
 			throw new IllegalArgumentException(e);
 		}
 	}
+	
+	@Override
+	public void addLayoutComponent(String name, Component comp) {
+		try {
+			add(comp);
+		} catch (InvalidLayoutException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
 
 	@Override
 	public Dimension maximumLayoutSize(Container target) {
@@ -122,15 +113,6 @@ public class Layout implements LayoutManager, LayoutManager2{
 
 	@Override
 	public void invalidateLayout(Container target) {
-	}
-
-	@Override
-	public void addLayoutComponent(String name, Component comp) {
-		try {
-			add(comp);
-		} catch (InvalidLayoutException e) {
-			throw new IllegalArgumentException(e);
-		}
 	}
 
 	@Override
