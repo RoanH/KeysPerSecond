@@ -7,7 +7,7 @@ variables:
 
 before_script:
   - java -version
-  
+
 stages:
    - compile
 

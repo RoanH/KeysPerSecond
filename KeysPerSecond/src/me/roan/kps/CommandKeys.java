@@ -71,11 +71,7 @@ public class CommandKeys {
 		 * @return
 		 */
 		protected final boolean matches(int keycode){
-			if((this.keycode == keycode) && (this.alt == isAltDown) && (this.ctrl == isCtrlDown)){
-				return true;
-			}else{
-				return false;
-			}
+			return (this.keycode == keycode) && (this.alt == isAltDown) && (this.ctrl == isCtrlDown);
 		}
 		
 		@Override
