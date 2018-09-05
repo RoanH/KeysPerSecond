@@ -4,194 +4,260 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Toolkit;
+
+import me.roan.kps.panels.BasePanel;
 
 /**
  * An enum specifying the different
  * text rendering modes
  * @author Roan
  */
-public enum RenderingMode {
+public enum RenderingMode{
 	/**
 	 * HORIZONTAL text rendering
 	 */
-	HORIZONTAL_TN("Horizontal (text - value)", Orientation.HORIZONTAL) {
+	HORIZONTAL_TN("Text - value"){
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), getHorizontalBaseline(panel, metrics));
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(panel.getWidth() - SizeManager.insideOffset - 1 - metrics.stringWidth(value), SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 5) / 8;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) / 2;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) / 2;
 		}
 	},
 	/**
 	 * HORIZONTAL text rendering
 	 */
-	HORIZONTAL_NT("Horizontal (value - text)", Orientation.HORIZONTAL) {
+	HORIZONTAL_NT("Value - text"){
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), getHorizontalBaseline(panel, metrics));
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(panel.getWidth() - SizeManager.insideOffset - 1 - metrics.stringWidth(title), SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(SizeManager.sideTextOffset, getHorizontalBaseline(panel, metrics));
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 5) / 8;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) / 2;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) / 2;
 		}
 	},
 	/**
-	 * HORIZONTAL text rendering
+	 * DIAGONAL text rendering
 	 */
-	HORIZONTAL_TAN("Horizontal (text above value)", Orientation.HORIZONTAL) {
+	DIAGONAL1("Text diagonally right above value"){
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, metrics.getAscent() + 1);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.sideTextOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, panel.getHeight() - SizeManager.sideTextOffset - 1);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
 		}
-		
+
 		@Override
-		public Font getTitleFont(String title){
-			return font1small;
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
-		
+
 		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
 		}
 	},
 	/**
-	 * HORIZONTAL text rendering
+	 * DIAGONAL text rendering
 	 */
-	HORIZONTAL_TDAN("Horizontal (text / value)", Orientation.HORIZONTAL) {
+	DIAGONAL2("Text diagonally left under value"){
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), metrics.getAscent() + 1);
-		}
-
-		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
 		}
 		
 		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 5 ? font2small : font2);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.sideTextOffset + 1 + getHeight(g, font));
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
 		}
 	},
 	/**
-	 * HORIZONTAL text rendering
+	 * DIAGONAL text rendering
 	 */
-	HORIZONTAL_TDAN2("Horizontal (text \\ value)", Orientation.HORIZONTAL) {
+	DIAGONAL3("Text diagonally left above value"){
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
 		}
-		
+
 		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 5 ? font2small : font2);
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
 		}
 	},
 	/**
-	 * HORIZONTAL text rendering
+	 * DIAGONAL text rendering
 	 */
-	HORIZONTAL_TDANS("Horizontal (small text / value)", Orientation.HORIZONTAL) {
+	DIAGONAL4("Text diagonally right under value"){
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(title), metrics.getAscent() + 1);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(SizeManager.sideTextOffset, panel.getHeight() - SizeManager.sideTextOffset - 1);
-		}
-		
-		@Override
-		public Font getTitleFont(String title){
-			return font1small;
-		}
-		
-		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
-		}
-	},
-	/**
-	 * HORIZONTAL text rendering
-	 */
-	HORIZONTAL_TDAN2S("Horizontal (small text \\ value)", Orientation.HORIZONTAL) {
-		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move(SizeManager.sideTextOffset, metrics.getAscent() + 1);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move(panel.getWidth() - SizeManager.sideTextOffset - metrics.stringWidth(value), panel.getHeight() - SizeManager.sideTextOffset - 1);
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
 		}
-		
+
 		@Override
-		public Font getTitleFont(String title){
-			return font1small;
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
 		}
-		
+
 		@Override
-		public Font getValueFont(String value) {
-			return value.length() >= 9 ? font2smallest : (value.length() >= 6 ? font2small : font2);
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) / 2 - 2;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 2;
 		}
 	},
 	/**
 	 * VERTICAL text rendering
 	 */
-	VERTICAL("Vertical", Orientation.VERTICAL) {
+	VERTICAL("Text above value"){
 		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(SizeManager.insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), SizeManager.insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
-		}
-	},
-	/**
-	 * VERTICAL text rendering
-	 */
-	VERTICALS("Vertical small text", Orientation.VERTICAL) {
-		@Override
-		protected void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title) {
-			point.move((panel.getWidth() - metrics.stringWidth(title)) / 2, SizeManager.keyTitleTextOffset);
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(SizeManager.insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), SizeManager.insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
 		}
 
 		@Override
-		protected void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value) {
-			point.move((panel.getWidth() - metrics.stringWidth(value)) / 2, SizeManager.keyDataTextOffset);
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 11) / 32;
 		}
-		
+
 		@Override
-		public Font getTitleFont(String title){
-			return font1small;
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel);
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return (getPanelInsideHeight(panel) * 9) / 32;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel);
 		}
 	};
-	
+
 	/**
 	 * The display name of the
 	 * enum constant, used in dialogs
 	 */
 	private String name;
-	/**
-	 * Panel orientation
-	 */
-	public final Orientation orientation;
 	/**
 	 * Cache point that is constantly being reused and
 	 * returned by the methods from this enum. This prevents
@@ -199,58 +265,17 @@ public enum RenderingMode {
 	 * multiple points from this class existing at the same time.
 	 */
 	private static final Point point = new Point();
-	/**
-	 * Font 1 used to display the title of the panel
-	 */
-	protected static Font font1;
-	/**
-	 * Font 1 used to draw the title of the panel but smaller
-	 */
-	protected static Font font1small;
-	/**
-	 * Font 2 used to display the value of this panel
-	 */
-	protected static Font font2;
-	/**
-	 * Font 2 but smaller
-	 */
-	protected static Font font2small;
-	/**
-	 * Font 2 small but smaller
-	 */
-	protected static Font font2smallest;
-	
+	private static final char[] ref = new char[]{'R'};
+
 	/**
 	 * Constructs a new RenderingMode
 	 * with the given name
 	 * @param n The display name of the mode
-	 * @param orientation The orientation of the panel
 	 */
-	private RenderingMode(String n, Orientation orientation){
+	private RenderingMode(String n){
 		name = n;
-		this.orientation = orientation;
 	}
-	
-	/**
-	 * Gets the font to be used to draw
-	 * the given title
-	 * @param title The title to draw
-	 * @return The font to use for drawing the title
-	 */
-	public Font getTitleFont(String title){
-		return title.length() == 1 ? font1 : font1small;
-	}
-	
-	/**
-	 * Gets the font to be used to draw
-	 * the given value
-	 * @param value The value to be drawn
-	 * @return the font to use for the value text
-	 */
-	public Font getValueFont(String value) {
-		return value.length() >= 5 ? font2smallest : (value.length() >= 4 ? font2small : font2);
-	}
-	
+
 	/**
 	 * Mode specific logic for the title position
 	 * @param metrics FontMetrics that will be used to draw the title
@@ -260,8 +285,8 @@ public enum RenderingMode {
 	 * @param title The title that will be drawn
 	 * @return The location at which the title should be drawn
 	 */
-	protected abstract void setTitleDrawPositionImpl(FontMetrics metrics, BasePanel panel, String title);
-	
+	protected abstract void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title);
+
 	/**
 	 * Mode specific logic for the value position
 	 * @param metrics FontMetrics that will be used to draw the value
@@ -271,8 +296,16 @@ public enum RenderingMode {
 	 * @param value The value that will be drawn
 	 * @return The location at which the value should be drawn
 	 */
-	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, BasePanel panel, String value);
-	
+	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value);
+
+	protected abstract int getEffectiveTitleHeight(BasePanel panel);
+
+	protected abstract int getEffectiveTitleWidth(BasePanel panel);
+
+	protected abstract int getEffectiveValueHeight(BasePanel panel);
+
+	protected abstract int getEffectiveValueWidth(BasePanel panel);
+
 	/**
 	 * Gets the location at which the panel title should be drawn
 	 * Points returned by this class are not static
@@ -282,11 +315,15 @@ public enum RenderingMode {
 	 * @param font The font with which the title is going to be drawn
 	 * @return The location at which the title should be drawn
 	 */
-	public Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
-		setTitleDrawPositionImpl(g.getFontMetrics(font), panel, title);
+	protected Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
+		setTitleDrawPositionImpl(g.getFontMetrics(font), g, font, panel, title);
 		return point;
 	}
 	
+	private static final int getHeight(Graphics2D g, Font font){
+		return font.createGlyphVector(g.getFontRenderContext(), ref).getPixelBounds(null, 0.0F, 0.0F).height;
+	}
+
 	/**
 	 * Gets the location at which the panel value should be drawn
 	 * Points returned by this class are not static
@@ -296,39 +333,96 @@ public enum RenderingMode {
 	 * @param font The font with which the value is going to be drawn
 	 * @return The location at which the value should be drawn
 	 */
-	public Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
-		setValueDrawPositionImpl(g.getFontMetrics(font), panel, value);
+	protected Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
+		setValueDrawPositionImpl(g.getFontMetrics(font), g, font, panel, value);
 		return point;
 	}
-	
-	/**
-	 * Gets the baseline to draw text in the panel
-	 * @param panel The panel
-	 * @param font The font used for drawing
-	 * @return The horizontal baseline to use for drawing
-	 */
-	private static int getHorizontalBaseline(BasePanel panel, FontMetrics metrics) {
-		return (panel.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
+
+	protected Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
+		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont);
+	}
+
+	protected Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
+		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont);
+	}
+
+	private static final int getPanelInsideHeight(BasePanel panel){
+		return panel.getHeight() - SizeManager.insideOffset * 2;
+	}
+
+	private static final int getPanelInsideWidth(BasePanel panel){
+		return panel.getWidth() - SizeManager.insideOffset * 2;
+	}
+
+	private static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont){
+		FontMetrics fm;
+		if(currentFont != null){
+			fm = g.getFontMetrics(currentFont);
+			if(getHeight(g, currentFont) <= maxHeight && stringWidth(text, fm) <= maxWidth){
+				return currentFont;
+			}
+		}
+
+		int size = (int)(maxHeight * (Toolkit.getDefaultToolkit().getScreenResolution() / 72.0));
+		Font font;
+		do{
+			font = new Font("Dialog", properties, size);
+			fm = g.getFontMetrics(font);
+			size--;
+		}while(!(getHeight(g, font) <= maxHeight && stringWidth(text, fm) <= maxWidth));
+
+		return font;
 	}
 	
+	private static final int stringWidth(String text, FontMetrics fm){
+		return fm.charWidth(ref[0]) * text.length();
+	}
+
 	@Override
 	public String toString(){
 		return name;
 	}
 	
-	/**
-	 * Simple enum specifying the possible
-	 * panel orientations
-	 * @author Roan
-	 */
-	public static enum Orientation{
-		/**
-		 * Horizontal panel orientation
-		 */
-		HORIZONTAL,
-		/**
-		 * Vertical panel orientation
-		 */
-		VERTICAL;
+	public static class RenderCache{
+		
+		private RenderingMode mode;
+		private Point valuePos;
+		private Point titlePos;
+		private Font valueFont;
+		private Font titleFont;
+		private int titleLen;
+		private int valueLen;
+		
+		public final void init(RenderingMode mode){
+			this.mode = mode;
+			valuePos = null;
+			titlePos = null;
+			valueFont = null;
+			titleFont = null;
+			titleLen = -1;
+			valueLen = -1;
+		}
+		
+		public final void renderTitle(String title, Graphics2D g, BasePanel panel){
+			if(titleLen != title.length()){
+				titleLen = title.length();
+				titleFont = mode.getTitleFont(title, g, panel, titleFont);
+				titlePos = mode.getTitleDrawPosition(g, panel, title, titleFont).getLocation();
+			}
+			
+			g.setFont(titleFont);
+			g.drawString(title, titlePos.x, titlePos.y);
+		}
+		
+		public final void renderValue(String value, Graphics2D g, BasePanel panel){
+			if(valueLen != value.length()){
+				valueLen = value.length();
+				valueFont = mode.getValueFont(value, g, panel, valueFont);
+				valuePos = mode.getValueDrawPosition(g, panel, value, valueFont).getLocation();
+			}
+			
+			g.setFont(valueFont);
+			g.drawString(value, valuePos.x, valuePos.y);
+		}
 	}
 }

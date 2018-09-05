@@ -51,7 +51,7 @@ public class Configuration {
 	/**
 	 * Whether or not to show the graph
 	 */
-	protected boolean showGraph = false;
+	public boolean showGraph = false;
 	/**
 	 * Whether or not the frame forces itself to be the top window
 	 */
@@ -83,11 +83,11 @@ public class Configuration {
 	/**
 	 * Number of points the graph consists of
 	 */
-	protected int backlog = 30;
+	public int backlog = 30;
 	/**
 	 * Draw the horizontal average line
 	 */
-	protected boolean graphAvg = true;
+	public boolean graphAvg = true;
 
 	//update rate
 	/**
@@ -117,13 +117,7 @@ public class Configuration {
 	/**
 	 * How many digits to display for avg
 	 */
-	protected int precision = 0;
-
-	//size
-	/**
-	 * The factor to multiply the frame size with
-	 */
-	protected double size = 1.0D;
+	public int precision = 0;
 	
 	//command keys
 	/**
@@ -152,46 +146,34 @@ public class Configuration {
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
 	
 	//layout
-	/**
-	 * Number of rows in the layout
-	 */
-	protected int rows = 1;
-	/**
-	 * Number of columns in the layout
-	 */
-	protected int columns = 0;
-	/**
-	 * Mode in which text is rendered
-	 */
-	protected RenderingMode mode = RenderingMode.VERTICAL;
+	public int avg_x = -1;
+	public int avg_y = 0;
+	public int avg_w = 2;
+	public int avg_h = 3;
+	public RenderingMode avg_mode = RenderingMode.VERTICAL;
+	public int max_x = -1;
+	public int max_y = 0;
+	public int max_w = 2;
+	public int max_h = 3;
+	public RenderingMode max_mode = RenderingMode.VERTICAL;
+	public int cur_x = -1;
+	public int cur_y = 0;
+	public int cur_w = 2;
+	public int cur_h = 3;
+	public RenderingMode cur_mode = RenderingMode.VERTICAL;
+	public int tot_x = -1;
+	public int tot_y = 0;
+	public int tot_w = 2;
+	public int tot_h = 3;
+	public RenderingMode tot_mode = RenderingMode.VERTICAL;
+	public int graph_x = 0;
+	public int graph_y = -1;
+	public int graph_w = -1;
+	public int graph_h = 3;
 	/**
 	 * Position the graph is rendered in
 	 */
-	protected GraphMode graphMode = GraphMode.Bottom;
-	/**
-	 * Width of the graph
-	 */
-	protected int graphWidth = SizeManager.defaultGraphWidth;
-	/**
-	 * Height of the graph
-	 */
-	protected int graphHeight = SizeManager.subComponentHeight;
-	/**
-	 * Position of the maximum
-	 */
-	protected int posMax = 101;
-	/**
-	 * Position of the average
-	 */
-	protected int posAvg = 102;
-	/**
-	 * Position of current
-	 */
-	protected int posCur = 103;
-	/**
-	 * Position of the total
-	 */
-	protected int posTot = 104;
+	protected GraphMode graphMode = GraphMode.INLINE;
 	
 	/**
 	 * The original configuration file
@@ -209,28 +191,28 @@ public class Configuration {
 	/**
 	 * @return The background opacity
 	 */
-	protected final float getBackgroundOpacity(){
+	public final float getBackgroundOpacity(){
 		return customColors ? opacitybg : 1.0F;
 	}
 	
 	/**
 	 * @return The foreground opacity
 	 */
-	protected final float getForegroundOpacity(){
+	public final float getForegroundOpacity(){
 		return customColors ? opacityfg : 1.0F;
 	}
 	
 	/**
 	 * @return The background color
 	 */
-	protected final Color getBackgroundColor(){
+	public final Color getBackgroundColor(){
 		return customColors ? background : Color.BLACK;
 	}
 	
 	/**
 	 * @return The foreground color
 	 */
-	protected final Color getForegroundColor(){
+	public final Color getForegroundColor(){
 		return customColors ? foreground : Color.CYAN;
 	}
 	
@@ -247,7 +229,15 @@ public class Configuration {
 					JOptionPane.showMessageDialog(null, "Failed to reload the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 				}
 			}else{
-				toLoad.loadNewFormat(data);
+				boolean v2 = data.getAbsolutePath().endsWith(".kpsconf2");
+				toLoad.loadNewFormat(data, v2);
+				if(v2){
+					toLoad.graph_x = 0;
+					toLoad.graph_y = -1;
+					toLoad.graph_w = -1;
+					toLoad.graph_h = 3;
+					toLoad.graphMode = GraphMode.INLINE;
+				}
 				Main.config = toLoad;
 			}
 		}
@@ -260,7 +250,7 @@ public class Configuration {
 	 */
 	protected static final boolean loadConfiguration(){
 		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2", "kpsconf3"));
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
 			return false;
@@ -276,7 +266,17 @@ public class Configuration {
 				return false;
 			}
 		}else{
-			if(toLoad.loadNewFormat(saveloc)){
+			boolean v2 = saveloc.getAbsolutePath().endsWith(".kpsconf2");
+			boolean defaults = toLoad.loadNewFormat(saveloc, v2);
+			if(v2){
+				toLoad.graph_x = 0;
+				toLoad.graph_y = -1;
+				toLoad.graph_w = -1;
+				toLoad.graph_h = 3;
+				toLoad.graphMode = GraphMode.INLINE;
+				defaults = true;
+			}
+			if(defaults){
 				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded but some default values were used", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
 			}else{
 				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
@@ -295,7 +295,15 @@ public class Configuration {
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			return loadLegacyFormat(saveloc);
 		}else{
-			loadNewFormat(saveloc);
+			boolean v2 = saveloc.getAbsolutePath().endsWith(".kpsconf2");
+			loadNewFormat(saveloc, v2);
+			if(v2){
+				graph_x = 0;
+				graph_y = -1;
+				graph_w = -1;
+				graph_h = 3;
+				graphMode = GraphMode.INLINE;
+			}
 			return true;
 		}
 	}
@@ -303,12 +311,14 @@ public class Configuration {
 	/**
 	 * Loads a new format configuration file
 	 * @param saveloc The save location
+	 * @param v2 Whether or not the config is using format v2
 	 * @return Whether or not some defaults were used
 	 */
-	private final boolean loadNewFormat(File saveloc){
+	private final boolean loadNewFormat(File saveloc, boolean v2){
 		boolean modified = false;
 		try{
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc), StandardCharsets.UTF_8));
+			RenderingMode defaultMode = RenderingMode.VERTICAL;
 			String line;
 			while((line = in.readLine()) != null){
 				if(line.startsWith("#") || line.isEmpty()){
@@ -318,7 +328,7 @@ public class Configuration {
 				if(args[0].startsWith("keys")){
 					while((line = in.readLine()) != null && (line = line.replace(" ", "")).startsWith("-")){
 						try{
-							keyinfo.add(parseKey(line.substring(1)));
+							keyinfo.add(parseKey(line.substring(1), defaultMode, v2));
 						}catch(Exception e){
 							modified = true;
 						}
@@ -364,18 +374,6 @@ public class Configuration {
 						}
 					}catch(NumberFormatException e){
 						precision = 0;
-						modified = true;
-					}
-					break;
-				case "size":
-					try{
-						size = Double.parseDouble(args[1]);
-						if(size <= 0.0D){
-							size = 1.0D;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						size = 1.0D;
 						modified = true;
 					}
 					break;
@@ -493,51 +491,32 @@ public class Configuration {
 					break;
 				case "textMode":
 					try{
-						String modeString = args[1].toUpperCase(Locale.ROOT);
-						mode = modeString.equals("HORIZONTAL") ? RenderingMode.HORIZONTAL_TN : RenderingMode.valueOf(modeString);
+						String mode = args[1].toUpperCase(Locale.ROOT);
+						switch(mode){
+						case "HORIZONTAL":
+							defaultMode = RenderingMode.HORIZONTAL_TN;
+							break;
+						case "VERTICALS":
+						case "HORIZONTAL_TAN":
+							defaultMode = RenderingMode.VERTICAL;
+							break;
+						case "HORIZONTAL_TDAN":
+							defaultMode = RenderingMode.DIAGONAL1;
+							break;
+						case "HORIZONTAL_TDAN2":
+							defaultMode = RenderingMode.DIAGONAL3;
+							break;
+						case "HORIZONTAL_TDANS":
+							defaultMode = RenderingMode.DIAGONAL1;
+							break;
+						case "HORIZONTAL_TDAN2S":
+							defaultMode = RenderingMode.DIAGONAL3;
+							break;
+							default: 
+								defaultMode = RenderingMode.valueOf(mode);
+								break;
+						}
 					}catch(IllegalArgumentException e){
-						modified = true;
-					}
-					break;
-				case "rows":
-					try{
-						rows = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "columns":
-					try{
-						columns = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "maxPos":
-					try{
-						posMax = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "avgPos":
-					try{
-						posAvg = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "curPos":
-					try{
-						posCur = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "totPos":
-					try{
-						posTot = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
@@ -548,22 +527,176 @@ public class Configuration {
 						modified = true;
 					}
 					break;
+				case "enableKeyModifierCombinations":
+					enableModifiers = Boolean.parseBoolean(args[1]);
+					break;
+				case "maxX":
+					try{
+						max_x = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "maxY":
+					try{
+						max_y = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "maxWidth":
+					try{
+						max_w = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "maxHeight":
+					try{
+						max_h = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "maxMode":
+					try{
+						max_mode = RenderingMode.valueOf(args[1]);
+					}catch(IllegalArgumentException e){
+						modified = true;
+					}
+					break;
+				case "avgX":
+					try{
+						avg_x = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "avgY":
+					try{
+						avg_y = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "avgWidth":
+					try{
+						avg_w = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "avgHeight":
+					try{
+						avg_h = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "avgMode":
+					try{
+						avg_mode = RenderingMode.valueOf(args[1]);
+					}catch(IllegalArgumentException e){
+						modified = true;
+					}
+					break;
+				case "curX":
+					try{
+						cur_x = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "curY":
+					try{
+						cur_y = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "curWidth":
+					try{
+						cur_w = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "curHeight":
+					try{
+						cur_h = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "curMode":
+					try{
+						cur_mode = RenderingMode.valueOf(args[1]);
+					}catch(IllegalArgumentException e){
+						modified = true;
+					}
+					break;
+				case "totX":
+					try{
+						tot_x = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "totY":
+					try{
+						tot_y = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "totWidth":
+					try{
+						tot_w = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "totHeight":
+					try{
+						tot_h = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "totMode":
+					try{
+						tot_mode = RenderingMode.valueOf(args[1]);
+					}catch(IllegalArgumentException e){
+						modified = true;
+					}
+					break;
+				case "graphX":
+					try{
+						graph_x = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "graphY":
+					try{
+						graph_y = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
 				case "graphWidth":
 					try{
-						graphWidth = Integer.parseInt(args[1]);
+						graph_w = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphHeight":
 					try{
-						graphHeight = Integer.parseInt(args[1]);
+						graph_h = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
-					break;
-				case "enableKeyModifierCombinations":
-					enableModifiers = Boolean.parseBoolean(args[1]);
 					break;
 				}
 			}
@@ -607,13 +740,17 @@ public class Configuration {
 	 * Parses the text representation of a key
 	 * to it's actual data
 	 * @param arg The text data
+	 * @param defaultMode 
 	 * @return The key data
 	 */
-	private final KeyInformation parseKey(String arg){
-		String[] args = arg.substring(1, arg.length() - 1).split(",", 7);
+	private final KeyInformation parseKey(String arg, RenderingMode mode, boolean v2){
+		String[] args = arg.substring(1, arg.length() - 1).split(",", v2 ? 7 : 11);
 		String name = null;
-		int index = -1;
 		int code = -1;
+		int x = -1;
+		int y = 0;
+		int width = 2;
+		int height = 3;
 		boolean visible = false;
 		boolean ctrl = false;
 		boolean alt = false;
@@ -623,9 +760,6 @@ public class Configuration {
 			switch(comp[0]){
 			case "keycode":
 				code = Integer.parseInt(comp[1]);
-				break;
-			case "index":
-				index = Integer.parseInt(comp[1]);
 				break;
 			case "visible":
 				visible = Boolean.parseBoolean(comp[1]);
@@ -642,12 +776,32 @@ public class Configuration {
 			case "shift":
 				shift = Boolean.parseBoolean(comp[1]);
 				break;
+			case "x":
+				x = Integer.parseInt(comp[1]);
+				break;
+			case "y":
+				y = Integer.parseInt(comp[1]);
+				break;
+			case "width":
+				width = Integer.parseInt(comp[1]);
+				break;
+			case "height":
+				height = Integer.parseInt(comp[1]);
+				break;
+			case "mode":
+				mode = RenderingMode.valueOf(comp[1]);
+				break;
 			}
 		}
-		KeyInformation kinfo = new KeyInformation(name, code, visible, index);
+		KeyInformation kinfo = new KeyInformation(name, code, visible);
 		kinfo.alt = alt;
 		kinfo.shift = shift;
 		kinfo.ctrl = ctrl;
+		kinfo.x = x;
+		kinfo.y = y;
+		kinfo.width = width;
+		kinfo.height = height;
+		kinfo.mode = mode;
 		return kinfo;
 	}
 
@@ -739,7 +893,7 @@ public class Configuration {
 				opacityfg = objin.readFloat();
 			}
 			if(version >= 4.0D){
-				size = objin.readDouble();
+				objin.readDouble();
 			}
 			if(version >= 4.2D){
 				overlay = objin.readBoolean();
@@ -749,9 +903,7 @@ public class Configuration {
 				if(version < 3.7D){
 					info.visible = true;
 				}
-				if(info.index > KeyInformation.autoIndex){
-					KeyInformation.autoIndex = info.index + 1;
-				}
+				KeyInformation.autoIndex = keyinfo.size() * 2 + 2;
 			}
 			return true;
 		} catch (Exception e1) {
@@ -769,12 +921,12 @@ public class Configuration {
 	protected final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (JOptionPane.showConfirmDialog(null, "Do you want to save the onscreen position of the program?", "Keys per Second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
 		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2"));
+		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf3"));
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
 			return;
 		}
-		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf2") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf2"));
+		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf3") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf3"));
 		if(!saveloc.exists() || (saveloc.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
@@ -789,7 +941,6 @@ public class Configuration {
 				out.println("trackAllKeys: " + trackAll);
 				out.println("updateRate: " + updateRate);
 				out.println("precision: " + precision);
-				out.println("size: " + size);
 				out.println("enableKeyModifierCombinations: " + enableModifiers);
 				out.println();
 				//advanced
@@ -824,16 +975,31 @@ public class Configuration {
 				out.println("keyReload: " + CR.toSaveString());
 				out.println();
 				out.println("# Layout");
-				out.println("textMode: " + mode.name());
-				out.println("rows: " + rows);
-				out.println("columns: " + columns);
-				out.println("maxPos: " + posMax);
-				out.println("avgPos: " + posAvg);
-				out.println("curPos: " + posCur);
-				out.println("totPos: " + posTot);
-				out.println("graphMode: " + graphMode);
-				out.println("graphWidth: " + graphWidth);
-				out.println("graphHeight: " + graphHeight);
+				out.println("maxX: " + max_x);
+				out.println("maxY: " + max_y);
+				out.println("maxWidth: " + max_w);
+				out.println("maxHeight: " + max_h);
+				out.println("maxMode: " + max_mode.name());
+				out.println("avgX: " + avg_x);
+				out.println("avgY: " + avg_y);
+				out.println("avgWidth: " + avg_w);
+				out.println("avgHeight: " + avg_h);
+				out.println("avgMode: " + avg_mode.name());
+				out.println("curX: " + cur_x);
+				out.println("curY: " + cur_y);
+				out.println("curWidth: " + cur_w);
+				out.println("curHeight: " + cur_h);
+				out.println("curMode: " + cur_mode.name());
+				out.println("totX: " + tot_x);
+				out.println("totY: " + tot_y);
+				out.println("totWidth: " + tot_w);
+				out.println("totHeight: " + tot_h);
+				out.println("totMode: " + tot_mode.name());
+				out.println("graphX: " + graph_x);
+				out.println("graphY: " + graph_y);
+				out.println("graphWidth: " + graph_w);
+				out.println("graphHeight: " + graph_h);
+				out.println("graphMode: " + graphMode.name());
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");

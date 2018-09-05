@@ -54,15 +54,14 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -75,6 +74,18 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseListener;
 
 import me.roan.kps.CommandKeys.CMD;
+import me.roan.kps.layout.GridPanel;
+import me.roan.kps.layout.Layout;
+import me.roan.kps.layout.LayoutValidator;
+import me.roan.kps.layout.Positionable;
+import me.roan.kps.panels.AvgPanel;
+import me.roan.kps.panels.GraphPanel;
+import me.roan.kps.panels.KeyPanel;
+import me.roan.kps.panels.MaxPanel;
+import me.roan.kps.panels.NowPanel;
+import me.roan.kps.panels.TotPanel;
+import me.roan.kps.ui.model.EndNumberModel;
+import me.roan.kps.ui.model.MaxNumberModel;
 
 /**
  * This program can be used to display
@@ -114,16 +125,16 @@ public class Main {
 	/**
 	 * The average keys per second
 	 */
-	protected static double avg;
+	public static double avg;
 	/**
 	 * The maximum keys per second value reached so far
 	 */
-	protected static int max;
+	public static int max;
 	/**
 	 * The keys per second of the previous second
 	 * used for displaying the current keys per second value
 	 */
-	protected static int prev;
+	public static int prev;
 	/**
 	 * HashMap containing all the tracked keys and their
 	 * virtual codes<br>Used to increment the count for the
@@ -139,7 +150,7 @@ public class Main {
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
-	private static JPanel content = new JPanel(new GridLayout(1, 0, 2, 0));
+	private static final GridPanel content = new GridPanel();
 	/**
 	 * Graph panel
 	 */
@@ -159,7 +170,7 @@ public class Main {
 	/**
 	 * The configuration
 	 */
-	protected static Configuration config = new Configuration(null);
+	public static Configuration config = new Configuration(null);
 	/**
 	 * The loop timer
 	 */
@@ -172,6 +183,8 @@ public class Main {
 	 * Frame for the graph
 	 */
 	protected static JFrame graphFrame = new JFrame("Keys per second");
+	//TODO javadoc
+	protected static final Layout layout = new Layout(content);
 	
 	/**
 	 * Main method
@@ -465,9 +478,8 @@ public class Main {
 				suspended = !suspended;
 				Menu.pause.setSelected(suspended);
 			}else if(config.CR.matches(event.getKeyCode())){
-				double oldScale = config.size;
 				config.reloadConfig();
-				Menu.resetData(oldScale);
+				Menu.resetData();
 			}
 		}
 	}
@@ -625,7 +637,7 @@ public class Main {
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(10, 1));
+		JPanel buttons = new JPanel(new GridLayout(9, 1));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
@@ -644,7 +656,6 @@ public class Main {
 			color.repaint();
 		});
 		JButton precision = new JButton("Precision");
-		JButton size = new JButton("Size");
 		JButton layout = new JButton("Layout");
 		buttons.add(addkey);
 		buttons.add(load);
@@ -653,7 +664,6 @@ public class Main {
 		buttons.add(updaterate);
 		buttons.add(color);
 		buttons.add(precision);
-		buttons.add(size);
 		buttons.add(cmdkeys);
 		buttons.add(layout);
 		form.add(options, BorderLayout.CENTER);
@@ -664,11 +674,7 @@ public class Main {
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
 		layout.addActionListener((e)->{
-			configureLayout();
-			save.setEnabled(true);
-		});
-		size.addActionListener((e)->{
-			configureSize();
+			configureLayout(false);
 			save.setEnabled(true);
 		});
 		cmdkeys.addActionListener((e)->{
@@ -877,27 +883,6 @@ public class Main {
 	}
 
 	/**
-	 * Shows the size configuration dialog
-	 */
-	protected static final void configureSize(){
-		JPanel pconfig = new JPanel(new BorderLayout());
-		JSpinner s = new JSpinner(new SpinnerNumberModel(config.size * 100, 50, Integer.MAX_VALUE, 1));
-		JLabel info = new JLabel("<html>Change how big the displayed window is.<br>"
-				+ "The precentage specifies how big the window is in<br>"
-				+ "comparison to the default size of the window.<html>");
-		pconfig.add(info, BorderLayout.PAGE_START);
-		pconfig.add(new JSeparator(), BorderLayout.CENTER);
-		JPanel line = new JPanel();
-		line.add(new JLabel("Size: "));
-		line.add(s);
-		line.add(new JLabel("%"));
-		pconfig.add(line, BorderLayout.PAGE_END);
-		if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			config.size = ((double)s.getValue()) / 100.0D;
-		}
-	}
-
-	/**
 	 * Shows the color configuration dialog
 	 */
 	protected static final void configureColors(){
@@ -1076,114 +1061,391 @@ public class Main {
 	
 	/**
 	 * Shows the layout configuration dialog
+	 * @param live Whether or not changes should be
+	 *        applied in real time
 	 */
-	protected static final void configureLayout(){
-		JPanel config = new JPanel(new BorderLayout());
-		JPanel mode = new JPanel(new GridLayout(0, 2, 0, 5));
-		//Text mode (horizontal / vertical)
-		mode.add(new JLabel("Text mode: "));
-		JComboBox<RenderingMode> textMode = new JComboBox<RenderingMode>(RenderingMode.values());
-		textMode.setSelectedItem(Main.config.mode);
-		mode.add(textMode);
-		mode.add(new JLabel("Rows (0=infinite): "));
-		JSpinner rows = new JSpinner(new SpinnerNumberModel(Main.config.rows, 0, Integer.MAX_VALUE, 1));
-		mode.add(rows);
-		mode.add(new JLabel("Columns (0=infinite): "));
-		JSpinner cols = new JSpinner(new SpinnerNumberModel(Main.config.columns, 0, Integer.MAX_VALUE, 1));
-		mode.add(cols);
-		ChangeListener cl = (e)->{
-			if((int)rows.getValue() == 0 && (int)cols.getValue() == 0){
-				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "Rows & Columns cannot both be zero!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-				rows.setValue(1);
-			}else if(((int)rows.getValue() * (int)cols.getValue() != 0)){
-				int n = getTotalAmountOfVisiblePanels();
-				if(n > (int)rows.getValue() * (int)cols.getValue()){
-					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "There aren't enough rows & columns to fit all the panels!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-					cols.setValue(0);
+	protected static final void configureLayout(boolean live){
+		content.showGrid();
+		JPanel form = new JPanel(new BorderLayout());
+		
+		JPanel fields = new JPanel(new GridLayout(0, 5, 2, 2));
+		JPanel modes = new JPanel(new GridLayout(0, 1, 0, 2));
+		
+		fields.add(new JLabel("Key", SwingConstants.CENTER));
+		fields.add(new JLabel("X", SwingConstants.CENTER));
+		fields.add(new JLabel("Y", SwingConstants.CENTER));
+		fields.add(new JLabel("Width", SwingConstants.CENTER));
+		fields.add(new JLabel("Height", SwingConstants.CENTER));
+		modes.add(new JLabel("Mode", SwingConstants.CENTER));
+		
+		for(KeyInformation i : config.keyinfo){
+			createListItem(i, fields, modes, live);
+		}
+		if(config.showAvg){
+			createListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.avg_x = x;
 				}
-			}
-		};
-		rows.addChangeListener(cl);
-		cols.addChangeListener(cl);
+
+				@Override
+				public void setY(int y) {
+					config.avg_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.avg_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.avg_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "AVG";
+				}
+
+				@Override
+				public int getX() {
+					return config.avg_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.avg_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.avg_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.avg_h;
+				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.avg_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.avg_mode = mode;
+				}
+			}, fields, modes, live);
+		}
+		if(config.showMax){
+			createListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.max_x = x;
+				}
+
+				@Override
+				public void setY(int y) {
+					config.max_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.max_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.max_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "MAX";
+				}
+
+				@Override
+				public int getX() {
+					return config.max_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.max_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.max_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.max_h;
+				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.max_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.max_mode = mode;
+				}
+			}, fields, modes, live);
+		}
+		if(config.showCur){
+			createListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.cur_x = x;
+				}
+
+				@Override
+				public void setY(int y) {
+					config.cur_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.cur_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.cur_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "CUR";
+				}
+
+				@Override
+				public int getX() {
+					return config.cur_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.cur_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.cur_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.cur_h;
+				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.cur_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.cur_mode = mode;
+				}
+			}, fields, modes, live);
+		}
+		if(config.showTotal){
+			createListItem(new Positionable(){
+
+				@Override
+				public void setX(int x) {
+					config.tot_x = x;
+				}
+
+				@Override
+				public void setY(int y) {
+					config.tot_y = y;
+				}
+
+				@Override
+				public void setWidth(int w) {
+					config.tot_w = w;
+				}
+
+				@Override
+				public void setHeight(int h) {
+					config.tot_h = h;
+				}
+
+				@Override
+				public String getName() {
+					return "TOT";
+				}
+
+				@Override
+				public int getX() {
+					return config.tot_x;
+				}
+
+				@Override
+				public int getY() {
+					return config.tot_y;
+				}
+
+				@Override
+				public int getWidth() {
+					return config.tot_w;
+				}
+
+				@Override
+				public int getHeight() {
+					return config.tot_h;
+				}
+
+				@Override
+				public RenderingMode getRenderingMode() {
+					return config.tot_mode;
+				}
+
+				@Override
+				public void setRenderingMode(RenderingMode mode) {
+					config.tot_mode = mode;
+				}
+			}, fields, modes, live);
+		}
 		
-		JPanel panel = new JPanel(new GridLayout(0, 2, 0, 5));
-		//max position
-		panel.add(new JLabel("'Max' position: "));
-		JSpinner posMax = new JSpinner(new SpinnerNumberModel(Main.config.posMax, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posMax);
-		//avg pos
-		panel.add(new JLabel("'Avg' position: "));
-		JSpinner posAvg = new JSpinner(new SpinnerNumberModel(Main.config.posAvg, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posAvg);
-		//cur pos
-		panel.add(new JLabel("'Cur' position: "));
-		JSpinner posCur = new JSpinner(new SpinnerNumberModel(Main.config.posCur, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posCur);
-		//tot pos
-		panel.add(new JLabel("'Tot' position: "));
-		JSpinner posTot = new JSpinner(new SpinnerNumberModel(Main.config.posTot, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
-		panel.add(posTot);
+		JPanel keys = new JPanel(new BorderLayout());
+		keys.add(fields, BorderLayout.CENTER);
+		keys.add(modes, BorderLayout.LINE_END);
+
+		JPanel view = new JPanel(new BorderLayout());
+		view.add(keys, BorderLayout.PAGE_START);
+		view.add(new JPanel(), BorderLayout.CENTER);
 		
-		JPanel graphLayout = new JPanel(new GridLayout(3, 2, 0, 5));                    
-		//Graph mode (left, right, top, bottom, detached)
+		JScrollPane pane = new JScrollPane(view);
+		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
+		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		pane.setPreferredSize(new Dimension(450, 200));
+
+		form.add(pane, BorderLayout.CENTER);
+		
+		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));
+		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
 		graphMode.setSelectedItem(Main.config.graphMode);
 		graphLayout.add(graphMode);
-		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner gw = new JSpinner(new SpinnerNumberModel(Main.config.graphWidth, 1, Integer.MAX_VALUE, 1));
-		graphLayout.add(gw);
-		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner gh = new JSpinner(new SpinnerNumberModel(Main.config.graphHeight, 1, Integer.MAX_VALUE, 1));
-		graphLayout.add(gh);
 		
-		graphMode.addActionListener((event)->{
-			if(graphMode.getSelectedItem() == GraphMode.Detached){
-				gw.setEnabled(true);
-				gh.setEnabled(true);
-			}else if(graphMode.getSelectedItem() == GraphMode.Bottom || graphMode.getSelectedItem() == GraphMode.Top){
-				gw.setEnabled(false);
-				gh.setEnabled(true);
+		LayoutValidator validator = new LayoutValidator();
+		
+		graphLayout.add(new JLabel("Graph x position: "));
+		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, validator.getXField(), (val)->{
+			Main.config.graph_x = val;
+			if(live){
+				reconfigure();
+			}
+		}));
+		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
+		graphLayout.add(x);
+		
+		graphLayout.add(new JLabel("Graph y position: "));
+		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, validator.getYField(), (val)->{
+			Main.config.graph_y = val;
+			if(live){
+				reconfigure();
+			}
+		}));
+		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
+		graphLayout.add(y);
+		
+		graphLayout.add(new JLabel("Graph width: "));
+		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), (val)->{
+			Main.config.graph_w = val;
+			if(live){
+				reconfigure();
+			}
+		}));
+		graphLayout.add(w);
+		
+		graphLayout.add(new JLabel("Graph height: "));
+		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), (val)->{
+			Main.config.graph_h = val;
+			if(live){
+				reconfigure();
+			}
+		}));
+		graphLayout.add(h);
+		
+		graphMode.addActionListener((e)->{
+			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
+			if(graphMode.getSelectedItem() == GraphMode.INLINE){
+				x.setEnabled(true);
+				y.setEnabled(true);
 			}else{
-				gw.setEnabled(true);
-				gh.setEnabled(false);
+				x.setEnabled(false);
+				y.setEnabled(false);
+			}
+			if(live){
+				reconfigure();
 			}
 		});
-		graphMode.setSelectedItem(Main.config.graphMode);
 		
-		mode.setBorder(BorderFactory.createTitledBorder("Layout"));
-		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
-		panel.setBorder(BorderFactory.createTitledBorder("Positions"));
-		config.add(panel, BorderLayout.CENTER);
-		config.add(graphLayout, BorderLayout.PAGE_END);
-		config.add(mode, BorderLayout.PAGE_START);
-		
-		if(0 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, config, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			Main.config.graphMode   = (GraphMode)graphMode.getSelectedItem();
-			Main.config.graphWidth  = (int)gw.getValue();
-			Main.config.graphHeight = (int)gh.getValue();
-			Main.config.posAvg      = (int)posAvg.getValue();
-			Main.config.posMax      = (int)posMax.getValue();
-			Main.config.posCur      = (int)posCur.getValue();
-			Main.config.posTot      = (int)posTot.getValue();
-			Main.config.rows        = (int)rows.getValue();
-			Main.config.columns     = (int)cols.getValue();
-			Main.config.mode        = (RenderingMode)textMode.getSelectedItem();
-		}
+		form.add(graphLayout, BorderLayout.PAGE_END);
+
+		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
+		content.hideGrid();
 	}
 	
-	/**
-	 * Gets the total amount of visible panels
-	 * @return The total amount of visible panels
-	 */
-	private static final int getTotalAmountOfVisiblePanels(){
-		int n = (Main.config.showAvg ? 1 : 0) + (Main.config.showMax ? 1 : 0) + (Main.config.showCur ? 1 : 0) + (Main.config.showTotal ? 1 : 0);
-		for(KeyInformation info : Main.config.keyinfo){
-			if(info.visible){
-				n++;
+	private static final void createListItem(Positionable info, JPanel fields, JPanel modes, boolean live){							
+		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
+		
+		LayoutValidator validator = new LayoutValidator();
+
+		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), validator.getXField(), (val)->{
+			info.setX(val);
+			if(live){
+				reconfigure();
 			}
-		}
-		return n;
+		}));
+		fields.add(x);
+
+		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), validator.getYField(), (val)->{
+			info.setY(val);
+			if(live){
+				reconfigure();
+			}
+		}));
+		fields.add(y);
+
+		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), validator.getWidthField(), (val)->{
+			info.setWidth(val);
+			if(live){
+				reconfigure();
+			}
+		}));
+		fields.add(w);
+
+		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), validator.getHeightField(), (val)->{
+			info.setHeight(val);
+			if(live){
+				reconfigure();
+			}
+		}));
+		fields.add(h);
+
+		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
+		mode.setSelectedItem(info.getRenderingMode());
+		mode.addActionListener((e)->{
+			info.setRenderingMode((RenderingMode)mode.getSelectedItem());
+			if(live){
+				reconfigure();
+			}
+		});
+		modes.add(mode);
 	}
 
 	/**
@@ -1192,7 +1454,7 @@ public class Main {
 	protected static final void configureKeys(){
 		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
 		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you can edit the position & visible or remove it):"), BorderLayout.PAGE_START);
+		keyform.add(new JLabel("Currently added keys (you hide or remove them):"), BorderLayout.PAGE_START);
 		JTable keys = new JTable();
 		DefaultTableModel model = new DefaultTableModel(){
 			/**
@@ -1207,20 +1469,18 @@ public class Main {
 
 			@Override
 			public int getColumnCount() {
-				return 4;
+				return 3;
 			}
 
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				switch(columnIndex){
 				case 0:
-					return config.keyinfo.get(rowIndex).index;
-				case 1:
 					int n = (config.keyinfo.get(rowIndex).alt ? 1 : 0) + (config.keyinfo.get(rowIndex).ctrl ? 1 : 0) + (config.keyinfo.get(rowIndex).shift ? 1 : 0);
 					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
-				case 2:
+				case 1:
 					return config.keyinfo.get(rowIndex).visible;
-				case 3:
+				case 2:
 					return false;
 				}
 				return null;
@@ -1230,12 +1490,10 @@ public class Main {
 			public String getColumnName(int col) {
 				switch(col){
 				case 0:
-					return "Position";
-				case 1:
 					return "Key";
-				case 2:
+				case 1:
 					return "Visible";
-				case 3:
+				case 2:
 					return "Remove";
 				}
 				return null;
@@ -1243,7 +1501,7 @@ public class Main {
 
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 2 || columnIndex ==3){
+				if (columnIndex == 1 || columnIndex == 2){
 					return Boolean.class;
 				}
 				return super.getColumnClass(columnIndex);
@@ -1251,22 +1509,12 @@ public class Main {
 
 			@Override
 			public boolean isCellEditable(int row, int col){
-				return col != 1;
+				return col != 0;
 			}
 
 			@Override
 			public void setValueAt(Object value, int row, int col){
-				if(col == 0){
-					try{
-						config.keyinfo.get(row).index = Integer.parseInt((String)value);
-					}catch(NumberFormatException | NullPointerException e){
-						JOptionPane.showMessageDialog(null, "Entered position not a (whole) number!", "Keys per second", JOptionPane.ERROR_MESSAGE);
-					}
-				}else if(col == 2){
-					if(config.rows * config.columns <= getTotalAmountOfVisiblePanels() && config.rows != 0 && config.columns != 0 && (boolean)value){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
-						return;
-					}
+				if(col == 1){
 					config.keyinfo.get(row).visible = (boolean)value;
 				}else{
 					if((boolean)value == true){
@@ -1284,10 +1532,6 @@ public class Main {
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
-			if(config.rows * config.columns <= getTotalAmountOfVisiblePanels() && config.rows != 0 && config.columns != 0){
-				JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "You don't have enough rows & columns to fit an extra key!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
-				return;
-			}
 			JPanel form = new JPanel(new GridLayout(config.enableModifiers ? 4 : 1, 1));
 			JLabel txt = new JLabel("Press a key and click 'OK' to add it.");
 			form.add(txt);
@@ -1454,8 +1698,6 @@ public class Main {
 			}
 		});
 		new Listener(graphFrame);
-		SizeManager.scale(config.size);
-		SizeManager.setLayoutMode(RenderingMode.VERTICAL, Main.config.mode);
 		reconfigure();
 	}
 
@@ -1465,13 +1707,12 @@ public class Main {
 	protected static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
-			content = new JPanel();
+			layout.removeAll();
 			try {
 				ColorManager.prepareImages(config.showGraph, config.customColors);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			List<LayoutPosition> components = new ArrayList<LayoutPosition>();
 			Key k;
 			int panels = 0;
 			for(KeyInformation i : config.keyinfo){
@@ -1484,29 +1725,30 @@ public class Main {
 					k = keys.get(i.keycode);
 				}
 				if(config.showKeys && i.visible){
-					components.add(k.getPanel(i));
+					content.add(k.getPanel(i));
+					k.getPanel(i).sizeChanged();
 					panels++;
 				}
 			}
 			if(config.showMax){
-				components.add(new MaxPanel());
+				content.add(MaxPanel.INSTANCE);
+				MaxPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showAvg){
-				components.add(new AvgPanel());
+				content.add(AvgPanel.INSTANCE);
+				AvgPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showCur){
-				components.add(new NowPanel());
+				content.add(NowPanel.INSTANCE);
+				NowPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showTotal){
-				components.add(new TotPanel());
+				content.add(TotPanel.INSTANCE);
+				TotPanel.INSTANCE.sizeChanged();
 				panels++;
-			}
-			components.sort((LayoutPosition left, LayoutPosition right) -> (left.getIndex() > right.getIndex() ? 1 : -1));
-			for(LayoutPosition c : components){
-				content.add((Component) c);
 			}
 			if(panels == 0 && !config.showGraph){
 				frame.setVisible(false);
@@ -1517,32 +1759,21 @@ public class Main {
 
 			JPanel all = new JPanel(new BorderLayout());
 			all.add(content, BorderLayout.CENTER);
-			JPanel gpanel = new JPanel(new BorderLayout());
 			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
-			gpanel.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
-			gpanel.add(graph, BorderLayout.CENTER);
 			if(config.showGraph){
-				if(config.graphMode != GraphMode.Detached){
-					all.add(gpanel, config.graphMode.layoutPosition);
+				if(config.graphMode == GraphMode.INLINE){
+					content.add(graph);
 					graphFrame.setVisible(false);
 				}else{
-					graphFrame.add(gpanel);
-					graphFrame.setSize(config.graphWidth, config.graphHeight);
+					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+					graphFrame.add(graph);
+					graphFrame.setSize(config.graph_w * SizeManager.cellSize, config.graph_h * SizeManager.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{
 				graphFrame.setVisible(false);
 			}
-			int r = config.rows;
-			int c = config.columns;
-			if(r == 0){
-				r = (int) Math.ceil((double)panels / (double)c);
-			}else if(c == 0){
-				c = (int) Math.ceil((double)panels / (double)r);
-			}
-			content.setLayout(new GridLayout(r, c, 0, 0));
-			frame.setSize(c * SizeManager.keyPanelWidth + (config.showGraph ? config.graphMode.getAddedWidth() : 0), 
-					      SizeManager.subComponentHeight * r + (config.showGraph ? config.graphMode.getAddedHeight() : 0));
+			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
 				content.setOpaque(false);
@@ -1568,7 +1799,8 @@ public class Main {
 	private static final String checkVersion(){
 		try{ 			
 			HttpURLConnection con = (HttpURLConnection) new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection(); 			
-			con.setRequestMethod("GET"); 		
+			con.setRequestMethod("GET"); 
+			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
 			con.setConnectTimeout(10000); 					   
 			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream())); 	
 			String line = reader.readLine(); 		
@@ -1789,7 +2021,7 @@ public class Main {
 	 * is pressed
 	 * @author Roan
 	 */
-	protected static final class Key implements Serializable{
+	public static final class Key implements Serializable{
 		/**
 		 * Serial ID
 		 */
@@ -1797,16 +2029,16 @@ public class Main {
 		/**
 		 * Whether or not this key is currently pressed
 		 */
-		protected transient boolean down = false;
+		public transient boolean down = false;
 		/**
 		 * The total number of times this key has been pressed
 		 */
-		protected int count = 0;
+		public int count = 0;
 		/**
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		protected transient final String name;
+		public transient final String name;
 		/**
 		 * The graphical display for this key
 		 */
@@ -1878,7 +2110,7 @@ public class Main {
 	 * about a key.
 	 * @author Roan
 	 */
-	protected static final class KeyInformation implements Serializable{
+	public static final class KeyInformation implements Serializable, Positionable{
 		/**
 		 * Serial ID
 		 */
@@ -1893,14 +2125,6 @@ public class Main {
 		 * This code represents the key
 		 */
 		protected int keycode;
-		/**
-		 * Index of the key
-		 */
-		protected int index = autoIndex++;
-		/**
-		 * Auto-increment for #index
-		 */
-		protected static transient volatile int autoIndex = 0; 
 		/**
 		 * Whether or not this key is displayed
 		 */
@@ -1917,6 +2141,16 @@ public class Main {
 		 * Whether or not shift is down
 		 */
 		protected boolean shift = false;
+		/**
+		 * Auto-increment for #x
+		 */
+		protected static transient volatile int autoIndex = -2; 
+		//TODO javadoc
+		protected int x = autoIndex += 2;
+		protected int y = 0;
+		protected int width = 2;
+		protected int height = 3;
+		protected RenderingMode mode = RenderingMode.VERTICAL;
 		
 		/**
 		 * Constructs a new KeyInformation
@@ -1964,11 +2198,11 @@ public class Main {
 		 * @see #name
 		 * @see #keycode
 		 */
-		protected KeyInformation(String name, int code, boolean visible, int index){
+		protected KeyInformation(String name, int code, boolean visible){
 			this.name = name;
 			this.keycode = code;
 			this.visible = visible;
-			this.index = index;
+			
 		}
 		
 		/**
@@ -1982,7 +2216,7 @@ public class Main {
 
 		@Override
 		public String toString(){
-			return "[keycode=" + keycode + ",index=" + index + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
+			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
 		}
 		
 		@Override
@@ -1993,6 +2227,22 @@ public class Main {
 		@Override
 		public boolean equals(Object other){
 			return other instanceof KeyInformation && keycode == ((KeyInformation)other).keycode;
+		}
+		
+		/**
+		 * Legacy object initialisation
+		 * @see ObjectInputStream#defaultReadObject()
+		 * @param stream The object input stream
+		 * @throws IOException When an IOException occurs
+		 * @throws ClassNotFoundException When this class cannot be found
+		 */
+		private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+			stream.defaultReadObject();
+			x = -1;
+			y = 0;
+			width = 2;
+			height = 3;
+			mode = RenderingMode.VERTICAL;
 		}
 		
 		/**
@@ -2122,6 +2372,61 @@ public class Main {
 			default: 
 				return NativeKeyEvent.getKeyText(keyCode);
 			}
+		}
+
+		@Override
+		public void setX(int x) {
+			this.x = x;
+		}
+
+		@Override
+		public void setY(int y) {
+			this.y = y;
+		}
+
+		@Override
+		public void setWidth(int w) {
+			width = w;
+		}
+
+		@Override
+		public void setHeight(int h) {
+			height = h;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public int getX() {
+			return x;
+		}
+
+		@Override
+		public int getY() {
+			return y;
+		}
+
+		@Override
+		public int getWidth() {
+			return width;
+		}
+
+		@Override
+		public int getHeight() {
+			return height;
+		}
+
+		@Override
+		public RenderingMode getRenderingMode() {
+			return mode;
+		}
+
+		@Override
+		public void setRenderingMode(RenderingMode mode) {
+			this.mode = mode;
 		}
 	}
 }

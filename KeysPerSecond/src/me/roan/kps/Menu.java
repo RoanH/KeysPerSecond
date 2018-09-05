@@ -39,7 +39,8 @@ import javax.swing.plaf.basic.BasicMenuUI;
 
 import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
-
+import me.roan.kps.panels.AvgPanel;
+import me.roan.kps.panels.TotPanel;
 import sun.swing.SwingUtilities2;
 
 /**
@@ -110,7 +111,6 @@ public class Menu {
 	 */
 	protected static final void createMenu(){
 		List<JMenuItem> components = new ArrayList<JMenuItem>();
-		JMenuItem size = new JMenuItem("Size");
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
 		JMenuItem sreset = new JMenuItem("Reset statistics");
@@ -149,7 +149,6 @@ public class Menu {
 		components.add(load);
 		components.add(layout);
 		components.add(save);
-		components.add(size);
 		components.add(snap);
 		components.add(exit);
 		components.add(pause);
@@ -190,7 +189,7 @@ public class Menu {
 			e.setUI(new MenuItemUI());
 		}
 		snap.addActionListener((e)->{
-			JFrame frame = (JFrame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+			JFrame frame = (JFrame)KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 			Point loc = frame.getLocationOnScreen();
 			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
 			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
@@ -261,6 +260,7 @@ public class Menu {
 			p1.setSelected(false);
 			p2.setSelected(false);
 			p3.setSelected(false);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		p1.addActionListener((e)->{
 			Main.config.precision = 1;
@@ -268,6 +268,7 @@ public class Menu {
 			p1.setSelected(true);
 			p2.setSelected(false);
 			p3.setSelected(false);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		p2.addActionListener((e)->{
 			Main.config.precision = 2;
@@ -275,6 +276,7 @@ public class Menu {
 			p1.setSelected(false);
 			p2.setSelected(true);
 			p3.setSelected(false);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		p3.addActionListener((e)->{
 			Main.config.precision = 3;
@@ -282,6 +284,7 @@ public class Menu {
 			p1.setSelected(false);
 			p2.setSelected(false);
 			p3.setSelected(true);
+			AvgPanel.INSTANCE.sizeChanged();
 		});
 		switch(Main.config.precision){
 		case 0:
@@ -368,16 +371,8 @@ public class Menu {
 			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
 			Main.config.backlog = (int)sbacklog.getValue();
 		});
-		size.addActionListener((e)->{
-			double old = Main.config.size;
-			Main.configureSize();
-			SizeManager.scale(Main.config.size / old);
-			Main.reconfigure();
-		});
 		layout.addActionListener((e)->{
-			RenderingMode m = Main.config.mode;
-			Main.configureLayout();
-			SizeManager.setLayoutMode(m, Main.config.mode);
+			Main.configureLayout(true);
 			Main.reconfigure();
 		});
 		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.updateRate == 1000);
@@ -496,9 +491,8 @@ public class Menu {
 			Main.config.saveConfig(true);
 		});
 		load.addActionListener((e)->{
-			double oldScale = Main.config.size;
 			if(Configuration.loadConfiguration()){
-				resetData(oldScale);
+				resetData();
 			}
 		});
 		saveStats.addActionListener((e)->{
@@ -534,7 +528,6 @@ public class Menu {
 		configure.add(rate);
 		configure.add(configcolors);
 		configure.add(precision);
-		configure.add(size);
 		configure.add(commandkeys);
 		configure.add(layout);
 		
@@ -554,7 +547,7 @@ public class Menu {
 	/**
 	 * Applies a new configuration to the program
 	 */
-	protected static final void resetData(double oldScale){
+	protected static final void resetData(){
 		menu.removeAll();
 		configure.removeAll();
 		general.removeAll();
@@ -565,7 +558,6 @@ public class Menu {
 		reset.removeAll();
 		saveLoad.removeAll();
 		createMenu();
-		SizeManager.scale(Main.config.size / oldScale);
 		Main.keys.clear();
 		Main.resetStats();
 		Main.reconfigure();
