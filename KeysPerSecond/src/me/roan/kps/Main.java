@@ -1773,8 +1773,6 @@ public class Main {
 			}else{
 				graphFrame.setVisible(false);
 			}
-			//TODO
-			System.out.println(layout);
 			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
