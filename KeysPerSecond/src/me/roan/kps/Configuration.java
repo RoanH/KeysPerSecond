@@ -118,13 +118,6 @@ public class Configuration {
 	 * How many digits to display for avg
 	 */
 	public int precision = 0;
-
-	//size
-	/**
-	 * The factor to multiply the frame size with
-	 */
-	@Deprecated
-	protected double size = 1.0D;
 	
 	//command keys
 	/**
@@ -398,18 +391,6 @@ public class Configuration {
 						}
 					}catch(NumberFormatException e){
 						precision = 0;
-						modified = true;
-					}
-					break;
-				case "size":
-					try{
-						size = Double.parseDouble(args[1]);
-						if(size <= 0.0D){
-							size = 1.0D;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						size = 1.0D;
 						modified = true;
 					}
 					break;
@@ -773,7 +754,7 @@ public class Configuration {
 				opacityfg = objin.readFloat();
 			}
 			if(version >= 4.0D){
-				size = objin.readDouble();
+				objin.readDouble();
 			}
 			if(version >= 4.2D){
 				overlay = objin.readBoolean();
