@@ -821,7 +821,6 @@ public class Configuration {
 				out.println("trackAllKeys: " + trackAll);
 				out.println("updateRate: " + updateRate);
 				out.println("precision: " + precision);
-				out.println("size: " + size);
 				out.println("enableKeyModifierCombinations: " + enableModifiers);
 				out.println();
 				//advanced
@@ -856,16 +855,31 @@ public class Configuration {
 				out.println("keyReload: " + CR.toSaveString());
 				out.println();
 				out.println("# Layout");
-				out.println("textMode: " + mode.name());
-				out.println("rows: " + rows);
-				out.println("columns: " + columns);
-				out.println("maxPos: " + posMax);
-				out.println("avgPos: " + posAvg);
-				out.println("curPos: " + posCur);
-				out.println("totPos: " + posTot);
-				out.println("graphMode: " + graphMode);//TODO write as .name() to avoid future confllict? backward issue though
-				out.println("graphWidth: " + graphWidth);
-				out.println("graphHeight: " + graphHeight);
+				out.println("maxX: " + max_x);
+				out.println("maxY: " + max_y);
+				out.println("maxWidth: " + max_w);
+				out.println("maxHeight: " + max_h);
+				out.println("maxMode: " + max_mode.name());
+				out.println("avgX: " + avg_x);
+				out.println("avgY: " + avg_y);
+				out.println("avgWidth: " + avg_w);
+				out.println("avgHeight: " + avg_h);
+				out.println("avgMode: " + avg_mode.name());
+				out.println("curX: " + cur_x);
+				out.println("curY: " + cur_y);
+				out.println("curWidth: " + cur_w);
+				out.println("curHeight: " + cur_h);
+				out.println("curMode: " + cur_mode.name());
+				out.println("totX: " + tot_x);
+				out.println("totY: " + tot_y);
+				out.println("totWidth: " + tot_w);
+				out.println("totHeight: " + tot_h);
+				out.println("totMode: " + tot_mode.name());
+				out.println("graphX: " + graph_x);
+				out.println("graphY: " + graph_y);
+				out.println("graphWidth: " + graph_w);
+				out.println("graphHeight: " + graph_h);
+				out.println("graphMode: " + graphMode);//TODO write as .name() to avoid future conflict? backward issue though
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");

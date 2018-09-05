@@ -2154,8 +2154,6 @@ public class Main {
 		private int width = 2;
 		private int height = 3;
 		private RenderingMode mode = RenderingMode.VERTICAL;
-		@Deprecated
-		private int index;
 		
 		/**
 		 * Constructs a new KeyInformation
@@ -2221,7 +2219,7 @@ public class Main {
 
 		@Override
 		public String toString(){
-			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
+			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
 		}
 		
 		@Override
@@ -2243,7 +2241,7 @@ public class Main {
 		 */
 		private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 			stream.defaultReadObject();
-			x = index * 2;
+			x = -1;
 			y = 0;
 			width = 2;
 			height = 3;
