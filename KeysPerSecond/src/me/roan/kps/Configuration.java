@@ -229,7 +229,15 @@ public class Configuration {
 					JOptionPane.showMessageDialog(null, "Failed to reload the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 				}
 			}else{
-				toLoad.loadNewFormat(data);
+				boolean v2 = data.getAbsolutePath().endsWith(".kpsconf2");
+				toLoad.loadNewFormat(data, v2);
+				if(v2){
+					toLoad.graph_x = 0;
+					toLoad.graph_y = -1;
+					toLoad.graph_w = -1;
+					toLoad.graph_h = 3;
+					toLoad.graphMode = GraphMode.INLINE;
+				}
 				Main.config = toLoad;
 			}
 		}
@@ -258,8 +266,9 @@ public class Configuration {
 				return false;
 			}
 		}else{
-			boolean defaults = toLoad.loadNewFormat(saveloc);
-			if(saveloc.getAbsolutePath().endsWith(".kpsconf2")){
+			boolean v2 = saveloc.getAbsolutePath().endsWith(".kpsconf2");
+			boolean defaults = toLoad.loadNewFormat(saveloc, v2);
+			if(v2){
 				toLoad.graph_x = 0;
 				toLoad.graph_y = -1;
 				toLoad.graph_w = -1;
@@ -286,7 +295,15 @@ public class Configuration {
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			return loadLegacyFormat(saveloc);
 		}else{
-			loadNewFormat(saveloc);
+			boolean v2 = saveloc.getAbsolutePath().endsWith(".kpsconf2");
+			loadNewFormat(saveloc, v2);
+			if(v2){
+				graph_x = 0;
+				graph_y = -1;
+				graph_w = -1;
+				graph_h = 3;
+				graphMode = GraphMode.INLINE;
+			}
 			return true;
 		}
 	}
@@ -294,9 +311,10 @@ public class Configuration {
 	/**
 	 * Loads a new format configuration file
 	 * @param saveloc The save location
+	 * @param v2 Whether or not the config is using format v2
 	 * @return Whether or not some defaults were used
 	 */
-	private final boolean loadNewFormat(File saveloc){
+	private final boolean loadNewFormat(File saveloc, boolean v2){
 		boolean modified = false;
 		try{
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc), StandardCharsets.UTF_8));
@@ -310,7 +328,7 @@ public class Configuration {
 				if(args[0].startsWith("keys")){
 					while((line = in.readLine()) != null && (line = line.replace(" ", "")).startsWith("-")){
 						try{
-							keyinfo.add(parseKey(line.substring(1), defaultMode));
+							keyinfo.add(parseKey(line.substring(1), defaultMode, v2));
 						}catch(Exception e){
 							modified = true;
 						}
@@ -725,8 +743,8 @@ public class Configuration {
 	 * @param defaultMode 
 	 * @return The key data
 	 */
-	private final KeyInformation parseKey(String arg, RenderingMode mode){
-		String[] args = arg.substring(1, arg.length() - 1).split(",", 7);
+	private final KeyInformation parseKey(String arg, RenderingMode mode, boolean v2){
+		String[] args = arg.substring(1, arg.length() - 1).split(",", v2 ? 7 : 11);
 		String name = null;
 		int code = -1;
 		int x = -1;
