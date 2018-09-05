@@ -1624,47 +1624,12 @@ public class Main {
 		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
-		frame.addWindowListener(new WindowListener(){
-
-			@Override
-			public void windowOpened(WindowEvent e) {				
-			}
-
-			@Override
-			public void windowClosing(WindowEvent e) {				
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-				try {
-					GlobalScreen.unregisterNativeHook();
-				} catch (NativeHookException e1) {
-					e1.printStackTrace();
-				}
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e) {				
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e) {				
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e) {				
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {				
-			}
-		});
 		new Listener(frame);
 		graphFrame.setResizable(false);
 		graphFrame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
 		graphFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		graphFrame.setUndecorated(true);
-		graphFrame.addWindowListener(new WindowListener(){
+		WindowListener onClose = new WindowListener(){
 
 			@Override
 			public void windowOpened(WindowEvent e) {				
@@ -1698,7 +1663,9 @@ public class Main {
 			@Override
 			public void windowDeactivated(WindowEvent e) {				
 			}
-		});
+		};
+		frame.addWindowListener(onClose);
+		graphFrame.addWindowListener(onClose);
 		new Listener(graphFrame);
 		reconfigure();
 	}
