@@ -1482,8 +1482,9 @@ public class Main {
 					return config.keyinfo.get(rowIndex).visible;
 				case 2:
 					return false;
+				default:
+					return null;
 				}
-				return null;
 			}
 
 			@Override
@@ -1495,8 +1496,9 @@ public class Main {
 					return "Visible";
 				case 2:
 					return "Remove";
+				default:
+					return null;
 				}
-				return null;
 			}
 
 			@Override

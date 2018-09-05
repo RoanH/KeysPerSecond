@@ -512,9 +512,9 @@ public class Configuration {
 						case "HORIZONTAL_TDAN2S":
 							defaultMode = RenderingMode.DIAGONAL3;
 							break;
-							default: 
-								defaultMode = RenderingMode.valueOf(mode);
-								break;
+						default: 
+							defaultMode = RenderingMode.valueOf(mode);
+							break;
 						}
 					}catch(IllegalArgumentException e){
 						modified = true;
@@ -822,7 +822,7 @@ public class Configuration {
 				r = Integer.parseInt(comp[1]);
 				break;
 			case "g":
-				g= Integer.parseInt(comp[1]);
+				g = Integer.parseInt(comp[1]);
 				break;
 			case "b":
 				b = Integer.parseInt(comp[1]);
