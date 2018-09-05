@@ -6,18 +6,6 @@ package me.roan.kps;
  * @author Roan
  */
 public class SizeManager {
-	//JFrame initialisation
-	/**
-	 * Height of the graph or a key panel
-	 */
-	@Deprecated
-	protected static int subComponentHeight = 68;
-	/**
-	 * Width of the graph when there are no
-	 * panels configured (only a graph)
-	 */
-	@Deprecated
-	protected static int defaultGraphWidth = 228;
 	//TODO
 	public final static int cellSize = 22;
 	protected final static int insideOffset = 5;
