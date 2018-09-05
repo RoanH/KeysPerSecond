@@ -2149,11 +2149,11 @@ public class Main {
 		 */
 		protected static transient volatile int autoIndex = -2; 
 		//TODO javadoc
-		private int x = autoIndex += 2;
-		private int y = new Random().nextInt(5);
-		private int width = 2;
-		private int height = 3;
-		private RenderingMode mode = RenderingMode.VERTICAL;
+		protected int x = autoIndex += 2;
+		protected int y = 0;
+		protected int width = 2;
+		protected int height = 3;
+		protected RenderingMode mode = RenderingMode.VERTICAL;
 		
 		/**
 		 * Constructs a new KeyInformation
