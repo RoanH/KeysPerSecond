@@ -2245,6 +2245,7 @@ public class Main {
 			y = 0;
 			width = 2;
 			height = 3;
+			mode = RenderingMode.VERTICAL;
 		}
 		
 		/**
