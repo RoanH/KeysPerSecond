@@ -79,16 +79,6 @@ public class Configuration {
 	 */
 	protected List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
 
-	//graph
-	/**
-	 * Number of points the graph consists of
-	 */
-	public int backlog = 30;
-	/**
-	 * Draw the horizontal average line
-	 */
-	public boolean graphAvg = true;
-
 	//update rate
 	/**
 	 * The amount of milliseconds a single time frame takes
@@ -145,30 +135,112 @@ public class Configuration {
 	 */
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
 	
-	//layout
+	//special panels
+	/**
+	 * The x position of the average panel
+	 */
 	public int avg_x = -1;
+	/**
+	 * The y position of the average panel
+	 */
 	public int avg_y = 0;
+	/**
+	 * The width of the average panel
+	 */
 	public int avg_w = 2;
+	/**
+	 * The height of the average panel
+	 */
 	public int avg_h = 3;
+	/**
+	 * The text rendering mode of the average panel
+	 */
 	public RenderingMode avg_mode = RenderingMode.VERTICAL;
+	/**
+	 * The x position of the max panel
+	 */
 	public int max_x = -1;
+	/**
+	 * The y position of the max panel
+	 */
 	public int max_y = 0;
+	/**
+	 * The width position of the max panel
+	 */
 	public int max_w = 2;
+	/**
+	 * The height of the max panel
+	 */
 	public int max_h = 3;
+	/**
+	 * The text rendering mode of the max panel
+	 */
 	public RenderingMode max_mode = RenderingMode.VERTICAL;
+	/**
+	 * The x position of the current panel
+	 */
 	public int cur_x = -1;
+	/**
+	 * The y position of the current panel
+	 */
 	public int cur_y = 0;
+	/**
+	 * The width of the current panel
+	 */
 	public int cur_w = 2;
+	/**
+	 * The height of the current panel
+	 */
 	public int cur_h = 3;
+	/**
+	 * The text rendering mode of the current panel
+	 */
 	public RenderingMode cur_mode = RenderingMode.VERTICAL;
+	/**
+	 * The x position of the total panel
+	 */
 	public int tot_x = -1;
+	/**
+	 * The y position of the total panel
+	 */
 	public int tot_y = 0;
+	/**
+	 * The width of the total panel
+	 */
 	public int tot_w = 2;
+	/**
+	 * The height o the total panel
+	 */
 	public int tot_h = 3;
+	/**
+	 * The text rendering mode of the total panel
+	 */
 	public RenderingMode tot_mode = RenderingMode.VERTICAL;
+	
+	//graph
+	/**
+	 * Number of points the graph consists of
+	 */
+	public int backlog = 30;
+	/**
+	 * Draw the horizontal average line
+	 */
+	public boolean graphAvg = true;
+	/**
+	 * The x position of the graph
+	 */
 	public int graph_x = 0;
+	/**
+	 * The y position of the graph
+	 */
 	public int graph_y = -1;
+	/**
+	 * The width of the graph
+	 */
 	public int graph_w = -1;
+	/**
+	 * The height of the graph
+	 */
 	public int graph_h = 3;
 	/**
 	 * Position the graph is rendered in
@@ -189,6 +261,7 @@ public class Configuration {
 	}
 	
 	/**
+	 * Gets the background opacity
 	 * @return The background opacity
 	 */
 	public final float getBackgroundOpacity(){
@@ -196,6 +269,7 @@ public class Configuration {
 	}
 	
 	/**
+	 * Gets the foreground opacity
 	 * @return The foreground opacity
 	 */
 	public final float getForegroundOpacity(){
@@ -203,6 +277,7 @@ public class Configuration {
 	}
 	
 	/**
+	 * Gets the background opacity
 	 * @return The background color
 	 */
 	public final Color getBackgroundColor(){
@@ -210,6 +285,7 @@ public class Configuration {
 	}
 	
 	/**
+	 * Gets the foreground color
 	 * @return The foreground color
 	 */
 	public final Color getForegroundColor(){
@@ -217,7 +293,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * Reloads the config from file
+	 * Reloads the configuration from file
 	 */
 	protected final void reloadConfig(){
 		Configuration toLoad = new Configuration(data);
@@ -245,7 +321,6 @@ public class Configuration {
 	
 	/**
 	 * Loads a configuration file (with GUI)
-	 * @param saveloc The save location
 	 * @return Whether or not the config was loaded successfully
 	 */
 	protected static final boolean loadConfiguration(){
@@ -289,7 +364,7 @@ public class Configuration {
 	/**
 	 * Loads a configuration file
 	 * @param saveloc The save location
-	 * @return Whether or not the config was loaded successfully
+	 * @return Whether or not the configuration was loaded successfully
 	 */
 	protected final boolean loadConfig(File saveloc){
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
@@ -311,7 +386,7 @@ public class Configuration {
 	/**
 	 * Loads a new format configuration file
 	 * @param saveloc The save location
-	 * @param v2 Whether or not the config is using format v2
+	 * @param v2 Whether or not the configuration is using format v2
 	 * @return Whether or not some defaults were used
 	 */
 	private final boolean loadNewFormat(File saveloc, boolean v2){
@@ -740,7 +815,8 @@ public class Configuration {
 	 * Parses the text representation of a key
 	 * to it's actual data
 	 * @param arg The text data
-	 * @param defaultMode 
+	 * @param mode The default rendering mode to use
+	 * @param v2 Whether or not the configuration is using format v2
 	 * @return The key data
 	 */
 	private final KeyInformation parseKey(String arg, RenderingMode mode, boolean v2){
@@ -858,7 +934,7 @@ public class Configuration {
 	/**
 	 * Loads a legacy configuration file
 	 * @param saveloc The save location
-	 * @return Whether or not the config was loaded successfully
+	 * @return Whether or not the configuration was loaded successfully
 	 */
 	@SuppressWarnings("unchecked")
 	private final boolean loadLegacyFormat(File saveloc){
