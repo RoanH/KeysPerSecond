@@ -183,7 +183,9 @@ public class Main {
 	 * Frame for the graph
 	 */
 	protected static JFrame graphFrame = new JFrame("Keys per second");
-	//TODO javadoc
+	/**
+	 * The layout for the main panel of the program
+	 */
 	protected static final Layout layout = new Layout(content);
 	
 	/**
@@ -1400,6 +1402,15 @@ public class Main {
 		content.hideGrid();
 	}
 	
+	/**
+	 * Creates a editable list item for the
+	 * layout configuration dialog
+	 * @param info The positionable that links the 
+	 *        editor to the underlying data
+	 * @param fields The GUI panel that holds all the fields
+	 * @param modes The GUI panel that holds all the modes
+	 * @param live Whether or not edits should be displayed in real time
+	 */
 	private static final void createListItem(Positionable info, JPanel fields, JPanel modes, boolean live){							
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
 		
@@ -2114,11 +2125,25 @@ public class Main {
 		 * Auto-increment for #x
 		 */
 		protected static transient volatile int autoIndex = -2; 
-		//TODO javadoc
+		/**
+		 * The x position of this panel in the layout
+		 */
 		protected int x = autoIndex += 2;
+		/**
+		 * The y postion of this panel in the layout
+		 */
 		protected int y = 0;
+		/**
+		 * The width of this panel in the layout
+		 */
 		protected int width = 2;
+		/**
+		 * The height of this panel in the layout
+		 */
 		protected int height = 3;
+		/**
+		 * The text rendering mode for this panel
+		 */
 		protected RenderingMode mode = RenderingMode.VERTICAL;
 		
 		/**
@@ -2163,7 +2188,6 @@ public class Main {
 		 * @param name The name of the key
 		 * @param code The virtual key code of the key
 		 * @param visible Whether or not the key is visible
-		 * @param index The key index
 		 * @see #name
 		 * @see #keycode
 		 */
