@@ -21,6 +21,12 @@ public class Listener implements MouseMotionListener, MouseListener{
 	 */
 	private Point from = null;
 
+	/**
+	 * Constructs a new movement listener
+	 * for the given frame
+	 * @param frame The frame to create
+	 *        the listener for
+	 */
 	protected Listener(JFrame frame){
 		frame.addMouseMotionListener(this);
 		frame.addMouseListener(this);
