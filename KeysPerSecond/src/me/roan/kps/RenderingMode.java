@@ -16,6 +16,7 @@ import me.roan.kps.panels.BasePanel;
 public enum RenderingMode{
 	/**
 	 * HORIZONTAL text rendering
+	 * The text is followed by the value
 	 */
 	HORIZONTAL_TN("Text - value"){
 		@Override
@@ -50,6 +51,7 @@ public enum RenderingMode{
 	},
 	/**
 	 * HORIZONTAL text rendering
+	 * The value is followed by the text
 	 */
 	HORIZONTAL_NT("Value - text"){
 		@Override
@@ -84,6 +86,7 @@ public enum RenderingMode{
 	},
 	/**
 	 * DIAGONAL text rendering
+	 * The text is diagonally right above the value
 	 */
 	DIAGONAL1("Text diagonally right above value"){
 		@Override
@@ -118,6 +121,7 @@ public enum RenderingMode{
 	},
 	/**
 	 * DIAGONAL text rendering
+	 * The text is diagonally left under the value
 	 */
 	DIAGONAL2("Text diagonally left under value"){
 		@Override
@@ -152,6 +156,7 @@ public enum RenderingMode{
 	},
 	/**
 	 * DIAGONAL text rendering
+	 * The text is diagonally left above the value
 	 */
 	DIAGONAL3("Text diagonally left above value"){
 		@Override
@@ -186,6 +191,7 @@ public enum RenderingMode{
 	},
 	/**
 	 * DIAGONAL text rendering
+	 * The text is diagonally right under the value
 	 */
 	DIAGONAL4("Text diagonally right under value"){
 		@Override
@@ -220,6 +226,7 @@ public enum RenderingMode{
 	},
 	/**
 	 * VERTICAL text rendering
+	 * The text is above the value
 	 */
 	VERTICAL("Text above value"){
 		@Override
@@ -265,6 +272,11 @@ public enum RenderingMode{
 	 * multiple points from this class existing at the same time.
 	 */
 	private static final Point point = new Point();
+	/**
+	 * Reference character for string width and height measurements.
+	 * This is used to give string with the same amount of characters
+	 * the same appearance.
+	 */
 	private static final char[] ref = new char[]{'R'};
 
 	/**
@@ -279,9 +291,9 @@ public enum RenderingMode{
 	/**
 	 * Mode specific logic for the title position
 	 * @param metrics FontMetrics that will be used to draw the title
-	 * @param baseline Baseline that will be used to draw the title
-	 * @param width Panel width
-	 * @param height Panel height
+	 * @param g The graphics used to render the title
+	 * @param font The font used to draw the title
+	 * @param panel The panel the title will be drawn on
 	 * @param title The title that will be drawn
 	 * @return The location at which the title should be drawn
 	 */
@@ -290,28 +302,50 @@ public enum RenderingMode{
 	/**
 	 * Mode specific logic for the value position
 	 * @param metrics FontMetrics that will be used to draw the value
-	 * @param baseline Baseline that will be used to draw the value
-	 * @param width Panel width
-	 * @param height Panel height
+	 * @param g The graphics used to render the value
+	 * @param font The font used to draw the value
+	 * @param panel The panel the value will be drawn on
 	 * @param value The value that will be drawn
 	 * @return The location at which the value should be drawn
 	 */
 	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value);
 
+	/**
+	 * Gets the effective height available to draw the title
+	 * @param panel The panel to get the effective height for
+	 * @return The effective height available to draw the title
+	 */
 	protected abstract int getEffectiveTitleHeight(BasePanel panel);
 
+	/**
+	 * Gets the effective width available to draw the title
+	 * @param panel The panel to get the effective width for
+	 * @return The effective width available to draw the title
+	 */
 	protected abstract int getEffectiveTitleWidth(BasePanel panel);
 
+	/**
+	 * Gets the effective height available to draw the value
+	 * @param panel The panel to get the effective height for
+	 * @return The effective height available to draw the value
+	 */
 	protected abstract int getEffectiveValueHeight(BasePanel panel);
 
+	/**
+	 * Gets the effective width available to draw the value
+	 * @param panel The panel to get the effective width for
+	 * @return The effective width available to draw the value
+	 */
 	protected abstract int getEffectiveValueWidth(BasePanel panel);
 
 	/**
 	 * Gets the location at which the panel title should be drawn
-	 * Points returned by this class are not static
-	 * @param g The graphics used for drawing
-	 * @param panel The panel
-	 * @param title The title
+	 * Points returned by this class are dynamic and change on a call
+	 * to either {@link #getTitleDrawPosition(Graphics2D, BasePanel, String, Font)}
+	 * or {@link #getValueDrawPosition(Graphics2D, BasePanel, String, Font)}.
+	 * @param g The graphics used to draw the title
+	 * @param panel The panel the title will be drawn on
+	 * @param title The title that is going to be drawn
 	 * @param font The font with which the title is going to be drawn
 	 * @return The location at which the title should be drawn
 	 */
@@ -319,17 +353,15 @@ public enum RenderingMode{
 		setTitleDrawPositionImpl(g.getFontMetrics(font), g, font, panel, title);
 		return point;
 	}
-	
-	private static final int getHeight(Graphics2D g, Font font){
-		return font.createGlyphVector(g.getFontRenderContext(), ref).getPixelBounds(null, 0.0F, 0.0F).height;
-	}
 
 	/**
-	 * Gets the location at which the panel value should be drawn
-	 * Points returned by this class are not static
-	 * @param g The graphics used for drawing
-	 * @param panel The panel
-	 * @param title The value
+	 * Gets the location at which the panel title should be drawn
+	 * Points returned by this class are dynamic and change on a call
+	 * to either {@link #getTitleDrawPosition(Graphics2D, BasePanel, String, Font)}
+	 * or {@link #getValueDrawPosition(Graphics2D, BasePanel, String, Font)}.
+	 * @param g The graphics used to draw the value
+	 * @param panel The panel the value will be drawn on
+	 * @param title The value that is going to be drawn
 	 * @param font The font with which the value is going to be drawn
 	 * @return The location at which the value should be drawn
 	 */
@@ -338,22 +370,66 @@ public enum RenderingMode{
 		return point;
 	}
 
+	/**
+	 * Gets the title font that should be used to draw the
+	 * panel title
+	 * @param text The title that is going to be drawn
+	 * @param g The graphics that will be used to draw the title
+	 * @param panel The panel the title will be drawn on
+	 * @param currentFont The font last used to draw this title
+	 * @return The font to use this time to draw the title
+	 */
 	protected Font getTitleFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
 		return resolveFont(text, g, getEffectiveTitleWidth(panel), getEffectiveTitleHeight(panel), Font.BOLD, currentFont);
 	}
 
+	/**
+	 * Gets the value font that should be used to draw the
+	 * panel value
+	 * @param text The value that is going to be drawn
+	 * @param g The graphics that will be used to draw the value
+	 * @param panel The panel the value will be drawn on
+	 * @param currentFont The font last used to draw this value
+	 * @return The font to use this time to draw the value
+	 */
 	protected Font getValueFont(String text, Graphics2D g, BasePanel panel, Font currentFont){
 		return resolveFont(text, g, getEffectiveValueWidth(panel), getEffectiveValueHeight(panel), Font.PLAIN, currentFont);
 	}
 
+	/**
+	 * Gets the inside height in pixel of the
+	 * given panel. The inside height is the
+	 * height inside of the border image
+	 * @param panel The panel to get the inside height for
+	 * @return The inside height of the panel
+	 */
 	private static final int getPanelInsideHeight(BasePanel panel){
 		return panel.getHeight() - SizeManager.insideOffset * 2;
 	}
 
+	/**
+	 * Gets the inside width in pixel of the
+	 * given panel. The inside width is the
+	 * width inside of the border image
+	 * @param panel The panel to get the inside width for
+	 * @return The inside width of the panel
+	 */
 	private static final int getPanelInsideWidth(BasePanel panel){
 		return panel.getWidth() - SizeManager.insideOffset * 2;
 	}
 
+	/**
+	 * Computes the font that should be used to
+	 * draw the given text based on the given
+	 * constraints
+	 * @param text The text that is going to be drawn
+	 * @param g The graphics that are going to be used to draw the text
+	 * @param maxWidth The maximum width the drawn text may be
+	 * @param maxHeight The maximum height the drawn text may be
+	 * @param properties The flags to pass on to the Font
+	 * @param currentFont The font currently being used by the panel
+	 * @return The new font to use to draw the text for the panel
+	 */
 	private static final Font resolveFont(String text, Graphics2D g, int maxWidth, int maxHeight, int properties, Font currentFont){
 		FontMetrics fm;
 		if(currentFont != null){
@@ -374,8 +450,26 @@ public enum RenderingMode{
 		return font;
 	}
 	
+	/**
+	 * Gets the height of drawn text in pixels
+	 * for the given font
+	 * @param g The graphics that will be used for drawing
+	 * @param font The font to check
+	 * @return The height of drawn text in the given font
+	 */
+	private static final int getHeight(Graphics2D g, Font font){
+		return font.createGlyphVector(g.getFontRenderContext(), ref).getPixelBounds(null, 0.0F, 0.0F).height;
+	}
+	
+	/**
+	 * Gets the width of the given string
+	 * using the given font metrics
+	 * @param text The text to get the width for
+	 * @param fm The font metrics to used to find this width
+	 * @return The width of the given string
+	 */
 	private static final int stringWidth(String text, FontMetrics fm){
-		return fm.charWidth(ref[0]) * text.length();
+		return Math.max(fm.charWidth(ref[0]) * text.length(), fm.stringWidth(text));
 	}
 
 	@Override
