@@ -65,10 +65,8 @@ public class CommandKeys {
 		/**
 		 * Check to see if the given state
 		 * triggers this command key
-		 * @param keycode
-		 * @param alt
-		 * @param ctrl
-		 * @return
+		 * @param keycode The key that was pressed
+		 * @return Whether or not this key code triggers this command key
 		 */
 		protected final boolean matches(int keycode){
 			return (this.keycode == keycode) && (this.alt == isAltDown) && (this.ctrl == isCtrlDown);
