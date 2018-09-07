@@ -9,40 +9,79 @@ import java.awt.LayoutManager2;
 import me.roan.kps.SizeManager;
 
 /**
- * 
+ * Layout manager that handles the layout
+ * of all the panels in the program
  * @author Roan
  */
 public class Layout implements LayoutManager, LayoutManager2{
-	
+	/**
+	 * The maximum width of the layout in cells
+	 */
 	private int maxw;
+	/**
+	 * The maximum height of the layout in cells
+	 */
 	private int maxh;
+	/**
+	 * Extra width for the layout in cells.
+	 * Extra width comes from panels that are
+	 * rendered in the end position as those
+	 * do not count towards {@link #maxw}
+	 */
 	private int extraWidth = 0;
+	/**
+	 * Extra height for the layout in cells.
+	 * Extra height comes from panels that are
+	 * rendered in the end position as those
+	 * do not count towards {@link #maxh}
+	 */
 	private int extraHeight = 0;
+	/**
+	 * The container this is the
+	 * LayoutManager for
+	 */
 	private final Container parent;
 	
+	/**
+	 * Constructs a new Layout for
+	 * the given container
+	 * @param parent The container this
+	 *        will be the layout for
+	 */
 	public Layout(Container parent){
 		this.parent = parent;
 		parent.setLayout(this);
 	}
 	
+	/**
+	 * Removes all the components that
+	 * were added to this layout
+	 */
 	public void removeAll(){
 		parent.removeAll();
 		extraWidth = 0;
 		extraHeight = 0;
 	}
 	
-	public int getLayoutWidth(){
-		return maxw;
-	}
-	
+	/**
+	 * Gets the width in pixels of this layout
+	 * @return The width in pixels of this layout
+	 */
 	public int getWidth(){
 		return SizeManager.cellSize * (maxw + extraWidth);
 	}
 	
+	/**
+	 * Gets the height in pixels of this layout
+	 * @return The height in pixels of this layout
+	 */
 	public int getHeight(){
 		return SizeManager.cellSize * (maxh + extraHeight);
 	}
 	
+	/**
+	 * Adds the given component to this layout
+	 */
 	public void add(Component comp){
 		LayoutPosition lp = (LayoutPosition)comp;
 		if(lp.getLayoutX() != -1){
@@ -60,6 +99,9 @@ public class Layout implements LayoutManager, LayoutManager2{
 		}
 	}
 	
+	/**
+	 * Recomputes the size of the layout
+	 */
 	private void recomputeGrid(){
 		LayoutPosition lp;
 		maxw = 0;
