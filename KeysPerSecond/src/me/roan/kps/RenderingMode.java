@@ -91,12 +91,12 @@ public enum RenderingMode{
 	DIAGONAL1("Text diagonally right above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.sideTextOffset + 1 + getHeight(g, font));
+			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
@@ -126,12 +126,12 @@ public enum RenderingMode{
 	DIAGONAL2("Text diagonally left under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 		
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.sideTextOffset + 1 + getHeight(g, font));
+			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
@@ -161,12 +161,12 @@ public enum RenderingMode{
 	DIAGONAL3("Text diagonally left above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + 1 + getHeight(g, font));
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
+			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
@@ -196,12 +196,12 @@ public enum RenderingMode{
 	DIAGONAL4("Text diagonally right under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.sideTextOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.sideTextOffset + getPanelInsideHeight(panel) - 1);
+			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.sideTextOffset + 1, SizeManager.sideTextOffset + 1 + getHeight(g, font));
+			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
