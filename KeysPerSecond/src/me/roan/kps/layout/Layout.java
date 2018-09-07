@@ -43,10 +43,8 @@ public class Layout implements LayoutManager, LayoutManager2{
 		return SizeManager.cellSize * (maxh + extraHeight);
 	}
 	
-	public void add(Component comp) throws InvalidLayoutException{
+	public void add(Component comp){
 		LayoutPosition lp = (LayoutPosition)comp;
-		System.out.println("Adding component: " + lp.getLayoutLocation());
-		//validate(lp.getLayoutX(), lp.getLayoutY(), lp.getLayoutWidth(), lp.getLayoutHeight(), lp);
 		if(lp.getLayoutX() != -1){
 			maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
 		}else{
@@ -80,20 +78,12 @@ public class Layout implements LayoutManager, LayoutManager2{
 	
 	@Override
 	public void addLayoutComponent(Component comp, Object constraints) {
-		try {
-			add(comp);
-		} catch (InvalidLayoutException e) {
-			throw new IllegalArgumentException(e);
-		}
+		add(comp);
 	}
 	
 	@Override
 	public void addLayoutComponent(String name, Component comp) {
-		try {
-			add(comp);
-		} catch (InvalidLayoutException e) {
-			throw new IllegalArgumentException(e);
-		}
+		add(comp);
 	}
 
 	@Override
@@ -171,28 +161,5 @@ public class Layout implements LayoutManager, LayoutManager2{
 				}
 			}
 		}
-	}
-	
-	public static class InvalidLayoutException extends Exception{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = -6137260732635701944L;	
-	}
-	
-	@Deprecated
-	public static final class LayoutOverlapException extends InvalidLayoutException{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = -4501441399333364320L;
-	}
-	
-	@Deprecated
-	public static final class NoAreaException extends InvalidLayoutException{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = 4640131353893912934L;
 	}
 }
