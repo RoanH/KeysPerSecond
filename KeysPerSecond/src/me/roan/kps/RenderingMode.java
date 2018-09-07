@@ -477,16 +477,48 @@ public enum RenderingMode{
 		return name;
 	}
 	
+	/**
+	 * Simple cache that caches rendering information
+	 * so that it does not have to be recomputed for
+	 * every repaint event
+	 * @author Roan
+	 */
 	public static class RenderCache{
-		
+		/**
+		 * The rendering mode this cache is for
+		 */
 		private RenderingMode mode;
+		/**
+		 * The last valid draw position for the value string
+		 */
 		private Point valuePos;
+		/**
+		 * The last valid draw position for the title string
+		 */
 		private Point titlePos;
+		/**
+		 * The last valid font for the value string
+		 */
 		private Font valueFont;
+		/**
+		 * The last valid font for the title string
+		 */
 		private Font titleFont;
+		/**
+		 * The last known length of the title string
+		 */
 		private int titleLen;
+		/**
+		 * The last known length of the value string
+		 */
 		private int valueLen;
 		
+		/**
+		 * Initialises and resets this cache
+		 * for the given rendering mode
+		 * @param mode The rendering mode to
+		 *        initialise this cache for
+		 */
 		public final void init(RenderingMode mode){
 			this.mode = mode;
 			valuePos = null;
@@ -497,6 +529,13 @@ public enum RenderingMode{
 			valueLen = -1;
 		}
 		
+		/**
+		 * Renders the title string on the given panel with
+		 * the given graphics according to the cached information
+		 * @param title The title to render
+		 * @param g The graphics to use to draw this title
+		 * @param panel The panel to draw this title on
+		 */
 		public final void renderTitle(String title, Graphics2D g, BasePanel panel){
 			if(titleLen != title.length()){
 				titleLen = title.length();
@@ -508,6 +547,13 @@ public enum RenderingMode{
 			g.drawString(title, titlePos.x, titlePos.y);
 		}
 		
+		/**
+		 * Renders the value string on the given panel with
+		 * the given graphics according to the cached information
+		 * @param value The value to render
+		 * @param g The graphics to use to draw this value
+		 * @param panel The panel to draw this value on
+		 */
 		public final void renderValue(String value, Graphics2D g, BasePanel panel){
 			if(valueLen != value.length()){
 				valueLen = value.length();
