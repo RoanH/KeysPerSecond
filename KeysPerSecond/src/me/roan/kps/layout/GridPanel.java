@@ -8,11 +8,19 @@ import me.roan.kps.ColorManager;
 import me.roan.kps.Main;
 import me.roan.kps.SizeManager;
 
+/**
+ * Simple panel that draws a grid spaced
+ * using the {@link SizeManager#cellSize}
+ * @author Roan
+ */
 public class GridPanel extends JPanel{
 	/**
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 5878892347456014988L;
+	/**
+	 * Whether or not the grid is currently displayed
+	 */
 	private boolean showGrid = false;
 	
 	@Override
@@ -32,10 +40,16 @@ public class GridPanel extends JPanel{
 		}
 	}
 	
+	/**
+	 * Turns on grid rendering
+	 */
 	public void showGrid(){
 		showGrid = true;
 	}
 	
+	/**
+	 * Turns off grid rendering
+	 */
 	public void hideGrid(){
 		showGrid = false;
 	}
