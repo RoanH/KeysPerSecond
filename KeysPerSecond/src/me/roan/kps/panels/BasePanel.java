@@ -25,9 +25,16 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
-	
+	/**
+	 * RenderCache for this panel
+	 */
 	private RenderCache cache = new RenderCache();
 	
+	/**
+	 * Signals this panel that its size
+	 * or properties changed and that thus
+	 * the render cache should be invalidated
+	 */
 	public void sizeChanged(){
 		cache.init(getRenderingMode());
 		this.repaint();
