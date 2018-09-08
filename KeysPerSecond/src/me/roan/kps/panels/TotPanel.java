@@ -17,8 +17,14 @@ public final class TotPanel extends BasePanel {
 	 * Total number of hits
 	 */
 	public static int hits;
+	/**
+	 * Static instance of this panel that is reused all the time
+	 */
 	public static final TotPanel INSTANCE = new TotPanel();
 
+	/**
+	 * Constructs a new total panel
+	 */
 	private TotPanel(){
 		sizeChanged();
 	}

@@ -13,8 +13,14 @@ public final class MaxPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
+	/**
+	 * Static instance of this panel that is reused all the time
+	 */
 	public static final MaxPanel INSTANCE = new MaxPanel();
 	
+	/**
+	 * Constructs a new maximum panel
+	 */
 	private MaxPanel(){
 		sizeChanged();
 	}

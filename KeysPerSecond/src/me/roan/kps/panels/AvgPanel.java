@@ -13,8 +13,14 @@ public final class AvgPanel extends BasePanel {
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 5628759695450014071L;
+	/**
+	 * Static instance of this panel that is reused all the time
+	 */
 	public static final AvgPanel INSTANCE = new AvgPanel();
 	
+	/**
+	 * Constructs a new average panel
+	 */
 	private AvgPanel(){
 		sizeChanged();
 	}
