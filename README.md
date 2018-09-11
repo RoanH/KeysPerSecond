@@ -11,8 +11,9 @@ I could however not find a program that worked on my computer so I decided to wr
 The program when active looks like this:<br>
 ![Interface](http://i.imgur.com/9cCzB0Q.png)<br>
 ![Interface](http://i.imgur.com/bLQXABw.png)<br>
+![Interface](https://i.imgur.com/2HgRJwO.png)<br>
 ![Menu](https://i.imgur.com/lltS2NK.png)<br>
-Accessible by right clicking on the program.
+_Accessible by right clicking on the program._
 
 For each configured key it shows how many times it is pressed. By default it also shows the maximum, average and current number of keys pressed per second.
 When enabled it can also show a graph of the number of keys pressed per second over time. The horizontal line in the graph represents the average number of keys pressed per second.
@@ -84,14 +85,16 @@ And if you find any bugs feel free to report them.
 - **24 December 2017**: Fix all known key-modifier bugs, better support for unfilled grids, internal optimizations.<br>
 - **2 June 2018**: Fix the arrow keys displaying rather broken.<br>
 - **3 June 2018**: Switch to arrow symbols with better availability, fix configuration position saving and UTF-8 support, add GitHub link to the initialisation dialog.
+- **12 September 2018**: Completely new versatible layout system, rendering modes on a per key basis, improved performance.
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)<br>
-[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v7.4/KeysPerSecond-v7.4.exe)<br>
-[Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v7.4/KeysPerSecond-v7.4.jar)
+(Note: if you're upgrading _to_ version 8.0 make sure to read the release notes)    
+[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.exe)<br>
+[Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)
