@@ -93,7 +93,7 @@ It's kinda empty here right now :c, so please suggest things c:
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)<br>
-(Note: if you're upgrading _to_ version 8.0 make sure to read the release notes)    
+(Note: if you're upgrading _to_ version 8.0 make sure to read the [release notes](https://github.com/RoanH/KeysPerSecond/releases/tag/v8.0))    
 [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.exe)<br>
 [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.jar)
 
