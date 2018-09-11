@@ -184,21 +184,21 @@ public class Layout implements LayoutManager, LayoutManager2{
 						component.setBounds((int)Math.floor(dx * width), 
 						                    (int)Math.floor((lp.getLayoutHeight() == -1 ? 0 : dy) * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
 						                    (int)Math.ceil(dx * lp.getLayoutWidth()), 
-						                    (int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? height : lp.getLayoutHeight())));
+						                    (int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? (maxh + extraHeight) : lp.getLayoutHeight())));
 						width += lp.getLayoutWidth();
 					}
 				}else{
 					if(lp.getLayoutY() == -1){
 						component.setBounds((int)Math.floor((lp.getLayoutWidth() == -1 ? 0 : dx) * lp.getLayoutX()), 
 						                    (int)Math.floor(dy * height), 
-						                    (int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? width : lp.getLayoutWidth())), 
+						                    (int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? (maxw + extraWidth) : lp.getLayoutWidth())), 
 						                    (int)Math.ceil(dy * lp.getLayoutHeight()));
 						height += lp.getLayoutHeight();
 					}else{
 						component.setBounds((int)Math.floor((lp.getLayoutWidth() == -1 ? 0 : dx) * lp.getLayoutX()), 
 						                    (int)Math.floor((lp.getLayoutHeight() == -1 ? 0 : dy) * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
-						                    (int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? width : lp.getLayoutWidth())), 
-						                    (int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? height : lp.getLayoutHeight())));
+						                    (int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? (maxw + extraWidth) : lp.getLayoutWidth())), 
+						                    (int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? (maxh + extraHeight) : lp.getLayoutHeight())));
 					}
 				}
 			}
