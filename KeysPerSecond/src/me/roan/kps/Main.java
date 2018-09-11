@@ -1465,7 +1465,7 @@ public class Main {
 	protected static final void configureKeys(){
 		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
 		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you hide or remove them):"), BorderLayout.PAGE_START);
+		keyform.add(new JLabel("Currently added keys (you can hide or remove them):"), BorderLayout.PAGE_START);
 		JTable keys = new JTable();
 		DefaultTableModel model = new DefaultTableModel(){
 			/**
