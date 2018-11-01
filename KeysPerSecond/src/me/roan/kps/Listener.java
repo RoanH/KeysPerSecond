@@ -33,7 +33,7 @@ public class Listener implements MouseMotionListener, MouseListener{
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(MouseEvent e){
 		Point to = e.getPoint();
 		if(from == null){
 			from = to;
@@ -46,20 +46,20 @@ public class Listener implements MouseMotionListener, MouseListener{
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e){
 		from = e.getPoint();
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {		
+	public void mouseClicked(MouseEvent e){
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {		
+	public void mousePressed(MouseEvent e){
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(MouseEvent e){
 		if(e.getButton() == MouseEvent.BUTTON3){
 			SwingUtilities.invokeLater(()->{
 				Menu.menu.show(e.getComponent(), e.getX(), e.getY());
@@ -68,11 +68,11 @@ public class Listener implements MouseMotionListener, MouseListener{
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {		
+	public void mouseEntered(MouseEvent e){
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {		
+	public void mouseExited(MouseEvent e){
 	}
 
 	static{
@@ -84,7 +84,7 @@ public class Listener implements MouseMotionListener, MouseListener{
 			private Point tmp = new Point();
 
 			@Override
-			public boolean dispatchKeyEvent(KeyEvent e) {
+			public boolean dispatchKeyEvent(KeyEvent e){
 				if(!Menu.menu.isVisible()){
 					if(e.getID() == KeyEvent.KEY_PRESSED){
 						int d = e.isShiftDown() ? 3 : e.isControlDown() ? 2 : 1;
