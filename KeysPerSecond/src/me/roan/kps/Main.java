@@ -111,7 +111,7 @@ import me.roan.kps.ui.model.MaxNumberModel;
  * This program also has support for saving and loading configurations
  * @author Roan
  */
-public class Main {
+public class Main{
 	/**
 	 * The number of seconds the average has
 	 * been calculated for
@@ -187,12 +187,12 @@ public class Main {
 	 * The layout for the main panel of the program
 	 */
 	protected static final Layout layout = new Layout(content);
-	
+
 	/**
 	 * Main method
 	 * @param args - configuration file path
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		String config = null;
 		if(args.length >= 1){
 			config = args[0];
@@ -209,18 +209,18 @@ public class Main {
 		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		System.out.println("Ctrl + R: Reloads the configuration");
-		try {
+		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
+		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1){
 		}
 
 		//Make sure the native hook is always unregistered
 		Runtime.getRuntime().addShutdownHook(new Thread(){
 			@Override
 			public void run(){
-				try {
+				try{
 					GlobalScreen.unregisterNativeHook();
-				} catch (NativeHookException e1) {
+				}catch(NativeHookException e1){
 					e1.printStackTrace();
 				}
 			}
@@ -237,7 +237,7 @@ public class Main {
 			final String name = config.substring(index + 1);
 			File[] files = null;
 			if(dir.exists()){
-				files = dir.listFiles((FilenameFilter) (f, n)->{
+				files = dir.listFiles((FilenameFilter)(f, n)->{
 					for(int i = 0; i < name.length(); i++){
 						char ch = name.charAt(i);
 						if(ch == '?'){
@@ -270,9 +270,9 @@ public class Main {
 		}
 
 		//Build GUI
-		try {
+		try{
 			buildGUI();
-		} catch (IOException e) {
+		}catch(IOException e){
 			e.printStackTrace();
 		}
 
@@ -326,19 +326,18 @@ public class Main {
 	 * press events
 	 */
 	private static final void setupNativeHook(){
-		try {
+		try{
 			Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
 			logger.setLevel(Level.WARNING);
 			logger.setUseParentHandlers(false);
 			GlobalScreen.registerNativeHook();
-		}
-		catch (NativeHookException ex) {
+		}catch(NativeHookException ex){
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
 			JOptionPane.showMessageDialog(null, "There was a problem registering the native hook: " + ex.getMessage(), "Keys per second", JOptionPane.ERROR_MESSAGE);
-			try {
+			try{
 				GlobalScreen.unregisterNativeHook();
-			} catch (NativeHookException e1) {
+			}catch(NativeHookException e1){
 				e1.printStackTrace();
 			}
 			System.exit(1);
@@ -346,32 +345,32 @@ public class Main {
 		GlobalScreen.addNativeKeyListener(new NativeKeyListener(){
 
 			@Override
-			public void nativeKeyPressed(NativeKeyEvent event) {
+			public void nativeKeyPressed(NativeKeyEvent event){
 				pressEvent(event);
 			}
 
 			@Override
-			public void nativeKeyReleased(NativeKeyEvent event) {
+			public void nativeKeyReleased(NativeKeyEvent event){
 				releaseEvent(event);
 			}
 
 			@Override
-			public void nativeKeyTyped(NativeKeyEvent event) {
+			public void nativeKeyTyped(NativeKeyEvent event){
 			}
 		});
 		GlobalScreen.addNativeMouseListener(new NativeMouseListener(){
 
 			@Override
-			public void nativeMouseClicked(NativeMouseEvent event) {				
+			public void nativeMouseClicked(NativeMouseEvent event){
 			}
 
 			@Override
-			public void nativeMousePressed(NativeMouseEvent event) {
+			public void nativeMousePressed(NativeMouseEvent event){
 				pressEvent(event);
 			}
 
 			@Override
-			public void nativeMouseReleased(NativeMouseEvent event) {
+			public void nativeMouseReleased(NativeMouseEvent event){
 				releaseEvent(event);
 			}
 		});
@@ -485,7 +484,7 @@ public class Main {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the extended key code for this event, this key code
 	 * includes modifiers
@@ -499,7 +498,7 @@ public class Main {
 			return -((NativeMouseEvent)event).getButton();
 		}
 	}
-	
+
 	/**
 	 * Gets the extended key code for this event, this key code
 	 * includes modifiers
@@ -513,7 +512,7 @@ public class Main {
 			return code;
 		}
 	}
-	
+
 	/**
 	 * Gets the extended key code for this event, this key code
 	 * includes modifiers
@@ -527,7 +526,7 @@ public class Main {
 			return code + (shift ? 100000 : 0) + (ctrl ? 10000 : 0) + (alt ? 1000 : 0);
 		}
 	}
-	
+
 	/**
 	 * Gets the base key code for the extended key code,
 	 * this is the key code without modifiers
@@ -779,7 +778,7 @@ public class Main {
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
 					Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 					if(((String)value).length() < 5 || ((String)value).equals("100ms")){
 						item.setForeground(Color.RED);
@@ -814,68 +813,68 @@ public class Main {
 		forum.addMouseListener(new MouseListener(){
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e){
 				if(Desktop.isDesktopSupported()){
-					try {
+					try{
 						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/community/forums/topics/552405").toURI());
-					} catch (IOException | URISyntaxException e1) {
+					}catch(IOException | URISyntaxException e1){
 						//pity
 					}
 				}
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(MouseEvent e){
 			}
 
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseReleased(MouseEvent e){
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
+			public void mouseEntered(MouseEvent e){
 			}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
+			public void mouseExited(MouseEvent e){
 			}
 		});
 		git.addMouseListener(new MouseListener(){
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e){
 				if(Desktop.isDesktopSupported()){
-					try {
+					try{
 						Desktop.getDesktop().browse(new URL("https://github.com/RoanH/KeysPerSecond").toURI());
-					} catch (IOException | URISyntaxException e1) {
+					}catch(IOException | URISyntaxException e1){
 						//pity
 					}
 				}
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(MouseEvent e){
 			}
 
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseReleased(MouseEvent e){
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
+			public void mouseEntered(MouseEvent e){
 			}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
+			public void mouseExited(MouseEvent e){
 			}
 		});
 		info.add(links);
 		form.add(info, BorderLayout.PAGE_END);
 		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.PLAIN_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
 		if(1 == option || option == JOptionPane.CLOSED_OPTION){
-			try {
+			try{
 				GlobalScreen.unregisterNativeHook();
-			} catch (NativeHookException e1) {
+			}catch(NativeHookException e1){
 				e1.printStackTrace();
 			}
 			System.exit(0);
@@ -901,7 +900,7 @@ public class Main {
 			private final JColorChooser chooser = new JColorChooser();
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e){
 				if(!open){
 					open = true;
 					chooser.setColor(e.getComponent().getBackground());
@@ -913,19 +912,19 @@ public class Main {
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e) {				
+			public void mousePressed(MouseEvent e){
 			}
 
 			@Override
-			public void mouseReleased(MouseEvent e) {				
+			public void mouseReleased(MouseEvent e){
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {				
+			public void mouseEntered(MouseEvent e){
 			}
 
 			@Override
-			public void mouseExited(MouseEvent e) {				
+			public void mouseExited(MouseEvent e){
 			}
 		};
 		cbg.addMouseListener(clistener);
@@ -934,7 +933,7 @@ public class Main {
 		cbg.setBackground(Main.config.background);
 		Color prevfg = cfg.getForeground();
 		Color prevbg = cbg.getForeground();
-		JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));	
+		JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));
 		JLabel lfg = new JLabel("Foreground colour: ");
 		JLabel lbg = new JLabel("Background colour: ");
 		JSpinner sbg = new JSpinner(new SpinnerNumberModel((int)(config.opacitybg * 100), 0, 100, 5));
@@ -1048,7 +1047,7 @@ public class Main {
 
 		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, content, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
 	}
-	
+
 	/**
 	 * Changes the update rate
 	 * @param newRate The new update rate
@@ -1060,7 +1059,7 @@ public class Main {
 		config.updateRate = newRate;
 		mainLoop();
 	}
-	
+
 	/**
 	 * Shows the layout configuration dialog
 	 * @param live Whether or not changes should be
@@ -1069,17 +1068,17 @@ public class Main {
 	protected static final void configureLayout(boolean live){
 		content.showGrid();
 		JPanel form = new JPanel(new BorderLayout());
-		
+
 		JPanel fields = new JPanel(new GridLayout(0, 5, 2, 2));
 		JPanel modes = new JPanel(new GridLayout(0, 1, 0, 2));
-		
+
 		fields.add(new JLabel("Key", SwingConstants.CENTER));
 		fields.add(new JLabel("X", SwingConstants.CENTER));
 		fields.add(new JLabel("Y", SwingConstants.CENTER));
 		fields.add(new JLabel("Width", SwingConstants.CENTER));
 		fields.add(new JLabel("Height", SwingConstants.CENTER));
 		modes.add(new JLabel("Mode", SwingConstants.CENTER));
-		
+
 		for(KeyInformation i : config.keyinfo){
 			createListItem(i, fields, modes, live);
 		}
@@ -1087,57 +1086,57 @@ public class Main {
 			createListItem(new Positionable(){
 
 				@Override
-				public void setX(int x) {
+				public void setX(int x){
 					config.avg_x = x;
 				}
 
 				@Override
-				public void setY(int y) {
+				public void setY(int y){
 					config.avg_y = y;
 				}
 
 				@Override
-				public void setWidth(int w) {
+				public void setWidth(int w){
 					config.avg_w = w;
 				}
 
 				@Override
-				public void setHeight(int h) {
+				public void setHeight(int h){
 					config.avg_h = h;
 				}
 
 				@Override
-				public String getName() {
+				public String getName(){
 					return "AVG";
 				}
 
 				@Override
-				public int getX() {
+				public int getX(){
 					return config.avg_x;
 				}
 
 				@Override
-				public int getY() {
+				public int getY(){
 					return config.avg_y;
 				}
 
 				@Override
-				public int getWidth() {
+				public int getWidth(){
 					return config.avg_w;
 				}
 
 				@Override
-				public int getHeight() {
+				public int getHeight(){
 					return config.avg_h;
 				}
 
 				@Override
-				public RenderingMode getRenderingMode() {
+				public RenderingMode getRenderingMode(){
 					return config.avg_mode;
 				}
 
 				@Override
-				public void setRenderingMode(RenderingMode mode) {
+				public void setRenderingMode(RenderingMode mode){
 					config.avg_mode = mode;
 				}
 			}, fields, modes, live);
@@ -1146,57 +1145,57 @@ public class Main {
 			createListItem(new Positionable(){
 
 				@Override
-				public void setX(int x) {
+				public void setX(int x){
 					config.max_x = x;
 				}
 
 				@Override
-				public void setY(int y) {
+				public void setY(int y){
 					config.max_y = y;
 				}
 
 				@Override
-				public void setWidth(int w) {
+				public void setWidth(int w){
 					config.max_w = w;
 				}
 
 				@Override
-				public void setHeight(int h) {
+				public void setHeight(int h){
 					config.max_h = h;
 				}
 
 				@Override
-				public String getName() {
+				public String getName(){
 					return "MAX";
 				}
 
 				@Override
-				public int getX() {
+				public int getX(){
 					return config.max_x;
 				}
 
 				@Override
-				public int getY() {
+				public int getY(){
 					return config.max_y;
 				}
 
 				@Override
-				public int getWidth() {
+				public int getWidth(){
 					return config.max_w;
 				}
 
 				@Override
-				public int getHeight() {
+				public int getHeight(){
 					return config.max_h;
 				}
 
 				@Override
-				public RenderingMode getRenderingMode() {
+				public RenderingMode getRenderingMode(){
 					return config.max_mode;
 				}
 
 				@Override
-				public void setRenderingMode(RenderingMode mode) {
+				public void setRenderingMode(RenderingMode mode){
 					config.max_mode = mode;
 				}
 			}, fields, modes, live);
@@ -1205,57 +1204,57 @@ public class Main {
 			createListItem(new Positionable(){
 
 				@Override
-				public void setX(int x) {
+				public void setX(int x){
 					config.cur_x = x;
 				}
 
 				@Override
-				public void setY(int y) {
+				public void setY(int y){
 					config.cur_y = y;
 				}
 
 				@Override
-				public void setWidth(int w) {
+				public void setWidth(int w){
 					config.cur_w = w;
 				}
 
 				@Override
-				public void setHeight(int h) {
+				public void setHeight(int h){
 					config.cur_h = h;
 				}
 
 				@Override
-				public String getName() {
+				public String getName(){
 					return "CUR";
 				}
 
 				@Override
-				public int getX() {
+				public int getX(){
 					return config.cur_x;
 				}
 
 				@Override
-				public int getY() {
+				public int getY(){
 					return config.cur_y;
 				}
 
 				@Override
-				public int getWidth() {
+				public int getWidth(){
 					return config.cur_w;
 				}
 
 				@Override
-				public int getHeight() {
+				public int getHeight(){
 					return config.cur_h;
 				}
 
 				@Override
-				public RenderingMode getRenderingMode() {
+				public RenderingMode getRenderingMode(){
 					return config.cur_mode;
 				}
 
 				@Override
-				public void setRenderingMode(RenderingMode mode) {
+				public void setRenderingMode(RenderingMode mode){
 					config.cur_mode = mode;
 				}
 			}, fields, modes, live);
@@ -1264,62 +1263,62 @@ public class Main {
 			createListItem(new Positionable(){
 
 				@Override
-				public void setX(int x) {
+				public void setX(int x){
 					config.tot_x = x;
 				}
 
 				@Override
-				public void setY(int y) {
+				public void setY(int y){
 					config.tot_y = y;
 				}
 
 				@Override
-				public void setWidth(int w) {
+				public void setWidth(int w){
 					config.tot_w = w;
 				}
 
 				@Override
-				public void setHeight(int h) {
+				public void setHeight(int h){
 					config.tot_h = h;
 				}
 
 				@Override
-				public String getName() {
+				public String getName(){
 					return "TOT";
 				}
 
 				@Override
-				public int getX() {
+				public int getX(){
 					return config.tot_x;
 				}
 
 				@Override
-				public int getY() {
+				public int getY(){
 					return config.tot_y;
 				}
 
 				@Override
-				public int getWidth() {
+				public int getWidth(){
 					return config.tot_w;
 				}
 
 				@Override
-				public int getHeight() {
+				public int getHeight(){
 					return config.tot_h;
 				}
 
 				@Override
-				public RenderingMode getRenderingMode() {
+				public RenderingMode getRenderingMode(){
 					return config.tot_mode;
 				}
 
 				@Override
-				public void setRenderingMode(RenderingMode mode) {
+				public void setRenderingMode(RenderingMode mode){
 					config.tot_mode = mode;
 				}
 			}, fields, modes, live);
 		}
-		
+
 		JPanel keys = new JPanel(new BorderLayout());
 		keys.add(fields, BorderLayout.CENTER);
 		keys.add(modes, BorderLayout.LINE_END);
@@ -1327,23 +1326,23 @@ public class Main {
 		JPanel view = new JPanel(new BorderLayout());
 		view.add(keys, BorderLayout.PAGE_START);
 		view.add(new JPanel(), BorderLayout.CENTER);
-		
+
 		JScrollPane pane = new JScrollPane(view);
 		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setPreferredSize(new Dimension(450, 200));
 
 		form.add(pane, BorderLayout.CENTER);
-		
+
 		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));
 		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
 		graphMode.setSelectedItem(Main.config.graphMode);
 		graphLayout.add(graphMode);
-		
+
 		LayoutValidator validator = new LayoutValidator();
-		
+
 		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, validator.getXField(), (val)->{
 			Main.config.graph_x = val;
@@ -1353,7 +1352,7 @@ public class Main {
 		}));
 		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(x);
-		
+
 		graphLayout.add(new JLabel("Graph y position: "));
 		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, validator.getYField(), (val)->{
 			Main.config.graph_y = val;
@@ -1363,7 +1362,7 @@ public class Main {
 		}));
 		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(y);
-		
+
 		graphLayout.add(new JLabel("Graph width: "));
 		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), (val)->{
 			Main.config.graph_w = val;
@@ -1372,7 +1371,7 @@ public class Main {
 			}
 		}));
 		graphLayout.add(w);
-		
+
 		graphLayout.add(new JLabel("Graph height: "));
 		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), (val)->{
 			Main.config.graph_h = val;
@@ -1381,7 +1380,7 @@ public class Main {
 			}
 		}));
 		graphLayout.add(h);
-		
+
 		graphMode.addActionListener((e)->{
 			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
 			if(graphMode.getSelectedItem() == GraphMode.INLINE){
@@ -1395,13 +1394,13 @@ public class Main {
 				reconfigure();
 			}
 		});
-		
+
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
 		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
 		content.hideGrid();
 	}
-	
+
 	/**
 	 * Creates a editable list item for the
 	 * layout configuration dialog
@@ -1411,9 +1410,9 @@ public class Main {
 	 * @param modes The GUI panel that holds all the modes
 	 * @param live Whether or not edits should be displayed in real time
 	 */
-	private static final void createListItem(Positionable info, JPanel fields, JPanel modes, boolean live){							
+	private static final void createListItem(Positionable info, JPanel fields, JPanel modes, boolean live){
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
-		
+
 		LayoutValidator validator = new LayoutValidator();
 
 		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), validator.getXField(), (val)->{
@@ -1471,20 +1470,20 @@ public class Main {
 			/**
 			 * Serial ID
 			 */
-			private static final long serialVersionUID = -5510962859479828507L;				
+			private static final long serialVersionUID = -5510962859479828507L;
 
 			@Override
-			public int getRowCount() {
+			public int getRowCount(){
 				return config.keyinfo.size();
 			}
 
 			@Override
-			public int getColumnCount() {
+			public int getColumnCount(){
 				return 3;
 			}
 
 			@Override
-			public Object getValueAt(int rowIndex, int columnIndex) {
+			public Object getValueAt(int rowIndex, int columnIndex){
 				switch(columnIndex){
 				case 0:
 					int n = (config.keyinfo.get(rowIndex).alt ? 1 : 0) + (config.keyinfo.get(rowIndex).ctrl ? 1 : 0) + (config.keyinfo.get(rowIndex).shift ? 1 : 0);
@@ -1499,7 +1498,7 @@ public class Main {
 			}
 
 			@Override
-			public String getColumnName(int col) {
+			public String getColumnName(int col){
 				switch(col){
 				case 0:
 					return "Key";
@@ -1513,8 +1512,8 @@ public class Main {
 			}
 
 			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 1 || columnIndex == 2){
+			public Class<?> getColumnClass(int columnIndex){
+				if(columnIndex == 1 || columnIndex == 2){
 					return Boolean.class;
 				}
 				return super.getColumnClass(columnIndex);
@@ -1565,21 +1564,21 @@ public class Main {
 				form.add(a);
 				form.add(s);
 			}
-			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, form, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){ 	
-				if(lastevent == null){ 				
-					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE); 	
-					return; 	
-				} 			
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false); 
-				int n  = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
-				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){ 		
+			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, form, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+				if(lastevent == null){
+					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
+				int n = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
+				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 					if(config.keyinfo.contains(info)){
 						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "That key was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
 					}else{
-						config.keyinfo.add(info); 			
+						config.keyinfo.add(info);
 					}
-				} 			
-				model.fireTableDataChanged(); 		
+				}
+				model.fireTableDataChanged();
 			}
 		});
 		JButton newmouse = new JButton("Add Mouse Button");
@@ -1589,12 +1588,14 @@ public class Main {
 
 			JPanel buttons = new JPanel(new GridLayout(5, 1, 2, 0));
 			String[] names = new String[]{"M1", "M2", "M3", "M4", "M5"};
-			JCheckBox[] boxes = new JCheckBox[]{new JCheckBox(names[0] + " (left click)"), 
-					                            new JCheckBox(names[1] + " (left click)"), 
-					                            new JCheckBox(names[2] + " (mouse wheel)"), 
-					                            new JCheckBox(names[3]),
-					                            new JCheckBox(names[4])};
-			
+			JCheckBox[] boxes = new JCheckBox[]{
+				new JCheckBox(names[0] + " (left click)"), 
+			    new JCheckBox(names[1] + " (left click)"), 
+			    new JCheckBox(names[2] + " (mouse wheel)"), 
+			    new JCheckBox(names[3]), 
+			    new JCheckBox(names[4])
+			};
+
 			for(JCheckBox box : boxes){
 				buttons.add(box);
 			}
@@ -1629,7 +1630,7 @@ public class Main {
 	 * @throws IOException When an IO Exception occurs, this can be thrown
 	 *         when the program fails to load its resources
 	 */
-	protected static final void buildGUI() throws IOException {
+	protected static final void buildGUI() throws IOException{
 		Menu.createMenu();
 		frame.setResizable(false);
 		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
@@ -1643,36 +1644,36 @@ public class Main {
 		WindowListener onClose = new WindowListener(){
 
 			@Override
-			public void windowOpened(WindowEvent e) {				
+			public void windowOpened(WindowEvent e){
 			}
 
 			@Override
-			public void windowClosing(WindowEvent e) {				
+			public void windowClosing(WindowEvent e){
 			}
 
 			@Override
-			public void windowClosed(WindowEvent e) {
-				try {
+			public void windowClosed(WindowEvent e){
+				try{
 					GlobalScreen.unregisterNativeHook();
-				} catch (NativeHookException e1) {
+				}catch(NativeHookException e1){
 					e1.printStackTrace();
 				}
 			}
 
 			@Override
-			public void windowIconified(WindowEvent e) {				
+			public void windowIconified(WindowEvent e){
 			}
 
 			@Override
-			public void windowDeiconified(WindowEvent e) {				
+			public void windowDeiconified(WindowEvent e){
 			}
 
 			@Override
-			public void windowActivated(WindowEvent e) {				
+			public void windowActivated(WindowEvent e){
 			}
 
 			@Override
-			public void windowDeactivated(WindowEvent e) {				
+			public void windowDeactivated(WindowEvent e){
 			}
 		};
 		frame.addWindowListener(onClose);
@@ -1688,9 +1689,9 @@ public class Main {
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
-			try {
+			try{
 				ColorManager.prepareImages(config.showGraph, config.customColors);
-			} catch (IOException e) {
+			}catch(IOException e){
 				e.printStackTrace();
 			}
 			Key k;
@@ -1777,14 +1778,14 @@ public class Main {
 	 * @return The latest version
 	 */
 	private static final String checkVersion(){
-		try{ 			
-			HttpURLConnection con = (HttpURLConnection) new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection(); 			
-			con.setRequestMethod("GET"); 
+		try{
+			HttpURLConnection con = (HttpURLConnection)new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection();
+			con.setRequestMethod("GET");
 			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
-			con.setConnectTimeout(10000); 					   
-			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream())); 	
-			String line = reader.readLine(); 		
-			reader.close(); 	
+			con.setConnectTimeout(10000);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String line = reader.readLine();
+			reader.close();
 			String[] versions = line.split("\"name\":\"v");
 			int max_main = 3;
 			int max_sub = 0;
@@ -1803,7 +1804,7 @@ public class Main {
 				}
 			}
 			return "v" + max_main + "." + max_sub;
-		}catch(Exception e){ 	
+		}catch(Exception e){
 			return null;
 			//No Internet access or something else is wrong,
 			//No problem though since this isn't a critical function
@@ -1814,9 +1815,9 @@ public class Main {
 	 * Shuts down the program
 	 */
 	protected static final void exit(){
-		try {
+		try{
 			GlobalScreen.unregisterNativeHook();
-		} catch (NativeHookException e1) {
+		}catch(NativeHookException e1){
 			e1.printStackTrace();
 		}
 		System.exit(0);
@@ -1856,31 +1857,31 @@ public class Main {
 	 * @param args The original command line arguments
 	 */
 	private static final void relaunchFromTemp(String args){
-		URL url = Main.class.getProtectionDomain().getCodeSource().getLocation(); 	
-		File exe; 	
-		try { 		 
-			exe = new File(url.toURI()); 	
-		} catch(URISyntaxException e) { 	
-			exe = new File(url.getPath()); 	
-		} 	
+		URL url = Main.class.getProtectionDomain().getCodeSource().getLocation();
+		File exe;
+		try{
+			exe = new File(url.toURI());
+		}catch(URISyntaxException e){
+			exe = new File(url.getPath());
+		}
 		if(!exe.getAbsolutePath().contains("!")){
 			return;
 		}
-		File jvm = new File(System.getProperty("java.home") +  File.separator + "bin" + File.separator + "java.exe");
+		File jvm = new File(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
 		if(!jvm.exists() || !exe.exists()){
 			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
 			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
 			System.exit(0);
 		}
 		File tmp = null;
-		try {
+		try{
 			tmp = File.createTempFile("kps", null);
 			if(tmp.getAbsolutePath().contains("!")){
 				JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
 				System.exit(0);
 			}
 			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
+		}catch(IOException e){
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
@@ -1894,35 +1895,35 @@ public class Main {
 			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath());
 		}
 		Process proc = null;
-		try {
+		try{
 			proc = builder.start();
-		} catch (IOException e) {
+		}catch(IOException e){
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
 			tmp.delete();
 			System.exit(0);
-		}		
+		}
 		BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 		String line;
-		try {
+		try{
 			while(proc.isAlive()){
 				while((line = in.readLine()) != null){
 					System.out.println(line);
 				}
-				try {
+				try{
 					Thread.sleep(1000);
-				} catch (InterruptedException e) {
+				}catch(InterruptedException e){
 				}
 			}
-		} catch (IOException e) {
+		}catch(IOException e){
 			System.err.print("Output stream chrashed :/");
 		}
 		tmp.deleteOnExit();
 		tmp.delete();
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Saves the statistics logged so far
 	 */
@@ -1935,7 +1936,7 @@ public class Main {
 		}
 		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
 		if(!file.exists() || (file.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
-			try {
+			try{
 				file.createNewFile();
 				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
 				out.writeInt(TotPanel.hits);
@@ -1951,12 +1952,13 @@ public class Main {
 				out.flush();
 				out.close();
 				JOptionPane.showMessageDialog(null, "Statistics succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-			} catch (IOException e) {e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Failed to save the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+			}catch(IOException e){
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Failed to save the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads the statistics from a file
 	 */
@@ -2043,7 +2045,7 @@ public class Main {
 		 * @param name The name of the key
 		 * @see #name
 		 */
-		private Key(String name) {
+		private Key(String name){
 			this.name = name;
 		}
 
@@ -2053,15 +2055,15 @@ public class Main {
 		 * @param i The information object for this key
 		 * @return A new KeyPanel
 		 */
-		private KeyPanel getPanel(KeyInformation i) {
+		private KeyPanel getPanel(KeyInformation i){
 			return panel != null ? panel : (panel = new KeyPanel(this, i));
 		}
 
 		/**
 		 * Called when a key is pressed
 		 */
-		private void keyPressed() {
-			if (!down) {
+		private void keyPressed(){
+			if(!down){
 				count++;
 				down = true;
 				tmp.incrementAndGet();
@@ -2074,7 +2076,7 @@ public class Main {
 		/**
 		 * Called when a key is released
 		 */
-		private void keyReleased() {
+		private void keyReleased(){
 			if(down){
 				down = false;
 				if(panel != null){
@@ -2124,7 +2126,7 @@ public class Main {
 		/**
 		 * Auto-increment for #x
 		 */
-		protected static transient volatile int autoIndex = -2; 
+		protected static transient volatile int autoIndex = -2;
 		/**
 		 * The x position of this panel in the layout
 		 */
@@ -2145,7 +2147,7 @@ public class Main {
 		 * The text rendering mode for this panel
 		 */
 		protected RenderingMode mode = RenderingMode.VERTICAL;
-		
+
 		/**
 		 * Constructs a new KeyInformation
 		 * object with the given information
@@ -2167,7 +2169,7 @@ public class Main {
 			this.name = mouse ? name : getKeyName(name, code, this.alt, this.ctrl, this.shift);
 			this.keycode = mouse ? code : getExtendedKeyCode(code, shift, ctrl, alt);
 		}
-		
+
 		/**
 		 * Constructs the key name from the key
 		 * and modifiers
@@ -2195,9 +2197,9 @@ public class Main {
 			this.name = name;
 			this.keycode = code;
 			this.visible = visible;
-			
+
 		}
-		
+
 		/**
 		 * Gets a string containing all
 		 * the modifiers for this key
@@ -2211,17 +2213,17 @@ public class Main {
 		public String toString(){
 			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
 		}
-		
+
 		@Override
 		public int hashCode(){
 			return keycode;
 		}
-		
+
 		@Override
 		public boolean equals(Object other){
 			return other instanceof KeyInformation && keycode == ((KeyInformation)other).keycode;
 		}
-		
+
 		/**
 		 * Legacy object initialisation
 		 * @see ObjectInputStream#defaultReadObject()
@@ -2229,7 +2231,7 @@ public class Main {
 		 * @throws IOException When an IOException occurs
 		 * @throws ClassNotFoundException When this class cannot be found
 		 */
-		private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
 			stream.defaultReadObject();
 			x = -1;
 			y = 0;
@@ -2237,14 +2239,14 @@ public class Main {
 			height = 3;
 			mode = RenderingMode.VERTICAL;
 		}
-		
+
 		/**
 		 * Gets the key name for a key code
 		 * @param keyCode The key code
 		 * @return The key name
 		 */
-		public static String getKeyText(int keyCode) {
-			switch (keyCode) {
+		public static String getKeyText(int keyCode){
+			switch(keyCode){
 			case NativeKeyEvent.VC_ESCAPE:
 				return "Esc";
 			// Begin Function Keys
@@ -2355,70 +2357,70 @@ public class Main {
 				return "\u25BE";
 			// Begin Modifier and Control Keys
 			case NativeKeyEvent.VC_SHIFT:
-				return	"\u21D1";
+				return "\u21D1";
 			case NativeKeyEvent.VC_CONTROL:
 				return "Ctl";
 			case NativeKeyEvent.VC_ALT:
 				return "Alt";
 			case NativeKeyEvent.VC_META:
 				return "\u2318";
-			default: 
+			default:
 				return NativeKeyEvent.getKeyText(keyCode);
 			}
 		}
 
 		@Override
-		public void setX(int x) {
+		public void setX(int x){
 			this.x = x;
 		}
 
 		@Override
-		public void setY(int y) {
+		public void setY(int y){
 			this.y = y;
 		}
 
 		@Override
-		public void setWidth(int w) {
+		public void setWidth(int w){
 			width = w;
 		}
 
 		@Override
-		public void setHeight(int h) {
+		public void setHeight(int h){
 			height = h;
 		}
 
 		@Override
-		public String getName() {
+		public String getName(){
 			return name;
 		}
 
 		@Override
-		public int getX() {
+		public int getX(){
 			return x;
 		}
 
 		@Override
-		public int getY() {
+		public int getY(){
 			return y;
 		}
 
 		@Override
-		public int getWidth() {
+		public int getWidth(){
 			return width;
 		}
 
 		@Override
-		public int getHeight() {
+		public int getHeight(){
 			return height;
 		}
 
 		@Override
-		public RenderingMode getRenderingMode() {
+		public RenderingMode getRenderingMode(){
 			return mode;
 		}
 
 		@Override
-		public void setRenderingMode(RenderingMode mode) {
+		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
 		}
 	}
