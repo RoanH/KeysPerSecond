@@ -27,7 +27,7 @@ public class LayoutValidator{
 	 * Change listener for the height editor
 	 */
 	private FieldListener height = new FieldListener();
-	
+
 	/**
 	 * Constructs and initialises a new LayoutValidator
 	 */
@@ -37,7 +37,7 @@ public class LayoutValidator{
 		y.incompatible = height;
 		height.incompatible = y;
 	}
-	
+
 	/**
 	 * Gets the field listener that should be
 	 * registered to the x position editor
@@ -46,7 +46,7 @@ public class LayoutValidator{
 	public final FieldListener getXField(){
 		return x;
 	}
-	
+
 	/**
 	 * Gets the field listener that should be
 	 * registered to the y position editor
@@ -55,7 +55,7 @@ public class LayoutValidator{
 	public final FieldListener getYField(){
 		return y;
 	}
-	
+
 	/**
 	 * Gets the field listener that should be
 	 * registered to the width editor
@@ -64,7 +64,7 @@ public class LayoutValidator{
 	public final FieldListener getWidthField(){
 		return width;
 	}
-	
+
 	/**
 	 * Gets the field listener that should be
 	 * registered to the height editor
@@ -73,7 +73,7 @@ public class LayoutValidator{
 	public final FieldListener getHeightField(){
 		return height;
 	}
-	
+
 	/**
 	 * Listener that listens for and validates
 	 * changes for the editor this listener is
@@ -91,7 +91,7 @@ public class LayoutValidator{
 		 * The model this listener is listening on
 		 */
 		private SpecialNumberModel model;
-		
+
 		/**
 		 * Checks to see if it is valid for
 		 * the model this listener is attached
@@ -107,7 +107,7 @@ public class LayoutValidator{
 		public final boolean specialValid(){
 			return !incompatible.model.isSpecialValueSelected();
 		}
-		
+
 		/**
 		 * Sets the model this listener is
 		 * listening for changes on

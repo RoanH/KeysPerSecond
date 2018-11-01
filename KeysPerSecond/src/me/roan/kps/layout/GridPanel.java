@@ -22,7 +22,7 @@ public class GridPanel extends JPanel{
 	 * Whether or not the grid is currently displayed
 	 */
 	private boolean showGrid = false;
-	
+
 	@Override
 	public void paintComponent(Graphics g){
 		g.setColor(Main.config.getBackgroundColor());
@@ -35,18 +35,18 @@ public class GridPanel extends JPanel{
 			}
 			for(int i = SizeManager.cellSize; i < this.getHeight(); i += SizeManager.cellSize){
 				g.drawLine(0, i, this.getWidth(), i);
-				g.drawLine(0, i - 1, this.getWidth(), i -1);
+				g.drawLine(0, i - 1, this.getWidth(), i - 1);
 			}
 		}
 	}
-	
+
 	/**
 	 * Turns on grid rendering
 	 */
 	public void showGrid(){
 		showGrid = true;
 	}
-	
+
 	/**
 	 * Turns off grid rendering
 	 */
