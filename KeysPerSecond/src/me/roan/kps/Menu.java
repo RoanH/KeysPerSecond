@@ -48,7 +48,7 @@ import sun.swing.SwingUtilities2;
  * the popup menus
  * @author Roan
  */
-public class Menu {
+public class Menu{
 	/**
 	 * The right click menu
 	 */
@@ -89,7 +89,7 @@ public class Menu {
 	 * The pause menu item
 	 */
 	protected static final JCheckBoxMenuItem pause = new JCheckBoxMenuItem("Pause");
-	
+
 	/**
 	 * Repaints the component border
 	 */
@@ -191,11 +191,9 @@ public class Menu {
 		snap.addActionListener((e)->{
 			JFrame frame = (JFrame)KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 			Point loc = frame.getLocationOnScreen();
-			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();	
-			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : 
-				              Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
-						      Math.abs(loc.y - bounds.y) < 100 ? bounds.y : 
-							  Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
+			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();
+			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
+			                  Math.abs(loc.y - bounds.y) < 100 ? bounds.y : Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
 		});
 		exit.addActionListener((e)->{
 			Main.exit();
@@ -501,7 +499,7 @@ public class Menu {
 		loadStats.addActionListener((e)->{
 			Main.loadStats();
 		});
-		
+
 		reset.add(treset);
 		reset.add(sreset);
 		reset.add(sresetmax);
@@ -530,7 +528,7 @@ public class Menu {
 		configure.add(precision);
 		configure.add(commandkeys);
 		configure.add(layout);
-		
+
 		saveLoad.add(load);
 		saveLoad.add(save);
 		saveLoad.add(loadStats);
@@ -577,7 +575,7 @@ public class Menu {
 		private boolean hasCursor = false;
 
 		@Override
-		public void installUI(JComponent c) {
+		public void installUI(JComponent c){
 			super.installUI(c);
 			this.menuItem.addMouseListener(this);
 			menu.addPopupMenuListener(this);
@@ -591,9 +589,9 @@ public class Menu {
 
 		@Override
 		public void paintMenuItem(Graphics g, JComponent c, Icon checkIcon, Icon arrowIcon, Color bg, Color fg, int defaultTextIconGap){
-			paintMenuItem((Graphics2D) g, menuItem, hasCursor, defaultTextIconGap);
+			paintMenuItem((Graphics2D)g, menuItem, hasCursor, defaultTextIconGap);
 		}
-		
+
 		/**
 		 * Paints a menu item
 		 * @param g The graphics to use
@@ -625,38 +623,38 @@ public class Menu {
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) {			
+		public void mouseClicked(MouseEvent e){
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {			
+		public void mousePressed(MouseEvent e){
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e) {			
+		public void mouseReleased(MouseEvent e){
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			hasCursor = true;	
+		public void mouseEntered(MouseEvent e){
+			hasCursor = true;
 		}
 
 		@Override
-		public void mouseExited(MouseEvent e) {
-			hasCursor = false;	
-		}
-
-		@Override
-		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-		}
-
-		@Override
-		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+		public void mouseExited(MouseEvent e){
 			hasCursor = false;
 		}
 
 		@Override
-		public void popupMenuCanceled(PopupMenuEvent e) {
+		public void popupMenuWillBecomeVisible(PopupMenuEvent e){
+		}
+
+		@Override
+		public void popupMenuWillBecomeInvisible(PopupMenuEvent e){
+			hasCursor = false;
+		}
+
+		@Override
+		public void popupMenuCanceled(PopupMenuEvent e){
 			hasCursor = false;
 		}
 	}
@@ -676,7 +674,7 @@ public class Menu {
 		private static final AlphaComposite mode = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1F);
 
 		@Override
-		public void installUI(JComponent c) {
+		public void installUI(JComponent c){
 			super.installUI(c);
 			this.menuItem.addMouseListener(this);
 			menu.addPopupMenuListener(this);
@@ -690,42 +688,42 @@ public class Menu {
 
 		@Override
 		public void paintMenuItem(Graphics g, JComponent c, Icon checkIcon, Icon arrowIcon, Color bg, Color fg, int defaultTextIconGap){
-			MenuUI.paintMenuItem((Graphics2D) g, menuItem, hasCursor, defaultTextIconGap);
+			MenuUI.paintMenuItem((Graphics2D)g, menuItem, hasCursor, defaultTextIconGap);
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) {			
+		public void mouseClicked(MouseEvent e){
 		}
 
 		@Override
-		public void mousePressed(MouseEvent e) {			
+		public void mousePressed(MouseEvent e){
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e) {			
+		public void mouseReleased(MouseEvent e){
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			hasCursor = true;			
+		public void mouseEntered(MouseEvent e){
+			hasCursor = true;
 		}
 
 		@Override
-		public void mouseExited(MouseEvent e) {
-			hasCursor = false;		
-		}
-		
-		@Override
-		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-		}
-
-		@Override
-		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+		public void mouseExited(MouseEvent e){
 			hasCursor = false;
 		}
 
 		@Override
-		public void popupMenuCanceled(PopupMenuEvent e) {
+		public void popupMenuWillBecomeVisible(PopupMenuEvent e){
+		}
+
+		@Override
+		public void popupMenuWillBecomeInvisible(PopupMenuEvent e){
+			hasCursor = false;
+		}
+
+		@Override
+		public void popupMenuCanceled(PopupMenuEvent e){
 			hasCursor = false;
 		}
 	}
