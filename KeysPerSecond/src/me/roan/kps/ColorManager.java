@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
  * colours and resources
  * @author Roan
  */
-public class ColorManager {
+public class ColorManager{
 	/**
 	 * Graph image segment 'lower right'
 	 */

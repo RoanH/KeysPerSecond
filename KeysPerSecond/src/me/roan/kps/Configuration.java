@@ -29,7 +29,7 @@ import me.roan.kps.Main.KeyInformation;
  * properties for the program
  * @author Roan
  */
-public class Configuration {
+public class Configuration{
 
 	//general
 	/**
@@ -72,7 +72,7 @@ public class Configuration {
 	 * Whether or not the enable tracking key-modifier combinations
 	 */
 	protected boolean enableModifiers = false;
-	
+
 	//keys
 	/**
 	 * Key configuration data, can be serialised
@@ -108,7 +108,7 @@ public class Configuration {
 	 * How many digits to display for avg
 	 */
 	public int precision = 0;
-	
+
 	//command keys
 	/**
 	 * Reset stats command key
@@ -133,8 +133,8 @@ public class Configuration {
 	/**
 	 * Reload command key
 	 */
-	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true); 
-	
+	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
+
 	//special panels
 	/**
 	 * The x position of the average panel
@@ -216,7 +216,7 @@ public class Configuration {
 	 * The text rendering mode of the total panel
 	 */
 	public RenderingMode tot_mode = RenderingMode.VERTICAL;
-	
+
 	//graph
 	/**
 	 * Number of points the graph consists of
@@ -246,12 +246,12 @@ public class Configuration {
 	 * Position the graph is rendered in
 	 */
 	protected GraphMode graphMode = GraphMode.INLINE;
-	
+
 	/**
 	 * The original configuration file
 	 */
 	private File data;
-	
+
 	/**
 	 * Constructs a new configuration object
 	 * @param data The data file
@@ -259,7 +259,7 @@ public class Configuration {
 	protected Configuration(File data){
 		this.data = data;
 	}
-	
+
 	/**
 	 * Gets the background opacity
 	 * @return The background opacity
@@ -267,7 +267,7 @@ public class Configuration {
 	public final float getBackgroundOpacity(){
 		return customColors ? opacitybg : 1.0F;
 	}
-	
+
 	/**
 	 * Gets the foreground opacity
 	 * @return The foreground opacity
@@ -275,7 +275,7 @@ public class Configuration {
 	public final float getForegroundOpacity(){
 		return customColors ? opacityfg : 1.0F;
 	}
-	
+
 	/**
 	 * Gets the background opacity
 	 * @return The background color
@@ -283,7 +283,7 @@ public class Configuration {
 	public final Color getBackgroundColor(){
 		return customColors ? background : Color.BLACK;
 	}
-	
+
 	/**
 	 * Gets the foreground color
 	 * @return The foreground color
@@ -291,7 +291,7 @@ public class Configuration {
 	public final Color getForegroundColor(){
 		return customColors ? foreground : Color.CYAN;
 	}
-	
+
 	/**
 	 * Reloads the configuration from file
 	 */
@@ -318,7 +318,7 @@ public class Configuration {
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
@@ -382,7 +382,7 @@ public class Configuration {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Loads a new format configuration file
 	 * @param saveloc The save location
@@ -587,7 +587,7 @@ public class Configuration {
 						case "HORIZONTAL_TDAN2S":
 							defaultMode = RenderingMode.DIAGONAL3;
 							break;
-						default: 
+						default:
 							defaultMode = RenderingMode.valueOf(mode);
 							break;
 						}
@@ -782,7 +782,7 @@ public class Configuration {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Parses the text representation of
 	 * a command key to it's actual data
@@ -810,7 +810,7 @@ public class Configuration {
 		}
 		return new CMD(code, alt, ctrl);
 	}
-	
+
 	/**
 	 * Parses the text representation of a key
 	 * to it's actual data
@@ -907,7 +907,7 @@ public class Configuration {
 		}
 		return new Color(r, g, b);
 	}
-	
+
 	/**
 	 * Parses the text representation of the position
 	 * to it's actual data
@@ -938,9 +938,9 @@ public class Configuration {
 	 */
 	@SuppressWarnings("unchecked")
 	private final boolean loadLegacyFormat(File saveloc){
-		try {
+		try{
 			ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
-			keyinfo = (List<KeyInformation>) objin.readObject();
+			keyinfo = (List<KeyInformation>)objin.readObject();
 			showMax = objin.readBoolean();
 			showCur = objin.readBoolean();
 			showAvg = objin.readBoolean();
@@ -982,7 +982,7 @@ public class Configuration {
 				KeyInformation.autoIndex = keyinfo.size() * 2 + 2;
 			}
 			return true;
-		} catch (Exception e1) {
+		}catch(Exception e1){
 			e1.printStackTrace();
 			return false;
 		}
@@ -1085,7 +1085,7 @@ public class Configuration {
 				out.close();
 				out.flush();
 				JOptionPane.showMessageDialog(null, "Configuration succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
-			} catch (Exception e1) {
+			}catch(Exception e1){
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Failed to save the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
 			}
