@@ -21,7 +21,7 @@ public class EndNumberModel extends SpecialNumberModel{
 	 * @param validator The validator to use to validate value changes
 	 * @param listener The listener to inform of value changes
 	 */
-	public EndNumberModel(int value, FieldListener validator, ValueChangeListener listener) {
+	public EndNumberModel(int value, FieldListener validator, ValueChangeListener listener){
 		super(value, "end", validator, listener);
 	}
 }

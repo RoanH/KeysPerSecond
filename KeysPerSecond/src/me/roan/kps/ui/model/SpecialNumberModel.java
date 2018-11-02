@@ -33,7 +33,7 @@ public class SpecialNumberModel extends AbstractSpinnerModel{
 	 * The validator to use to check the validity of new values
 	 */
 	private FieldListener validator;
-	
+
 	/**
 	 * Constructs a new SpecialNumberModel with
 	 * the given arguments.
@@ -49,7 +49,7 @@ public class SpecialNumberModel extends AbstractSpinnerModel{
 		validator.setModel(this);
 		this.listener = listener;
 	}
-	
+
 	/**
 	 * Checks to see if the current value
 	 * is the special (-1) value
