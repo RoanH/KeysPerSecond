@@ -12,7 +12,7 @@ import me.roan.kps.RenderingMode;
  * from the previous second
  * @author Roan
  */
-public final class NowPanel extends BasePanel {
+public final class NowPanel extends BasePanel{
 	/**
 	 * Serial ID
 	 */
@@ -21,7 +21,7 @@ public final class NowPanel extends BasePanel {
 	 * Static instance of this panel that is reused all the time
 	 */
 	public static final NowPanel INSTANCE = new NowPanel();
-	
+
 	/**
 	 * Constructs a new current panel
 	 */
@@ -30,37 +30,37 @@ public final class NowPanel extends BasePanel {
 	}
 
 	@Override
-	protected String getTitle() {
+	protected String getTitle(){
 		return "CUR";
 	}
 
 	@Override
-	protected String getValue() {
+	protected String getValue(){
 		return String.valueOf(Main.prev);
 	}
-	
+
 	@Override
-	public int getLayoutX() {
+	public int getLayoutX(){
 		return Main.config.cur_x;
 	}
 
 	@Override
-	public int getLayoutY() {
+	public int getLayoutY(){
 		return Main.config.cur_y;
 	}
 
 	@Override
-	public int getLayoutWidth() {
+	public int getLayoutWidth(){
 		return Main.config.cur_w;
 	}
 
 	@Override
-	public int getLayoutHeight() {
+	public int getLayoutHeight(){
 		return Main.config.cur_h;
 	}
 
 	@Override
-	protected RenderingMode getRenderingMode() {
+	protected RenderingMode getRenderingMode(){
 		return Main.config.cur_mode;
 	}
 }

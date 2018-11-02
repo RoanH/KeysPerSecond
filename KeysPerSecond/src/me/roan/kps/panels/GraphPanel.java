@@ -42,7 +42,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	 * Stroke used to draw average line
 	 */
 	private static final Stroke avgstroke = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0F, null, 0);
-	
+
 	/**
 	 * Resets the graph
 	 */
@@ -50,7 +50,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 		values.clear();
 		maxval = 1;
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g1){
 		if(Main.config.showGraph){
@@ -73,8 +73,8 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				Polygon poly = new Polygon();
 				poly.addPoint(this.getWidth() - SizeManager.insideOffset - 2, this.getHeight() - SizeManager.insideOffset - 1);
 				for(int i = 1; i <= values.size(); i++){
-					int px = (int) (SizeManager.insideOffset + ((double)(this.getWidth() - SizeManager.insideOffset * 2 - 2) / (double)(Main.config.backlog - 1)) * (Main.config.backlog - i));
-					int py = (int) (this.getHeight() - SizeManager.insideOffset - 1 - ((float)(this.getHeight() - SizeManager.insideOffset * 2) * ((float)values.get(i - 1) / (float)maxval)));
+					int px = (int)(SizeManager.insideOffset + ((double)(this.getWidth() - SizeManager.insideOffset * 2 - 2) / (double)(Main.config.backlog - 1)) * (Main.config.backlog - i));
+					int py = (int)(this.getHeight() - SizeManager.insideOffset - 1 - ((float)(this.getHeight() - SizeManager.insideOffset * 2) * ((float)values.get(i - 1) / (float)maxval)));
 					poly.addPoint(px, py);
 					if(i == values.size()){
 						poly.addPoint(px, this.getHeight() - SizeManager.insideOffset - 1);
@@ -82,7 +82,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				}
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 				if(Main.config.graphAvg){
-					int y = (int) (this.getHeight() - SizeManager.insideOffset - ((float)(this.getHeight() - SizeManager.insideOffset * 2) * (Main.avg / (float)maxval)));
+					int y = (int)(this.getHeight() - SizeManager.insideOffset - ((float)(this.getHeight() - SizeManager.insideOffset * 2) * (Main.avg / (float)maxval)));
 					g.setColor(Main.config.getForegroundColor().darker());
 					g.setStroke(avgstroke);
 					g.drawLine(SizeManager.insideOffset, y, this.getWidth() - SizeManager.insideOffset - 2, y);
@@ -107,7 +107,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds a new point to the end of this graph
 	 * @param value The new point to add
@@ -125,22 +125,22 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	}
 
 	@Override
-	public int getLayoutX() {
+	public int getLayoutX(){
 		return Main.config.graph_x;
 	}
 
 	@Override
-	public int getLayoutY() {
+	public int getLayoutY(){
 		return Main.config.graph_y;
 	}
 
 	@Override
-	public int getLayoutWidth() {
+	public int getLayoutWidth(){
 		return Main.config.graph_w;
 	}
 
 	@Override
-	public int getLayoutHeight() {
+	public int getLayoutHeight(){
 		return Main.config.graph_h;
 	}
 }
