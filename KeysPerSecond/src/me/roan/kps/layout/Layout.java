@@ -41,7 +41,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	 * LayoutManager for
 	 */
 	private final Container parent;
-	
+
 	/**
 	 * Constructs a new Layout for
 	 * the given container
@@ -52,7 +52,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 		this.parent = parent;
 		parent.setLayout(this);
 	}
-	
+
 	/**
 	 * Removes all the components that
 	 * were added to this layout
@@ -62,7 +62,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 		extraWidth = 0;
 		extraHeight = 0;
 	}
-	
+
 	/**
 	 * Gets the width in pixels of this layout
 	 * @return The width in pixels of this layout
@@ -70,7 +70,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	public int getWidth(){
 		return SizeManager.cellSize * (maxw + extraWidth);
 	}
-	
+
 	/**
 	 * Gets the height in pixels of this layout
 	 * @return The height in pixels of this layout
@@ -78,7 +78,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	public int getHeight(){
 		return SizeManager.cellSize * (maxh + extraHeight);
 	}
-	
+
 	/**
 	 * Adds the given component to this layout
 	 */
@@ -98,7 +98,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 			parent.add(comp);
 		}
 	}
-	
+
 	/**
 	 * Recomputes the size of the layout
 	 */
@@ -112,58 +112,58 @@ public class Layout implements LayoutManager, LayoutManager2{
 			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		}
 	}
-	
+
 	@Override
 	public String toString(){
 		return "Layout[components=" + parent.getComponentCount() + ",maxw=" + maxw + ",maxh=" + maxh + "]";
 	}
-	
+
 	@Override
-	public void addLayoutComponent(Component comp, Object constraints) {
-		add(comp);
-	}
-	
-	@Override
-	public void addLayoutComponent(String name, Component comp) {
+	public void addLayoutComponent(Component comp, Object constraints){
 		add(comp);
 	}
 
 	@Override
-	public Dimension maximumLayoutSize(Container target) {
+	public void addLayoutComponent(String name, Component comp){
+		add(comp);
+	}
+
+	@Override
+	public Dimension maximumLayoutSize(Container target){
 		return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
 
 	@Override
-	public float getLayoutAlignmentX(Container target) {
+	public float getLayoutAlignmentX(Container target){
 		return 0.5F;
 	}
 
 	@Override
-	public float getLayoutAlignmentY(Container target) {
+	public float getLayoutAlignmentY(Container target){
 		return 0.5F;
 	}
 
 	@Override
-	public void invalidateLayout(Container target) {
+	public void invalidateLayout(Container target){
 	}
 
 	@Override
-	public void removeLayoutComponent(Component comp) {
+	public void removeLayoutComponent(Component comp){
 		recomputeGrid();
 	}
 
 	@Override
-	public Dimension preferredLayoutSize(Container parent) {
+	public Dimension preferredLayoutSize(Container parent){
 		return new Dimension(0, 0);
 	}
 
 	@Override
-	public Dimension minimumLayoutSize(Container parent) {
+	public Dimension minimumLayoutSize(Container parent){
 		return new Dimension(0, 0);
 	}
 
 	@Override
-	public void layoutContainer(Container parent) {
+	public void layoutContainer(Container parent){
 		if(!(maxw == 0 && extraWidth == 0) && !(maxh == 0 && extraHeight == 0)){
 			double dx = parent.getWidth() / (maxw + extraWidth);
 			double dy = parent.getHeight() / (maxh + extraHeight);
@@ -175,9 +175,9 @@ public class Layout implements LayoutManager, LayoutManager2{
 				if(lp.getLayoutX() == -1){
 					if(lp.getLayoutY() == -1){
 						component.setBounds((int)Math.floor(dx * width), 
-			                                (int)Math.floor(dy * height), 
-			                                (int)Math.ceil(dx * lp.getLayoutWidth()), 
-			                                (int)Math.ceil(dy * lp.getLayoutHeight()));
+						                    (int)Math.floor(dy * height), 
+						                    (int)Math.ceil(dx * lp.getLayoutWidth()), 
+						                    (int)Math.ceil(dy * lp.getLayoutHeight()));
 						width += lp.getLayoutWidth();
 						height += lp.getLayoutHeight();
 					}else{

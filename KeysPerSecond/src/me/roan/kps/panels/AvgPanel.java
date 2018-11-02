@@ -8,7 +8,7 @@ import me.roan.kps.RenderingMode;
  * average keys pressed per second
  * @author Roan
  */
-public final class AvgPanel extends BasePanel {
+public final class AvgPanel extends BasePanel{
 	/**
 	 * Serial ID
 	 */
@@ -17,7 +17,7 @@ public final class AvgPanel extends BasePanel {
 	 * Static instance of this panel that is reused all the time
 	 */
 	public static final AvgPanel INSTANCE = new AvgPanel();
-	
+
 	/**
 	 * Constructs a new average panel
 	 */
@@ -26,37 +26,37 @@ public final class AvgPanel extends BasePanel {
 	}
 
 	@Override
-	protected String getTitle() {
+	protected String getTitle(){
 		return "AVG";
 	}
 
 	@Override
-	protected String getValue() {
+	protected String getValue(){
 		return Main.config.precision == 0 ? String.valueOf((int)Main.avg) : String.valueOf(String.format("%1$." + Main.config.precision + "f", (double)((int)(Main.avg * Math.pow(10, Main.config.precision)) / Math.pow(10, Main.config.precision))));
 	}
 
 	@Override
-	public int getLayoutX() {
+	public int getLayoutX(){
 		return Main.config.avg_x;
 	}
 
 	@Override
-	public int getLayoutY() {
+	public int getLayoutY(){
 		return Main.config.avg_y;
 	}
 
 	@Override
-	public int getLayoutWidth() {
+	public int getLayoutWidth(){
 		return Main.config.avg_w;
 	}
 
 	@Override
-	public int getLayoutHeight() {
+	public int getLayoutHeight(){
 		return Main.config.avg_h;
 	}
 
 	@Override
-	protected RenderingMode getRenderingMode() {
+	protected RenderingMode getRenderingMode(){
 		return Main.config.avg_mode;
 	}
 }

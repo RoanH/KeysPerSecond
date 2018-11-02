@@ -10,7 +10,7 @@ import me.roan.kps.RenderingMode;
  * been pressed
  * @author Roan
  */
-public final class KeyPanel extends BasePanel {
+public final class KeyPanel extends BasePanel{
 	/**
 	 * Serial ID
 	 */
@@ -35,48 +35,48 @@ public final class KeyPanel extends BasePanel {
 	 * @see Key
 	 * @see #key
 	 */
-	public KeyPanel(Key key, KeyInformation i) {
+	public KeyPanel(Key key, KeyInformation i){
 		this.key = key;
 		info = i;
 	}
 
 	@Override
-	protected boolean isActive() {
+	protected boolean isActive(){
 		return key.down;
 	}
 
 	@Override
-	protected String getTitle() {
+	protected String getTitle(){
 		return key.name;
 	}
 
 	@Override
-	protected String getValue() {
+	protected String getValue(){
 		return String.valueOf(key.count);
 	}
 
 	@Override
-	public int getLayoutX() {
+	public int getLayoutX(){
 		return info.getX();
 	}
 
 	@Override
-	public int getLayoutY() {
+	public int getLayoutY(){
 		return info.getY();
 	}
 
 	@Override
-	public int getLayoutWidth() {
+	public int getLayoutWidth(){
 		return info.getWidth();
 	}
 
 	@Override
-	public int getLayoutHeight() {
+	public int getLayoutHeight(){
 		return info.getHeight();
 	}
 
 	@Override
-	protected RenderingMode getRenderingMode() {
+	protected RenderingMode getRenderingMode(){
 		return info.getRenderingMode();
 	}
 }

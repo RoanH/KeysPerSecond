@@ -21,7 +21,7 @@ public class MaxNumberModel extends SpecialNumberModel{
 	 * @param validator The validator to use to validate value changes
 	 * @param listener The listener to inform of value changes
 	 */
-	public MaxNumberModel(int value, FieldListener validator, ValueChangeListener listener) {
+	public MaxNumberModel(int value, FieldListener validator, ValueChangeListener listener){
 		super(value, "max", validator, listener);
 	}
 }

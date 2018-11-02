@@ -5,7 +5,7 @@ package me.roan.kps;
  * constants for the program
  * @author Roan
  */
-public class SizeManager {
+public class SizeManager{
 	/**
 	 * The pixel size of one cell in this program
 	 */

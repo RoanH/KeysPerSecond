@@ -6,7 +6,7 @@ package me.roan.kps.layout;
  * @author Roan
  * @see Layout
  */
-public abstract interface LayoutPosition {
+public abstract interface LayoutPosition{
 	/**
 	 * Gets the x position of this
 	 * panel in the layout
@@ -14,6 +14,7 @@ public abstract interface LayoutPosition {
 	 *         panel in the layout
 	 */
 	public abstract int getLayoutX();
+
 	/**
 	 * Gets the y position of this
 	 * panel in the layout
@@ -21,6 +22,7 @@ public abstract interface LayoutPosition {
 	 *         panel in the layout
 	 */
 	public abstract int getLayoutY();
+
 	/**
 	 * Gets the width of this panel
 	 * in the layout
@@ -28,6 +30,7 @@ public abstract interface LayoutPosition {
 	 *         in the layout
 	 */
 	public abstract int getLayoutWidth();
+
 	/**
 	 * Gets the height of this panel
 	 * in the layout
@@ -35,7 +38,7 @@ public abstract interface LayoutPosition {
 	 *         in the layout
 	 */
 	public abstract int getLayoutHeight();
-	
+
 	/**
 	 * Gets the position and size given by
 	 * this LayoutPosition as a string

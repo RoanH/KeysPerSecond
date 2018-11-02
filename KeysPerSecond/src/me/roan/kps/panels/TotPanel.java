@@ -8,7 +8,7 @@ import me.roan.kps.RenderingMode;
  * total number of keys pressed
  * @author Roan
  */
-public final class TotPanel extends BasePanel {
+public final class TotPanel extends BasePanel{
 	/**
 	 * Serial ID
 	 */
@@ -28,39 +28,39 @@ public final class TotPanel extends BasePanel {
 	private TotPanel(){
 		sizeChanged();
 	}
-	
+
 	@Override
-	protected String getTitle() {
+	protected String getTitle(){
 		return "TOT";
 	}
 
 	@Override
-	protected String getValue() {
+	protected String getValue(){
 		return String.valueOf(hits);
 	}
 
 	@Override
-	public int getLayoutX() {
+	public int getLayoutX(){
 		return Main.config.tot_x;
 	}
 
 	@Override
-	public int getLayoutY() {
+	public int getLayoutY(){
 		return Main.config.tot_y;
 	}
 
 	@Override
-	public int getLayoutWidth() {
+	public int getLayoutWidth(){
 		return Main.config.tot_w;
 	}
 
 	@Override
-	public int getLayoutHeight() {
+	public int getLayoutHeight(){
 		return Main.config.tot_h;
 	}
 
 	@Override
-	protected RenderingMode getRenderingMode() {
+	protected RenderingMode getRenderingMode(){
 		return Main.config.tot_mode;
 	}
 }

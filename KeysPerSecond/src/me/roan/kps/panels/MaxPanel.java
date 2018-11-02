@@ -8,7 +8,7 @@ import me.roan.kps.RenderingMode;
  * maximum keys pressed per second
  * @author Roan
  */
-public final class MaxPanel extends BasePanel {
+public final class MaxPanel extends BasePanel{
 	/**
 	 * Serial ID
 	 */
@@ -17,7 +17,7 @@ public final class MaxPanel extends BasePanel {
 	 * Static instance of this panel that is reused all the time
 	 */
 	public static final MaxPanel INSTANCE = new MaxPanel();
-	
+
 	/**
 	 * Constructs a new maximum panel
 	 */
@@ -26,37 +26,37 @@ public final class MaxPanel extends BasePanel {
 	}
 
 	@Override
-	protected String getTitle() {
+	protected String getTitle(){
 		return "MAX";
 	}
 
 	@Override
-	protected String getValue() {
+	protected String getValue(){
 		return String.valueOf(Main.max);
 	}
 
 	@Override
-	public int getLayoutX() {
+	public int getLayoutX(){
 		return Main.config.max_x;
 	}
 
 	@Override
-	public int getLayoutY() {
+	public int getLayoutY(){
 		return Main.config.max_y;
 	}
 
 	@Override
-	public int getLayoutWidth() {
+	public int getLayoutWidth(){
 		return Main.config.max_w;
 	}
 
 	@Override
-	public int getLayoutHeight() {
+	public int getLayoutHeight(){
 		return Main.config.max_h;
 	}
 
 	@Override
-	protected RenderingMode getRenderingMode() {
+	protected RenderingMode getRenderingMode(){
 		return Main.config.max_mode;
 	}
 }

@@ -15,7 +15,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
  * the command keys for the program
  * @author Roan
  */
-public class CommandKeys {
+public class CommandKeys{
 	/**
 	 * Whether or not ctrl is down
 	 */
@@ -28,7 +28,7 @@ public class CommandKeys {
 	 * Whether or not shift is down
 	 */
 	protected static boolean isShiftDown = false;
-	
+
 	/**
 	 * Simple class to represent
 	 * a command key
@@ -61,7 +61,7 @@ public class CommandKeys {
 			this.ctrl = ctrl;
 			this.keycode = keycode;
 		}
-		
+
 		/**
 		 * Check to see if the given state
 		 * triggers this command key
@@ -71,12 +71,12 @@ public class CommandKeys {
 		protected final boolean matches(int keycode){
 			return (this.keycode == keycode) && (this.alt == isAltDown) && (this.ctrl == isCtrlDown);
 		}
-		
+
 		@Override
 		public String toString(){
 			return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + NativeKeyEvent.getKeyText(keycode);
 		}
-		
+
 		/**
 		 * @return The save form of this command key
 		 */

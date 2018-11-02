@@ -128,7 +128,7 @@ public enum RenderingMode{
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
 			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
 		}
-		
+
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
 			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.insideOffset + 1 + getHeight(g, font));
@@ -449,7 +449,7 @@ public enum RenderingMode{
 
 		return font;
 	}
-	
+
 	/**
 	 * Gets the height of drawn text in pixels
 	 * for the given font
@@ -460,7 +460,7 @@ public enum RenderingMode{
 	private static final int getHeight(Graphics2D g, Font font){
 		return font.createGlyphVector(g.getFontRenderContext(), ref).getPixelBounds(null, 0.0F, 0.0F).height;
 	}
-	
+
 	/**
 	 * Gets the width of the given string
 	 * using the given font metrics
@@ -476,7 +476,7 @@ public enum RenderingMode{
 	public String toString(){
 		return name;
 	}
-	
+
 	/**
 	 * Simple cache that caches rendering information
 	 * so that it does not have to be recomputed for
@@ -512,7 +512,7 @@ public enum RenderingMode{
 		 * The last known length of the value string
 		 */
 		private int valueLen;
-		
+
 		/**
 		 * Initialises and resets this cache
 		 * for the given rendering mode
@@ -528,7 +528,7 @@ public enum RenderingMode{
 			titleLen = -1;
 			valueLen = -1;
 		}
-		
+
 		/**
 		 * Renders the title string on the given panel with
 		 * the given graphics according to the cached information
@@ -542,11 +542,11 @@ public enum RenderingMode{
 				titleFont = mode.getTitleFont(title, g, panel, titleFont);
 				titlePos = mode.getTitleDrawPosition(g, panel, title, titleFont).getLocation();
 			}
-			
+
 			g.setFont(titleFont);
 			g.drawString(title, titlePos.x, titlePos.y);
 		}
-		
+
 		/**
 		 * Renders the value string on the given panel with
 		 * the given graphics according to the cached information
@@ -560,7 +560,7 @@ public enum RenderingMode{
 				valueFont = mode.getValueFont(value, g, panel, valueFont);
 				valuePos = mode.getValueDrawPosition(g, panel, value, valueFont).getLocation();
 			}
-			
+
 			g.setFont(valueFont);
 			g.drawString(value, valuePos.x, valuePos.y);
 		}
