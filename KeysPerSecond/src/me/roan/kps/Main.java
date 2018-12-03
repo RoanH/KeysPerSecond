@@ -1326,7 +1326,21 @@ public class Main{
 		JPanel view = new JPanel(new BorderLayout());
 		view.add(keys, BorderLayout.PAGE_START);
 		view.add(new JPanel(), BorderLayout.CENTER);
-
+		
+		JPanel gridSize = new JPanel(new GridLayout(1, 2, 0, 5));
+		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
+		gridSize.add(new JLabel("Cell size: "));
+		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.cellSize, SizeManager.graphImageSize, Integer.MAX_VALUE, 1));
+		gridSpinner.addChangeListener((e)->{
+			SizeManager.cellSize = (int)gridSpinner.getValue();
+			if(live){
+				reconfigure();
+			}
+		});
+		gridSize.add(gridSpinner);
+		
+		form.add(gridSize, BorderLayout.PAGE_START);
+		
 		JScrollPane pane = new JScrollPane(view);
 		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
