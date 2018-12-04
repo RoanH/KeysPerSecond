@@ -57,14 +57,14 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		g.drawImage(ColorManager.graph_upper_left,   2, 2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_left,   2, this.getHeight() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 2, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 2 - SizeManager.graphImageSize, 2, this.getWidth() - 2, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 2 - SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_side_left,    2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
-		g.drawImage(ColorManager.graph_upper_middle, 2 + SizeManager.graphImageSize, 2, this.getWidth() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_lower_middle, 2 + SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, this.getWidth() - 2 - SizeManager.graphImageSize, this.getHeight() - 2, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getWidth() - 2, this.getHeight() - 2 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+//		g.drawImage(ColorManager.graph_upper_left,   2, 2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
+//		g.drawImage(ColorManager.graph_lower_left,   2, this.getHeight() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 2, 0, 0, 4, 4, this);
+//		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 2 - SizeManager.graphImageSize, 2, this.getWidth() - 2, 2 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
+//		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 2 - SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, this.getWidth() - 2, this.getHeight() - 2, 0, 0, 4, 4, this);
+//		g.drawImage(ColorManager.graph_side_left,    2, 2 + SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+//		g.drawImage(ColorManager.graph_upper_middle, 2 + SizeManager.graphImageSize, 2, this.getWidth() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, 0, 0, 46, 4, this);
+//		g.drawImage(ColorManager.graph_lower_middle, 2 + SizeManager.graphImageSize, this.getHeight() - 2 - SizeManager.graphImageSize, this.getWidth() - 2 - SizeManager.graphImageSize, this.getHeight() - 2, 0, 0, 46, 4, this);
+//		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 2 - SizeManager.graphImageSize, 2 + SizeManager.graphImageSize, this.getWidth() - 2, this.getHeight() - 2 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
 		//TODO close or far version
 //		g.drawImage(ColorManager.graph_upper_left,   0, 0, 0 + SizeManager.graphImageSize, 0 + SizeManager.graphImageSize, 0, 0, 4, 4, this);
 //		g.drawImage(ColorManager.graph_lower_left,   0, this.getHeight() - 0 - SizeManager.graphImageSize, 0 + SizeManager.graphImageSize, this.getHeight() - 0, 0, 0, 4, 4, this);
@@ -75,6 +75,16 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 //		g.drawImage(ColorManager.graph_lower_middle, 0 + SizeManager.graphImageSize, this.getHeight() - 0 - SizeManager.graphImageSize, this.getWidth() - 0 - SizeManager.graphImageSize, this.getHeight() - 0, 0, 0, 46, 4, this);
 //		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 0 - SizeManager.graphImageSize, 0 + SizeManager.graphImageSize, this.getWidth() - 0, this.getHeight() - 0 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
 
+		g.drawImage(ColorManager.graph_upper_left,   SizeManager.tmp, SizeManager.tmp, SizeManager.tmp + SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_left,   SizeManager.tmp, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp, this.getWidth() - SizeManager.tmp, SizeManager.tmp + SizeManager.graphImageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, this.getWidth() - SizeManager.tmp, this.getHeight() - SizeManager.tmp, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_side_left,    SizeManager.tmp, SizeManager.tmp + SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_upper_middle, SizeManager.tmp + SizeManager.graphImageSize, SizeManager.tmp, this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_lower_middle, SizeManager.tmp + SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, this.getWidth() - SizeManager.tmp, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+		
+		
 		if(isActive()){
 			g.setColor(ColorManager.activeColor);
 			g.fillRect(2 + (SizeManager.graphImageSize / 4) * 3, 

@@ -15,7 +15,9 @@ public class SizeManager{
 	 * Offset from a panel border to the inside
 	 * of the panel (inside the image)
 	 */
-	public final static int insideOffset = 5;
+	@Deprecated
+	public static int insideOffset = 5;
+	public static int tmp = 2;
 	/**
 	 * Smallest size of graph images
 	 */

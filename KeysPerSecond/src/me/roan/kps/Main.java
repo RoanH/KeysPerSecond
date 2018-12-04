@@ -1327,7 +1327,7 @@ public class Main{
 		view.add(keys, BorderLayout.PAGE_START);
 		view.add(new JPanel(), BorderLayout.CENTER);
 		
-		JPanel gridSize = new JPanel(new GridLayout(1, 2, 0, 5));
+		JPanel gridSize = new JPanel(new GridLayout(2, 2, 0, 5));
 		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
 		gridSize.add(new JLabel("Cell size: "));
 		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.cellSize, SizeManager.graphImageSize, Integer.MAX_VALUE, 1));
@@ -1338,6 +1338,16 @@ public class Main{
 			}
 		});
 		gridSize.add(gridSpinner);
+		gridSize.add(new JLabel("Gap size (x2): "));
+		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, Integer.MAX_VALUE, 1));
+		gapSpinner.addChangeListener((e)->{
+			SizeManager.tmp = (int)gapSpinner.getValue();
+			SizeManager.insideOffset = SizeManager.tmp + 3;
+			if(live){
+				reconfigure();
+			}
+		});
+		gridSize.add(gapSpinner);
 		
 		form.add(gridSize, BorderLayout.PAGE_START);
 		
