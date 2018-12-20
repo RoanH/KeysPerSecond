@@ -65,6 +65,7 @@ And if you find any bugs feel free to report them.
 - **18 February 2017**: Added support for a variable size & added an icon to the window.<br>
 - **21 March 2017**: Major performance improvements & change opacity settings to use a percentage.<br>
 - **21 March 2017**: Made adding keys a little bit easier.<br>
+- **24 March 2017**: Added the option to pass a config file via the command line & minor bug fixes.<br>
 - **30 March 2017**: Implemented a right click dialog, pause functionality & a snap to screen edge function.<br>
 - **31 March 2017**: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.<br>
 - **1 April 2017**: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
