@@ -249,7 +249,7 @@ public class Configuration{
 	
 	//layout
 	//TODO config support and javadoc
-	public int insideOffset = SizeManager.insideOffset;//enforce bounds
+	public int borderOffset = SizeManager.insideOffset;//enforce bounds
 	/**
 	 * The pixel size of one cell in this program
 	 */
@@ -781,9 +781,9 @@ public class Configuration{
 						modified = true;
 					}
 					break;
-				case "insideOffset":
+				case "borderOffset":
 					try{
-						insideOffset = Integer.parseInt(args[1]);
+						borderOffset = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}

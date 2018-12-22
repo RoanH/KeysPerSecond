@@ -1343,8 +1343,8 @@ public class Main{
 		gridSize.add(new JLabel("Gap size (x2): "));
 		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, new VariableComparable(()->(config.cellSize - BasePanel.imageSize)), 1));
 		gapSpinner.addChangeListener((e)->{
-			SizeManager.tmp = (int)gapSpinner.getValue();
-			SizeManager.insideOffset = SizeManager.tmp + 3;
+			config.borderOffset = (int)gapSpinner.getValue();
+			SizeManager.insideOffset = config.borderOffset + 3;
 			if(live){
 				reconfigure();
 			}

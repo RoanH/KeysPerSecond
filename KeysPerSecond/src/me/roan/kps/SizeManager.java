@@ -13,6 +13,4 @@ public class SizeManager{
 	 */
 	@Deprecated
 	public static int insideOffset = 5;
-	@Deprecated
-	public static int tmp = 2;
 }
