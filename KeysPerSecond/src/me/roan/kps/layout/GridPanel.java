@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 
 import me.roan.kps.ColorManager;
 import me.roan.kps.Main;
-import me.roan.kps.SizeManager;
 
 /**
  * Simple panel that draws a grid spaced
@@ -29,11 +28,11 @@ public class GridPanel extends JPanel{
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if(showGrid){
 			g.setColor(ColorManager.alphaAqua);
-			for(int i = SizeManager.cellSize; i < this.getWidth(); i += SizeManager.cellSize){
+			for(int i = Main.config.cellSize; i < this.getWidth(); i += Main.config.cellSize){
 				g.drawLine(i, 0, i, this.getHeight());
 				g.drawLine(i - 1, 0, i - 1, this.getHeight());
 			}
-			for(int i = SizeManager.cellSize; i < this.getHeight(); i += SizeManager.cellSize){
+			for(int i = Main.config.cellSize; i < this.getHeight(); i += Main.config.cellSize){
 				g.drawLine(0, i, this.getWidth(), i);
 				g.drawLine(0, i - 1, this.getWidth(), i - 1);
 			}

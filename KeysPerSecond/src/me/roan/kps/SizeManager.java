@@ -8,11 +8,6 @@ package me.roan.kps;
 @Deprecated
 public class SizeManager{
 	/**
-	 * The pixel size of one cell in this program
-	 */
-	@Deprecated
-	public static int cellSize = 22;
-	/**
 	 * Offset from a panel border to the inside
 	 * of the panel (inside the image)
 	 */

@@ -1341,7 +1341,7 @@ public class Main{
 		});
 		gridSize.add(gridSpinner);
 		gridSize.add(new JLabel("Gap size (x2): "));
-		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, new VariableComparable(()->config.cellSize), 1));
+		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, new VariableComparable(()->(config.cellSize - BasePanel.imageSize)), 1));
 		gapSpinner.addChangeListener((e)->{
 			SizeManager.tmp = (int)gapSpinner.getValue();
 			SizeManager.insideOffset = SizeManager.tmp + 3;
@@ -1774,7 +1774,7 @@ public class Main{
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.graph_w * SizeManager.cellSize, config.graph_h * SizeManager.cellSize);
+					graphFrame.setSize(config.graph_w * config.cellSize, config.graph_h * config.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{

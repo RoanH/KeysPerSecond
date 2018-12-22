@@ -250,7 +250,10 @@ public class Configuration{
 	//layout
 	//TODO config support and javadoc
 	public int insideOffset = SizeManager.insideOffset;//enforce bounds
-	public int cellSize = SizeManager.cellSize;
+	/**
+	 * The pixel size of one cell in this program
+	 */
+	public int cellSize = 22;
 
 	/**
 	 * The original configuration file
