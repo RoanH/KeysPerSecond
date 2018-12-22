@@ -87,7 +87,7 @@ import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
-import me.roan.kps.ui.model.VariableComparable;
+import me.roan.kps.ui.model.DynamicInteger;
 
 /**
  * This program can be used to display
@@ -1335,7 +1335,7 @@ public class Main{
 		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(config.cellSize, BasePanel.imageSize, Integer.MAX_VALUE, 1));
 		gridSize.add(gridSpinner);
 		gridSize.add(new JLabel("Panel border offset: "));
-		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(config.borderOffset, 0, new VariableComparable(()->(config.cellSize - BasePanel.imageSize)), 1));
+		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(config.borderOffset, 0, new DynamicInteger(()->(config.cellSize - BasePanel.imageSize)), 1));
 		gapSpinner.addChangeListener((e)->{
 			config.borderOffset = (int)gapSpinner.getValue();
 			if(live){
