@@ -25,8 +25,10 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
-	//TODO javadoc
-	public static final int imageSize = SizeManager.graphImageSize;
+	/**
+	 * Smallest size of graph images
+	 */
+	public static final int imageSize = 4;
 	/**
 	 * RenderCache for this panel
 	 */

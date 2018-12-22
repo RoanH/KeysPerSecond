@@ -15,9 +15,4 @@ public class SizeManager{
 	public static int insideOffset = 5;
 	@Deprecated
 	public static int tmp = 2;
-	/**
-	 * Smallest size of graph images
-	 */
-	@Deprecated
-	public static int graphImageSize = 4;
 }
