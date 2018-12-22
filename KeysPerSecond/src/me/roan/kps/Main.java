@@ -86,6 +86,7 @@ import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
+import me.roan.kps.ui.model.VariableComparable;
 
 /**
  * This program can be used to display
@@ -1339,7 +1340,7 @@ public class Main{
 		});
 		gridSize.add(gridSpinner);
 		gridSize.add(new JLabel("Gap size (x2): "));
-		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, Integer.MAX_VALUE, 1));
+		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, new VariableComparable(()->SizeManager.cellSize), 1));
 		gapSpinner.addChangeListener((e)->{
 			SizeManager.tmp = (int)gapSpinner.getValue();
 			SizeManager.insideOffset = SizeManager.tmp + 3;
