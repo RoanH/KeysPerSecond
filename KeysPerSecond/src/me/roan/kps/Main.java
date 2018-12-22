@@ -1625,8 +1625,14 @@ public class Main{
 		JOptionPane optionPane = new JOptionPane(keyform, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Save", "Cancel"}, 0);
 		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
 		dialog.setResizable(true);
+		try{
+			dialog.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps_small.png")));
+		}catch(IOException e1){
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		dialog.setVisible(true);
-		if(optionPane.getValue() != null && (int)optionPane.getValue() == 1){
+		if((int)optionPane.getValue() == 1){
 			config.keyinfo = copy;
 		}
 	}
