@@ -79,6 +79,7 @@ import me.roan.kps.layout.Layout;
 import me.roan.kps.layout.LayoutValidator;
 import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.AvgPanel;
+import me.roan.kps.panels.BasePanel;
 import me.roan.kps.panels.GraphPanel;
 import me.roan.kps.panels.KeyPanel;
 import me.roan.kps.panels.MaxPanel;
@@ -1331,16 +1332,16 @@ public class Main{
 		JPanel gridSize = new JPanel(new GridLayout(2, 2, 0, 5));
 		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
 		gridSize.add(new JLabel("Cell size: "));
-		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.cellSize, SizeManager.graphImageSize, Integer.MAX_VALUE, 1));
+		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(config.cellSize, BasePanel.imageSize, Integer.MAX_VALUE, 1));
 		gridSpinner.addChangeListener((e)->{
-			SizeManager.cellSize = (int)gridSpinner.getValue();
+			config.cellSize = (int)gridSpinner.getValue();
 			if(live){
 				reconfigure();
 			}
 		});
 		gridSize.add(gridSpinner);
 		gridSize.add(new JLabel("Gap size (x2): "));
-		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, new VariableComparable(()->SizeManager.cellSize), 1));
+		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(SizeManager.insideOffset, 0, new VariableComparable(()->config.cellSize), 1));
 		gapSpinner.addChangeListener((e)->{
 			SizeManager.tmp = (int)gapSpinner.getValue();
 			SizeManager.insideOffset = SizeManager.tmp + 3;

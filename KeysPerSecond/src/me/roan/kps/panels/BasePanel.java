@@ -25,6 +25,8 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
+	//TODO javadoc
+	public static final int imageSize = SizeManager.graphImageSize;
 	/**
 	 * RenderCache for this panel
 	 */
@@ -75,14 +77,14 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 //		g.drawImage(ColorManager.graph_lower_middle, 0 + SizeManager.graphImageSize, this.getHeight() - 0 - SizeManager.graphImageSize, this.getWidth() - 0 - SizeManager.graphImageSize, this.getHeight() - 0, 0, 0, 46, 4, this);
 //		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 0 - SizeManager.graphImageSize, 0 + SizeManager.graphImageSize, this.getWidth() - 0, this.getHeight() - 0 - SizeManager.graphImageSize, 0, 0, 4, 56, this);
 
-		g.drawImage(ColorManager.graph_upper_left,   SizeManager.tmp, SizeManager.tmp, SizeManager.tmp + SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_left,   SizeManager.tmp, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp, this.getWidth() - SizeManager.tmp, SizeManager.tmp + SizeManager.graphImageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, this.getWidth() - SizeManager.tmp, this.getHeight() - SizeManager.tmp, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_side_left,    SizeManager.tmp, SizeManager.tmp + SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, 0, 0, 4, 56, this);
-		g.drawImage(ColorManager.graph_upper_middle, SizeManager.tmp + SizeManager.graphImageSize, SizeManager.tmp, this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_lower_middle, SizeManager.tmp + SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, this.getHeight() - SizeManager.tmp, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - SizeManager.tmp - SizeManager.graphImageSize, SizeManager.tmp + SizeManager.graphImageSize, this.getWidth() - SizeManager.tmp, this.getHeight() - SizeManager.tmp - SizeManager.graphImageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_upper_left,   SizeManager.tmp, SizeManager.tmp, SizeManager.tmp + imageSize, SizeManager.tmp + imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_left,   SizeManager.tmp, this.getHeight() - SizeManager.tmp - imageSize, SizeManager.tmp + imageSize, this.getHeight() - SizeManager.tmp, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - SizeManager.tmp - imageSize, SizeManager.tmp, this.getWidth() - SizeManager.tmp, SizeManager.tmp + imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - SizeManager.tmp - imageSize, this.getHeight() - SizeManager.tmp - imageSize, this.getWidth() - SizeManager.tmp, this.getHeight() - SizeManager.tmp, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_side_left,    SizeManager.tmp, SizeManager.tmp + imageSize, SizeManager.tmp + imageSize, this.getHeight() - SizeManager.tmp - imageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_upper_middle, SizeManager.tmp + imageSize, SizeManager.tmp, this.getWidth() - SizeManager.tmp - imageSize, SizeManager.tmp + imageSize, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_lower_middle, SizeManager.tmp + imageSize, this.getHeight() - SizeManager.tmp - imageSize, this.getWidth() - SizeManager.tmp - imageSize, this.getHeight() - SizeManager.tmp, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - SizeManager.tmp - imageSize, SizeManager.tmp + imageSize, this.getWidth() - SizeManager.tmp, this.getHeight() - SizeManager.tmp - imageSize, 0, 0, 4, 56, this);
 		
 		
 		if(isActive()){

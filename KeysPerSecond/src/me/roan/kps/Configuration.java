@@ -246,6 +246,11 @@ public class Configuration{
 	 * Position the graph is rendered in
 	 */
 	protected GraphMode graphMode = GraphMode.INLINE;
+	
+	//layout
+	//TODO config support and javadoc
+	public int insideOffset = SizeManager.insideOffset;//enforce bounds
+	public int cellSize = SizeManager.cellSize;
 
 	/**
 	 * The original configuration file
@@ -773,8 +778,23 @@ public class Configuration{
 						modified = true;
 					}
 					break;
+				case "insideOffset":
+					try{
+						insideOffset = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "cellSize":
+					try{
+						cellSize = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
 				}
 			}
+			//TODO insideOffset < cellSize
 			in.close();
 			return modified;
 		}catch(Throwable t){
