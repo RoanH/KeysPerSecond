@@ -21,12 +21,12 @@ public enum RenderingMode{
 	HORIZONTAL_TN("Text - value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(panel.getWidth() - SizeManager.insideOffset - 1 - metrics.stringWidth(value), SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(panel.getWidth() - Main.config.borderOffset + insideOffset - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
@@ -56,12 +56,12 @@ public enum RenderingMode{
 	HORIZONTAL_NT("Value - text"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(panel.getWidth() - SizeManager.insideOffset - 1 - metrics.stringWidth(title), SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(panel.getWidth() - Main.config.borderOffset + insideOffset - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
@@ -91,12 +91,12 @@ public enum RenderingMode{
 	DIAGONAL1("Text diagonally right above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.insideOffset + 1 + getHeight(g, font));
+			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
@@ -126,12 +126,12 @@ public enum RenderingMode{
 	DIAGONAL2("Text diagonally left under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.insideOffset + 1 + getHeight(g, font));
+			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
@@ -161,12 +161,12 @@ public enum RenderingMode{
 	DIAGONAL3("Text diagonally left above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + 1 + getHeight(g, font));
+			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
@@ -196,12 +196,12 @@ public enum RenderingMode{
 	DIAGONAL4("Text diagonally right under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), SizeManager.insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.insideOffset + 1, SizeManager.insideOffset + 1 + getHeight(g, font));
+			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
 		}
 
 		@Override
@@ -231,12 +231,12 @@ public enum RenderingMode{
 	VERTICAL("Text above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(SizeManager.insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), SizeManager.insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(SizeManager.insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), SizeManager.insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
 		}
 
 		@Override
@@ -269,15 +269,20 @@ public enum RenderingMode{
 	 * Cache point that is constantly being reused and
 	 * returned by the methods from this enum. This prevents
 	 * the creation of a lot of extra objects. But prevents
-	 * multiple points from this class existing at the same time.
+	 * multiple points from this enum from existing at the same time.
 	 */
 	private static final Point point = new Point();
 	/**
 	 * Reference character for string width and height measurements.
-	 * This is used to give string with the same amount of characters
+	 * This is used to give strings with the same number of characters
 	 * the same appearance.
 	 */
 	private static final char[] ref = new char[]{'R'};
+	/**
+	 * Offset from the panel border offset to the inside
+	 * of the panel (inside the image)
+	 */
+	public static final int insideOffset = 3;
 
 	/**
 	 * Constructs a new RenderingMode
@@ -404,7 +409,7 @@ public enum RenderingMode{
 	 * @return The inside height of the panel
 	 */
 	private static final int getPanelInsideHeight(BasePanel panel){
-		return panel.getHeight() - SizeManager.insideOffset * 2;
+		return panel.getHeight() - (Main.config.borderOffset + insideOffset) * 2;
 	}
 
 	/**
@@ -415,7 +420,7 @@ public enum RenderingMode{
 	 * @return The inside width of the panel
 	 */
 	private static final int getPanelInsideWidth(BasePanel panel){
-		return panel.getWidth() - SizeManager.insideOffset * 2;
+		return panel.getWidth() - (Main.config.borderOffset + insideOffset) * 2;
 	}
 
 	/**
