@@ -49,7 +49,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -269,7 +268,7 @@ public class Main{
 			}catch(NullPointerException e){
 				e.printStackTrace();
 				try{
-					JOptionPane.showMessageDialog(null, "Failed to load the configuration menu, however you can use the live menu instead", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
 				}catch(Throwable t){
 					t.printStackTrace();
 				}
@@ -342,7 +341,7 @@ public class Main{
 		}catch(NativeHookException ex){
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
-			JOptionPane.showMessageDialog(null, "There was a problem registering the native hook: " + ex.getMessage(), "Keys per second", JOptionPane.ERROR_MESSAGE);
+			showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
 			try{
 				GlobalScreen.unregisterNativeHook();
 			}catch(NativeHookException e1){
@@ -705,7 +704,7 @@ public class Main{
 			pvalue.add(values, BorderLayout.CENTER);
 			pconfig.add(plabels, BorderLayout.CENTER);
 			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			if(showOptionDialog(pconfig)){
 				config.precision = values.getSelectedIndex();
 				save.setEnabled(true);
 			}
@@ -732,7 +731,7 @@ public class Main{
 			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
 			pconfig.add(glabels);
 			pconfig.add(gcomponents);
-			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			if(showOptionDialog(pconfig)){
 				Main.config.graphAvg = showavg.isSelected();
 				Main.config.backlog = (int)backlog.getValue();
 				save.setEnabled(true);
@@ -801,7 +800,7 @@ public class Main{
 			pconfig.add(info, BorderLayout.PAGE_START);
 			pconfig.add(lupdate, BorderLayout.WEST);
 			pconfig.add(update, BorderLayout.CENTER);
-			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			if(showOptionDialog(pconfig)){
 				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 				save.setEnabled(true);
 			}
@@ -878,8 +877,7 @@ public class Main{
 		});
 		info.add(links);
 		form.add(info, BorderLayout.PAGE_END);
-		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.PLAIN_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
-		if(1 == option || option == JOptionPane.CLOSED_OPTION){
+		if(!showDialog(form, false, new String[]{"OK", "Exit"})){
 			try{
 				GlobalScreen.unregisterNativeHook();
 			}catch(NativeHookException e1){
@@ -912,7 +910,7 @@ public class Main{
 				if(!open){
 					open = true;
 					chooser.setColor(e.getComponent().getBackground());
-					if(0 == JOptionPane.showOptionDialog(null, chooser, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+					if(showOptionDialog(chooser)){
 						e.getComponent().setBackground(chooser.getColor());
 					}
 					open = false;
@@ -1572,14 +1570,14 @@ public class Main{
 				form.add(a);
 				form.add(s);
 			}
-			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, form, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+			if(showOptionDialog(form)){
 				if(lastevent == null){
-					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					showMessageDialog("No key pressed!");
 					return;
 				}
 				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
 				int n = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
-				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
 					if(config.keyinfo.contains(info)){
 						showMessageDialog("That key was already added before.\nIt was not added again.");
 					}else{
