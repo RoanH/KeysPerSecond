@@ -6,10 +6,12 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +49,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -188,6 +191,10 @@ public class Main{
 	 * The layout for the main panel of the program
 	 */
 	protected static final Layout layout = new Layout(content);
+	/**
+	 * Small icon for the program
+	 */
+	private static final Image iconSmall;
 
 	/**
 	 * Main method
@@ -953,14 +960,14 @@ public class Main{
 		cform.add(lbg);
 		cform.add(cbg);
 		cform.add(spanelbg);
-		if(1 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, cform, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			cfg.setForeground(prevfg);
-			cbg.setForeground(prevbg);
-		}else{
+		if(showOptionDialog(cform, false)){
 			config.foreground = cfg.getBackground();
 			config.background = cbg.getBackground();
 			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
 			config.opacityfg = (float)((int)sfg.getValue() / 100.0D);
+		}else{
+			cfg.setForeground(prevfg);
+			cbg.setForeground(prevbg);
 		}
 		frame.repaint();
 	}
@@ -1046,7 +1053,7 @@ public class Main{
 			}
 		});
 
-		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, content, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
+		showMessageDialog(content);
 	}
 
 	/**
@@ -1398,7 +1405,7 @@ public class Main{
 
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
-		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
+		showOptionDialog(form, true);
 		content.hideGrid();
 	}
 
@@ -1574,7 +1581,7 @@ public class Main{
 				int n = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
 				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 					if(config.keyinfo.contains(info)){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "That key was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+						showMessageDialog("That key was already added before.\nIt was not added again.");
 					}else{
 						config.keyinfo.add(info);
 					}
@@ -1603,12 +1610,12 @@ public class Main{
 
 			addform.add(buttons, BorderLayout.CENTER);
 
-			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+			if(showOptionDialog(addform)){
 				for(int i = 0; i < boxes.length; i++){
 					if(boxes[i].isSelected()){
 						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
 						if(config.keyinfo.contains(key)){
-							JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The " + names[i] + " button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+							showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
 						}else{
 							config.keyinfo.add(key);
 						}
@@ -1622,17 +1629,7 @@ public class Main{
 		nbuttons.add(newmouse, BorderLayout.LINE_END);
 		keyform.add(nbuttons, BorderLayout.PAGE_END);
 		
-		JOptionPane optionPane = new JOptionPane(keyform, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Save", "Cancel"}, 0);
-		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
-		dialog.setResizable(true);
-		try{
-			dialog.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps_small.png")));
-		}catch(IOException e1){
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		dialog.setVisible(true);
-		if((int)optionPane.getValue() == 1){
+		if(showOptionDialog(keyform, true)){
 			config.keyinfo = copy;
 		}
 	}
@@ -1882,20 +1879,20 @@ public class Main{
 		File jvm = new File(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
 		if(!jvm.exists() || !exe.exists()){
 			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
-			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			showMessageDialog("An error occured whilst trying to launch the program >.<");
 			System.exit(0);
 		}
 		File tmp = null;
 		try{
 			tmp = File.createTempFile("kps", null);
 			if(tmp.getAbsolutePath().contains("!")){
-				JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+				showMessageDialog("An error occured whilst trying to launch the program >.<");
 				System.exit(0);
 			}
 			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}catch(IOException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			showMessageDialog("An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
 			tmp.delete();
 			System.exit(0);
@@ -1911,7 +1908,7 @@ public class Main{
 			proc = builder.start();
 		}catch(IOException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			showMessageDialog("An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
 			tmp.delete();
 			System.exit(0);
@@ -1947,7 +1944,7 @@ public class Main{
 			return;
 		}
 		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
-		if(!file.exists() || (file.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
+		if(!file.exists() || (file.exists() && showConfirmDialog("File already exists, overwrite?"))){
 			try{
 				file.createNewFile();
 				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
@@ -1963,10 +1960,10 @@ public class Main{
 				}
 				out.flush();
 				out.close();
-				JOptionPane.showMessageDialog(null, "Statistics succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				showMessageDialog("Statistics succesfully saved");
 			}catch(IOException e){
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Failed to save the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				showErrorDialog("Failed to save the statistics!");
 			}
 		}
 	}
@@ -1999,12 +1996,47 @@ public class Main{
 			in.close();
 			frame.repaint();
 			graphFrame.repaint();
-			JOptionPane.showMessageDialog(null, "Statistics succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			showMessageDialog("Statistics succesfully loaded");
 		}catch(IOException | ClassNotFoundException e){
-			JOptionPane.showMessageDialog(null, "Failed to load the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+			showErrorDialog("Failed to load the statistics!");
 		}
 	}
+	
+	//=================================================================================================
+	//================== DIALOGUES ====================================================================
+	//=================================================================================================
 
+	protected static final boolean showOptionDialog(Object form, boolean resizable){
+		return showDialog(form, resizable, new String[]{"Save", "Cancel"});
+	}
+	
+	protected static final boolean showOptionDialog(Object form){
+		return showOptionDialog(form, false);
+	}
+	
+	protected static final boolean showConfirmDialog(Object msg){
+		return showDialog(msg, false, new String[]{"Yes", "No"});
+	}
+	
+	protected static final void showMessageDialog(Object msg){
+		showDialog(msg, false, new String[]{"OK"});
+	}
+	
+	protected static final void showErrorDialog(String error){
+		showMessageDialog(error);
+	}
+	
+	//TODO javadoc
+	//returns false if cancel == false
+	protected static final boolean showDialog(Object form, boolean resizable, String[] options){
+		JOptionPane optionPane = new JOptionPane(form, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
+		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
+		dialog.setResizable(resizable);
+		dialog.setIconImage(iconSmall);
+		dialog.setVisible(true);
+		return options[0].equals(optionPane.getValue());
+	}
+	
 	//=================================================================================================
 	//================== NESTED CLASSES ===============================================================
 	//=================================================================================================
@@ -2435,5 +2467,15 @@ public class Main{
 		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
 		}
+	}
+	
+	static{
+		Image img;
+		try{
+			img = ImageIO.read(ClassLoader.getSystemResource("kps_small.png"));
+		}catch(IOException e){
+			img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+		}
+		iconSmall = img;
 	}
 }
