@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 import me.roan.kps.ColorManager;
 import me.roan.kps.Main;
-import me.roan.kps.SizeManager;
+import me.roan.kps.RenderingMode;
 import me.roan.kps.layout.LayoutPosition;
 
 /**
@@ -71,21 +71,21 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 				}
 				Polygon poly = new Polygon();
-				poly.addPoint(this.getWidth() - SizeManager.insideOffset - 2, this.getHeight() - SizeManager.insideOffset - 1);
+				poly.addPoint(this.getWidth() - Main.config.borderOffset + RenderingMode.insideOffset - 2, this.getHeight() - Main.config.borderOffset + RenderingMode.insideOffset - 1);
 				for(int i = 1; i <= values.size(); i++){
-					int px = (int)(SizeManager.insideOffset + ((double)(this.getWidth() - SizeManager.insideOffset * 2 - 2) / (double)(Main.config.backlog - 1)) * (Main.config.backlog - i));
-					int py = (int)(this.getHeight() - SizeManager.insideOffset - 1 - ((float)(this.getHeight() - SizeManager.insideOffset * 2) * ((float)values.get(i - 1) / (float)maxval)));
+					int px = (int)(Main.config.borderOffset + RenderingMode.insideOffset + ((double)(this.getWidth() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2 - 2) / (double)(Main.config.backlog - 1)) * (Main.config.backlog - i));
+					int py = (int)(this.getHeight() - Main.config.borderOffset + RenderingMode.insideOffset - 1 - ((float)(this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * ((float)values.get(i - 1) / (float)maxval)));
 					poly.addPoint(px, py);
 					if(i == values.size()){
-						poly.addPoint(px, this.getHeight() - SizeManager.insideOffset - 1);
+						poly.addPoint(px, this.getHeight() - Main.config.borderOffset + RenderingMode.insideOffset - 1);
 					}
 				}
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 				if(Main.config.graphAvg){
-					int y = (int)(this.getHeight() - SizeManager.insideOffset - ((float)(this.getHeight() - SizeManager.insideOffset * 2) * (Main.avg / (float)maxval)));
+					int y = (int)(this.getHeight() - Main.config.borderOffset + RenderingMode.insideOffset - ((float)(this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * (Main.avg / (float)maxval)));
 					g.setColor(Main.config.getForegroundColor().darker());
 					g.setStroke(avgstroke);
-					g.drawLine(SizeManager.insideOffset, y, this.getWidth() - SizeManager.insideOffset - 2, y);
+					g.drawLine(Main.config.borderOffset + RenderingMode.insideOffset, y, this.getWidth() - Main.config.borderOffset + RenderingMode.insideOffset - 2, y);
 				}
 				g.setStroke(line);
 				g.setColor(ColorManager.alphaAqua);
