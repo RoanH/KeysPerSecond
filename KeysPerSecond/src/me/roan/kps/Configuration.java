@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -302,7 +301,7 @@ public class Configuration{
 				if(toLoad.loadLegacyFormat(data)){
 					Main.config = toLoad;
 				}else{
-					JOptionPane.showMessageDialog(null, "Failed to reload the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					Main.showErrorDialog("Failed to reload the config!");
 				}
 			}else{
 				boolean v2 = data.getAbsolutePath().endsWith(".kpsconf2");
@@ -334,10 +333,10 @@ public class Configuration{
 		Configuration toLoad = new Configuration(saveloc);
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			if(toLoad.loadLegacyFormat(saveloc)){
-				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				Main.showMessageDialog("Configuration succesfully loaded");
 				Main.config = toLoad;
 			}else{
-				JOptionPane.showMessageDialog(null, "Failed to load the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				Main.showErrorDialog("Failed to load the config!");
 				return false;
 			}
 		}else{
@@ -352,9 +351,9 @@ public class Configuration{
 				defaults = true;
 			}
 			if(defaults){
-				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded but some default values were used", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				Main.showMessageDialog("Configuration succesfully loaded but some default values were used");
 			}else{
-				JOptionPane.showMessageDialog(null, "Configuration succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				Main.showMessageDialog("Configuration succesfully loaded");
 			}
 			Main.config = toLoad;
 		}
@@ -995,7 +994,7 @@ public class Configuration{
 	 *        of the program
 	 */
 	protected final void saveConfig(boolean pos){
-		boolean savepos = (!pos) ? false : (JOptionPane.showConfirmDialog(null, "Do you want to save the onscreen position of the program?", "Keys per Second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION);
+		boolean savepos = (!pos) ? false : (Main.showConfirmDialog("Do you want to save the onscreen position of the program?"));
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf3"));
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -1003,7 +1002,7 @@ public class Configuration{
 			return;
 		}
 		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf3") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf3"));
-		if(!saveloc.exists() || (saveloc.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
+		if(!saveloc.exists() || (saveloc.exists() && Main.showConfirmDialog("File already exists, overwrite?"))){
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
@@ -1084,10 +1083,10 @@ public class Configuration{
 				}
 				out.close();
 				out.flush();
-				JOptionPane.showMessageDialog(null, "Configuration succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				Main.showMessageDialog("Configuration succesfully saved");
 			}catch(Exception e1){
 				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Failed to save the config!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				Main.showErrorDialog("Failed to save the config!");
 			}
 		}
 	}

@@ -25,7 +25,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
@@ -366,7 +365,7 @@ public class Menu{
 			}
 			pconfig.add(lbacklog);
 			pconfig.add(sbacklog);
-			JOptionPane.showMessageDialog(null, pconfig, "Keys per second", JOptionPane.QUESTION_MESSAGE, null);
+			Main.showMessageDialog(pconfig);
 			Main.config.backlog = (int)sbacklog.getValue();
 		});
 		layout.addActionListener((e)->{
