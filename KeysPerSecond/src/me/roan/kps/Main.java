@@ -47,6 +47,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -1620,7 +1621,12 @@ public class Main{
 		nbuttons.add(newkey, BorderLayout.LINE_START);
 		nbuttons.add(newmouse, BorderLayout.LINE_END);
 		keyform.add(nbuttons, BorderLayout.PAGE_END);
-		if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Save", "Cancel"}, 0) == 1){
+		
+		JOptionPane optionPane = new JOptionPane(keyform, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Save", "Cancel"}, 0);
+		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
+		dialog.setResizable(true);
+		dialog.setVisible(true);
+		if((int)optionPane.getValue() == 1){
 			config.keyinfo = copy;
 		}
 	}
