@@ -23,6 +23,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
+import me.roan.kps.panels.BasePanel;
 
 /**
  * This class contains all the configurable
@@ -135,7 +136,7 @@ public class Configuration{
 	 */
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
 
-	//special panels
+	//special panels / layout
 	/**
 	 * The x position of the average panel
 	 */
@@ -216,6 +217,15 @@ public class Configuration{
 	 * The text rendering mode of the total panel
 	 */
 	public RenderingMode tot_mode = RenderingMode.VERTICAL;
+	/**
+	 * The offset from the border of a panel
+	 * to the actual panel content
+	 */
+	public int borderOffset = 2;
+	/**
+	 * The pixel size of one cell in this program
+	 */
+	public int cellSize = 22;
 
 	//graph
 	/**
@@ -246,14 +256,6 @@ public class Configuration{
 	 * Position the graph is rendered in
 	 */
 	protected GraphMode graphMode = GraphMode.INLINE;
-	
-	//layout
-	//TODO config support and javadoc
-	public int borderOffset = 2;//enforce bounds
-	/**
-	 * The pixel size of one cell in this program
-	 */
-	public int cellSize = 22;
 
 	/**
 	 * The original configuration file
@@ -791,13 +793,20 @@ public class Configuration{
 				case "cellSize":
 					try{
 						cellSize = Integer.parseInt(args[1]);
+						if(cellSize < BasePanel.imageSize){
+							cellSize = BasePanel.imageSize;
+							modified = true;
+						}
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				}
 			}
-			//TODO insideOffset < cellSize
+			if(borderOffset > cellSize - BasePanel.imageSize){
+				borderOffset = cellSize - BasePanel.imageSize;
+				modified = true;
+			}
 			in.close();
 			return modified;
 		}catch(Throwable t){
@@ -1099,6 +1108,8 @@ public class Configuration{
 				out.println("graphWidth: " + graph_w);
 				out.println("graphHeight: " + graph_h);
 				out.println("graphMode: " + graphMode.name());
+				out.println("cellSize: " + cellSize);
+				out.println("borderOffset: " + borderOffset);
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");
