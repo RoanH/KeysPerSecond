@@ -1546,7 +1546,7 @@ public class Main{
 		keys.setModel(model);
 		keys.setDragEnabled(false);
 		JScrollPane pane = new JScrollPane(keys);
-		pane.setPreferredSize(new Dimension((int)keys.getPreferredSize().getWidth(), 120));
+		pane.setPreferredSize(new Dimension((int)keyform.getPreferredSize().getWidth() + 50, 120));
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
