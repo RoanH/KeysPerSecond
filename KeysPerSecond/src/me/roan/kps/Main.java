@@ -1626,7 +1626,7 @@ public class Main{
 		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
 		dialog.setResizable(true);
 		dialog.setVisible(true);
-		if((int)optionPane.getValue() == 1){
+		if(optionPane.getValue() != null && (int)optionPane.getValue() == 1){
 			config.keyinfo = copy;
 		}
 	}
@@ -1696,7 +1696,7 @@ public class Main{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			try{
-				ColorManager.prepareImages(config.showGraph, config.customColors);
+				ColorManager.prepareImages(config.customColors);
 			}catch(IOException e){
 				e.printStackTrace();
 			}
