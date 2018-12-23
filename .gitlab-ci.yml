@@ -9,7 +9,22 @@ before_script:
   - java -version
 
 stages:
-   - compile
+  - javadoc
+  - compile
+
+verify:
+  script:
+    - wget ${SERVER}ci/javadoc.sh
+    - chmod 755 javadoc.sh
+    - ./javadoc.sh
+  stage: javadoc
+
+javadoc:
+  script:
+    - cd ${PROJECTNAME}
+    - find src -name "*.java" > sources.txt
+    - javadoc -cp "./lib/jnativehook-2.1.0/jnativehook/jar/jnativehook-2.1.0.jar:." -private @sources.txt
+  stage: javadoc
 
 compile:
   script:
