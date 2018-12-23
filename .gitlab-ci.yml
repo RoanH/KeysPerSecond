@@ -22,7 +22,7 @@ javadoc:
   script:
     - cd ${PROJECTNAME}
     - find src -name "*.java" > sources.txt
-    - javadoc -private @sources.txt
+    - javadoc -cp "./lib/jnativehook-2.1.0/jnativehook/jar/jnativehook-2.1.0.jar:." -private @sources.txt
   stage: javadoc
 
 compile:
