@@ -300,7 +300,6 @@ public enum RenderingMode{
 	 * @param font The font used to draw the title
 	 * @param panel The panel the title will be drawn on
 	 * @param title The title that will be drawn
-	 * @return The location at which the title should be drawn
 	 */
 	protected abstract void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title);
 
@@ -311,7 +310,6 @@ public enum RenderingMode{
 	 * @param font The font used to draw the value
 	 * @param panel The panel the value will be drawn on
 	 * @param value The value that will be drawn
-	 * @return The location at which the value should be drawn
 	 */
 	protected abstract void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value);
 
@@ -366,7 +364,7 @@ public enum RenderingMode{
 	 * or {@link #getValueDrawPosition(Graphics2D, BasePanel, String, Font)}.
 	 * @param g The graphics used to draw the value
 	 * @param panel The panel the value will be drawn on
-	 * @param title The value that is going to be drawn
+	 * @param value The value that is going to be drawn
 	 * @param font The font with which the value is going to be drawn
 	 * @return The location at which the value should be drawn
 	 */

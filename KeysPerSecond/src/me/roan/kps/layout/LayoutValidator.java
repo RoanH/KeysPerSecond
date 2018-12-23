@@ -102,7 +102,8 @@ public class LayoutValidator{
 		 * model of this listener is incompatible
 		 * with does not have its special value
 		 * selected.
-		 * @return
+		 * @return Whether or not the selecting the
+		 *         special value is valid at this time
 		 */
 		public final boolean specialValid(){
 			return !incompatible.model.isSpecialValueSelected();

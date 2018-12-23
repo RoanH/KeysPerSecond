@@ -436,7 +436,7 @@ public class Main{
 
 	/**
 	 * Called when a key is pressed
-	 * @param event The event that occurred
+	 * @param nevent The event that occurred
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
@@ -2267,10 +2267,10 @@ public class Main{
 		 * object with the given information
 		 * @param name The name of the key
 		 * @param code The virtual key code of the key
-		 * @param Whether or not alt is down
-		 * @param Whether or not ctrl is down
-		 * @param Whether or not shift is down
-		 * @param Whether or not this is a mouse button
+		 * @param alt Whether or not alt is down
+		 * @param ctrl Whether or not ctrl is down
+		 * @param shift Whether or not shift is down
+		 * @param mouse Whether or not this is a mouse button
 		 * @see #name
 		 * @see #keycode 
 		 */
@@ -2289,9 +2289,9 @@ public class Main{
 		 * and modifiers
 		 * @param name The name of the key
 		 * @param code The virtual key code of the key
-		 * @param Whether or not alt is down
-		 * @param Whether or not ctrl is down
-		 * @param Whether or not shift is down
+		 * @param alt Whether or not alt is down
+		 * @param ctrl Whether or not ctrl is down
+		 * @param shift Whether or not shift is down
 		 * @return The full name of this given key
 		 */
 		private static final String getKeyName(String name, int code, boolean alt, boolean ctrl, boolean shift){

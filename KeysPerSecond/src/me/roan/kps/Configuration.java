@@ -942,7 +942,7 @@ public class Configuration{
 	/**
 	 * Parses the text representation of the position
 	 * to it's actual data
-	 * @param arg The text data
+	 * @param data The text data
 	 * @return The position data
 	 */
 	private final Point parsePosition(String data){

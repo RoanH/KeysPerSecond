@@ -8,8 +8,7 @@ import me.roan.kps.ColorManager;
 import me.roan.kps.Main;
 
 /**
- * Simple panel that draws a grid spaced
- * using the {@link SizeManager#cellSize}
+ * Simple panel that draws a spaced grid
  * @author Roan
  */
 public class GridPanel extends JPanel{

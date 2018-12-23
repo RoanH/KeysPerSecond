@@ -110,8 +110,7 @@ public class ColorManager{
 	/**
 	 * Parses the given image in
 	 * order to change its colours
-	 * to the set {@link #foreground}
-	 * colour
+	 * to the config foreground color
 	 * @param img The image to parse
 	 * @return The recoloured image
 	 */
