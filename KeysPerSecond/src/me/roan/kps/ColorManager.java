@@ -73,11 +73,10 @@ public class ColorManager{
 	/**
 	 * Prepares the colours and images
 	 * used by the program.
-	 * @param graph Whether or not to load resources for the graph
 	 * @param custom Whether or not the supplied colours are custom colours
 	 * @throws IOException When an IOException occurs
 	 */
-	public static final void prepareImages(boolean graph, boolean custom) throws IOException{
+	public static final void prepareImages(boolean custom) throws IOException{
 		if(custom){
 			if(Main.config.getForegroundOpacity() != 1.0F || Main.config.getBackgroundOpacity() != 1.0F){
 				transparency = true;
