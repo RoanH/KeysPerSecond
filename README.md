@@ -8,7 +8,7 @@ Originally I wanted to know how many keys / second I pressed in osu! And I had a
 I could however not find a program that worked well on my computer so I decided to write one myself.
 
 The program when active looks like this:    
-![Interface](http://i.imgur.com/9cCzB0Q.png)![Interface](http://i.imgur.com/bLQXABw.png)    
+![Interface](http://i.imgur.com/9cCzB0Q.png)  ![Interface](http://i.imgur.com/bLQXABw.png)    
 ![Interface](https://i.imgur.com/2HgRJwO.png)    
 There is also a right click menu to configure all the settings:    
 ![Menu](https://i.imgur.com/lltS2NK.png)    
@@ -17,7 +17,7 @@ For each configured key the program will show how many times it was pressed. By 
 When enabled it can also show a graph of the number of keys pressed per second over time and total number of keys pressed.
 
 Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.      
-![Config](https://i.imgur.com/G0NYcPE.png)![Key config](https://i.imgur.com/vwtThmz.png)    
+![Config](https://i.imgur.com/G0NYcPE.png)  ![Key config](https://i.imgur.com/vwtThmz.png)    
 ![Layout](https://i.imgur.com/6XdgGYe.png)    
 
 There are also some commands that can be sent to the program:    
