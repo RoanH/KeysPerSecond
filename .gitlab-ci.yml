@@ -14,12 +14,13 @@ stages:
 
 verify:
   script:
-    - wget ${SERVER}/ci/javadoc.sh
+    - wget ${SERVER}ci/javadoc.sh
     - ./javadoc.sh
   stage: javadoc
 
 javadoc:
   script:
+    - cd ${PROJECTNAME}
     - find src -name "*.java" > sources.txt
     - javadoc -private @sources.txt
   stage: javadoc
