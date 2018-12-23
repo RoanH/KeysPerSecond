@@ -22,6 +22,7 @@ javadoc:
   script:
     - find src -name "*.java" > sources.txt
     - javadoc -private @sources.txt
+  stage: javadoc
 
 compile:
   script:
