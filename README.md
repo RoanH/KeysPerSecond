@@ -3,25 +3,23 @@
 KeysPerSecond is a program that counts how many times certain keys are pressed. And shows what the average, maximum and current number of keys pressed per second is. The program can also shows a nice graph of the key presses over time.    
 The program is also fully customizable.   
 
-# Forum post
-So I wanted to know how many keys / second I pressed in osu! And I had already seen programs like this on streams.
-I could however not find a program that worked on my computer so I decided to write one myself.
+# Introduction
+Originally I wanted to know how many keys / second I pressed in osu! And I had already seen programs like this on live streams.
+I could however not find a program that worked well on my computer so I decided to write one myself.
 
-The program when active looks like this:<br>
-![Interface](http://i.imgur.com/9cCzB0Q.png)<br>
-![Interface](http://i.imgur.com/bLQXABw.png)<br>
-![Interface](https://i.imgur.com/2HgRJwO.png)<br>
-![Menu](https://i.imgur.com/lltS2NK.png)<br>
-_Accessible by right clicking on the program._
+The program when active looks like this:    
+![Interface](http://i.imgur.com/9cCzB0Q.png)![Interface](http://i.imgur.com/bLQXABw.png)    
+![Interface](https://i.imgur.com/2HgRJwO.png)    
+There is also a right click menu to configure all the settings:    
+![Menu](https://i.imgur.com/lltS2NK.png)    
 
-For each configured key it shows how many times it is pressed. By default it also shows the maximum, average and current number of keys pressed per second.
-When enabled it can also show a graph of the number of keys pressed per second over time. The horizontal line in the graph represents the average number of keys pressed per second.
+For each configured key the program will show how many times it was pressed. By default it will also shows the maximum, average and current number of keys pressed per second.
+When enabled it can also show a graph of the number of keys pressed per second over time and total number of keys pressed.
 
-Everything shown in the picture above can be toggled on or off and all the panels can be arranged in a lot of different ways.<br>
+Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.    
 ![Config](https://i.imgur.com/G0NYcPE.png)
 ![Key config](https://i.imgur.com/vwtThmz.png)<br>
 ![Layout](https://i.imgur.com/6XdgGYe.png)<br>
-![Modes](https://i.imgur.com/gNYCSb9.png)  
 
 Lastly, there are also some commands that can be sent to the program:<br>
 **Ctrl + P**: Causes the program to reset the average and maximum value.<br>
@@ -37,6 +35,7 @@ Well I hope some of you find this program useful and/or will use it for your str
 And if you find any bugs feel free to report them.
 
 ## Notes
+- The horizontal line in the graph represents the average number of keys pressed per second.
 - To clarify, you can add any key, and any number of keys to the program. So it can be used for any game mode.
 - The overlay option doesn't work on a Mac nor does it work when the fullscreen option in osu! is enabled.
 - When changing the key order, the keys are ordered from lowest value to highest value (negative values & skipping indices is allowed).
@@ -53,9 +52,9 @@ And if you find any bugs feel free to report them.
 It's kinda empty here right now :c, so please suggest things c:
 
 ## Downloads (Java 8 required)
-Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)<br>
+Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)    
 (Note: if you're upgrading _to_ version 8.0 make sure to read the [release notes](https://github.com/RoanH/KeysPerSecond/releases/tag/v8.0))    
-[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.exe)<br>
+[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.exe)    
 [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
@@ -63,12 +62,14 @@ GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)
 Original osu! forum post: [post](https://osu.ppy.sh/community/forums/topics/552405)    
 
 ## Examples
-The following two examples show the layout while it is being edited. All the panels have to line up with the grid, but the size of the grid cells can be changed.
-![](https://i.imgur.com/kfXaqwX.png)
-![](https://i.imgur.com/DP5MNVq.png)
-Next are two other examples of possible layouts.
-![](https://i.imgur.com/ImE4zTU.png)
-![](https://i.imgur.com/fBgohIA.png)
+The following two examples show the layout while it is being edited. All the panels have to line up with the grid, but the size of the grid cells can be changed.    
+![](https://i.imgur.com/kfXaqwX.png)    
+![](https://i.imgur.com/DP5MNVq.png)    
+Next are two other examples of possible layouts.    
+![](https://i.imgur.com/ImE4zTU.png)    
+![](https://i.imgur.com/fBgohIA.png)    
+Last are some very simple layouts to highlight the title-value display options.    
+![Modes](https://i.imgur.com/gNYCSb9.png)      
 
 ## Dependencies
 https://github.com/kwhat/jnativehook
