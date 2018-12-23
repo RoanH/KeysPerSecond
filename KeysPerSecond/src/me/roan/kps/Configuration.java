@@ -22,6 +22,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
+import me.roan.kps.panels.BasePanel;
 
 /**
  * This class contains all the configurable
@@ -134,7 +135,7 @@ public class Configuration{
 	 */
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
 
-	//special panels
+	//special panels / layout
 	/**
 	 * The x position of the average panel
 	 */
@@ -215,6 +216,15 @@ public class Configuration{
 	 * The text rendering mode of the total panel
 	 */
 	public RenderingMode tot_mode = RenderingMode.VERTICAL;
+	/**
+	 * The offset from the border of a panel
+	 * to the actual panel content
+	 */
+	public int borderOffset = 2;
+	/**
+	 * The pixel size of one cell in this program
+	 */
+	public int cellSize = 22;
 
 	//graph
 	/**
@@ -772,7 +782,29 @@ public class Configuration{
 						modified = true;
 					}
 					break;
+				case "borderOffset":
+					try{
+						borderOffset = Integer.parseInt(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "cellSize":
+					try{
+						cellSize = Integer.parseInt(args[1]);
+						if(cellSize < BasePanel.imageSize){
+							cellSize = BasePanel.imageSize;
+							modified = true;
+						}
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
 				}
+			}
+			if(borderOffset > cellSize - BasePanel.imageSize){
+				borderOffset = cellSize - BasePanel.imageSize;
+				modified = true;
 			}
 			in.close();
 			return modified;
@@ -1075,6 +1107,8 @@ public class Configuration{
 				out.println("graphWidth: " + graph_w);
 				out.println("graphHeight: " + graph_h);
 				out.println("graphMode: " + graphMode.name());
+				out.println("cellSize: " + cellSize);
+				out.println("borderOffset: " + borderOffset);
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");

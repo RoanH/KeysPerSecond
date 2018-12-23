@@ -82,6 +82,7 @@ import me.roan.kps.layout.Layout;
 import me.roan.kps.layout.LayoutValidator;
 import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.AvgPanel;
+import me.roan.kps.panels.BasePanel;
 import me.roan.kps.panels.GraphPanel;
 import me.roan.kps.panels.KeyPanel;
 import me.roan.kps.panels.MaxPanel;
@@ -89,6 +90,7 @@ import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
+import me.roan.kps.ui.model.DynamicInteger;
 
 /**
  * This program can be used to display
@@ -1335,7 +1337,34 @@ public class Main{
 		JPanel view = new JPanel(new BorderLayout());
 		view.add(keys, BorderLayout.PAGE_START);
 		view.add(new JPanel(), BorderLayout.CENTER);
-
+		
+		JPanel gridSize = new JPanel(new GridLayout(2, 2, 0, 5));
+		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
+		gridSize.add(new JLabel("Cell size: "));
+		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(config.cellSize, BasePanel.imageSize, Integer.MAX_VALUE, 1));
+		gridSize.add(gridSpinner);
+		gridSize.add(new JLabel("Panel border offset: "));
+		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(config.borderOffset, 0, new DynamicInteger(()->(config.cellSize - BasePanel.imageSize)), 1));
+		gapSpinner.addChangeListener((e)->{
+			config.borderOffset = (int)gapSpinner.getValue();
+			if(live){
+				reconfigure();
+			}
+		});
+		gridSize.add(gapSpinner);
+		gridSpinner.addChangeListener((e)->{
+			config.cellSize = (int)gridSpinner.getValue();
+			if(config.borderOffset > config.cellSize - BasePanel.imageSize){
+				config.borderOffset = config.cellSize - BasePanel.imageSize;
+				gapSpinner.setValue(config.borderOffset);
+			}
+			if(live){
+				reconfigure();
+			}
+		});
+		
+		form.add(gridSize, BorderLayout.PAGE_START);
+		
 		JScrollPane pane = new JScrollPane(view);
 		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -1758,7 +1787,7 @@ public class Main{
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.graph_w * SizeManager.cellSize, config.graph_h * SizeManager.cellSize);
+					graphFrame.setSize(config.graph_w * config.cellSize, config.graph_h * config.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{

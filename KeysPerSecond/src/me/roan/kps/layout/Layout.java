@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
 
-import me.roan.kps.SizeManager;
+import me.roan.kps.Main;
 
 /**
  * Layout manager that handles the layout
@@ -68,7 +68,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	 * @return The width in pixels of this layout
 	 */
 	public int getWidth(){
-		return SizeManager.cellSize * (maxw + extraWidth);
+		return Main.config.cellSize * (maxw + extraWidth);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 	 * @return The height in pixels of this layout
 	 */
 	public int getHeight(){
-		return SizeManager.cellSize * (maxh + extraHeight);
+		return Main.config.cellSize * (maxh + extraHeight);
 	}
 
 	/**
