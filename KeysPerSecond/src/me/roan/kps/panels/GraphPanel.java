@@ -92,14 +92,14 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				g.fillPolygon(poly);
 				g.setColor(Main.config.getForegroundColor());
 				g.drawPolygon(poly);
-				g.drawImage(ColorManager.graph_upper_left,   2, 2, 2 + BasePanel.imageSize, 2 + BasePanel.imageSize, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_lower_left,   2, this.getHeight() - 3 - BasePanel.imageSize, 2 + BasePanel.imageSize, this.getHeight() - 3, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 3 - BasePanel.imageSize, 2, this.getWidth() - 3, 2 + BasePanel.imageSize, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 3 - BasePanel.imageSize, this.getHeight() - 3 - BasePanel.imageSize, this.getWidth() - 3, this.getHeight() - 3, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_side_left,    2, 2 + BasePanel.imageSize, 2 + BasePanel.imageSize, this.getHeight() - 3 - BasePanel.imageSize, 0, 0, 4, 56, this);
-				g.drawImage(ColorManager.graph_upper_middle, 2 + BasePanel.imageSize, 2, this.getWidth() - 3 - BasePanel.imageSize, 2 + BasePanel.imageSize, 0, 0, 46, 4, this);
-				g.drawImage(ColorManager.graph_lower_middle, 2 + BasePanel.imageSize, this.getHeight() - 3 - BasePanel.imageSize, this.getWidth() - 3 - BasePanel.imageSize, this.getHeight() - 3, 0, 0, 46, 4, this);
-				g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 3 - BasePanel.imageSize, 2 + BasePanel.imageSize, this.getWidth() - 3, this.getHeight() - 3 - BasePanel.imageSize, 0, 0, 4, 56, this);
+				g.drawImage(ColorManager.graph_upper_left,   Main.config.borderOffset, Main.config.borderOffset, Main.config.borderOffset + BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_lower_left,   Main.config.borderOffset, this.getHeight() - Main.config.borderOffset - 1 - BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, Main.config.borderOffset, this.getWidth() - Main.config.borderOffset - 1, Main.config.borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getWidth() - 1 - Main.config.borderOffset, this.getHeight() - 1 - Main.config.borderOffset, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_side_left,    Main.config.borderOffset, Main.config.borderOffset + BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
+				g.drawImage(ColorManager.graph_upper_middle, Main.config.borderOffset + BasePanel.imageSize, Main.config.borderOffset, this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, 0, 0, 46, 4, this);
+				g.drawImage(ColorManager.graph_lower_middle, Main.config.borderOffset + BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset, 0, 0, 46, 4, this);
+				g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, this.getWidth() - 1 - Main.config.borderOffset, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
 			}catch(NullPointerException e){
 				//catch but do not solve, this is caused by a race
 				//condition. However adding synchronisation would impact
