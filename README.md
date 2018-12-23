@@ -1,8 +1,7 @@
 # Keys Per Second ![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg)![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)
 
-A program that counts how many times a certain key is pressed. And shows what the average, maximum and current keys pressed per second is. Also show a nice graph of the key presses over time.
-This program is also fully configurable.<br>
-osu! forum post: [post](https://osu.ppy.sh/forum/p/5789644/)<br>
+KeysPerSecond is a program that counts how many times certain keys are pressed. And shows what the average, maximum and current number of keys pressed per second is. The program can also shows a nice graph of the key presses over time.    
+The program is also fully customizable.   
 
 # Forum post
 So I wanted to know how many keys / second I pressed in osu! And I had already seen programs like this on streams.
@@ -59,8 +58,15 @@ Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LT
 [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.exe)<br>
 [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.0/KeysPerSecond-v8.0.jar)
 
-All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)<br>
-GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)
+All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
+GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
+Original osu! forum post: [post](https://osu.ppy.sh/community/forums/topics/552405)    
+
+## Examples
+![](https://i.imgur.com/kfXaqwX.png)
+![](https://i.imgur.com/DP5MNVq.png)
+![](https://i.imgur.com/ImE4zTU.png)
+![](https://i.imgur.com/fBgohIA.png)
 
 ## Dependencies
 https://github.com/kwhat/jnativehook
