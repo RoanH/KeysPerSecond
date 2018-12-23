@@ -156,7 +156,7 @@ public class Main{
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
-	private static final GridPanel content = new GridPanel();
+	protected static final GridPanel content = new GridPanel();
 	/**
 	 * Graph panel
 	 */

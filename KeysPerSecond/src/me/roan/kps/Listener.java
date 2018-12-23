@@ -1,5 +1,6 @@
 package me.roan.kps;
 
+import java.awt.Component;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
@@ -8,8 +9,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import me.roan.kps.layout.GridPanel;
 
 /**
  * Listener for dragging the dialog
@@ -60,6 +65,12 @@ public class Listener implements MouseMotionListener, MouseListener{
 
 	@Override
 	public void mouseReleased(MouseEvent e){
+		if(e.getComponent() == Main.frame){
+			Component c = Main.content.getComponentAt(e.getX(), e.getY());
+			System.out.println(c);
+		}
+		
+		
 		if(e.getButton() == MouseEvent.BUTTON3){
 			SwingUtilities.invokeLater(()->{
 				Menu.menu.show(e.getComponent(), e.getX(), e.getY());
