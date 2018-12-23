@@ -1,4 +1,4 @@
-# Keys Per Second
+# Keys Per Second ![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg)![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)
 
 A program that counts how many times a certain key is pressed. And shows what the average, maximum and current keys pressed per second is. Also show a nice graph of the key presses over time.
 This program is also fully configurable.<br>
