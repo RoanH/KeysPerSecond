@@ -6,10 +6,12 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +49,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -187,6 +190,10 @@ public class Main{
 	 * The layout for the main panel of the program
 	 */
 	protected static final Layout layout = new Layout(content);
+	/**
+	 * Small icon for the program
+	 */
+	private static final Image iconSmall;
 
 	/**
 	 * Main method
@@ -261,7 +268,7 @@ public class Main{
 			}catch(NullPointerException e){
 				e.printStackTrace();
 				try{
-					JOptionPane.showMessageDialog(null, "Failed to load the configuration menu, however you can use the live menu instead", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
 				}catch(Throwable t){
 					t.printStackTrace();
 				}
@@ -334,7 +341,7 @@ public class Main{
 		}catch(NativeHookException ex){
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
-			JOptionPane.showMessageDialog(null, "There was a problem registering the native hook: " + ex.getMessage(), "Keys per second", JOptionPane.ERROR_MESSAGE);
+			showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
 			try{
 				GlobalScreen.unregisterNativeHook();
 			}catch(NativeHookException e1){
@@ -517,6 +524,9 @@ public class Main{
 	 * Gets the extended key code for this event, this key code
 	 * includes modifiers
 	 * @param code The original key code
+	 * @param shift Is the shift modifer involved
+	 * @param ctrl Is the ctrl modifier involved
+	 * @param alt Is the alt modifier involved
 	 * @return The extended key code for this event
 	 */
 	private static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
@@ -697,7 +707,7 @@ public class Main{
 			pvalue.add(values, BorderLayout.CENTER);
 			pconfig.add(plabels, BorderLayout.CENTER);
 			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			if(showOptionDialog(pconfig)){
 				config.precision = values.getSelectedIndex();
 				save.setEnabled(true);
 			}
@@ -724,7 +734,7 @@ public class Main{
 			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
 			pconfig.add(glabels);
 			pconfig.add(gcomponents);
-			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			if(showOptionDialog(pconfig)){
 				Main.config.graphAvg = showavg.isSelected();
 				Main.config.backlog = (int)backlog.getValue();
 				save.setEnabled(true);
@@ -793,7 +803,7 @@ public class Main{
 			pconfig.add(info, BorderLayout.PAGE_START);
 			pconfig.add(lupdate, BorderLayout.WEST);
 			pconfig.add(update, BorderLayout.CENTER);
-			if(0 == JOptionPane.showOptionDialog(null, pconfig, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+			if(showOptionDialog(pconfig)){
 				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 				save.setEnabled(true);
 			}
@@ -870,8 +880,7 @@ public class Main{
 		});
 		info.add(links);
 		form.add(info, BorderLayout.PAGE_END);
-		int option = JOptionPane.showOptionDialog(null, form, "Keys per second", 0, JOptionPane.PLAIN_MESSAGE, null, new String[]{"OK", "Exit"}, 0);
-		if(1 == option || option == JOptionPane.CLOSED_OPTION){
+		if(!showDialog(form, false, new String[]{"OK", "Exit"})){
 			try{
 				GlobalScreen.unregisterNativeHook();
 			}catch(NativeHookException e1){
@@ -904,7 +913,7 @@ public class Main{
 				if(!open){
 					open = true;
 					chooser.setColor(e.getComponent().getBackground());
-					if(0 == JOptionPane.showOptionDialog(null, chooser, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
+					if(showOptionDialog(chooser)){
 						e.getComponent().setBackground(chooser.getColor());
 					}
 					open = false;
@@ -952,14 +961,14 @@ public class Main{
 		cform.add(lbg);
 		cform.add(cbg);
 		cform.add(spanelbg);
-		if(1 == JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, cform, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0)){
-			cfg.setForeground(prevfg);
-			cbg.setForeground(prevbg);
-		}else{
+		if(showOptionDialog(cform, false)){
 			config.foreground = cfg.getBackground();
 			config.background = cbg.getBackground();
 			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
 			config.opacityfg = (float)((int)sfg.getValue() / 100.0D);
+		}else{
+			cfg.setForeground(prevfg);
+			cbg.setForeground(prevbg);
 		}
 		frame.repaint();
 	}
@@ -1045,7 +1054,7 @@ public class Main{
 			}
 		});
 
-		JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, content, "Keys per second", 0, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK"}, 0);
+		showMessageDialog(content);
 	}
 
 	/**
@@ -1397,7 +1406,7 @@ public class Main{
 
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
-		JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, form, "Keys Per Second", JOptionPane.QUESTION_MESSAGE);
+		showOptionDialog(form, true);
 		content.hideGrid();
 	}
 
@@ -1540,7 +1549,7 @@ public class Main{
 		keys.setModel(model);
 		keys.setDragEnabled(false);
 		JScrollPane pane = new JScrollPane(keys);
-		pane.setPreferredSize(new Dimension((int)keys.getPreferredSize().getWidth(), 120));
+		pane.setPreferredSize(new Dimension((int)keyform.getPreferredSize().getWidth() + 50, 120));
 		keyform.add(pane, BorderLayout.CENTER);
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
@@ -1564,16 +1573,16 @@ public class Main{
 				form.add(a);
 				form.add(s);
 			}
-			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, form, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+			if(showOptionDialog(form)){
 				if(lastevent == null){
-					JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "No key pressed!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+					showMessageDialog("No key pressed!");
 					return;
 				}
 				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
 				int n = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
-				if(JOptionPane.showConfirmDialog(frame.isVisible() ? frame : null, "Add the " + info.getModifierString() + info.name.substring(n) + " key?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
 					if(config.keyinfo.contains(info)){
-						JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "That key was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+						showMessageDialog("That key was already added before.\nIt was not added again.");
 					}else{
 						config.keyinfo.add(info);
 					}
@@ -1602,12 +1611,12 @@ public class Main{
 
 			addform.add(buttons, BorderLayout.CENTER);
 
-			if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, addform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+			if(showOptionDialog(addform)){
 				for(int i = 0; i < boxes.length; i++){
 					if(boxes[i].isSelected()){
 						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
 						if(config.keyinfo.contains(key)){
-							JOptionPane.showMessageDialog(frame.isVisible() ? frame : null, "The " + names[i] + " button was already added before.\nIt was not added again.", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+							showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
 						}else{
 							config.keyinfo.add(key);
 						}
@@ -1620,7 +1629,8 @@ public class Main{
 		nbuttons.add(newkey, BorderLayout.LINE_START);
 		nbuttons.add(newmouse, BorderLayout.LINE_END);
 		keyform.add(nbuttons, BorderLayout.PAGE_END);
-		if(JOptionPane.showOptionDialog(frame.isVisible() ? frame : null, keyform, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Save", "Cancel"}, 0) == 1){
+		
+		if(showOptionDialog(keyform, true)){
 			config.keyinfo = copy;
 		}
 	}
@@ -1690,7 +1700,7 @@ public class Main{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			try{
-				ColorManager.prepareImages(config.showGraph, config.customColors);
+				ColorManager.prepareImages(config.customColors);
 			}catch(IOException e){
 				e.printStackTrace();
 			}
@@ -1870,20 +1880,20 @@ public class Main{
 		File jvm = new File(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
 		if(!jvm.exists() || !exe.exists()){
 			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
-			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			showMessageDialog("An error occured whilst trying to launch the program >.<");
 			System.exit(0);
 		}
 		File tmp = null;
 		try{
 			tmp = File.createTempFile("kps", null);
 			if(tmp.getAbsolutePath().contains("!")){
-				JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+				showMessageDialog("An error occured whilst trying to launch the program >.<");
 				System.exit(0);
 			}
 			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}catch(IOException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			showMessageDialog("An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
 			tmp.delete();
 			System.exit(0);
@@ -1899,7 +1909,7 @@ public class Main{
 			proc = builder.start();
 		}catch(IOException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "An error occured whilst trying to launch the program >.<");
+			showMessageDialog("An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
 			tmp.delete();
 			System.exit(0);
@@ -1935,7 +1945,7 @@ public class Main{
 			return;
 		}
 		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
-		if(!file.exists() || (file.exists() && JOptionPane.showConfirmDialog(null, "File already exists, overwrite?", "Keys per second", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)){
+		if(!file.exists() || (file.exists() && showConfirmDialog("File already exists, overwrite?"))){
 			try{
 				file.createNewFile();
 				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
@@ -1951,10 +1961,10 @@ public class Main{
 				}
 				out.flush();
 				out.close();
-				JOptionPane.showMessageDialog(null, "Statistics succesfully saved", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+				showMessageDialog("Statistics succesfully saved");
 			}catch(IOException e){
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Failed to save the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+				showErrorDialog("Failed to save the statistics!");
 			}
 		}
 	}
@@ -1987,12 +1997,87 @@ public class Main{
 			in.close();
 			frame.repaint();
 			graphFrame.repaint();
-			JOptionPane.showMessageDialog(null, "Statistics succesfully loaded", "Keys per second", JOptionPane.INFORMATION_MESSAGE);
+			showMessageDialog("Statistics succesfully loaded");
 		}catch(IOException | ClassNotFoundException e){
-			JOptionPane.showMessageDialog(null, "Failed to load the statistics!", "Keys per second", JOptionPane.ERROR_MESSAGE);
+			showErrorDialog("Failed to load the statistics!");
 		}
 	}
+	
+	//=================================================================================================
+	//================== DIALOGUES ====================================================================
+	//=================================================================================================
 
+	/**
+	 * Shows the given object to the user.
+	 * The dialog will have a 'Save' and
+	 * 'Cancel' close option.
+	 * @param form The object to display
+	 * @param resizable Whether the user should
+	 *        be able to resize the dialog
+	 * @return True if the 'Save' option was selected
+	 */
+	protected static final boolean showOptionDialog(Object form, boolean resizable){
+		return showDialog(form, resizable, new String[]{"Save", "Cancel"});
+	}
+	
+	/**
+	 * Shows the given object to the user.
+	 * The dialog will have a 'Save' and
+	 * 'Cancel' close option.
+	 * @param form The object to display
+	 * @return True if the 'Save' option was selected
+	 */
+	protected static final boolean showOptionDialog(Object form){
+		return showOptionDialog(form, false);
+	}
+	
+	/**
+	 * Poses the given object as a yes/no option
+	 * dialog to the user.
+	 * @param msg The object to display
+	 * @return True if the user selected yes
+	 */
+	protected static final boolean showConfirmDialog(Object msg){
+		return showDialog(msg, false, new String[]{"Yes", "No"});
+	}
+	
+	/**
+	 * Shows the given object to the user in a dialog
+	 * @param msg The object to display
+	 */
+	protected static final void showMessageDialog(Object msg){
+		showDialog(msg, false, new String[]{"OK"});
+	}
+	
+	/**
+	 * Shows the given error message to the user
+	 * @param error The error to display
+	 */
+	protected static final void showErrorDialog(String error){
+		showMessageDialog(error);
+	}
+	
+	/**
+	 * Shows the given object as a dialog
+	 * with the given close options
+	 * @param form The dialog to display
+	 * @param resizable Whether or not the
+	 *        dialog can be resized
+	 * @param options The close options
+	 *        for the dialog
+	 * @return True if the used close option
+	 *         is the first item in the close
+	 *         options list, false otherwise
+	 */
+	protected static final boolean showDialog(Object form, boolean resizable, String[] options){
+		JOptionPane optionPane = new JOptionPane(form, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
+		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
+		dialog.setResizable(resizable);
+		dialog.setIconImage(iconSmall);
+		dialog.setVisible(true);
+		return options[0].equals(optionPane.getValue());
+	}
+	
 	//=================================================================================================
 	//================== NESTED CLASSES ===============================================================
 	//=================================================================================================
@@ -2423,5 +2508,15 @@ public class Main{
 		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
 		}
+	}
+	
+	static{
+		Image img;
+		try{
+			img = ImageIO.read(ClassLoader.getSystemResource("kps_small.png"));
+		}catch(IOException e){
+			img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+		}
+		iconSmall = img;
 	}
 }

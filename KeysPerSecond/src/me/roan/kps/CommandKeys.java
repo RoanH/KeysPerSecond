@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -103,12 +102,12 @@ public class CommandKeys{
 		form.add(txt);
 		form.add(c);
 		form.add(a);
-		if(JOptionPane.showOptionDialog(Main.frame.isVisible() ? Main.frame : null, form, "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+		if(Main.showOptionDialog(form)){
 			if(Main.lastevent == null){
 				return null;
 			}
 			CMD cmd = new CMD(Main.lastevent.getKeyCode(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
-			if(JOptionPane.showOptionDialog(Main.frame.isVisible() ? Main.frame : null, "Set command key to: " + cmd.toString(), "Keys per second", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"OK", "Cancel"}, 0) == 0){
+			if(Main.showConfirmDialog("Set command key to: " + cmd.toString())){
 				return cmd;
 			}
 		}
