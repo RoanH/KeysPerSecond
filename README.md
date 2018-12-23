@@ -63,8 +63,10 @@ GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)
 Original osu! forum post: [post](https://osu.ppy.sh/community/forums/topics/552405)    
 
 ## Examples
+The following two examples show the layout while it is being edited. All the panels have to line up with the grid, but the size of the grid cells can be changed.
 ![](https://i.imgur.com/kfXaqwX.png)
 ![](https://i.imgur.com/DP5MNVq.png)
+Next are two other examples of possible layouts.
 ![](https://i.imgur.com/ImE4zTU.png)
 ![](https://i.imgur.com/fBgohIA.png)
 
