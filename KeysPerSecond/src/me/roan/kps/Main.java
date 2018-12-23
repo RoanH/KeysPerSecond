@@ -1659,7 +1659,7 @@ public class Main{
 		nbuttons.add(newmouse, BorderLayout.LINE_END);
 		keyform.add(nbuttons, BorderLayout.PAGE_END);
 		
-		if(showOptionDialog(keyform, true)){
+		if(!showOptionDialog(keyform, true)){
 			config.keyinfo = copy;
 		}
 	}
