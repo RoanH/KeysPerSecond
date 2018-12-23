@@ -406,7 +406,7 @@ public class Main{
 				CommandKeys.isAltDown = false;
 			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
 				CommandKeys.isCtrlDown = false;
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+			}else if(isShift(evt.getKeyCode())){
 				CommandKeys.isShiftDown = false;
 			}
 		}
@@ -424,7 +424,7 @@ public class Main{
 						k.keyReleased();
 					}
 				}
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+			}else if(isShift(evt.getKeyCode())){
 				for(Key k : keys.values()){
 					if(k.shift){
 						k.keyReleased();
@@ -469,6 +469,9 @@ public class Main{
 				if(key.shift && keys.containsKey(NativeKeyEvent.VC_SHIFT)){
 					keys.get(NativeKeyEvent.VC_SHIFT).keyReleased();
 				}
+				if(key.shift && keys.containsKey(0x0E36)){//RShift
+					keys.get(0x0E36).keyReleased();
+				}
 			}
 		}
 		if(nevent instanceof NativeKeyEvent){
@@ -480,7 +483,7 @@ public class Main{
 				CommandKeys.isCtrlDown = event.getKeyCode() == NativeKeyEvent.VC_CONTROL;
 			}
 			if(!CommandKeys.isShiftDown){
-				CommandKeys.isShiftDown = event.getKeyCode() == NativeKeyEvent.VC_SHIFT;
+				CommandKeys.isShiftDown = isShift(event.getKeyCode());
 			}
 			lastevent = event;
 			if(config.CP.matches(event.getKeyCode())){
@@ -541,11 +544,22 @@ public class Main{
 	 * @return The extended key code for this event
 	 */
 	private static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
-		if(code == NativeKeyEvent.VC_SHIFT || code == NativeKeyEvent.VC_CONTROL || code == NativeKeyEvent.VC_ALT){
+		if(isShift(code) || code == NativeKeyEvent.VC_CONTROL || code == NativeKeyEvent.VC_ALT){
 			return code;
 		}else{
 			return code + (shift ? 100000 : 0) + (ctrl ? 10000 : 0) + (alt ? 1000 : 0);
 		}
+	}
+	
+	/**
+	 * Tests if the given key code 
+	 * represents the shift key
+	 * @param code The key code
+	 * @return Whether or not the given
+	 *         key code belongs to the shift key
+	 */
+	private static final boolean isShift(int code){
+		return code == NativeKeyEvent.VC_SHIFT || code == 0x0E36;
 	}
 
 	/**
@@ -2285,7 +2299,7 @@ public class Main{
 		 * @see #keycode 
 		 */
 		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
-			if(!(code == NativeKeyEvent.VC_SHIFT || code == NativeKeyEvent.VC_CONTROL || code == NativeKeyEvent.VC_ALT)){
+			if(!(isShift(code) || code == NativeKeyEvent.VC_CONTROL || code == NativeKeyEvent.VC_ALT)){
 				this.alt = alt;
 				this.ctrl = ctrl;
 				this.shift = shift;
@@ -2480,8 +2494,6 @@ public class Main{
 			case NativeKeyEvent.VC_DOWN:
 				return "\u25BE";
 			// Begin Modifier and Control Keys
-			case NativeKeyEvent.VC_SHIFT:
-				return "\u21D1";
 			case NativeKeyEvent.VC_CONTROL:
 				return "Ctl";
 			case NativeKeyEvent.VC_ALT:
@@ -2489,6 +2501,9 @@ public class Main{
 			case NativeKeyEvent.VC_META:
 				return "\u2318";
 			default:
+				if(isShift(keyCode)){
+					return "\u21D1";
+				}
 				return NativeKeyEvent.getKeyText(keyCode);
 			}
 		}
