@@ -1,4 +1,4 @@
-# Keys Per Second ![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg)![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)
+# Keys Per Second ![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg)  ![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)
 
 KeysPerSecond is a program that counts how many times certain keys are pressed. And shows what the average, maximum and current number of keys pressed per second is. The program can also shows a nice graph of the key presses over time.    
 The program is also fully customizable.   
