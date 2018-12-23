@@ -32,6 +32,8 @@ public final class KeyPanel extends BasePanel{
 	 * with the given key object
 	 * @param key The key object to
 	 *        associate this panel with
+	 * @param i The key information object
+	 *        for the key for this panel
 	 * @see Key
 	 * @see #key
 	 */
