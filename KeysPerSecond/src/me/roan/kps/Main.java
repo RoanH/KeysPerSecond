@@ -524,6 +524,9 @@ public class Main{
 	 * Gets the extended key code for this event, this key code
 	 * includes modifiers
 	 * @param code The original key code
+	 * @param shift Is the shift modifer involved
+	 * @param ctrl Is the ctrl modifier involved
+	 * @param alt Is the alt modifier involved
 	 * @return The extended key code for this event
 	 */
 	private static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
