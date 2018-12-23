@@ -16,36 +16,33 @@ There is also a right click menu to configure all the settings:
 For each configured key the program will show how many times it was pressed. By default it will also shows the maximum, average and current number of keys pressed per second.
 When enabled it can also show a graph of the number of keys pressed per second over time and total number of keys pressed.
 
-Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.    
-![Config](https://i.imgur.com/G0NYcPE.png)
-![Key config](https://i.imgur.com/vwtThmz.png)<br>
-![Layout](https://i.imgur.com/6XdgGYe.png)<br>
+Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.      
+![Config](https://i.imgur.com/G0NYcPE.png)![Key config](https://i.imgur.com/vwtThmz.png)    
+![Layout](https://i.imgur.com/6XdgGYe.png)    
 
-Lastly, there are also some commands that can be sent to the program:<br>
-**Ctrl + P**: Causes the program to reset the average and maximum value.<br>
-**Ctrl + U**: Terminates the program.<br>
-**Ctrl + I**: Causes the program to reset the key press statistics.<br>
-**Ctrl + Y**: Shows / hides the GUI.<br>
-**Ctrl + T**: Pauses / resumes the counter.<br>
+There are also some commands that can be sent to the program:    
+**Ctrl + P**: Causes the program to reset the average and maximum value.    
+**Ctrl + U**: Terminates the program.    
+**Ctrl + I**: Causes the program to reset the key press statistics.    
+**Ctrl + Y**: Shows / hides the GUI.    
+**Ctrl + T**: Pauses / resumes the counter.    
 **Ctrl + R**: Reloads the configuration file.
 
-You can also move the program using the arrow keys this makes pixel perfect positioning possible :D .
+You can also move the program using the arrow keys or snap it to the edges of your screen.
 
 Well I hope some of you find this program useful and/or will use it for your streams (I would love to see that happen  :) ).
 And if you find any bugs feel free to report them.
 
 ## Notes
 - The horizontal line in the graph represents the average number of keys pressed per second.
-- To clarify, you can add any key, and any number of keys to the program. So it can be used for any game mode.
-- The overlay option doesn't work on a Mac nor does it work when the fullscreen option in osu! is enabled.
-- When changing the key order, the keys are ordered from lowest value to highest value (negative values & skipping indices is allowed).
+- You can add any key, and any number of keys to the program.
+- You can also track mouse buttons with this program.
+- The overlay options is far form perfect it just ask the OS to place the program on top. It'll not overlay most full screen games.
 - To change a GUI colour in the colours menu, click on the current colour
 - An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
 - The snap to screen edge function works on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
-- You can also track mouse buttons with this program.
-- The order for positions is from the top left to the bottom right.
-- You can pass the path to the config file to load via the commandline or a shortcut so you can skip the configuration step.
+- You can pass the path to the config file to load via the commandline or a shortcut so you can skip the configuration step. Setting the program as the default program to open the configuration file with may work as well as long as you don't move the executable afterwards.
 - When resetting something it will also be printed to the console if this program is run using cmd/shell.
 
 ## Todo list / working on
