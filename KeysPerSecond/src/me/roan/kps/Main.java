@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -167,7 +168,7 @@ public class Main{
 	/**
 	 * The program's main frame
 	 */
-	protected static final JFrame frame = new JFrame("Keys per second");
+	protected static final JFrame frame = new JFrame("KeysPerSecond");
 	/**
 	 * Whether or not the counter is paused
 	 */
@@ -187,7 +188,7 @@ public class Main{
 	/**
 	 * Frame for the graph
 	 */
-	protected static JFrame graphFrame = new JFrame("Keys per second");
+	protected static JFrame graphFrame = new JFrame("KeysPerSecond");
 	/**
 	 * The layout for the main panel of the program
 	 */
@@ -196,6 +197,14 @@ public class Main{
 	 * Small icon for the program
 	 */
 	private static final Image iconSmall;
+	/**
+	 * Icon for the program
+	 */
+	private static final Image icon;
+	/**
+	 * Called when a frame is closed
+	 */
+	private static final WindowListener onClose;
 
 	/**
 	 * Main method
@@ -882,14 +891,42 @@ public class Main{
 		});
 		info.add(links);
 		form.add(info, BorderLayout.PAGE_END);
-		if(!showDialog(form, false, new String[]{"OK", "Exit"})){
-			try{
-				GlobalScreen.unregisterNativeHook();
-			}catch(NativeHookException e1){
-				e1.printStackTrace();
-			}
-			System.exit(0);
+		
+		JButton ok = new JButton("OK");
+		JButton exit = new JButton("Exit");
+		exit.addActionListener(e->exit());
+		
+		CountDownLatch latch = new CountDownLatch(1);
+		ok.addActionListener(e->latch.countDown());
+		
+		JPanel bottomButtons = new JPanel();
+		bottomButtons.add(ok);
+		bottomButtons.add(exit);
+		
+		JPanel dialog = new JPanel(new BorderLayout());
+		dialog.add(form, BorderLayout.CENTER);
+		dialog.add(bottomButtons, BorderLayout.PAGE_END);
+		
+		dialog.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
+		JFrame conf = new JFrame("KeysPerSecond");
+		conf.add(dialog);
+		conf.pack();
+		conf.setResizable(false);
+		conf.setLocationRelativeTo(null);
+		List<Image> icons = new ArrayList<Image>();
+		icons.add(icon);
+		icons.add(iconSmall);
+		conf.setIconImages(icons);
+		conf.addWindowListener(onClose);
+		conf.setVisible(true);
+		
+		try{
+			latch.await();
+		}catch(InterruptedException e1){
 		}
+		conf.setVisible(false);
+		conf.dispose();
 		frame.setAlwaysOnTop(config.overlay);
 		graphFrame.setAlwaysOnTop(config.overlay);
 	}
@@ -1672,49 +1709,14 @@ public class Main{
 	protected static final void buildGUI() throws IOException{
 		Menu.createMenu();
 		frame.setResizable(false);
-		frame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
+		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		new Listener(frame);
 		graphFrame.setResizable(false);
-		graphFrame.setIconImage(ImageIO.read(ClassLoader.getSystemResource("kps.png")));
+		graphFrame.setIconImage(icon);
 		graphFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		graphFrame.setUndecorated(true);
-		WindowListener onClose = new WindowListener(){
-
-			@Override
-			public void windowOpened(WindowEvent e){
-			}
-
-			@Override
-			public void windowClosing(WindowEvent e){
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e){
-				try{
-					GlobalScreen.unregisterNativeHook();
-				}catch(NativeHookException e1){
-					e1.printStackTrace();
-				}
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e){
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e){
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e){
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e){
-			}
-		};
 		frame.addWindowListener(onClose);
 		graphFrame.addWindowListener(onClose);
 		new Listener(graphFrame);
@@ -2547,5 +2549,42 @@ public class Main{
 			img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
 		}
 		iconSmall = img;
+		try{
+			img = ImageIO.read(ClassLoader.getSystemResource("kps.png"));
+		}catch(IOException e){
+			img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);
+		}
+		icon = img;
+		onClose = new WindowListener(){
+
+			@Override
+			public void windowOpened(WindowEvent e){
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e){
+				exit();
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e){
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e){
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e){
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e){
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e){
+			}
+		};
 	}
 }
