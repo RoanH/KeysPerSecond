@@ -1538,6 +1538,11 @@ public class Main{
 	 */
 	protected static final void configureKeys(){
 		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
+		boolean[] visibleState = new boolean[copy.size()];
+		for(int i = 0; i < copy.size(); i++){
+			visibleState[i] = copy.get(i).visible;
+		}
+		
 		JPanel keyform = new JPanel(new BorderLayout());
 		keyform.add(new JLabel("Currently added keys (you can hide or remove them):"), BorderLayout.PAGE_START);
 		JTable keys = new JTable();
@@ -1697,6 +1702,9 @@ public class Main{
 		keyform.add(nbuttons, BorderLayout.PAGE_END);
 		
 		if(!showOptionDialog(keyform, true)){
+			for(int i = 0; i < copy.size(); i++){
+				copy.get(i).visible = visibleState[i];
+			}
 			config.keyinfo = copy;
 		}
 	}
