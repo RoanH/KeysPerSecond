@@ -35,7 +35,13 @@ public class CommandKeys{
 	public static final int RIGHT_MASK = 0b1000_00000000_00000000;
 	public static final int MOUSE_MASK = 0x80000000;
 	public static final int FORMAT_MASK = 0b1_0000_00000000_00000000;
-	public static final int RSHIFT = 0x0E36;
+	public static final int VC_RSHIFT = 0x0E36;
+	public static final int RSHIFT = VC_RSHIFT | FORMAT_MASK | RIGHT_MASK;
+	public static final int LSHIFT = NativeKeyEvent.VC_SHIFT | FORMAT_MASK;
+	public static final int RCTRL = NativeKeyEvent.VC_CONTROL | FORMAT_MASK;
+	public static final int LCTRL = NativeKeyEvent.VC_CONTROL | FORMAT_MASK;
+	public static final int RALT = NativeKeyEvent.VC_ALT | FORMAT_MASK;
+	public static final int LALT = NativeKeyEvent.VC_ALT | FORMAT_MASK;
 	
 	protected static final int getExtendedKeyCode(int code, int modifiers){
 		return getExtendedKeyCode(code, modifiers, isShiftDown, isCtrlDown, isAltDown);
@@ -53,40 +59,41 @@ public class CommandKeys{
 	 */
 	protected static final int getExtendedKeyCode(int code, int modifiers, boolean shift, boolean ctrl, boolean alt){
 		if(code == NativeKeyEvent.VC_SHIFT){
-			return code | FORMAT_MASK | SHIFT_MASK;
-		}else if(code == RSHIFT){
-			return code | FORMAT_MASK | SHIFT_MASK | RIGHT_MASK;
+			return code | FORMAT_MASK;
+		}else if(code == VC_RSHIFT){
+			return code | FORMAT_MASK | RIGHT_MASK;
 		}else if(code == NativeKeyEvent.VC_CONTROL){
 			if((modifiers & NativeInputEvent.CTRL_R_MASK) != 0){
-				return code | FORMAT_MASK | CTRL_MASK | RIGHT_MASK;
+				return code | FORMAT_MASK | RIGHT_MASK;
 			}else{
-				return code | FORMAT_MASK | CTRL_MASK;
+				return code | FORMAT_MASK;
 			}
 		}else if(code == NativeKeyEvent.VC_ALT){
 			if((modifiers & NativeInputEvent.ALT_R_MASK) != 0){
-				return code | FORMAT_MASK | ALT_MASK | RIGHT_MASK;
+				return code | FORMAT_MASK | RIGHT_MASK;
 			}else{
-				return code | FORMAT_MASK | ALT_MASK;
+				return code | FORMAT_MASK;
 			}
 		}else{
 			return code | (shift ? SHIFT_MASK : 0) | (ctrl ? CTRL_MASK : 0) | (alt ? ALT_MASK : 0) | FORMAT_MASK;
 		}
 	}
 	
+	@Deprecated
 	public static boolean isModifier(int code){
 		return isCtrl(code) || isAlt(code) || isShift(code);
 	}
 	
 	public static boolean isCtrl(int code){
-		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_CONTROL;
+		return code == LCTRL || code == RCTRL;
 	}
 	
 	public static boolean isAlt(int code){
-		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_ALT;
+		return code == LALT || code == RALT;
 	}
 	
 	public static boolean isShift(int code){
-		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_SHIFT || (code & KEYCODE_MASK) == RSHIFT;
+		return code == LSHIFT || code == RSHIFT;
 	}
 	
 	public static boolean hasCtrl(int code){

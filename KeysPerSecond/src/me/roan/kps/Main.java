@@ -448,7 +448,7 @@ public class Main{
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
 		
-		System.out.print(code + " | " + nevent.getModifiers() + " ");
+		System.out.print(code + " | " + nevent.getModifiers() + " ");//TODO remove
 		if((nevent.getModifiers() & NativeInputEvent.SHIFT_L_MASK) > 0) System.out.print("Lshift ");
 		if((nevent.getModifiers() & NativeInputEvent.SHIFT_R_MASK) > 0) System.out.print("Rshift ");
 		if((nevent.getModifiers() & NativeInputEvent.META_L_MASK) > 0) System.out.print("Lmeta ");
@@ -470,27 +470,27 @@ public class Main{
 			Key key = keys.get(code);
 			key.keyPressed();
 			if(config.enableModifiers){
-				if(key.alt && keys.containsKey(NativeKeyEvent.VC_ALT)){
-					keys.get(NativeKeyEvent.VC_ALT).keyReleased();
+				if(key.alt){
+					keys.getOrDefault(CommandKeys.RALT, DUMMY_KEY).keyReleased();
+					keys.getOrDefault(CommandKeys.LALT, DUMMY_KEY).keyReleased();
 				}
-				if(key.ctrl && keys.containsKey(NativeKeyEvent.VC_CONTROL)){
-					keys.get(NativeKeyEvent.VC_CONTROL).keyReleased();
+				if(key.ctrl){
+					keys.getOrDefault(CommandKeys.RCTRL, DUMMY_KEY).keyReleased();
+					keys.getOrDefault(CommandKeys.LCTRL, DUMMY_KEY).keyReleased();
 				}
-				if(key.shift && keys.containsKey(NativeKeyEvent.VC_SHIFT)){
-					keys.get(NativeKeyEvent.VC_SHIFT).keyReleased();
-				}
-				if(key.shift && keys.containsKey(0x0E36)){//RShift
-					keys.get(0x0E36).keyReleased();
+				if(key.shift){
+					keys.getOrDefault(CommandKeys.RSHIFT, DUMMY_KEY).keyReleased();
+					keys.getOrDefault(CommandKeys.LSHIFT, DUMMY_KEY).keyReleased();
 				}
 			}
 		}
 		if(nevent instanceof NativeKeyEvent){
 			NativeKeyEvent event = (NativeKeyEvent)nevent;
 			if(!CommandKeys.isAltDown){
-				CommandKeys.isAltDown = event.getKeyCode() == NativeKeyEvent.VC_ALT;
+				CommandKeys.isAltDown = CommandKeys.isAlt(code);
 			}
 			if(!CommandKeys.isCtrlDown){
-				CommandKeys.isCtrlDown = event.getKeyCode() == NativeKeyEvent.VC_CONTROL;
+				CommandKeys.isCtrlDown = CommandKeys.isCtrl(code);
 			}
 			if(!CommandKeys.isShiftDown){
 				CommandKeys.isShiftDown = CommandKeys.isShift(code);
