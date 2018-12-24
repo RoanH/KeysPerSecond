@@ -1622,7 +1622,7 @@ public class Main{
 					showMessageDialog("No key pressed!");
 					return;
 				}
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), getExtendedKeyCode(lastevent), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
 				int n = (CommandKeys.hasAlt(info.keycode) ? 1 : 0) + (CommandKeys.hasCtrl(info.keycode) ? 1 : 0) + (CommandKeys.hasShift(info.keycode) ? 1 : 0);
 				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
 					if(config.keyinfo.contains(info)){
@@ -2261,7 +2261,7 @@ public class Main{
 		 * @return The full name of this given key
 		 */
 		private static final String getKeyName(String name, int code, boolean alt, boolean ctrl, boolean shift){
-			return (CommandKeys.isModifier(code) ? (alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "") : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
+			return (!CommandKeys.isModifier(code) ? ((alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "")) : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
 		}
 
 		/**
@@ -2277,7 +2277,6 @@ public class Main{
 			this.name = name;
 			this.keycode = code;
 			this.visible = visible;
-
 		}
 
 		/**
