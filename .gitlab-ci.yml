@@ -13,6 +13,7 @@ stages:
   - compile
 
 verify:
+  allow_failure: true
   script:
     - wget ${SERVER}ci/javadoc.sh
     - chmod 755 javadoc.sh
