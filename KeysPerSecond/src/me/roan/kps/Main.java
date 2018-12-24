@@ -1626,6 +1626,7 @@ public class Main{
 				int n = (CommandKeys.hasAlt(info.keycode) ? 1 : 0) + (CommandKeys.hasCtrl(info.keycode) ? 1 : 0) + (CommandKeys.hasShift(info.keycode) ? 1 : 0);
 				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
 					if(config.keyinfo.contains(info)){
+						KeyInformation.autoIndex -= 2;
 						showMessageDialog("That key was already added before.\nIt was not added again.");
 					}else{
 						config.keyinfo.add(info);
@@ -1660,6 +1661,7 @@ public class Main{
 					if(boxes[i].isSelected()){
 						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
 						if(config.keyinfo.contains(key)){
+							KeyInformation.autoIndex -= 2;
 							showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
 						}else{
 							config.keyinfo.add(key);
