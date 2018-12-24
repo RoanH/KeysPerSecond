@@ -2437,6 +2437,9 @@ public class Main{
 			case NativeKeyEvent.VC_DOWN:
 				return "\u25BE";
 			// Begin Modifier and Control Keys
+			case NativeKeyEvent.VC_SHIFT:
+			case CommandKeys.VC_RSHIFT:
+				return "\u21D1";
 			case NativeKeyEvent.VC_CONTROL:
 				return "Ctl";
 			case NativeKeyEvent.VC_ALT:
@@ -2444,9 +2447,6 @@ public class Main{
 			case NativeKeyEvent.VC_META:
 				return "\u2318";
 			default:
-				if(CommandKeys.isShift(keyCode)){
-					return "\u21D1";
-				}
 				return NativeKeyEvent.getKeyText(keyCode);
 			}
 		}
