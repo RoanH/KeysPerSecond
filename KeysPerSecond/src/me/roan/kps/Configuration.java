@@ -901,7 +901,7 @@ public class Configuration{
 			}
 		}
 		if(!CommandKeys.isNewFormat(code)){
-			code = CommandKeys.getExtendedKeyCode(code % 1000, 0, shift, ctrl, alt);
+			code = CommandKeys.getExtendedKeyCode(code % 1000, shift, ctrl, alt);
 		}
 		KeyInformation kinfo = new KeyInformation(name, code, visible);
 		kinfo.x = x;

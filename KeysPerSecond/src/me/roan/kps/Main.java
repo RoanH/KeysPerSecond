@@ -404,21 +404,35 @@ public class Main{
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
 		int code = getExtendedKeyCode(event);
-		if(CommandKeys.isAlt(code)){
+		
+		if(event instanceof NativeKeyEvent){
+			System.out.print(code + " r| " + event.getModifiers() + " " + NativeKeyEvent.getKeyText(((NativeKeyEvent)event).getKeyCode()) + NativeKeyEvent.getModifiersText(event.getModifiers()) + " | ");//TODO remove
+			if((event.getModifiers() & NativeInputEvent.SHIFT_L_MASK) > 0) System.out.print("Lshift ");
+			if((event.getModifiers() & NativeInputEvent.SHIFT_R_MASK) > 0) System.out.print("Rshift ");
+			if((event.getModifiers() & NativeInputEvent.META_L_MASK) > 0) System.out.print("Lmeta ");
+			if((event.getModifiers() & NativeInputEvent.META_R_MASK) > 0) System.out.print("Rmeta ");
+			if((event.getModifiers() & NativeInputEvent.CTRL_L_MASK) > 0) System.out.print("Lctrl ");
+			if((event.getModifiers() & NativeInputEvent.CTRL_R_MASK) > 0) System.out.print("Rctrl ");
+			if((event.getModifiers() & NativeInputEvent.ALT_L_MASK) > 0) System.out.print("Lalt ");
+			if((event.getModifiers() & NativeInputEvent.ALT_R_MASK) > 0) System.out.print("Ralt ");
+			System.out.println();
+		}
+		
+		if(code == CommandKeys.ALT){
 			CommandKeys.isAltDown = false;
-		}else if(CommandKeys.isCtrl(code)){
+		}else if(code == CommandKeys.CTRL){
 			CommandKeys.isCtrlDown = false;
 		}else if(CommandKeys.isShift(code)){
 			CommandKeys.isShiftDown = false;
 		}
 		if(config.enableModifiers){
-			if(CommandKeys.isAlt(code)){
+			if(code == CommandKeys.ALT){
 				for(Key k : keys.values()){
 					if(k.alt){
 						k.keyReleased();
 					}
 				}
-			}else if(CommandKeys.isCtrl(code)){
+			}else if(code == CommandKeys.CTRL){
 				for(Key k : keys.values()){
 					if(k.ctrl){
 						k.keyReleased();
@@ -447,9 +461,21 @@ public class Main{
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
+		
+		System.out.print(code + " p| " + nevent.getModifiers() + " ");//TODO remove
+		if((nevent.getModifiers() & NativeInputEvent.SHIFT_L_MASK) > 0) System.out.print("Lshift ");
+		if((nevent.getModifiers() & NativeInputEvent.SHIFT_R_MASK) > 0) System.out.print("Rshift ");
+		if((nevent.getModifiers() & NativeInputEvent.META_L_MASK) > 0) System.out.print("Lmeta ");
+		if((nevent.getModifiers() & NativeInputEvent.META_R_MASK) > 0) System.out.print("Rmeta ");
+		if((nevent.getModifiers() & NativeInputEvent.CTRL_L_MASK) > 0) System.out.print("Lctrl ");
+		if((nevent.getModifiers() & NativeInputEvent.CTRL_R_MASK) > 0) System.out.print("Rctrl ");
+		if((nevent.getModifiers() & NativeInputEvent.ALT_L_MASK) > 0) System.out.print("Lalt ");
+		if((nevent.getModifiers() & NativeInputEvent.ALT_R_MASK) > 0) System.out.print("Ralt ");
+		System.out.println();
+		
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), ((NativeKeyEvent)nevent).getKeyCode(), CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
+				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code, CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
 			}else{
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
@@ -459,12 +485,10 @@ public class Main{
 			key.keyPressed();
 			if(config.enableModifiers){
 				if(key.alt){
-					keys.getOrDefault(CommandKeys.RALT, DUMMY_KEY).keyReleased();
-					keys.getOrDefault(CommandKeys.LALT, DUMMY_KEY).keyReleased();
+					keys.getOrDefault(CommandKeys.ALT, DUMMY_KEY).keyReleased();
 				}
 				if(key.ctrl){
-					keys.getOrDefault(CommandKeys.RCTRL, DUMMY_KEY).keyReleased();
-					keys.getOrDefault(CommandKeys.LCTRL, DUMMY_KEY).keyReleased();
+					keys.getOrDefault(CommandKeys.CTRL, DUMMY_KEY).keyReleased();
 				}
 				if(key.shift){
 					keys.getOrDefault(CommandKeys.RSHIFT, DUMMY_KEY).keyReleased();
@@ -475,10 +499,10 @@ public class Main{
 		if(nevent instanceof NativeKeyEvent){
 			NativeKeyEvent event = (NativeKeyEvent)nevent;
 			if(!CommandKeys.isAltDown){
-				CommandKeys.isAltDown = CommandKeys.isAlt(code);
+				CommandKeys.isAltDown = code == CommandKeys.ALT;
 			}
 			if(!CommandKeys.isCtrlDown){
-				CommandKeys.isCtrlDown = CommandKeys.isCtrl(code);
+				CommandKeys.isCtrlDown = code == CommandKeys.CTRL;
 			}
 			if(!CommandKeys.isShiftDown){
 				CommandKeys.isShiftDown = CommandKeys.isShift(code);
@@ -514,9 +538,9 @@ public class Main{
 		if(event instanceof NativeKeyEvent){
 			NativeKeyEvent key = (NativeKeyEvent)event;
 			if(!config.enableModifiers){
-				return key.getKeyCode() | CommandKeys.FORMAT_MASK;
+				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), false, false, false);
 			}else{
-				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), key.getModifiers());
+				return CommandKeys.getExtendedKeyCode(key.getKeyCode());
 			}
 		}else{
 			return -((NativeMouseEvent)event).getButton();
@@ -1624,7 +1648,7 @@ public class Main{
 					showMessageDialog("No key pressed!");
 					return;
 				}
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
+				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), getExtendedKeyCode(lastevent), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
 				int n = (CommandKeys.hasAlt(info.keycode) ? 1 : 0) + (CommandKeys.hasCtrl(info.keycode) ? 1 : 0) + (CommandKeys.hasShift(info.keycode) ? 1 : 0);
 				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
 					if(config.keyinfo.contains(info)){
@@ -2127,17 +2151,14 @@ public class Main{
 		/**
 		 * Whether or not alt has to be down
 		 */
-		@Deprecated
 		protected transient boolean alt;
 		/**
 		 * Whether or not ctrl has to be down
 		 */
-		@Deprecated
 		protected transient boolean ctrl;
 		/**
 		 * Whether or not shift has to be down
 		 */
-		@Deprecated
 		protected transient boolean shift;
 
 		/**
@@ -2251,7 +2272,7 @@ public class Main{
 		 * @see #keycode 
 		 */
 		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
-			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, 0, shift, ctrl, alt);
+			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
 			this.name = mouse ? name : getKeyName(name, keycode, alt, ctrl, shift);
 		}
 
@@ -2266,7 +2287,7 @@ public class Main{
 		 * @return The full name of this given key
 		 */
 		private static final String getKeyName(String name, int code, boolean alt, boolean ctrl, boolean shift){
-			return (!CommandKeys.isModifier(code) ? (alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "") : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
+			return (CommandKeys.isModifier(code) ? (alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "") : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
 		}
 
 		/**
@@ -2323,7 +2344,7 @@ public class Main{
 			width = 2;
 			height = 3;
 			mode = RenderingMode.VERTICAL;
-			keycode = CommandKeys.getExtendedKeyCode(keycode, 0, false, false, false);
+			keycode = CommandKeys.getExtendedKeyCode(keycode, false, false, false);
 		}
 
 		/**

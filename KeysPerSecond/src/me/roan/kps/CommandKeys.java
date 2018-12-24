@@ -7,7 +7,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 /**
@@ -38,13 +37,11 @@ public class CommandKeys{
 	public static final int VC_RSHIFT = 0x0E36;
 	public static final int RSHIFT = VC_RSHIFT | FORMAT_MASK | RIGHT_MASK;
 	public static final int LSHIFT = NativeKeyEvent.VC_SHIFT | FORMAT_MASK;
-	public static final int RCTRL = NativeKeyEvent.VC_CONTROL | FORMAT_MASK;
-	public static final int LCTRL = NativeKeyEvent.VC_CONTROL | FORMAT_MASK;
-	public static final int RALT = NativeKeyEvent.VC_ALT | FORMAT_MASK;
-	public static final int LALT = NativeKeyEvent.VC_ALT | FORMAT_MASK;
+	public static final int CTRL = NativeKeyEvent.VC_CONTROL | FORMAT_MASK;
+	public static final int ALT = NativeKeyEvent.VC_ALT | FORMAT_MASK;
 	
-	protected static final int getExtendedKeyCode(int code, int modifiers){
-		return getExtendedKeyCode(code, modifiers, isShiftDown, isCtrlDown, isAltDown);
+	protected static final int getExtendedKeyCode(int code){
+		return getExtendedKeyCode(code, isShiftDown, isCtrlDown, isAltDown);
 	}
 	
 	/**
@@ -57,39 +54,22 @@ public class CommandKeys{
 	 * @param modifers The involved modifiers
 	 * @return The extended key code for this event
 	 */
-	protected static final int getExtendedKeyCode(int code, int modifiers, boolean shift, boolean ctrl, boolean alt){
+	protected static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
 		if(code == NativeKeyEvent.VC_SHIFT){
-			return code | FORMAT_MASK;
+			return LSHIFT;
 		}else if(code == VC_RSHIFT){
-			return code | FORMAT_MASK | RIGHT_MASK;
+			return RSHIFT;
 		}else if(code == NativeKeyEvent.VC_CONTROL){
-			if((modifiers & NativeInputEvent.CTRL_R_MASK) != 0){
-				return code | FORMAT_MASK | RIGHT_MASK;
-			}else{
-				return code | FORMAT_MASK;
-			}
+			return CTRL;
 		}else if(code == NativeKeyEvent.VC_ALT){
-			if((modifiers & NativeInputEvent.ALT_R_MASK) != 0){
-				return code | FORMAT_MASK | RIGHT_MASK;
-			}else{
-				return code | FORMAT_MASK;
-			}
+			return ALT;
 		}else{
 			return code | (shift ? SHIFT_MASK : 0) | (ctrl ? CTRL_MASK : 0) | (alt ? ALT_MASK : 0) | FORMAT_MASK;
 		}
 	}
 	
-	@Deprecated
 	public static boolean isModifier(int code){
-		return isCtrl(code) || isAlt(code) || isShift(code);
-	}
-	
-	public static boolean isCtrl(int code){
-		return code == LCTRL || code == RCTRL;
-	}
-	
-	public static boolean isAlt(int code){
-		return code == LALT || code == RALT;
+		return code == CTRL || code == ALT || isShift(code);
 	}
 	
 	public static boolean isShift(int code){
