@@ -1539,8 +1539,12 @@ public class Main{
 			public Object getValueAt(int rowIndex, int columnIndex){
 				switch(columnIndex){
 				case 0:
-					int n = (CommandKeys.hasAlt(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasCtrl(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasShift(config.keyinfo.get(rowIndex).keycode) ? 1 : 0);
-					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
+					if(CommandKeys.isMouseButton(config.keyinfo.get(rowIndex).keycode)){
+						return config.keyinfo.get(rowIndex).name;
+					}else{
+						int n = (CommandKeys.hasAlt(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasCtrl(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasShift(config.keyinfo.get(rowIndex).keycode) ? 1 : 0);
+						return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
+					}
 				case 1:
 					return config.keyinfo.get(rowIndex).visible;
 				case 2:

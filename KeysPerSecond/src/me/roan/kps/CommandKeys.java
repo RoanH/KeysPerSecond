@@ -163,7 +163,18 @@ public class CommandKeys{
 	 * @return Whether the given key code is in the new format
 	 */
 	public static boolean isNewFormat(int code){
-		return ((code & MOUSE_MASK) != 0) || ((code & FORMAT_MASK) != 0);
+		return isMouseButton(code) || ((code & FORMAT_MASK) != 0);
+	}
+	
+	/**
+	 * Checks if the given code represents
+	 * a mouse button
+	 * @param code The code to check
+	 * @return True if the given code
+	 *         represents a mouse button
+	 */
+	public static boolean isMouseButton(int code){
+		return (code & MOUSE_MASK) != 0;
 	}
 
 	/**
