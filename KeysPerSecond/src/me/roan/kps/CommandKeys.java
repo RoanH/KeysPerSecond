@@ -73,6 +73,10 @@ public class CommandKeys{
 		}
 	}
 	
+	public static boolean isModifier(int code){
+		return isCtrl(code) || isAlt(code) || isShift(code);
+	}
+	
 	public static boolean isCtrl(int code){
 		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_CONTROL;
 	}
@@ -83,6 +87,18 @@ public class CommandKeys{
 	
 	public static boolean isShift(int code){
 		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_SHIFT || (code & KEYCODE_MASK) == RSHIFT;
+	}
+	
+	public static boolean hasCtrl(int code){
+		return (code & CTRL_MASK) != 0;
+	}
+	
+	public static boolean hasAlt(int code){
+		return (code & ALT_MASK) != 0;
+	}
+	
+	public static boolean hasShift(int code){
+		return (code & SHIFT_MASK) != 0;
 	}
 	
 	public static boolean isNewFormat(int code){

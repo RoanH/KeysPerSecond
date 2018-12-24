@@ -542,7 +542,7 @@ public class Main{
 	 * @return The base key code
 	 */
 	private static final int getBaseKeyCode(int code){
-		return code % 1000;
+		return code & CommandKeys.KEYCODE_MASK;
 	}
 
 	/**
@@ -1553,7 +1553,7 @@ public class Main{
 			public Object getValueAt(int rowIndex, int columnIndex){
 				switch(columnIndex){
 				case 0:
-					int n = (config.keyinfo.get(rowIndex).alt ? 1 : 0) + (config.keyinfo.get(rowIndex).ctrl ? 1 : 0) + (config.keyinfo.get(rowIndex).shift ? 1 : 0);
+					int n = (CommandKeys.hasAlt(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasCtrl(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasShift(config.keyinfo.get(rowIndex).keycode) ? 1 : 0);
 					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
 				case 1:
 					return config.keyinfo.get(rowIndex).visible;
@@ -1637,7 +1637,7 @@ public class Main{
 					return;
 				}
 				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
-				int n = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
+				int n = (CommandKeys.hasAlt(info.keycode) ? 1 : 0) + (CommandKeys.hasCtrl(info.keycode) ? 1 : 0) + (CommandKeys.hasShift(info.keycode) ? 1 : 0);
 				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
 					if(config.keyinfo.contains(info)){
 						showMessageDialog("That key was already added before.\nIt was not added again.");
@@ -1735,9 +1735,9 @@ public class Main{
 			for(KeyInformation i : config.keyinfo){
 				if(!keys.containsKey(i.keycode)){
 					keys.put(i.keycode, k = new Key(i.name));
-					k.alt = i.alt;
-					k.ctrl = i.ctrl;
-					k.shift = i.shift;
+					k.alt = CommandKeys.hasAlt(i.keycode);
+					k.ctrl = CommandKeys.hasCtrl(i.keycode);
+					k.shift = CommandKeys.hasShift(i.keycode);
 				}else{
 					k = keys.get(i.keycode);
 				}
@@ -2226,21 +2226,6 @@ public class Main{
 		 */
 		protected boolean visible = true;
 		/**
-		 * Whether or not alt is down
-		 */
-		@Deprecated
-		protected boolean alt = false;
-		/**
-		 * Whether or not ctrl is down
-		 */
-		@Deprecated
-		protected boolean ctrl = false;
-		/**
-		 * Whether or not shift is down
-		 */
-		@Deprecated
-		protected boolean shift = false;
-		/**
 		 * Auto-increment for #x
 		 */
 		protected static transient volatile int autoIndex = -2;
@@ -2278,13 +2263,8 @@ public class Main{
 		 * @see #keycode 
 		 */
 		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
-			if(!(CommandKeys.isShift(code) || code == NativeKeyEvent.VC_CONTROL || code == NativeKeyEvent.VC_ALT)){
-				this.alt = alt;
-				this.ctrl = ctrl;
-				this.shift = shift;
-			}
-			this.name = mouse ? name : getKeyName(name, code, this.alt, this.ctrl, this.shift);
 			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, 0, shift, ctrl, alt);
+			this.name = mouse ? name : getKeyName(name, keycode, alt, ctrl, shift);
 		}
 
 		/**
@@ -2298,7 +2278,7 @@ public class Main{
 		 * @return The full name of this given key
 		 */
 		private static final String getKeyName(String name, int code, boolean alt, boolean ctrl, boolean shift){
-			return (alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code));
+			return (!CommandKeys.isModifier(code) ? (alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "") : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
 		}
 
 		/**
@@ -2323,12 +2303,12 @@ public class Main{
 		 * @return The modifier string
 		 */
 		public String getModifierString(){
-			return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + (shift ? "Shift + " : "");
+			return (CommandKeys.hasCtrl(keycode) ? "Ctrl + " : "") + (CommandKeys.hasAlt(keycode) ? "Alt + " : "") + (CommandKeys.hasShift(keycode) ? "Shift + " : "");
 		}
 
 		@Override
 		public String toString(){
-			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
+			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",name=\"" + name + "\"]";
 		}
 
 		@Override
