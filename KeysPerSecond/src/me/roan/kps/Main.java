@@ -449,7 +449,7 @@ public class Main{
 		Integer code = getExtendedKeyCode(nevent);
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code, CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
+				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code)));
 			}else{
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
@@ -2247,7 +2247,7 @@ public class Main{
 		 */
 		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
 			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
-			this.name = mouse ? name : getKeyName(name, keycode, alt, ctrl, shift);
+			this.name = mouse ? name : getKeyName(name, keycode);
 		}
 
 		/**
@@ -2260,8 +2260,8 @@ public class Main{
 		 * @param shift Whether or not shift is down
 		 * @return The full name of this given key
 		 */
-		private static final String getKeyName(String name, int code, boolean alt, boolean ctrl, boolean shift){
-			return (!CommandKeys.isModifier(code) ? ((alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "")) : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
+		private static final String getKeyName(String name, int code){
+			return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
 		}
 
 		/**

@@ -112,17 +112,6 @@ public class CommandKeys{
 	}
 	
 	/**
-	 * Tests if the given keycode
-	 * belongs to a modifier key
-	 * @param code The key code to test
-	 * @return Whether the given key code
-	 *         represents a modifier key
-	 */
-	public static boolean isModifier(int code){
-		return code == CTRL || code == ALT || isShift(code);
-	}
-	
-	/**
 	 * Tests if the given key code is the 
 	 * keycode of either the right or left
 	 * shift key
