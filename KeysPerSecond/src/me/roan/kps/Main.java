@@ -2335,7 +2335,7 @@ public class Main{
 			width = 2;
 			height = 3;
 			mode = RenderingMode.VERTICAL;
-			//TODO init stuff convert keycode
+			keycode = CommandKeys.getExtendedKeyCode(keycode, 0, false, false, false);
 		}
 
 		/**
