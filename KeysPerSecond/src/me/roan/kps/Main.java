@@ -449,6 +449,18 @@ public class Main{
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
+		
+		System.out.print(code + " | " + nevent.getModifiers() + " ");
+		if((nevent.getModifiers() & NativeInputEvent.SHIFT_L_MASK) > 0) System.out.print("Lshift ");
+		if((nevent.getModifiers() & NativeInputEvent.SHIFT_R_MASK) > 0) System.out.print("Rshift ");
+		if((nevent.getModifiers() & NativeInputEvent.META_L_MASK) > 0) System.out.print("Lmeta ");
+		if((nevent.getModifiers() & NativeInputEvent.META_R_MASK) > 0) System.out.print("Rmeta ");
+		if((nevent.getModifiers() & NativeInputEvent.CTRL_L_MASK) > 0) System.out.print("Lctrl ");
+		if((nevent.getModifiers() & NativeInputEvent.CTRL_R_MASK) > 0) System.out.print("Rctrl ");
+		if((nevent.getModifiers() & NativeInputEvent.ALT_L_MASK) > 0) System.out.print("Lalt ");
+		if((nevent.getModifiers() & NativeInputEvent.ALT_R_MASK) > 0) System.out.print("Ralt ");
+		System.out.println();
+		
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
 				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), ((NativeKeyEvent)nevent).getKeyCode(), CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
@@ -2252,14 +2264,17 @@ public class Main{
 		/**
 		 * Whether or not alt is down
 		 */
+		@Deprecated
 		protected boolean alt = false;
 		/**
 		 * Whether or not ctrl is down
 		 */
+		@Deprecated
 		protected boolean ctrl = false;
 		/**
 		 * Whether or not shift is down
 		 */
+		@Deprecated
 		protected boolean shift = false;
 		/**
 		 * Auto-increment for #x

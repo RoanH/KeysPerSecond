@@ -27,6 +27,13 @@ public class CommandKeys{
 	 * Whether or not shift is down
 	 */
 	protected static boolean isShiftDown = false;
+	public static final int KEYCODE_MASK = 0xFFFF;
+	public static final int CTRL_MASK = 0b0001_00000000_00000000;
+	public static final int ALT_MASK = 0b0010_00000000_00000000;
+	public static final int SHIFT_MASK = 0b0100_00000000_00000000;
+	public static final int RIGHT_MASK = 0b1000_00000000_00000000;
+	public static final int MOUSE_MASK = 0x80000000;
+	public static final int FORMAT_MASK = 0b1_0000_00000000_00000000;
 
 	/**
 	 * Simple class to represent
