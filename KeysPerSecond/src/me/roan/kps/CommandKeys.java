@@ -7,6 +7,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 /**
@@ -34,6 +35,59 @@ public class CommandKeys{
 	public static final int RIGHT_MASK = 0b1000_00000000_00000000;
 	public static final int MOUSE_MASK = 0x80000000;
 	public static final int FORMAT_MASK = 0b1_0000_00000000_00000000;
+	public static final int RSHIFT = 0x0E36;
+	
+	protected static final int getExtendedKeyCode(int code, int modifiers){
+		return getExtendedKeyCode(code, modifiers, isShiftDown, isCtrlDown, isAltDown);
+	}
+	
+	/**
+	 * Gets the extended key code for this event, this key code
+	 * includes modifiers
+	 * @param code The original key code
+	 * @param
+	 * @param
+	 * @param
+	 * @param modifers The involved modifiers
+	 * @return The extended key code for this event
+	 */
+	protected static final int getExtendedKeyCode(int code, int modifiers, boolean shift, boolean ctrl, boolean alt){
+		if(code == NativeKeyEvent.VC_SHIFT){
+			return code | FORMAT_MASK | SHIFT_MASK;
+		}else if(code == RSHIFT){
+			return code | FORMAT_MASK | SHIFT_MASK | RIGHT_MASK;
+		}else if(code == NativeKeyEvent.VC_CONTROL){
+			if((modifiers & NativeInputEvent.CTRL_R_MASK) != 0){
+				return code | FORMAT_MASK | CTRL_MASK | RIGHT_MASK;
+			}else{
+				return code | FORMAT_MASK | CTRL_MASK;
+			}
+		}else if(code == NativeKeyEvent.VC_ALT){
+			if((modifiers & NativeInputEvent.ALT_R_MASK) != 0){
+				return code | FORMAT_MASK | ALT_MASK | RIGHT_MASK;
+			}else{
+				return code | FORMAT_MASK | ALT_MASK;
+			}
+		}else{
+			return code | (shift ? SHIFT_MASK : 0) | (ctrl ? CTRL_MASK : 0) | (alt ? ALT_MASK : 0) | FORMAT_MASK;
+		}
+	}
+	
+	public static boolean isCtrl(int code){
+		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_CONTROL;
+	}
+	
+	public static boolean isAlt(int code){
+		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_ALT;
+	}
+	
+	public static boolean isShift(int code){
+		return (code & KEYCODE_MASK) == NativeKeyEvent.VC_SHIFT || (code & KEYCODE_MASK) == RSHIFT;
+	}
+	
+	public static boolean isNewFormat(int code){
+		return ((code & MOUSE_MASK) != 0) || ((code & FORMAT_MASK) != 0);
+	}
 
 	/**
 	 * Simple class to represent
