@@ -404,20 +404,6 @@ public class Main{
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
 		int code = getExtendedKeyCode(event);
-		
-		if(event instanceof NativeKeyEvent){
-			System.out.print(code + " r| " + event.getModifiers() + " " + NativeKeyEvent.getKeyText(((NativeKeyEvent)event).getKeyCode()) + NativeKeyEvent.getModifiersText(event.getModifiers()) + " | ");//TODO remove
-			if((event.getModifiers() & NativeInputEvent.SHIFT_L_MASK) > 0) System.out.print("Lshift ");
-			if((event.getModifiers() & NativeInputEvent.SHIFT_R_MASK) > 0) System.out.print("Rshift ");
-			if((event.getModifiers() & NativeInputEvent.META_L_MASK) > 0) System.out.print("Lmeta ");
-			if((event.getModifiers() & NativeInputEvent.META_R_MASK) > 0) System.out.print("Rmeta ");
-			if((event.getModifiers() & NativeInputEvent.CTRL_L_MASK) > 0) System.out.print("Lctrl ");
-			if((event.getModifiers() & NativeInputEvent.CTRL_R_MASK) > 0) System.out.print("Rctrl ");
-			if((event.getModifiers() & NativeInputEvent.ALT_L_MASK) > 0) System.out.print("Lalt ");
-			if((event.getModifiers() & NativeInputEvent.ALT_R_MASK) > 0) System.out.print("Ralt ");
-			System.out.println();
-		}
-		
 		if(code == CommandKeys.ALT){
 			CommandKeys.isAltDown = false;
 		}else if(code == CommandKeys.CTRL){
@@ -461,18 +447,6 @@ public class Main{
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
-		
-		System.out.print(code + " p| " + nevent.getModifiers() + " ");//TODO remove
-		if((nevent.getModifiers() & NativeInputEvent.SHIFT_L_MASK) > 0) System.out.print("Lshift ");
-		if((nevent.getModifiers() & NativeInputEvent.SHIFT_R_MASK) > 0) System.out.print("Rshift ");
-		if((nevent.getModifiers() & NativeInputEvent.META_L_MASK) > 0) System.out.print("Lmeta ");
-		if((nevent.getModifiers() & NativeInputEvent.META_R_MASK) > 0) System.out.print("Rmeta ");
-		if((nevent.getModifiers() & NativeInputEvent.CTRL_L_MASK) > 0) System.out.print("Lctrl ");
-		if((nevent.getModifiers() & NativeInputEvent.CTRL_R_MASK) > 0) System.out.print("Rctrl ");
-		if((nevent.getModifiers() & NativeInputEvent.ALT_L_MASK) > 0) System.out.print("Lalt ");
-		if((nevent.getModifiers() & NativeInputEvent.ALT_R_MASK) > 0) System.out.print("Ralt ");
-		System.out.println();
-		
 		if(config.trackAll && !keys.containsKey(code)){
 			if(nevent instanceof NativeKeyEvent){
 				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code, CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
