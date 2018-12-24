@@ -900,10 +900,10 @@ public class Configuration{
 				break;
 			}
 		}
+		if(!CommandKeys.isNewFormat(code)){
+			code = CommandKeys.getExtendedKeyCode(code % 1000, shift, ctrl, alt);
+		}
 		KeyInformation kinfo = new KeyInformation(name, code, visible);
-		kinfo.alt = alt;
-		kinfo.shift = shift;
-		kinfo.ctrl = ctrl;
 		kinfo.x = x;
 		kinfo.y = y;
 		kinfo.width = width;
