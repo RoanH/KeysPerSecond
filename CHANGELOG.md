@@ -35,4 +35,5 @@
 - **24 December 2017**: Fix all known key-modifier bugs, better support for unfilled grids, internal optimizations.<br>
 - **2 June 2018**: Fix the arrow keys displaying rather broken.<br>
 - **3 June 2018**: Switch to arrow symbols with better availability, fix configuration position saving and UTF-8 support, add GitHub link to the initialisation dialog.
-- **12 September 2018**: Completely new versatible layout system, rendering modes on a per key basis, improved performance.
+- **12 September 2018**: Completely new versatible layout system, rendering modes on a per key basis, improved performance.    
+- **27 December 2018**: Variable layout size, variable layout border offset size, support for the right shift key, several other bug fixes, improved dialogs.
