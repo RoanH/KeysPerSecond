@@ -560,7 +560,7 @@ public class Menu{
 		TotPanel.hits = 0;
 		Main.reconfigure();
 		Main.mainLoop();
-		KeyInformation.autoIndex = (int)(Main.config.keyinfo.stream().filter(k->k.visible).count() * 2 - 2);
+		KeyInformation.autoIndex = (int)(Main.config.keyinfo.size() * 2 - 2);
 		Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
 		Main.frame.setAlwaysOnTop(Main.config.overlay);
 	}
