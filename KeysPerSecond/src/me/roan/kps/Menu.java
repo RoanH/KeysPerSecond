@@ -557,6 +557,7 @@ public class Menu{
 		createMenu();
 		Main.keys.clear();
 		Main.resetStats();
+		TotPanel.hits = 0;
 		Main.reconfigure();
 		Main.mainLoop();
 		Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
