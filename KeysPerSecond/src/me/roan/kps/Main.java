@@ -1445,7 +1445,7 @@ public class Main{
 
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
-		showOptionDialog(form, true);
+		showMessageDialog(form, true);
 		content.hideGrid();
 	}
 
@@ -2064,7 +2064,17 @@ public class Main{
 	 * @param msg The object to display
 	 */
 	protected static final void showMessageDialog(Object msg){
-		showDialog(msg, false, new String[]{"OK"});
+		showMessageDialog(msg, false);
+	}
+	
+	/**
+	 * Shows the given object to the user in a dialog
+	 * @param msg The object to display
+	 * @param resizable Whether the user should
+	 *        be able to resize the dialog
+	 */
+	protected static final void showMessageDialog(Object msg, boolean resizable){
+		showDialog(msg, resizable, new String[]{"OK"});
 	}
 	
 	/**
