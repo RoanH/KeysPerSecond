@@ -1648,7 +1648,7 @@ public class Main{
 			String[] names = new String[]{"M1", "M2", "M3", "M4", "M5"};
 			JCheckBox[] boxes = new JCheckBox[]{
 				new JCheckBox(names[0] + " (left click)"), 
-			    new JCheckBox(names[1] + " (left click)"), 
+			    new JCheckBox(names[1] + " (right click)"), 
 			    new JCheckBox(names[2] + " (mouse wheel)"), 
 			    new JCheckBox(names[3]), 
 			    new JCheckBox(names[4])
