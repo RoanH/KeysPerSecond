@@ -63,7 +63,11 @@ public class Configuration{
 	/**
 	 * Whether or not to track all key presses
 	 */
-	protected boolean trackAll = false;
+	protected boolean trackAllKeys = false;
+	/**
+	 * Whether or not to track all mouse button presses
+	 */
+	protected boolean trackAllButtons = false;
 	/**
 	 * Whether or not to show the total number of hits
 	 */
@@ -435,7 +439,11 @@ public class Configuration{
 					overlay = Boolean.parseBoolean(args[1]);
 					break;
 				case "trackAllKeys":
-					trackAll = Boolean.parseBoolean(args[1]);
+					trackAllKeys = Boolean.parseBoolean(args[1]);
+					trackAllButtons = trackAllKeys;//for backwards compatibility
+					break;
+				case "trackAllButtons":
+					trackAllButtons = Boolean.parseBoolean(args[1]);
 					break;
 				case "updateRate":
 					try{
@@ -985,7 +993,8 @@ public class Configuration{
 				background = (Color)objin.readObject();
 				foreground = (Color)objin.readObject();
 				if(objin.available() > 0){
-					trackAll = objin.readBoolean();
+					trackAllKeys = objin.readBoolean();
+					trackAllButtons = trackAllKeys;
 					showKeys = objin.readBoolean();
 					if(objin.available() > 0){
 						version = objin.readDouble();
@@ -1045,7 +1054,8 @@ public class Configuration{
 				out.println("showTotal: " + showTotal);
 				out.println("showKeys: " + showKeys);
 				out.println("overlay: " + overlay);
-				out.println("trackAllKeys: " + trackAll);
+				out.println("trackAllKeys: " + trackAllKeys);
+				out.println("trackAllButtons: " + trackAllButtons);
 				out.println("updateRate: " + updateRate);
 				out.println("precision: " + precision);
 				out.println("enableKeyModifierCombinations: " + enableModifiers);

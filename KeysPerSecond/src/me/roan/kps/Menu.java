@@ -124,7 +124,8 @@ public class Menu{
 		JMenuItem commandkeys = new JMenuItem("Commands");
 		JMenuItem layout = new JMenuItem("Layout");
 		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
-		JCheckBoxMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
+		JCheckBoxMenuItem tAllKeys = new JCheckBoxMenuItem("Track all keys");
+		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
 		JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay mode");
 		JCheckBoxMenuItem p0 = new JCheckBoxMenuItem("No digits beyond the decimal point");
 		JCheckBoxMenuItem p1 = new JCheckBoxMenuItem("1 digit beyond the decimal point");
@@ -161,7 +162,8 @@ public class Menu{
 		components.add(colorcustom);
 		components.add(backlog);
 		components.add(colorenable);
-		components.add(tAll);
+		components.add(tAllKeys);
+		components.add(tAllButtons);
 		components.add(overlay);
 		components.add(commandkeys);
 		components.add(p0);
@@ -224,20 +226,41 @@ public class Menu{
 		treset.addActionListener((e)->{
 			Main.resetTotals();
 		});
-		tAll.setSelected(Main.config.trackAll);
-		tAll.addActionListener((e)->{
-			Main.config.trackAll = tAll.isSelected();
+		tAllKeys.setSelected(Main.config.trackAllKeys);
+		tAllKeys.addActionListener((e)->{
+			Main.config.trackAllKeys = tAllKeys.isSelected();
 			Iterator<Entry<Integer, Key>> iter = Main.keys.entrySet().iterator();
 			while(iter.hasNext()){
 				Entry<Integer, Key> key = iter.next();
-				boolean remove = true;
-				for(KeyInformation info : Main.config.keyinfo){
-					if(info.keycode == key.getKey()){
-						remove = false;
+				if(!CommandKeys.isMouseButton(key.getKey())){
+					boolean remove = true;
+					for(KeyInformation info : Main.config.keyinfo){
+						if(info.keycode == key.getKey()){
+							remove = false;
+						}
+					}
+					if(remove){
+						iter.remove();
 					}
 				}
-				if(remove){
-					iter.remove();
+			}
+		});
+		tAllButtons.setSelected(Main.config.trackAllButtons);
+		tAllButtons.addActionListener((e)->{
+			Main.config.trackAllButtons = tAllButtons.isSelected();
+			Iterator<Entry<Integer, Key>> iter = Main.keys.entrySet().iterator();
+			while(iter.hasNext()){
+				Entry<Integer, Key> key = iter.next();
+				if(CommandKeys.isMouseButton(key.getKey())){
+					boolean remove = true;
+					for(KeyInformation info : Main.config.keyinfo){
+						if(info.keycode == key.getKey()){
+							remove = false;
+						}
+					}
+					if(remove){
+						iter.remove();
+					}
 				}
 			}
 		});
@@ -516,7 +539,8 @@ public class Menu{
 		general.add(tot);
 		general.add(keys);
 		general.add(overlay);
-		general.add(tAll);
+		general.add(tAllKeys);
+		general.add(tAllButtons);
 		general.add(modifiers);
 
 		configure.add(general);
