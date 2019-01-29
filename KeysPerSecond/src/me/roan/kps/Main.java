@@ -447,10 +447,10 @@ public class Main{
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
-		if(config.trackAll && !keys.containsKey(code)){
-			if(nevent instanceof NativeKeyEvent){
+		if(!keys.containsKey(code)){
+			if(config.trackAllKeys && nevent instanceof NativeKeyEvent){
 				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code)));
-			}else{
+			}else if(config.trackAllButtons && nevent instanceof NativeMouseEvent){
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
 		}
@@ -540,8 +540,8 @@ public class Main{
 	 */
 	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(10, 0));
-		JPanel labels = new JPanel(new GridLayout(10, 0));
+		JPanel boxes = new JPanel(new GridLayout(11, 0));
+		JPanel labels = new JPanel(new GridLayout(11, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
@@ -549,7 +549,8 @@ public class Main{
 		JCheckBox cgra = new JCheckBox();
 		JCheckBox ctop = new JCheckBox();
 		JCheckBox ccol = new JCheckBox();
-		JCheckBox call = new JCheckBox();
+		JCheckBox callKeys = new JCheckBox();
+		JCheckBox callButtons = new JCheckBox();
 		JCheckBox ctot = new JCheckBox();
 		JCheckBox cmod = new JCheckBox();
 		cmax.setSelected(true);
@@ -563,7 +564,8 @@ public class Main{
 		JLabel lgra = new JLabel("Show graph: ");
 		JLabel ltop = new JLabel("Overlay mode: ");
 		JLabel lcol = new JLabel("Custom colours: ");
-		JLabel lall = new JLabel("Track all keys");
+		JLabel lallKeys = new JLabel("Track all keys");
+		JLabel lallButtons = new JLabel("Track all buttons");
 		JLabel ltot = new JLabel("Show total");
 		JLabel lmod = new JLabel("Key-modifier tracking");
 		ltop.setToolTipText("Requires you to run osu! out of full screen mode, known to not (always) work with the wine version of osu!");
@@ -575,7 +577,8 @@ public class Main{
 		boxes.add(cgra);
 		boxes.add(ctop);
 		boxes.add(ccol);
-		boxes.add(call);
+		boxes.add(callKeys);
+		boxes.add(callButtons);
 		boxes.add(cmod);
 		labels.add(lmax);
 		labels.add(lavg);
@@ -585,15 +588,20 @@ public class Main{
 		labels.add(lgra);
 		labels.add(ltop);
 		labels.add(lcol);
-		labels.add(lall);
+		labels.add(lallKeys);
+		labels.add(lallButtons);
 		labels.add(lmod);
 		JButton save = new JButton("Save config");
 		ctop.addActionListener((e)->{
 			config.overlay = ctop.isSelected();
 			save.setEnabled(true);
 		});
-		call.addActionListener((e)->{
-			config.trackAll = call.isSelected();
+		callKeys.addActionListener((e)->{
+			config.trackAllKeys = callKeys.isSelected();
+			save.setEnabled(true);
+		});
+		callButtons.addActionListener((e)->{
+			config.trackAllButtons = callButtons.isSelected();
 			save.setEnabled(true);
 		});
 		cmax.addActionListener((e)->{
@@ -751,7 +759,8 @@ public class Main{
 			if(config.customColors){
 				color.setEnabled(true);
 			}
-			call.setSelected(config.trackAll);
+			callKeys.setSelected(config.trackAllKeys);
+			callButtons.setSelected(config.trackAllButtons);
 			ckey.setSelected(config.showKeys);
 			ctop.setSelected(config.overlay);
 			ctot.setSelected(config.showTotal);
