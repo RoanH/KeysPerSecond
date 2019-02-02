@@ -60,6 +60,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -640,7 +641,7 @@ public class Main{
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(9, 1));
+		JPanel buttons = new JPanel(new GridLayout(10, 1));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
@@ -660,6 +661,7 @@ public class Main{
 		});
 		JButton precision = new JButton("Precision");
 		JButton layout = new JButton("Layout");
+		JButton autoSave = new JButton("Stats Saving");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
@@ -667,6 +669,7 @@ public class Main{
 		buttons.add(updaterate);
 		buttons.add(color);
 		buttons.add(precision);
+		buttons.add(autoSave);
 		buttons.add(cmdkeys);
 		buttons.add(layout);
 		form.add(options, BorderLayout.CENTER);
@@ -800,6 +803,10 @@ public class Main{
 				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 				save.setEnabled(true);
 			}
+		});
+		autoSave.addActionListener((e)->{
+			configureAutoSave();
+			save.setEnabled(true);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
 		JLabel ver = new JLabel("<html><center><i>Version: v8.1, latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
@@ -1513,6 +1520,52 @@ public class Main{
 			}
 		});
 		modes.add(mode);
+	}
+	
+	/**
+	 * Show the auto save statistics configuration dialog
+	 */
+	protected static final void configureAutoSave(){//XXX autosave
+		//dest folder
+		//overwrite
+		//interval
+		//on exit
+		//data
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setMultiSelectionEnabled(false);
+		
+		JPanel panel = new JPanel(new GridLayout(6, 1));
+		panel.add(new JLabel("Periodically save the statistics so far to a file"));
+		
+		JPanel dest = new JPanel(new BorderLayout());
+		JTextField lout = new JTextField("");
+		JButton seldest = new JButton("Select");
+		JTextField ldest = new JTextField("");
+		dest.add(ldest, BorderLayout.CENTER);
+		dest.add(seldest, BorderLayout.LINE_END);
+		dest.add(new JLabel("Save location: "), BorderLayout.LINE_START);
+		seldest.addActionListener((e)->{
+			if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
+				ldest.setText(chooser.getSelectedFile().getAbsolutePath());
+			}
+		});
+		
+		
+		
+		JCheckBox overwrite = new JCheckBox("Overwrite when saving");
+		JCheckBox date = new JCheckBox("Include the current date in the file name");
+		JCheckBox onExit = new JCheckBox("Attempt to save on exit");
+		
+		panel.add(dest);
+		//panel.add(comp);
+		panel.add(overwrite);
+		panel.add(date);
+		panel.add(onExit);
+		
+		//TODO also a toggle for it all
+		
+		Main.showConfirmDialog(panel);
 	}
 
 	/**
