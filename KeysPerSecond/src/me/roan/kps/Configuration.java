@@ -267,10 +267,10 @@ public class Configuration{
 			//interval
 			//on exit
 			//data
+	public boolean autoSaveStats = false;
 	public String statsDest = null;
-	public boolean statsOverwrite = false;
+	public String format = null;
 	public boolean statsSaveOnExit = false;
-	public boolean statsSaveDate = false;
 	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(60);
 
 	/**

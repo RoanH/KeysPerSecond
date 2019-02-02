@@ -516,10 +516,10 @@ public class Menu{
 			}
 		});
 		saveStats.addActionListener((e)->{
-			Main.saveStats();
+			Statistics.saveStats();
 		});
 		loadStats.addActionListener((e)->{
-			Main.loadStats();
+			Statistics.loadStats();
 		});
 
 		reset.add(treset);

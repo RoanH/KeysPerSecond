@@ -14,13 +14,10 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -51,7 +48,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -60,14 +56,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -210,15 +204,7 @@ public class Main{
 	 * Dummy key for getOrDefault operations
 	 */
 	private static final Key DUMMY_KEY;
-	/**
-	 * Periodic stats save scheduler
-	 */
-	protected static ScheduledExecutorService statsScheduler = null;
-	/**
-	 * Stats save future
-	 */
-	protected static ScheduledFuture<?> statsFuture = null;
-
+	
 	/**
 	 * Main method
 	 * @param args - configuration file path
@@ -813,7 +799,7 @@ public class Main{
 			}
 		});
 		autoSave.addActionListener((e)->{
-			configureAutoSave();
+			Statistics.configureAutoSave();
 			save.setEnabled(true);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
@@ -1531,57 +1517,6 @@ public class Main{
 	}
 	
 	/**
-	 * Show the auto save statistics configuration dialog
-	 */
-	protected static final void configureAutoSave(){//XXX autosave
-		//dest folder
-		//overwrite
-		//interval
-		//on exit
-		//data
-		
-		//Main.statsFuture
-		//Main.statsScheduler
-		//TimeUnit.MICROSECONDS.toNanos(duration)
-		
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setMultiSelectionEnabled(false);
-		
-		JPanel panel = new JPanel(new GridLayout(6, 1));
-		panel.add(new JLabel("Periodically save the statistics so far to a file"));
-		
-		JPanel dest = new JPanel(new BorderLayout());
-		JTextField lout = new JTextField("");
-		JButton seldest = new JButton("Select");
-		JTextField ldest = new JTextField("");
-		dest.add(ldest, BorderLayout.CENTER);
-		dest.add(seldest, BorderLayout.LINE_END);
-		dest.add(new JLabel("Save location: "), BorderLayout.LINE_START);
-		seldest.addActionListener((e)->{
-			if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
-				ldest.setText(chooser.getSelectedFile().getAbsolutePath());
-			}
-		});
-		
-		
-		
-		JCheckBox overwrite = new JCheckBox("Overwrite when saving");
-		JCheckBox date = new JCheckBox("Include the current date in the file name");
-		JCheckBox onExit = new JCheckBox("Attempt to save on exit");
-		
-		panel.add(dest);
-		//panel.add(comp);
-		panel.add(overwrite);
-		panel.add(date);
-		panel.add(onExit);
-		
-		//TODO also a toggle for it all
-		
-		Main.showConfirmDialog(panel);
-	}
-
-	/**
 	 * Shows the key configuration dialog
 	 */
 	protected static final void configureKeys(){
@@ -2025,78 +1960,6 @@ public class Main{
 		tmp.deleteOnExit();
 		tmp.delete();
 		System.exit(0);
-	}
-
-	/**
-	 * Saves the statistics logged so far
-	 */
-	protected static void saveStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
-		if(!file.exists() || (file.exists() && showConfirmDialog("File already exists, overwrite?"))){
-			try{
-				file.createNewFile();
-				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-				out.writeInt(TotPanel.hits);
-				out.writeDouble(avg);
-				out.writeInt(max);
-				out.writeLong(n);
-				out.writeInt(prev);
-				out.writeInt(tmp.get());
-				for(Entry<Integer, Key> key : keys.entrySet()){
-					out.writeInt(key.getKey());
-					out.writeObject(key.getValue());
-				}
-				out.flush();
-				out.close();
-				showMessageDialog("Statistics succesfully saved");
-			}catch(IOException e){
-				e.printStackTrace();
-				showErrorDialog("Failed to save the statistics!");
-			}
-		}
-	}
-
-	/**
-	 * Loads the statistics from a file
-	 */
-	protected static void loadStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-			TotPanel.hits = in.readInt();
-			avg = in.readDouble();
-			max = in.readInt();
-			n = in.readLong();
-			prev = in.readInt();
-			tmp.set(in.readInt());
-			while(in.available() > 0){
-				int code = in.readInt();
-				Key key = keys.get(code);
-				Key obj = ((Key)in.readObject());
-				if(key != null){
-					key.count = obj.count;
-				}else{
-					keys.put(code, obj);
-				}
-			}
-			in.close();
-			frame.repaint();
-			graphFrame.repaint();
-			showMessageDialog("Statistics succesfully loaded");
-		}catch(IOException | ClassNotFoundException e){
-			showErrorDialog("Failed to load the statistics!");
-		}
 	}
 	
 	//=================================================================================================
