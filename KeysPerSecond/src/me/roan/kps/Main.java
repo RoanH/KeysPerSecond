@@ -2015,10 +2015,13 @@ public class Main{
 			prev = in.readInt();
 			tmp.set(in.readInt());
 			while(in.available() > 0){
-				Key key = keys.get(in.readInt());
+				int code = in.readInt();
+				Key key = keys.get(code);
 				Key obj = ((Key)in.readObject());
 				if(key != null){
 					key.count = obj.count;
+				}else{
+					keys.put(code, obj);
 				}
 			}
 			in.close();
@@ -2142,7 +2145,7 @@ public class Main{
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		public transient final String name;
+		public final String name;
 		/**
 		 * The graphical display for this key
 		 */
@@ -2150,15 +2153,15 @@ public class Main{
 		/**
 		 * Whether or not alt has to be down
 		 */
-		protected transient boolean alt;
+		protected boolean alt;
 		/**
 		 * Whether or not ctrl has to be down
 		 */
-		protected transient boolean ctrl;
+		protected boolean ctrl;
 		/**
 		 * Whether or not shift has to be down
 		 */
-		protected transient boolean shift;
+		protected boolean shift;
 
 		/**
 		 * Constructs a new Key object
