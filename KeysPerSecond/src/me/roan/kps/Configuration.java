@@ -262,15 +262,9 @@ public class Configuration{
 	protected GraphMode graphMode = GraphMode.INLINE;
 	
 	//automatic stats saving
-	//dest folder
-			//overwrite
-			//interval
-			//on exit
-			//data
 	public boolean autoSaveStats = false;
 	public String statsDest = null;
 	public String format = null;
-	public boolean statsSaveOnExit = false;
 	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(60);
 
 	/**

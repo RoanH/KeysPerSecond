@@ -75,12 +75,12 @@ public class Statistics{
 		
 		
 		
-		JCheckBox overwrite = new JCheckBox("Overwrite when saving");
+		//JCheckBox overwrite = new JCheckBox("Overwrite when saving");
 		JCheckBox onExit = new JCheckBox("Attempt to save on exit");
 		
 		panel.add(dest);
 		//panel.add(comp);
-		panel.add(overwrite);
+		//panel.add(overwrite);
 		//panel.add(date);
 		panel.add(onExit);
 		
@@ -88,9 +88,11 @@ public class Statistics{
 		
 		Main.showConfirmDialog(panel);
 	}
-
+	
 	/**
 	 * Saves the statistics logged so far
+	 * and asks the user to provide a location
+	 * to save to
 	 */
 	protected static void saveStats(){
 		JFileChooser chooser = new JFileChooser();
@@ -101,26 +103,40 @@ public class Statistics{
 		}
 		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
 		if(!file.exists() || (file.exists() && Main.showConfirmDialog("File already exists, overwrite?"))){
-			try{
-				file.createNewFile();
-				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-				out.writeInt(TotPanel.hits);
-				out.writeDouble(Main.avg);
-				out.writeInt(Main.max);
-				out.writeLong(Main.n);
-				out.writeInt(Main.prev);
-				out.writeInt(Main.tmp.get());
-				for(Entry<Integer, Key> key : Main.keys.entrySet()){
-					out.writeInt(key.getKey());
-					out.writeObject(key.getValue());
-				}
-				out.flush();
-				out.close();
+			if(saveStats(file)){
 				Main.showMessageDialog("Statistics succesfully saved");
-			}catch(IOException e){
-				e.printStackTrace();
+			}else{
 				Main.showErrorDialog("Failed to save the statistics!");
 			}
+		}
+	}
+
+	/**
+	 * Saves the statistics logged so far
+	 * @param dest The file to save to
+	 * @return True if saving was successful, 
+	 *         false otherwise
+	 */
+	private static boolean saveStats(File dest){
+		try{
+			dest.createNewFile();
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dest));
+			out.writeInt(TotPanel.hits);
+			out.writeDouble(Main.avg);
+			out.writeInt(Main.max);
+			out.writeLong(Main.n);
+			out.writeInt(Main.prev);
+			out.writeInt(Main.tmp.get());
+			for(Entry<Integer, Key> key : Main.keys.entrySet()){
+				out.writeInt(key.getKey());
+				out.writeObject(key.getValue());
+			}
+			out.flush();
+			out.close();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+			return false;
 		}
 	}
 
