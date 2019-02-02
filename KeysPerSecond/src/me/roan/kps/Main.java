@@ -210,6 +210,14 @@ public class Main{
 	 * Dummy key for getOrDefault operations
 	 */
 	private static final Key DUMMY_KEY;
+	/**
+	 * Periodic stats save scheduler
+	 */
+	protected static ScheduledExecutorService statsScheduler = null;
+	/**
+	 * Stats save future
+	 */
+	protected static ScheduledFuture<?> statsFuture = null;
 
 	/**
 	 * Main method
@@ -1531,6 +1539,11 @@ public class Main{
 		//interval
 		//on exit
 		//data
+		
+		//Main.statsFuture
+		//Main.statsScheduler
+		//TimeUnit.MICROSECONDS.toNanos(duration)
+		
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setMultiSelectionEnabled(false);

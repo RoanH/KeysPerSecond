@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -259,6 +260,18 @@ public class Configuration{
 	 * Position the graph is rendered in
 	 */
 	protected GraphMode graphMode = GraphMode.INLINE;
+	
+	//automatic stats saving
+	//dest folder
+			//overwrite
+			//interval
+			//on exit
+			//data
+	public String statsDest = null;
+	public boolean statsOverwrite = false;
+	public boolean statsSaveOnExit = false;
+	public boolean statsSaveDate = false;
+	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(60);
 
 	/**
 	 * The original configuration file
