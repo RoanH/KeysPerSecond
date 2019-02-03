@@ -2,6 +2,8 @@ package me.roan.kps;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -62,7 +64,7 @@ public class Statistics{
 		JPanel extras = new JPanel(new GridLayout(3, 1, 0, 2));
 		
 		JButton seldest = new JButton("Select");
-		JTextField ldest = new JTextField("");
+		JTextField ldest = new JTextField(Main.config.statsDest);
 		fields.add(ldest);
 		extras.add(seldest);
 		labels.add(new JLabel("Save location: "));
@@ -75,7 +77,7 @@ public class Statistics{
 		JComboBox<Unit> timeUnit = new JComboBox<Unit>(Unit.values());
 		Unit bestUnit = Unit.fromMillis(Main.config.statsSaveInterval);
 		timeUnit.setSelectedItem(bestUnit);
-		JSpinner time = new JSpinner(new SpinnerNumberModel(Main.config.statsSaveInterval / bestUnit.unit.toMillis(1), 1, Long.MAX_VALUE, 1));
+		JSpinner time = new JSpinner(new SpinnerNumberModel(new Long(Main.config.statsSaveInterval / bestUnit.unit.toMillis(1)), new Long(1), new Long(Long.MAX_VALUE), new Long(1)));
 		labels.add(new JLabel("Save interval: "));
 		fields.add(time);
 		JPanel unitPanel = new JPanel(new BorderLayout());
@@ -85,9 +87,10 @@ public class Statistics{
 		
 		JTextField format = new JTextField(Main.config.statsFormat);
 		JButton help = new JButton("Help");
-		labels.add(new JLabel("Format: "));
+		labels.add(new JLabel("Save format: "));
 		fields.add(format);
 		extras.add(help);
+		help.addActionListener(Statistics::showFormatHelp);
 		
 		settings.add(labels, BorderLayout.LINE_START);
 		settings.add(fields, BorderLayout.CENTER);
@@ -95,6 +98,17 @@ public class Statistics{
 		
 		panel.add(enabled, BorderLayout.PAGE_START);
 		panel.add(settings, BorderLayout.CENTER);
+		
+		ActionListener enabledTask = (e)->{
+			ldest.setEnabled(enabled.isSelected());
+			seldest.setEnabled(enabled.isSelected());
+			format.setEnabled(enabled.isSelected());
+			help.setEnabled(enabled.isSelected());
+			time.setEnabled(enabled.isSelected());
+			timeUnit.setEnabled(enabled.isSelected());
+		};
+		enabled.addActionListener(enabledTask);
+		enabledTask.actionPerformed(null);
 				
 		if(Main.showOptionDialog(panel)){
 			Main.config.autoSaveStats = enabled.isSelected();
@@ -103,6 +117,10 @@ public class Statistics{
 			Main.config.statsSaveInterval = ((Unit)timeUnit.getSelectedItem()).unit.toMillis((long)time.getValue());
 			//TODO new scheduled future if interval changed
 		}
+	}
+	
+	private static void showFormatHelp(ActionEvent event){
+		//TODO
 	}
 	
 	private static void saveStatsTask(){
