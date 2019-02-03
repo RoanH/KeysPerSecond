@@ -46,17 +46,7 @@ public class Statistics{
 	/**
 	 * Show the auto save statistics configuration dialog
 	 */
-	protected static final void configureAutoSave(){//XXX autosave
-		//dest folder
-		//interval
-		//on exit
-		//data
-		
-		//Main.statsFuture
-		//Main.statsScheduler
-		//TimeUnit.MICROSECONDS.toNanos(duration)
-		//format DateTimeFormatter.ofPattern(...).format(Instant.now());
-		
+	protected static final void configureAutoSave(){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
@@ -106,7 +96,18 @@ public class Statistics{
 		panel.add(enabled, BorderLayout.PAGE_START);
 		panel.add(settings, BorderLayout.CENTER);
 				
-		Main.showConfirmDialog(panel);
+		if(Main.showOptionDialog(panel)){
+			Main.config.autoSaveStats = enabled.isSelected();
+			Main.config.statsDest = ldest.getText();
+			Main.config.statsFormat = format.getText();
+			Main.config.statsSaveInterval = ((Unit)timeUnit.getSelectedItem()).unit.toMillis((long)time.getValue());
+			//TODO new scheduled future if interval changed
+		}
+	}
+	
+	private static void saveStatsTask(){
+		//format DateTimeFormatter.ofPattern(...).format(Instant.now());
+
 	}
 	
 	/**
