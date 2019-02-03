@@ -48,7 +48,6 @@ public class Statistics{
 	 */
 	protected static final void configureAutoSave(){//XXX autosave
 		//dest folder
-		//overwrite
 		//interval
 		//on exit
 		//data
@@ -63,12 +62,14 @@ public class Statistics{
 		chooser.setMultiSelectionEnabled(false);
 		
 		JPanel panel = new JPanel(new GridLayout(6, 1));
-		panel.add(new JLabel("Periodically save the statistics so far to a file"));
+		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", Main.config.autoSaveStats);
 		
-		JPanel destInterval = new JPanel(new BorderLayout());
-		JPanel labels = new JPanel(new GridLayout(2, 1, 0, 2));
-		JPanel fields = new JPanel(new GridLayout(2, 1, 0, 2));
-		JPanel extras = new JPanel(new GridLayout(2, 1, 0, 2));
+		BorderLayout layout = new BorderLayout();
+		layout.setHgap(2);
+		JPanel settings = new JPanel(layout);
+		JPanel labels = new JPanel(new GridLayout(3, 1, 0, 2));
+		JPanel fields = new JPanel(new GridLayout(3, 1, 0, 2));
+		JPanel extras = new JPanel(new GridLayout(3, 1, 0, 2));
 		
 		JButton seldest = new JButton("Select");
 		JTextField ldest = new JTextField("");
@@ -92,21 +93,19 @@ public class Statistics{
 		unitPanel.add(timeUnit, BorderLayout.CENTER);
 		extras.add(unitPanel);
 		
-		destInterval.add(labels, BorderLayout.LINE_START);
-		destInterval.add(fields, BorderLayout.CENTER);
-		destInterval.add(extras, BorderLayout.LINE_END);
+		JTextField format = new JTextField(Main.config.statsFormat);
+		JButton help = new JButton("Help");
+		labels.add(new JLabel("Format: "));
+		fields.add(format);
+		extras.add(help);
 		
+		settings.add(labels, BorderLayout.LINE_START);
+		settings.add(fields, BorderLayout.CENTER);
+		settings.add(extras, BorderLayout.LINE_END);
 		
-		//JCheckBox overwrite = new JCheckBox("Overwrite when saving");
-		JCheckBox onExit = new JCheckBox("Attempt to save on exit");
-		
-		panel.add(destInterval);
-		//panel.add(overwrite);
-		//panel.add(date);
-		panel.add(onExit);
-		
-		//TODO also a toggle for it all
-		
+		panel.add(enabled);
+		panel.add(settings);
+				
 		Main.showConfirmDialog(panel);
 	}
 	
