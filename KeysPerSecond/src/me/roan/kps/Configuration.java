@@ -262,6 +262,7 @@ public class Configuration{
 	protected GraphMode graphMode = GraphMode.INLINE;
 	
 	//automatic stats saving
+	//TODO save and load from config
 	public boolean autoSaveStats = false;
 	public String statsDest = null;
 	public String statsFormat = null;
