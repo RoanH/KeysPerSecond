@@ -11,13 +11,18 @@ import java.io.ObjectOutputStream;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import me.roan.kps.Main.Key;
@@ -60,26 +65,42 @@ public class Statistics{
 		JPanel panel = new JPanel(new GridLayout(6, 1));
 		panel.add(new JLabel("Periodically save the statistics so far to a file"));
 		
-		JPanel dest = new JPanel(new BorderLayout());
+		JPanel destInterval = new JPanel(new BorderLayout());
+		JPanel labels = new JPanel(new GridLayout(2, 1, 0, 2));
+		JPanel fields = new JPanel(new GridLayout(2, 1, 0, 2));
+		JPanel extras = new JPanel(new GridLayout(2, 1, 0, 2));
+		
 		JButton seldest = new JButton("Select");
 		JTextField ldest = new JTextField("");
-		dest.add(ldest, BorderLayout.CENTER);
-		dest.add(seldest, BorderLayout.LINE_END);
-		dest.add(new JLabel("Save location: "), BorderLayout.LINE_START);
+		fields.add(ldest);
+		extras.add(seldest);
+		labels.add(new JLabel("Save location: "));
 		seldest.addActionListener((e)->{
 			if(chooser.showOpenDialog(Main.frame) == JFileChooser.APPROVE_OPTION){
 				ldest.setText(chooser.getSelectedFile().getAbsolutePath());
 			}
 		});
 		
+		JComboBox<Unit> timeUnit = new JComboBox<Unit>(Unit.values());
+		Unit bestUnit = Unit.fromMillis(Main.config.statsSaveInterval);
+		timeUnit.setSelectedItem(bestUnit);
+		JSpinner time = new JSpinner(new SpinnerNumberModel(Main.config.statsSaveInterval / bestUnit.unit.toMillis(1), 1, Long.MAX_VALUE, 1));
+		labels.add(new JLabel("Save interval: "));
+		fields.add(time);
+		JPanel unitPanel = new JPanel(new BorderLayout());
+		unitPanel.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+		unitPanel.add(timeUnit, BorderLayout.CENTER);
+		extras.add(unitPanel);
 		
+		destInterval.add(labels, BorderLayout.LINE_START);
+		destInterval.add(fields, BorderLayout.CENTER);
+		destInterval.add(extras, BorderLayout.LINE_END);
 		
 		
 		//JCheckBox overwrite = new JCheckBox("Overwrite when saving");
 		JCheckBox onExit = new JCheckBox("Attempt to save on exit");
 		
-		panel.add(dest);
-		//panel.add(comp);
+		panel.add(destInterval);
 		//panel.add(overwrite);
 		//panel.add(date);
 		panel.add(onExit);
@@ -174,6 +195,37 @@ public class Statistics{
 			Main.showMessageDialog("Statistics succesfully loaded");
 		}catch(IOException | ClassNotFoundException e){
 			Main.showErrorDialog("Failed to load the statistics!");
+		}
+	}
+	
+	private static enum Unit{
+		HOUR("Hours", TimeUnit.HOURS, null),
+		MINUTE("Minutes", TimeUnit.MINUTES, HOUR),
+		SECOND("Seconds", TimeUnit.SECONDS, MINUTE),
+		MILLISECOND("Milliseconds", TimeUnit.MILLISECONDS, SECOND);
+		
+		private TimeUnit unit;
+		private String name;
+		private Unit up;
+		
+		private Unit(String name, TimeUnit unit, Unit up){
+			this.name = name;
+			this.unit = unit;
+			this.up = up;
+		}
+		
+		private static final Unit fromMillis(long millis){
+			for(Unit unit : values()){
+				if(millis % unit.unit.toMillis(1) == 0 && (unit.up == null || millis < unit.up.unit.toMillis(1))){
+					return unit;
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public String toString(){
+			return name;
 		}
 	}
 }

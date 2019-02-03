@@ -265,7 +265,7 @@ public class Configuration{
 	public boolean autoSaveStats = false;
 	public String statsDest = null;
 	public String format = null;
-	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(60);
+	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
 
 	/**
 	 * The original configuration file
