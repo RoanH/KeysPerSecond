@@ -61,7 +61,7 @@ public class Statistics{
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
 		
-		JPanel panel = new JPanel(new GridLayout(6, 1));
+		JPanel panel = new JPanel(new BorderLayout());
 		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", Main.config.autoSaveStats);
 		
 		BorderLayout layout = new BorderLayout();
@@ -103,8 +103,8 @@ public class Statistics{
 		settings.add(fields, BorderLayout.CENTER);
 		settings.add(extras, BorderLayout.LINE_END);
 		
-		panel.add(enabled);
-		panel.add(settings);
+		panel.add(enabled, BorderLayout.PAGE_START);
+		panel.add(settings, BorderLayout.CENTER);
 				
 		Main.showConfirmDialog(panel);
 	}
