@@ -121,6 +121,7 @@ public class Menu{
 		JMenuItem configkeys = new JMenuItem("Keys");
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
 		JMenuItem backlog = new JMenuItem("Backlog");
+		JMenuItem statsSaving = new JMenuItem("Stats saving");
 		JMenuItem commandkeys = new JMenuItem("Commands");
 		JMenuItem layout = new JMenuItem("Layout");
 		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
@@ -147,6 +148,7 @@ public class Menu{
 		components.add(saveStats);
 		components.add(loadStats);
 		components.add(load);
+		components.add(statsSaving);
 		components.add(layout);
 		components.add(save);
 		components.add(snap);
@@ -521,6 +523,9 @@ public class Menu{
 		loadStats.addActionListener((e)->{
 			Statistics.loadStats();
 		});
+		statsSaving.addActionListener((e)->{
+			Statistics.configureAutoSave(true);
+		});
 
 		reset.add(treset);
 		reset.add(sreset);
@@ -549,6 +554,7 @@ public class Menu{
 		configure.add(rate);
 		configure.add(configcolors);
 		configure.add(precision);
+		configure.add(statsSaving);
 		configure.add(commandkeys);
 		configure.add(layout);
 
