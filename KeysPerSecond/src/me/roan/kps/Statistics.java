@@ -49,11 +49,11 @@ import me.roan.kps.Main.ClickableLink;
  */
 public class Statistics{
 	/**
-	 * Stats save future
+	 * Statistics save future
 	 */
 	protected static ScheduledFuture<?> statsFuture = null;
 	/**
-	 * Periodic stats save scheduler
+	 * Periodic statistics save scheduler
 	 */
 	protected static ScheduledExecutorService statsScheduler = null;
 
@@ -170,6 +170,12 @@ public class Statistics{
 		}
 	}
 	
+	/**
+	 * Shows a help dialog to the user that list some of
+	 * the available {@link DateTimeFormatter} options
+	 * @param event The {@link ActionEvent} from the button
+	 *        that was clicked
+	 */
 	private static void showFormatHelp(ActionEvent event){
 		JLabel help = new JLabel("<html>Format syntax:<br>"
 			+ "- Escape strings with single quotes ( ' )<br>"
@@ -189,23 +195,25 @@ public class Statistics{
 		Main.showMessageDialog(text);
 	}
 	
+	/**
+	 * Cancels the automatic statistics saving task
+	 */
 	private static void cancelScheduledTask(){
 		if(statsFuture != null){
 			statsFuture.cancel(false);
 		}
 	}
 	
-	public static boolean isSavingSetup(){
-		return statsScheduler != null;
-	}
-	
+	/**
+	 * Starts the statistics saving task or cancels the current
+	 * one and stars a new one.
+	 */
 	public static void saveStatsTask(){
 		if(statsScheduler == null){
 			statsScheduler = Executors.newSingleThreadScheduledExecutor();
 		}
 		cancelScheduledTask();
 		statsFuture = statsScheduler.scheduleAtFixedRate(()->{
-			System.out.println("Try save");
 			try{
 				File parent = new File(Main.config.statsDest);
 				parent.mkdirs();
@@ -307,22 +315,74 @@ public class Statistics{
 		}
 	}
 	
+	/**
+	 * Enum that has the different
+	 * time unit values offered
+	 * @author Roan
+	 * @see TimeUnit
+	 */
 	private static enum Unit{
+		/**
+		 * Represents the hour unit.
+		 * Larger units are not offered.
+		 */
 		HOUR("Hours", TimeUnit.HOURS, null),
+		/**
+		 * Represents the minute unit, 60 of
+		 * which make up a single {@link #HOUR}.
+		 */
 		MINUTE("Minutes", TimeUnit.MINUTES, HOUR),
+		/**
+		 * Represents the second unit, 60 of
+		 * which make up a single {@link #MINUTE}.
+		 */
 		SECOND("Seconds", TimeUnit.SECONDS, MINUTE),
+		/**
+		 * Represents the millisecond unit, 1000 of
+		 * which make up a single {@link #SECOND}.
+		 */
 		MILLISECOND("Milliseconds", TimeUnit.MILLISECONDS, SECOND);
 		
+		/**
+		 * The {@link TimeUnit} for this unit
+		 */
 		private TimeUnit unit;
+		/**
+		 * The display name for this unit
+		 */
 		private String name;
+		/**
+		 * The Unit that is one order of magnitude
+		 * larger than this one
+		 */
 		private Unit up;
 		
+		/**
+		 * Constructs a new Unit with the given
+		 * display name, {@link TimeUnit} and
+		 * Unit that is one order of magnitude larger
+		 * @param name
+		 * @param unit
+		 * @param up
+		 */
 		private Unit(String name, TimeUnit unit, Unit up){
 			this.name = name;
 			this.unit = unit;
 			this.up = up;
 		}
 		
+		/**
+		 * Returns the biggest time unit for which a single
+		 * unit is a divisor of the given number of millisecond 
+		 * and for which the a single unit of the time unit
+		 * that is one biggest is bigger than the given
+		 * number of milliseconds. If there is not bigger
+		 * unit then {@link #HOUR} is returned.
+		 * @param millis The number of milliseconds to
+		 *        find the best unit for
+		 * @return The best unit for the given number
+		 *         of milliseconds
+		 */
 		private static final Unit fromMillis(long millis){
 			for(Unit unit : values()){
 				if(millis % unit.unit.toMillis(1) == 0 && (unit.up == null || millis < unit.up.unit.toMillis(1))){
