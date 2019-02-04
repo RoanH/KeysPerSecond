@@ -14,6 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -259,6 +261,25 @@ public class Configuration{
 	 * Position the graph is rendered in
 	 */
 	protected GraphMode graphMode = GraphMode.INLINE;
+	
+	//automatic statistics saving
+	/**
+	 * Whether or not to periodically save the stats to a file
+	 */
+	public boolean autoSaveStats = false;
+	/**
+	 * The folder to auto save stats to
+	 */
+	public String statsDest = Objects.toString(System.getProperty("user.home"), "");
+	/**
+	 * The date time formatter pattern to use for the
+	 * statis auto saving file name
+	 */
+	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
+	/**
+	 * The statistics auto saving save interval in milliseconds
+	 */
+	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
 
 	/**
 	 * The original configuration file
@@ -412,7 +433,7 @@ public class Configuration{
 				if(line.startsWith("#") || line.isEmpty()){
 					continue;
 				}
-				String[] args = line.replace(" ", "").split(":");
+				String[] args = line.split(":", 2);
 				if(args[0].startsWith("keys")){
 					while((line = in.readLine()) != null && (line = line.replace(" ", "")).startsWith("-")){
 						try{
@@ -422,7 +443,8 @@ public class Configuration{
 						}
 					}
 				}
-				switch(args[0]){
+				args[1] = args[1].trim();
+				switch(args[0].trim()){
 				case "showMax":
 					showMax = Boolean.parseBoolean(args[1]);
 					break;
@@ -808,6 +830,29 @@ public class Configuration{
 						modified = true;
 					}
 					break;
+				case "autoSaveStats":
+					autoSaveStats = Boolean.parseBoolean(args[1]);
+					break;
+				case "statsSaveInterval":
+					try{
+						statsSaveInterval = Long.parseLong(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "statsDest":
+					if(args.length > 1){
+						statsDest = args[1];
+					}else{
+						modified = true;
+					}
+					break;
+				case "statsFormat":
+					if(args.length > 1){
+						statsFormat = args[1];
+					}else{
+						modified = true;
+					}
 				}
 			}
 			if(borderOffset > cellSize - BasePanel.imageSize){
@@ -1119,6 +1164,12 @@ public class Configuration{
 				out.println("graphMode: " + graphMode.name());
 				out.println("cellSize: " + cellSize);
 				out.println("borderOffset: " + borderOffset);
+				out.println();
+				out.println("# Stats auto saving");
+				out.println("autoSaveStats: " + autoSaveStats);
+				out.println("statsDest: " + statsDest);
+				out.println("statsFormat: " + statsFormat);
+				out.println("statsSaveInterval: " + statsSaveInterval);
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");

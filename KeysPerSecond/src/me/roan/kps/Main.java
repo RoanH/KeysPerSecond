@@ -14,15 +14,13 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -51,7 +49,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -66,7 +63,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -209,7 +205,7 @@ public class Main{
 	 * Dummy key for getOrDefault operations
 	 */
 	private static final Key DUMMY_KEY;
-
+	
 	/**
 	 * Main method
 	 * @param args - configuration file path
@@ -296,6 +292,11 @@ public class Main{
 			buildGUI();
 		}catch(IOException e){
 			e.printStackTrace();
+		}
+		
+		//Start stats saving
+		if(Main.config.autoSaveStats){
+			Statistics.saveStatsTask();
 		}
 
 		//Enter the main loop
@@ -640,7 +641,7 @@ public class Main{
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(9, 1));
+		JPanel buttons = new JPanel(new GridLayout(10, 1));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
@@ -660,6 +661,7 @@ public class Main{
 		});
 		JButton precision = new JButton("Precision");
 		JButton layout = new JButton("Layout");
+		JButton autoSave = new JButton("Stats saving");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
@@ -667,6 +669,7 @@ public class Main{
 		buttons.add(updaterate);
 		buttons.add(color);
 		buttons.add(precision);
+		buttons.add(autoSave);
 		buttons.add(cmdkeys);
 		buttons.add(layout);
 		form.add(options, BorderLayout.CENTER);
@@ -801,6 +804,10 @@ public class Main{
 				save.setEnabled(true);
 			}
 		});
+		autoSave.addActionListener((e)->{
+			Statistics.configureAutoSave(false);
+			save.setEnabled(true);
+		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
 		JLabel ver = new JLabel("<html><center><i>Version: v8.1, latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
 		info.add(ver);
@@ -813,64 +820,8 @@ public class Main{
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
 		links.add(forum);
 		links.add(git);
-		forum.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(Desktop.isDesktopSupported()){
-					try{
-						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/community/forums/topics/552405").toURI());
-					}catch(IOException | URISyntaxException e1){
-						//pity
-					}
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e){
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e){
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e){
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e){
-			}
-		});
-		git.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(Desktop.isDesktopSupported()){
-					try{
-						Desktop.getDesktop().browse(new URL("https://github.com/RoanH/KeysPerSecond").toURI());
-					}catch(IOException | URISyntaxException e1){
-						//pity
-					}
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e){
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e){
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e){
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e){
-			}
-		});
+		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
+		git.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
 		info.add(links);
 		form.add(info, BorderLayout.PAGE_END);
 		
@@ -1514,7 +1465,7 @@ public class Main{
 		});
 		modes.add(mode);
 	}
-
+	
 	/**
 	 * Shows the key configuration dialog
 	 */
@@ -1959,78 +1910,6 @@ public class Main{
 		tmp.deleteOnExit();
 		tmp.delete();
 		System.exit(0);
-	}
-
-	/**
-	 * Saves the statistics logged so far
-	 */
-	protected static void saveStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
-		if(!file.exists() || (file.exists() && showConfirmDialog("File already exists, overwrite?"))){
-			try{
-				file.createNewFile();
-				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-				out.writeInt(TotPanel.hits);
-				out.writeDouble(avg);
-				out.writeInt(max);
-				out.writeLong(n);
-				out.writeInt(prev);
-				out.writeInt(tmp.get());
-				for(Entry<Integer, Key> key : keys.entrySet()){
-					out.writeInt(key.getKey());
-					out.writeObject(key.getValue());
-				}
-				out.flush();
-				out.close();
-				showMessageDialog("Statistics succesfully saved");
-			}catch(IOException e){
-				e.printStackTrace();
-				showErrorDialog("Failed to save the statistics!");
-			}
-		}
-	}
-
-	/**
-	 * Loads the statistics from a file
-	 */
-	protected static void loadStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-			TotPanel.hits = in.readInt();
-			avg = in.readDouble();
-			max = in.readInt();
-			n = in.readLong();
-			prev = in.readInt();
-			tmp.set(in.readInt());
-			while(in.available() > 0){
-				int code = in.readInt();
-				Key key = keys.get(code);
-				Key obj = ((Key)in.readObject());
-				if(key != null){
-					key.count = obj.count;
-				}else{
-					keys.put(code, obj);
-				}
-			}
-			in.close();
-			frame.repaint();
-			graphFrame.repaint();
-			showMessageDialog("Statistics succesfully loaded");
-		}catch(IOException | ClassNotFoundException e){
-			showErrorDialog("Failed to load the statistics!");
-		}
 	}
 	
 	//=================================================================================================
@@ -2531,6 +2410,59 @@ public class Main{
 		@Override
 		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
+		}
+	}
+	
+	/**
+	 * MouseListener that opens the URL it is
+	 * instantiated with when triggered
+	 * @author Roan
+	 */
+	public static final class ClickableLink implements MouseListener{
+		/**
+		 * The target link
+		 */
+		private URI uri = null;
+		
+		/**
+		 * Constructs a new ClickableLink
+		 * with the given url
+		 * @param link The link to browse to
+		 *        when clicked
+		 */
+		public ClickableLink(String link){
+			try{
+				uri = new URI(link);
+			}catch(URISyntaxException e){
+				//pity
+			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e){
+			if(Desktop.isDesktopSupported() && uri != null){
+				try{
+					Desktop.getDesktop().browse(uri);
+				}catch(IOException e1){
+					//pity
+				}
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e){
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e){
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e){
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e){
 		}
 	}
 	
