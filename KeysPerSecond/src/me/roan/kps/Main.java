@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -814,64 +815,8 @@ public class Main{
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
 		links.add(forum);
 		links.add(git);
-		forum.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(Desktop.isDesktopSupported()){
-					try{
-						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/community/forums/topics/552405").toURI());
-					}catch(IOException | URISyntaxException e1){
-						//pity
-					}
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e){
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e){
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e){
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e){
-			}
-		});
-		git.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(Desktop.isDesktopSupported()){
-					try{
-						Desktop.getDesktop().browse(new URL("https://github.com/RoanH/KeysPerSecond").toURI());
-					}catch(IOException | URISyntaxException e1){
-						//pity
-					}
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e){
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e){
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e){
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e){
-			}
-		});
+		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
+		git.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
 		info.add(links);
 		form.add(info, BorderLayout.PAGE_END);
 		
@@ -2460,6 +2405,59 @@ public class Main{
 		@Override
 		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
+		}
+	}
+	
+	/**
+	 * MouseListener that opens the URL it is
+	 * instantiated with when triggered
+	 * @author Roan
+	 */
+	public static final class ClickableLink implements MouseListener{
+		/**
+		 * The target link
+		 */
+		private URI uri = null;
+		
+		/**
+		 * Constructs a new ClickableLink
+		 * with the given url
+		 * @param link The link to browse to
+		 *        when clicked
+		 */
+		public ClickableLink(String link){
+			try{
+				uri = new URI(link);
+			}catch(URISyntaxException e){
+				//pity
+			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e){
+			if(Desktop.isDesktopSupported() && uri != null){
+				try{
+					Desktop.getDesktop().browse(uri);
+				}catch(IOException e1){
+					//pity
+				}
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e){
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e){
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e){
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e){
 		}
 	}
 	

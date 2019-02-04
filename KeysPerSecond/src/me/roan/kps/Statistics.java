@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,6 +30,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import me.roan.kps.Main.Key;
 import me.roan.kps.panels.TotPanel;
+import me.roan.kps.Main.ClickableLink;
 
 /**
  * Class that handles most of the more complex
@@ -137,7 +139,8 @@ public class Statistics{
 			+ "- <b>hh</b> represents the hour of the day<br>"
 			+ "- <b>mm</b> represents the minute in the hour<br>"
 			+ "- <b>ss</b> represents the second in the minute</html>");
-		JLabel more = new JLabel("More options can be found in the Javadoc for the DateTimeFormatter.");
+		JLabel more = new JLabel("<html><font color=blue><u>More options can be found in the Javadoc for the DateTimeFormatter.</u></font></html>");
+		more.addMouseListener(new ClickableLink("https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html"));
 		JPanel text = new JPanel(new BorderLayout());
 		text.add(help, BorderLayout.CENTER);
 		text.add(more, BorderLayout.PAGE_END);
