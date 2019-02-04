@@ -114,18 +114,48 @@ public class Statistics{
 			Main.config.autoSaveStats = enabled.isSelected();
 			Main.config.statsDest = ldest.getText();
 			Main.config.statsFormat = format.getText();
-			Main.config.statsSaveInterval = ((Unit)timeUnit.getSelectedItem()).unit.toMillis((long)time.getValue());
-			//TODO new scheduled future if interval changed
+			long interval = ((Unit)timeUnit.getSelectedItem()).unit.toMillis((long)time.getValue());
+			if(Main.config.autoSaveStats){
+				if(interval != Main.config.statsSaveInterval){
+					Main.config.statsSaveInterval = interval;
+					saveStatsTask();
+				}
+			}else{
+				cancelScheduledTask();
+				Main.config.statsSaveInterval = interval;
+			}
 		}
 	}
 	
 	private static void showFormatHelp(ActionEvent event){
-		//TODO
+		JLabel help = new JLabel("<html>Format syntax:<br>"
+			+ "- Escape strings with single quotes ( ' )<br>"
+			+ "- A double single quote is a single quote ( '' becomes ' )<br>"
+			+ "- <b>yyyy</b> represents the year<br>"
+			+ "- <b>MM</b> represents the month of the year<br>"
+			+ "- <b>dd</b> represents the day of the month<br>"
+			+ "- <b>hh</b> represents the hour of the day<br>"
+			+ "- <b>mm</b> represents the minute in the hour<br>"
+			+ "- <b>ss</b> represents the second in the minute</html>");
+		JLabel more = new JLabel("More options can be found in the Javadoc for the DateTimeFormatter.");
+		JPanel text = new JPanel(new BorderLayout());
+		text.add(help, BorderLayout.CENTER);
+		text.add(more, BorderLayout.PAGE_END);
+		Main.showMessageDialog(text);
+	}
+	
+	private static void cancelScheduledTask(){
+		if(statsFuture != null){
+			statsFuture.cancel(false);
+		}
 	}
 	
 	private static void saveStatsTask(){
 		//format DateTimeFormatter.ofPattern(...).format(Instant.now());
-
+		cancelScheduledTask();
+		statsFuture = statsScheduler.scheduleAtFixedRate(()->{
+			
+		}, Main.config.statsSaveInterval, Main.config.statsSaveInterval, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
