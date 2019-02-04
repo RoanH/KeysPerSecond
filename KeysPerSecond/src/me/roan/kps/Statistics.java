@@ -2,7 +2,6 @@ package me.roan.kps;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,17 +11,22 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.ParseException;
+import java.time.Clock;
+import java.time.DateTimeException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
-import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFormattedTextField.AbstractFormatter;
@@ -55,8 +59,9 @@ public class Statistics{
 
 	/**
 	 * Show the auto save statistics configuration dialog
+	 * @param Whether or not the program is already running
 	 */
-	protected static final void configureAutoSave(){
+	protected static final void configureAutoSave(boolean live){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
@@ -77,7 +82,7 @@ public class Statistics{
 		extras.add(seldest);
 		labels.add(new JLabel("Save location: "));
 		seldest.addActionListener((e)->{
-			if(chooser.showOpenDialog(Main.frame) == JFileChooser.APPROVE_OPTION){
+			if(chooser.showOpenDialog(Main.frame.isDisplayable() ? Main.frame : null) == JFileChooser.APPROVE_OPTION){
 				ldest.setText(chooser.getSelectedFile().getAbsolutePath());
 			}
 		});
@@ -154,7 +159,9 @@ public class Statistics{
 			if(Main.config.autoSaveStats){
 				if(interval != Main.config.statsSaveInterval){
 					Main.config.statsSaveInterval = interval;
-					saveStatsTask();
+					if(live){
+						saveStatsTask();
+					}
 				}
 			}else{
 				cancelScheduledTask();
@@ -188,11 +195,27 @@ public class Statistics{
 		}
 	}
 	
-	private static void saveStatsTask(){
-		//format DateTimeFormatter.ofPattern(...).format(Instant.now());
+	public static boolean isSavingSetup(){
+		return statsScheduler != null;
+	}
+	
+	public static void saveStatsTask(){
+		if(statsScheduler == null){
+			statsScheduler = Executors.newSingleThreadScheduledExecutor();
+		}
 		cancelScheduledTask();
 		statsFuture = statsScheduler.scheduleAtFixedRate(()->{
-			
+			System.out.println("Try save");
+			try{
+				File parent = new File(Main.config.statsDest);
+				parent.mkdirs();
+				File target = new File(parent, DateTimeFormatter.ofPattern(Main.config.statsFormat).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
+				target.createNewFile();
+				saveStats(target);
+			}catch(IOException | NullPointerException | IllegalArgumentException | DateTimeException e){
+				//Main priority here is to not interrupt whatever the user is doing
+				e.printStackTrace();
+			}
 		}, Main.config.statsSaveInterval, Main.config.statsSaveInterval, TimeUnit.MILLISECONDS);
 	}
 	

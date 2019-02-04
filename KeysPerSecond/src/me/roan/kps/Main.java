@@ -293,6 +293,11 @@ public class Main{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
+		//Start stats saving
+		if(Main.config.autoSaveStats){
+			Statistics.saveStatsTask();
+		}
 
 		//Enter the main loop
 		mainLoop();
@@ -800,7 +805,7 @@ public class Main{
 			}
 		});
 		autoSave.addActionListener((e)->{
-			Statistics.configureAutoSave();
+			Statistics.configureAutoSave(false);
 			save.setEnabled(true);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
