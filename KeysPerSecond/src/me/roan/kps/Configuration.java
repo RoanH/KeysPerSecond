@@ -265,7 +265,7 @@ public class Configuration{
 	//TODO save and load from config
 	public boolean autoSaveStats = false;
 	public String statsDest = null;
-	public String statsFormat = null;
+	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
 	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
 
 	/**

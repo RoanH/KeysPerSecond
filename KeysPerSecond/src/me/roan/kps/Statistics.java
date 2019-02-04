@@ -2,6 +2,7 @@ package me.roan.kps;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -10,16 +11,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFormattedTextField.AbstractFormatter;
+import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -86,7 +93,35 @@ public class Statistics{
 		unitPanel.add(timeUnit, BorderLayout.CENTER);
 		extras.add(unitPanel);
 		
-		JTextField format = new JTextField(Main.config.statsFormat);
+		JFormattedTextField format = new JFormattedTextField(new AbstractFormatterFactory(){
+			@Override
+			public AbstractFormatter getFormatter(JFormattedTextField tf){
+				return new AbstractFormatter(){
+					/**
+					 * Serial ID
+					 */
+					private static final long serialVersionUID = 5956641218097576666L;
+
+					@Override
+					public Object stringToValue(String text) throws ParseException{
+						for(char ch : new char[]{'/', '\\', '?', '%', '*', ':', '|', '"', '<', '>'}){
+							int index = text.indexOf(ch);
+							if(index != -1){
+								throw new ParseException("Invalid character found", index);
+							}
+						}
+						return text;
+					}
+
+					@Override
+					public String valueToString(Object value) throws ParseException{
+						return value instanceof String ? (String)value : null;
+					}
+				};
+			}
+		}, Main.config.statsFormat);
+		format.setColumns(30);
+		format.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
 		JButton help = new JButton("Help");
 		labels.add(new JLabel("Save format: "));
 		fields.add(format);
@@ -132,6 +167,7 @@ public class Statistics{
 		JLabel help = new JLabel("<html>Format syntax:<br>"
 			+ "- Escape strings with single quotes ( ' )<br>"
 			+ "- A double single quote is a single quote ( '' becomes ' )<br>"
+			+ "- Note that / \\ ? % * : | \" &lt and > are not allowed in file names<br>"
 			+ "- <b>yyyy</b> represents the year<br>"
 			+ "- <b>MM</b> represents the month of the year<br>"
 			+ "- <b>dd</b> represents the day of the month<br>"

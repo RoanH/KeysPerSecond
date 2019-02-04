@@ -656,7 +656,7 @@ public class Main{
 		});
 		JButton precision = new JButton("Precision");
 		JButton layout = new JButton("Layout");
-		JButton autoSave = new JButton("Stats Saving");
+		JButton autoSave = new JButton("Stats saving");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
