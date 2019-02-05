@@ -1477,7 +1477,7 @@ public class Main{
 		}
 		
 		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you can hide or remove them):"), BorderLayout.PAGE_START);
+		keyform.add(new JLabel("Currently added keys (you can edit these fields):"), BorderLayout.PAGE_START);
 		JTable keys = new JTable();
 		DefaultTableModel model = new DefaultTableModel(){
 			/**
@@ -1499,12 +1499,7 @@ public class Main{
 			public Object getValueAt(int rowIndex, int columnIndex){
 				switch(columnIndex){
 				case 0:
-					if(CommandKeys.isMouseButton(config.keyinfo.get(rowIndex).keycode)){
-						return config.keyinfo.get(rowIndex).name;
-					}else{
-						int n = (CommandKeys.hasAlt(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasCtrl(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasShift(config.keyinfo.get(rowIndex).keycode) ? 1 : 0);
-						return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
-					}
+					return config.keyinfo.get(rowIndex).name;
 				case 1:
 					return config.keyinfo.get(rowIndex).visible;
 				case 2:
