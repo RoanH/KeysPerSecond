@@ -435,9 +435,9 @@ public class Configuration{
 				}
 				String[] args = line.split(":", 2);
 				if(args[0].startsWith("keys")){
-					while((line = in.readLine()) != null && (line = line.replace(" ", "")).startsWith("-")){
+					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
 						try{
-							keyinfo.add(parseKey(line.substring(1), defaultMode, v2));
+							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode, v2));
 						}catch(Exception e){
 							modified = true;
 						}
@@ -917,7 +917,8 @@ public class Configuration{
 		boolean shift = false;
 		for(String str : args){
 			String[] comp = str.split("=", 2);
-			switch(comp[0]){
+			comp[1] = comp[1].trim();
+			switch(comp[0].trim()){
 			case "keycode":
 				code = Integer.parseInt(comp[1]);
 				break;
