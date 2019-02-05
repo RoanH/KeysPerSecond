@@ -1472,12 +1472,14 @@ public class Main{
 	protected static final void configureKeys(){
 		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
 		boolean[] visibleState = new boolean[copy.size()];
+		String[] nameState = new String[copy.size()];
 		for(int i = 0; i < copy.size(); i++){
 			visibleState[i] = copy.get(i).visible;
+			nameState[i] = copy.get(i).name;
 		}
 		
 		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you can hide or remove them):"), BorderLayout.PAGE_START);
+		keyform.add(new JLabel("Currently added keys (you can edit these fields):"), BorderLayout.PAGE_START);
 		JTable keys = new JTable();
 		DefaultTableModel model = new DefaultTableModel(){
 			/**
@@ -1499,12 +1501,7 @@ public class Main{
 			public Object getValueAt(int rowIndex, int columnIndex){
 				switch(columnIndex){
 				case 0:
-					if(CommandKeys.isMouseButton(config.keyinfo.get(rowIndex).keycode)){
-						return config.keyinfo.get(rowIndex).name;
-					}else{
-						int n = (CommandKeys.hasAlt(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasCtrl(config.keyinfo.get(rowIndex).keycode) ? 1 : 0) + (CommandKeys.hasShift(config.keyinfo.get(rowIndex).keycode) ? 1 : 0);
-						return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
-					}
+					return config.keyinfo.get(rowIndex).name;
 				case 1:
 					return config.keyinfo.get(rowIndex).visible;
 				case 2:
@@ -1538,19 +1535,25 @@ public class Main{
 
 			@Override
 			public boolean isCellEditable(int row, int col){
-				return col != 0;
+				return true;
 			}
 
 			@Override
 			public void setValueAt(Object value, int row, int col){
-				if(col == 1){
+				switch(col){
+				case 0:
+					config.keyinfo.get(row).setName((String)value);
+					break;
+				case 1:
 					config.keyinfo.get(row).visible = (boolean)value;
-				}else{
+					break;
+				case 2:
 					if((boolean)value == true){
 						Main.keys.remove(config.keyinfo.get(row).keycode);
 						config.keyinfo.remove(row);
 						keys.repaint();
 					}
+					break;
 				}
 			}
 		};
@@ -1643,6 +1646,7 @@ public class Main{
 		if(!showOptionDialog(keyform, true)){
 			for(int i = 0; i < copy.size(); i++){
 				copy.get(i).visible = visibleState[i];
+				copy.get(i).setName(nameState[i]);
 			}
 			config.keyinfo = copy;
 		}
@@ -2024,7 +2028,7 @@ public class Main{
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		public final String name;
+		public String name;
 		/**
 		 * The graphical display for this key
 		 */
@@ -2184,6 +2188,19 @@ public class Main{
 			this.name = name;
 			this.keycode = code;
 			this.visible = visible;
+		}
+		
+		/**
+		 * Changes the display name of this
+		 * key to the given string. If {@link Key}
+		 * panels are active with the same key code
+		 * as this {@link KeyInformation} object
+		 * then their display name is also updated.
+		 * @param name The new display name
+		 */
+		public void setName(String name){
+			this.name = name;
+			keys.getOrDefault(keycode, DUMMY_KEY).name = name;
 		}
 
 		/**
