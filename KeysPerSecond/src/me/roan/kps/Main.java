@@ -1538,19 +1538,25 @@ public class Main{
 
 			@Override
 			public boolean isCellEditable(int row, int col){
-				return col != 0;
+				return true;
 			}
 
 			@Override
 			public void setValueAt(Object value, int row, int col){
-				if(col == 1){
+				switch(col){
+				case 0:
+					config.keyinfo.get(row).name = (String)value;
+					break;
+				case 1:
 					config.keyinfo.get(row).visible = (boolean)value;
-				}else{
+					break;
+				case 2:
 					if((boolean)value == true){
 						Main.keys.remove(config.keyinfo.get(row).keycode);
 						config.keyinfo.remove(row);
 						keys.repaint();
 					}
+					break;
 				}
 			}
 		};
