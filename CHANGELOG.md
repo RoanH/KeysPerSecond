@@ -36,4 +36,5 @@
 - **2 June 2018**: Fix the arrow keys displaying rather broken.<br>
 - **3 June 2018**: Switch to arrow symbols with better availability, fix configuration position saving and UTF-8 support, add GitHub link to the initialisation dialog.
 - **12 September 2018**: Completely new versatible layout system, rendering modes on a per key basis, improved performance.    
-- **27 December 2018**: Variable layout size, variable layout border offset size, support for the right shift key, several other bug fixes, improved dialogs.
+- **27 December 2018**: Variable layout size, variable layout border offset size, support for the right shift key, several other bug fixes, improved dialogs.    
+- **5 February 2019**: Changable key name, periodic stats saving, separate track all options for keys and mouse buttons, some bug fixes.

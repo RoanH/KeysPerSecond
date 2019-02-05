@@ -17,7 +17,7 @@ For each configured key the program will show how many times it was pressed. By 
 When enabled it can also show a graph of the number of keys pressed per second over time and total number of keys pressed.
 
 Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.      
-![Config](https://i.imgur.com/R7Ihx1H.png)  ![Key config](https://i.imgur.com/yeUavBb.png)    
+![Config](https://i.imgur.com/QcEm7Og.png)  ![Key config](https://i.imgur.com/Zjuc7Na.png)    
 ![Layout](https://i.imgur.com/w61exGO.png)    
 
 There are also some commands that can be sent to the program:    
@@ -50,8 +50,8 @@ It's kinda empty here right now :c, so please suggest things c:
 
 ## Downloads (Java 8 required)
 Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)    
-[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.1/KeysPerSecond-v8.1.exe)    
-[Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.1/KeysPerSecond-v8.1.jar)
+[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.exe)    
+[Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
