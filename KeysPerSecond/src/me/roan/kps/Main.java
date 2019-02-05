@@ -2190,6 +2190,14 @@ public class Main{
 			this.visible = visible;
 		}
 		
+		/**
+		 * Changes the display name of this
+		 * key to the given string. If {@link Key}
+		 * panels are active with the same key code
+		 * as this {@link KeyInformation} object
+		 * then their display name is also updated.
+		 * @param name The new display name
+		 */
 		public void setName(String name){
 			this.name = name;
 			keys.getOrDefault(keycode, DUMMY_KEY).name = name;
