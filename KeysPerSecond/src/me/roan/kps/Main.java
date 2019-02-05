@@ -1472,8 +1472,10 @@ public class Main{
 	protected static final void configureKeys(){
 		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
 		boolean[] visibleState = new boolean[copy.size()];
+		String[] nameState = new String[copy.size()];
 		for(int i = 0; i < copy.size(); i++){
 			visibleState[i] = copy.get(i).visible;
+			nameState[i] = copy.get(i).name;
 		}
 		
 		JPanel keyform = new JPanel(new BorderLayout());
@@ -1644,6 +1646,7 @@ public class Main{
 		if(!showOptionDialog(keyform, true)){
 			for(int i = 0; i < copy.size(); i++){
 				copy.get(i).visible = visibleState[i];
+				copy.get(i).setName(nameState[i]);
 			}
 			config.keyinfo = copy;
 		}
