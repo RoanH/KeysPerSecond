@@ -1540,7 +1540,7 @@ public class Main{
 			public void setValueAt(Object value, int row, int col){
 				switch(col){
 				case 0:
-					config.keyinfo.get(row).name = (String)value;
+					config.keyinfo.get(row).setName((String)value);
 					break;
 				case 1:
 					config.keyinfo.get(row).visible = (boolean)value;
@@ -2025,7 +2025,7 @@ public class Main{
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		public final String name;
+		public String name;
 		/**
 		 * The graphical display for this key
 		 */
@@ -2185,6 +2185,11 @@ public class Main{
 			this.name = name;
 			this.keycode = code;
 			this.visible = visible;
+		}
+		
+		public void setName(String name){
+			this.name = name;
+			keys.getOrDefault(keycode, DUMMY_KEY).name = name;
 		}
 
 		/**
