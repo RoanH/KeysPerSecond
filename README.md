@@ -43,7 +43,8 @@ And if you find any bugs feel free to report them.
 - The snap to screen edge function works on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
 - You can pass the path to the config file to load via the commandline or a shortcut so you can skip the configuration step. Setting the program as the default program to open the configuration file with may work as well as long as you don't move the executable afterwards.
-- When resetting something it will also be printed to the console if this program is run using cmd/shell.
+- When resetting something it will also be printed to the console if this program is run using cmd/shell.    
+- [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
 
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
