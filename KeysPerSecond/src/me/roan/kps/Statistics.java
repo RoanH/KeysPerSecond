@@ -59,7 +59,7 @@ public class Statistics{
 
 	/**
 	 * Show the auto save statistics configuration dialog
-	 * @param Whether or not the program is already running
+	 * @param live Whether or not the program is already running
 	 */
 	protected static final void configureAutoSave(boolean live){
 		JFileChooser chooser = new JFileChooser();
@@ -361,9 +361,9 @@ public class Statistics{
 		 * Constructs a new Unit with the given
 		 * display name, {@link TimeUnit} and
 		 * Unit that is one order of magnitude larger
-		 * @param name
-		 * @param unit
-		 * @param up
+		 * @param name The display name for this unit
+		 * @param unit The TimeUnit for this unit
+		 * @param up The unit one size bigger than this one
 		 */
 		private Unit(String name, TimeUnit unit, Unit up){
 			this.name = name;

@@ -249,7 +249,7 @@ public class Main{
 
 		//Set configuration for the keys
 		if(config != null){
-			Configuration toLoad = new Configuration(config == null ? null : new File(config));
+			Configuration toLoad = new Configuration(new File(config));
 			int index = config.lastIndexOf(File.separatorChar);
 			File dir = new File(config.substring(0, index));
 			final String name = config.substring(index + 1);
@@ -2166,9 +2166,6 @@ public class Main{
 		 * and modifiers
 		 * @param name The name of the key
 		 * @param code The virtual key code of the key
-		 * @param alt Whether or not alt is down
-		 * @param ctrl Whether or not ctrl is down
-		 * @param shift Whether or not shift is down
 		 * @return The full name of this given key
 		 */
 		private static final String getKeyName(String name, int code){

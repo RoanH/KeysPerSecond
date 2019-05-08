@@ -3,7 +3,6 @@ package me.roan.kps.layout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
 
 import me.roan.kps.Main;
@@ -13,7 +12,7 @@ import me.roan.kps.Main;
  * of all the panels in the program
  * @author Roan
  */
-public class Layout implements LayoutManager, LayoutManager2{
+public class Layout implements LayoutManager2{
 	/**
 	 * The maximum width of the layout in cells
 	 */
@@ -81,6 +80,7 @@ public class Layout implements LayoutManager, LayoutManager2{
 
 	/**
 	 * Adds the given component to this layout
+	 * @param comp The component to add
 	 */
 	public void add(Component comp){
 		LayoutPosition lp = (LayoutPosition)comp;
