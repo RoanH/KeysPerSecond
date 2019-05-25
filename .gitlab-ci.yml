@@ -1,9 +1,9 @@
 image: openjdk:8
 
 variables:
-   GIT_STRATEGY: clone
-   SSL_SELF_SIGNED: "true"
-   PROJECTNAME: "KeysPerSecond"
+  GIT_STRATEGY: clone
+  SSL_SELF_SIGNED: "true"
+  PROJECTNAME: "KeysPerSecond"
 
 before_script:
   - java -version
