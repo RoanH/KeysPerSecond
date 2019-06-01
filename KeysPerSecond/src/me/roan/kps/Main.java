@@ -94,10 +94,10 @@ import me.roan.kps.ui.model.DynamicInteger;
  * information about how many times
  * certain keys are pressed and what the
  * average, maximum and current
- * amount of keys pressed per second is
- * <pre>
+ * amount of keys pressed per second is.
+ * <p>
  * Besides the tracking of the assigned keys
- * this program responds to 5 key events these are:
+ * this program responds to 6 key events these are:
  * <ol><li><b>Ctrl + P</b>: Causes the program to reset the average and maximum value
  * And to print the statistics to standard output
  * </li><li><b>Ctrl + O</b>: Terminates the program
@@ -105,7 +105,7 @@ import me.roan.kps.ui.model.DynamicInteger;
  * And to print the statistics to standard output
  * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI
  * </li><li><b>Ctrl + T</b>: Pauses/resumes the counter
- * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol></pre>
+ * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol>
  * The program also constantly prints the current keys per second to
  * the standard output.<br>
  * A key is only counted as being pressed if the key has been released before
@@ -1816,7 +1816,7 @@ public class Main{
 	}
 
 	/**
-	 * Resets avg, max & cur
+	 * Resets avg, max &amp; cur
 	 */
 	protected static final void resetStats(){
 		System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
