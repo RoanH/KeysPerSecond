@@ -3,7 +3,6 @@ package me.roan.kps;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -20,7 +19,6 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -88,6 +86,7 @@ import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
 import me.roan.kps.ui.model.DynamicInteger;
+import me.roan.util.ClickableLink;
 
 /**
  * This program can be used to display
@@ -2424,59 +2423,6 @@ public class Main{
 		@Override
 		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
-		}
-	}
-	
-	/**
-	 * MouseListener that opens the URL it is
-	 * instantiated with when triggered
-	 * @author Roan
-	 */
-	public static final class ClickableLink implements MouseListener{
-		/**
-		 * The target link
-		 */
-		private URI uri = null;
-		
-		/**
-		 * Constructs a new ClickableLink
-		 * with the given url
-		 * @param link The link to browse to
-		 *        when clicked
-		 */
-		public ClickableLink(String link){
-			try{
-				uri = new URI(link);
-			}catch(URISyntaxException e){
-				//pity
-			}
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e){
-			if(Desktop.isDesktopSupported() && uri != null){
-				try{
-					Desktop.getDesktop().browse(uri);
-				}catch(IOException e1){
-					//pity
-				}
-			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e){
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e){
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e){
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e){
 		}
 	}
 	

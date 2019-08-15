@@ -11,5 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jnativehook-2.1.0/jnativehook/jar/jnativehook-2.1.0.jar" sourcepath="C:/Users/Roan/Downloads/jnativehook-2.1.0.zip"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
