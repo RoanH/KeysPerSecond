@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 
 import org.jnativehook.keyboard.NativeKeyEvent;
 
+import me.roan.util.Dialog;
+
 /**
  * This class is used to configure
  * the command keys for the program
@@ -251,12 +253,12 @@ public class CommandKeys{
 		form.add(txt);
 		form.add(c);
 		form.add(a);
-		if(Main.showOptionDialog(form)){
+		if(Dialog.showOptionDialog(form)){
 			if(Main.lastevent == null){
 				return null;
 			}
 			CMD cmd = new CMD(Main.lastevent.getKeyCode(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
-			if(Main.showConfirmDialog("Set command key to: " + cmd.toString())){
+			if(Dialog.showConfirmDialog("Set command key to: " + cmd.toString())){
 				return cmd;
 			}
 		}

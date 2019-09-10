@@ -41,6 +41,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import me.roan.kps.Main.Key;
 import me.roan.kps.panels.TotPanel;
 import me.roan.util.ClickableLink;
+import me.roan.util.Dialog;
 
 /**
  * Class that handles most of the more complex
@@ -151,7 +152,7 @@ public class Statistics{
 		enabled.addActionListener(enabledTask);
 		enabledTask.actionPerformed(null);
 				
-		if(Main.showOptionDialog(panel)){
+		if(Dialog.showOptionDialog(panel)){
 			Main.config.autoSaveStats = enabled.isSelected();
 			Main.config.statsDest = ldest.getText();
 			Main.config.statsFormat = format.getText();
@@ -192,7 +193,7 @@ public class Statistics{
 		JPanel text = new JPanel(new BorderLayout());
 		text.add(help, BorderLayout.CENTER);
 		text.add(more, BorderLayout.PAGE_END);
-		Main.showMessageDialog(text);
+		Dialog.showMessageDialog(text);
 	}
 	
 	/**
@@ -240,11 +241,11 @@ public class Statistics{
 			return;
 		}
 		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
-		if(!file.exists() || (file.exists() && Main.showConfirmDialog("File already exists, overwrite?"))){
+		if(!file.exists() || (file.exists() && Dialog.showConfirmDialog("File already exists, overwrite?"))){
 			if(saveStats(file)){
-				Main.showMessageDialog("Statistics succesfully saved");
+				Dialog.showMessageDialog("Statistics succesfully saved");
 			}else{
-				Main.showErrorDialog("Failed to save the statistics!");
+				Dialog.showErrorDialog("Failed to save the statistics!");
 			}
 		}
 	}
@@ -309,9 +310,9 @@ public class Statistics{
 			in.close();
 			Main.frame.repaint();
 			Main.graphFrame.repaint();
-			Main.showMessageDialog("Statistics succesfully loaded");
+			Dialog.showMessageDialog("Statistics succesfully loaded");
 		}catch(IOException | ClassNotFoundException e){
-			Main.showErrorDialog("Failed to load the statistics!");
+			Dialog.showErrorDialog("Failed to load the statistics!");
 		}
 	}
 	

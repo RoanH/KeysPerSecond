@@ -25,6 +25,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.BasePanel;
+import me.roan.util.Dialog;
 
 /**
  * This class contains all the configurable
@@ -336,7 +337,7 @@ public class Configuration{
 				if(toLoad.loadLegacyFormat(data)){
 					Main.config = toLoad;
 				}else{
-					Main.showErrorDialog("Failed to reload the config!");
+					Dialog.showErrorDialog("Failed to reload the config!");
 				}
 			}else{
 				boolean v2 = data.getAbsolutePath().endsWith(".kpsconf2");
@@ -368,10 +369,10 @@ public class Configuration{
 		Configuration toLoad = new Configuration(saveloc);
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			if(toLoad.loadLegacyFormat(saveloc)){
-				Main.showMessageDialog("Configuration succesfully loaded");
+				Dialog.showMessageDialog("Configuration succesfully loaded");
 				Main.config = toLoad;
 			}else{
-				Main.showErrorDialog("Failed to load the config!");
+				Dialog.showErrorDialog("Failed to load the config!");
 				return false;
 			}
 		}else{
@@ -386,9 +387,9 @@ public class Configuration{
 				defaults = true;
 			}
 			if(defaults){
-				Main.showMessageDialog("Configuration succesfully loaded but some default values were used");
+				Dialog.showMessageDialog("Configuration succesfully loaded but some default values were used");
 			}else{
-				Main.showMessageDialog("Configuration succesfully loaded");
+				Dialog.showMessageDialog("Configuration succesfully loaded");
 			}
 			Main.config = toLoad;
 		}
@@ -1081,7 +1082,7 @@ public class Configuration{
 	 *        of the program
 	 */
 	protected final void saveConfig(boolean pos){
-		boolean savepos = (!pos) ? false : (Main.showConfirmDialog("Do you want to save the onscreen position of the program?"));
+		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf3"));
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -1089,7 +1090,7 @@ public class Configuration{
 			return;
 		}
 		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf3") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf3"));
-		if(!saveloc.exists() || (saveloc.exists() && Main.showConfirmDialog("File already exists, overwrite?"))){
+		if(!saveloc.exists() || (saveloc.exists() && Dialog.showConfirmDialog("File already exists, overwrite?"))){
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
@@ -1179,10 +1180,10 @@ public class Configuration{
 				}
 				out.close();
 				out.flush();
-				Main.showMessageDialog("Configuration succesfully saved");
+				Dialog.showMessageDialog("Configuration succesfully saved");
 			}catch(Exception e1){
 				e1.printStackTrace();
-				Main.showErrorDialog("Failed to save the config!");
+				Dialog.showErrorDialog("Failed to save the config!");
 			}
 		}
 	}
