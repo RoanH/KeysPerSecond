@@ -1,0 +1,35 @@
+plugins{
+	id 'java'
+	id 'application'
+	id 'eclipse'
+}
+
+sourceSets{
+	main{
+		java{
+			srcDirs = ['src']
+		}
+		resources{
+			srcDirs = ['src']
+		}
+	}
+}
+
+compileJava.options.encoding = 'UTF-8'
+sourceCompatibility = 1.8
+
+repositories{
+	maven{
+		url "$nexusPublic"
+	}
+	jcenter()
+}
+
+dependencies{
+	implementation 'me.roan:util:1.0-SNAPSHOT'
+	implementation 'com.1stleg:jnativehook:2.1.0'
+}
+
+application{
+	mainClassName = 'me.roan.kps.Main'
+}
