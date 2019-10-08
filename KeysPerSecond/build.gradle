@@ -17,6 +17,10 @@ sourceSets{
 	}
 }
 
+javadoc{
+	options.memberLevel = JavadocMemberLevel.PRIVATE
+}
+
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 version = 'v8.2'//Don't forget Main.java
