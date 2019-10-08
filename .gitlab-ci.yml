@@ -43,23 +43,28 @@ verify:
 
 javadoc:
   script:
-    - cd ${PROJECTNAME}
-    - find src -name "*.java" > sources.txt
-    - javadoc -cp "./lib/jnativehook-2.1.0/jnativehook/jar/jnativehook-2.1.0.jar:." -private @sources.txt
+    - mkdir ../javadoc
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} javadoc
+    - mv ./build/docs/javadoc/* ../javadoc
   stage: javadoc
+  environment: javadoc
+  artifacts:
+    name: "$PROJECTNAME"
+    expire_in: 1 week
+    paths:
+      - javadoc/
 
 compile:
   script:
-    - chmod -R 777 ./*
-    - cd ${PROJECTNAME}
-    - ls -l
-    - rm -rf ./bin
-    - mkdir bin
-    - find src -name "*.java" > sources.txt
-    - find lib -name "*.jar" > libs.txt
-    - libs=""
-    - while read line; do libs=$libs./$line:; done <libs.txt
-    - libs=$libs.
-    - javac -cp $libs -d ./bin -g -verbose -version -encoding "UTF-8" @sources.txt
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} shadowJar
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} createExe
+    - mv ./build/libs/* ../
+    - mv ./build/launch4j/*.exe ../
   stage: compile
   environment: builds
+  artifacts:
+    name: "${PROJECTNAME}"
+    expire_in: 1 week
+    paths:
+      - ${PROJECTNAME}-*.jar
+      - ${PROJECTNAME}-*.exe
