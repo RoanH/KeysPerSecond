@@ -7,6 +7,8 @@ variables:
 
 before_script:
   - java -version
+  - cd ${PROJECTNAME}
+  - ls -l
 
 stages:
   - compile
@@ -16,29 +18,26 @@ stages:
 pending:
   allow_failure: true
   script:
-    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} pending
+    - curl --request POST --form "type=status" --form "status=pending" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   stage: compile
 
 success:
   allow_failure: true
   script:
-    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} success
+    - curl --request POST --form "type=status" --form "status=success" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   when: on_success
   stage: status
 
 failure:
   allow_failure: true
   script:
-    - curl ${SERVER}ci/status.sh | bash -s ${PROJECTNAME} ${CI_COMMIT_SHA} failure
+    - curl --request POST --form "type=status" --form "status=failure" --form "repo=${PROJECTNAME}" --form "commit=${CI_COMMIT_SHA}" ${CISERVER}
   when: on_failure
   stage: status
 
 verify:
   allow_failure: true
-  script:
-    - wget ${SERVER}ci/javadoc.sh
-    - chmod 755 javadoc.sh
-    - ./javadoc.sh
+  script: curl ${SERVER}ci/javadoc.sh | bash
   stage: javadoc
 
 javadoc:
