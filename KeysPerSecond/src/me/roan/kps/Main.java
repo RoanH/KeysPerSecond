@@ -3,7 +3,6 @@ package me.roan.kps;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -19,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -48,11 +45,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -88,6 +83,9 @@ import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
 import me.roan.kps.ui.model.DynamicInteger;
+import me.roan.util.ClickableLink;
+import me.roan.util.Dialog;
+import me.roan.util.Util;
 
 /**
  * This program can be used to display
@@ -231,6 +229,11 @@ public class Main{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1){
 		}
+		
+		//Set dialog defaults
+		Dialog.setDialogIcon(iconSmall);
+		Dialog.setParentFrame(frame);
+		Dialog.setDialogTitle("Keys per second");
 
 		//Make sure the native hook is always unregistered
 		Runtime.getRuntime().addShutdownHook(new Thread(){
@@ -279,7 +282,7 @@ public class Main{
 			}catch(NullPointerException e){
 				e.printStackTrace();
 				try{
-					showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
+					Dialog.showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
 				}catch(Throwable t){
 					t.printStackTrace();
 				}
@@ -357,7 +360,7 @@ public class Main{
 		}catch(NativeHookException ex){
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
-			showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
+			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
 			try{
 				GlobalScreen.unregisterNativeHook();
 			}catch(NativeHookException e1){
@@ -702,7 +705,7 @@ public class Main{
 			pvalue.add(values, BorderLayout.CENTER);
 			pconfig.add(plabels, BorderLayout.CENTER);
 			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			if(showOptionDialog(pconfig)){
+			if(Dialog.showOptionDialog(pconfig)){
 				config.precision = values.getSelectedIndex();
 				save.setEnabled(true);
 			}
@@ -729,7 +732,7 @@ public class Main{
 			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
 			pconfig.add(glabels);
 			pconfig.add(gcomponents);
-			if(showOptionDialog(pconfig)){
+			if(Dialog.showOptionDialog(pconfig)){
 				Main.config.graphAvg = showavg.isSelected();
 				Main.config.backlog = (int)backlog.getValue();
 				save.setEnabled(true);
@@ -799,7 +802,7 @@ public class Main{
 			pconfig.add(info, BorderLayout.PAGE_START);
 			pconfig.add(lupdate, BorderLayout.WEST);
 			pconfig.add(update, BorderLayout.CENTER);
-			if(showOptionDialog(pconfig)){
+			if(Dialog.showOptionDialog(pconfig)){
 				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 				save.setEnabled(true);
 			}
@@ -809,12 +812,7 @@ public class Main{
 			save.setEnabled(true);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		JLabel ver = new JLabel("<html><center><i>Version: v8.2, latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
-		info.add(ver);
-		new Thread(()->{
-			String version = checkVersion();//XXX the version number 
-			ver.setText("<html><center><i>Version: v8.2, latest version: " + (version == null ? "unknown :(" : version) + "</i></center></html>");
-		}, "Version Checker").start();
+		info.add(Util.getVersionLabel("KeysPerSecond", "v8.2"));//XXX the version number  - don't forget build.gradle
 		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
 		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
@@ -885,7 +883,7 @@ public class Main{
 				if(!open){
 					open = true;
 					chooser.setColor(e.getComponent().getBackground());
-					if(showOptionDialog(chooser)){
+					if(Dialog.showOptionDialog(chooser)){
 						e.getComponent().setBackground(chooser.getColor());
 					}
 					open = false;
@@ -933,7 +931,7 @@ public class Main{
 		cform.add(lbg);
 		cform.add(cbg);
 		cform.add(spanelbg);
-		if(showOptionDialog(cform, false)){
+		if(Dialog.showOptionDialog(cform, false)){
 			config.foreground = cfg.getBackground();
 			config.background = cbg.getBackground();
 			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
@@ -1026,7 +1024,7 @@ public class Main{
 			}
 		});
 
-		showMessageDialog(content);
+		Dialog.showMessageDialog(content);
 	}
 
 	/**
@@ -1405,7 +1403,7 @@ public class Main{
 
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
-		showMessageDialog(form, true);
+		Dialog.showMessageDialog(form, true);
 		content.hideGrid();
 	}
 
@@ -1584,17 +1582,17 @@ public class Main{
 				form.add(a);
 				form.add(s);
 			}
-			if(showOptionDialog(form)){
+			if(Dialog.showOptionDialog(form)){
 				if(lastevent == null){
-					showMessageDialog("No key pressed!");
+					Dialog.showMessageDialog("No key pressed!");
 					return;
 				}
 				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
 				int n = (CommandKeys.hasAlt(info.keycode) ? 1 : 0) + (CommandKeys.hasCtrl(info.keycode) ? 1 : 0) + (CommandKeys.hasShift(info.keycode) ? 1 : 0);
-				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
+				if(Dialog.showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
 					if(config.keyinfo.contains(info)){
 						KeyInformation.autoIndex -= 2;
-						showMessageDialog("That key was already added before.\nIt was not added again.");
+						Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
 					}else{
 						config.keyinfo.add(info);
 					}
@@ -1623,13 +1621,13 @@ public class Main{
 
 			addform.add(buttons, BorderLayout.CENTER);
 
-			if(showOptionDialog(addform)){
+			if(Dialog.showOptionDialog(addform)){
 				for(int i = 0; i < boxes.length; i++){
 					if(boxes[i].isSelected()){
 						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
 						if(config.keyinfo.contains(key)){
 							KeyInformation.autoIndex -= 2;
-							showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
+							Dialog.showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
 						}else{
 							config.keyinfo.add(key);
 						}
@@ -1643,7 +1641,7 @@ public class Main{
 		nbuttons.add(newmouse, BorderLayout.LINE_END);
 		keyform.add(nbuttons, BorderLayout.PAGE_END);
 		
-		if(!showOptionDialog(keyform, true)){
+		if(!Dialog.showOptionDialog(keyform, true)){
 			for(int i = 0; i < copy.size(); i++){
 				copy.get(i).visible = visibleState[i];
 				copy.get(i).setName(nameState[i]);
@@ -1765,45 +1763,6 @@ public class Main{
 	}
 
 	/**
-	 * Checks the KeysPerSecond version to see
-	 * if we are running the latest version
-	 * @return The latest version
-	 */
-	private static final String checkVersion(){
-		try{
-			HttpURLConnection con = (HttpURLConnection)new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection();
-			con.setRequestMethod("GET");
-			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
-			con.setConnectTimeout(10000);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String line = reader.readLine();
-			reader.close();
-			String[] versions = line.split("\"name\":\"v");
-			int max_main = 3;
-			int max_sub = 0;
-			String[] tmp;
-			for(int i = 1; i < versions.length; i++){
-				tmp = versions[i].split("\",\"")[0].split("\\.");
-				if(Integer.parseInt(tmp[0]) > max_main){
-					max_main = Integer.parseInt(tmp[0]);
-					max_sub = Integer.parseInt(tmp[1]);
-				}else if(Integer.parseInt(tmp[0]) < max_main){
-					continue;
-				}else{
-					if(Integer.parseInt(tmp[1]) > max_sub){
-						max_sub = Integer.parseInt(tmp[1]);
-					}
-				}
-			}
-			return "v" + max_main + "." + max_sub;
-		}catch(Exception e){
-			return null;
-			//No Internet access or something else is wrong,
-			//No problem though since this isn't a critical function
-		}
-	}
-
-	/**
 	 * Shuts down the program
 	 */
 	protected static final void exit(){
@@ -1862,20 +1821,20 @@ public class Main{
 		File jvm = new File(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
 		if(!jvm.exists() || !exe.exists()){
 			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
-			showMessageDialog("An error occured whilst trying to launch the program >.<");
+			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
 			System.exit(0);
 		}
 		File tmp = null;
 		try{
 			tmp = File.createTempFile("kps", null);
 			if(tmp.getAbsolutePath().contains("!")){
-				showMessageDialog("An error occured whilst trying to launch the program >.<");
+				Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
 				System.exit(0);
 			}
 			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}catch(IOException e){
 			e.printStackTrace();
-			showMessageDialog("An error occured whilst trying to launch the program >.<");
+			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
 			tmp.delete();
 			System.exit(0);
@@ -1891,7 +1850,7 @@ public class Main{
 			proc = builder.start();
 		}catch(IOException e){
 			e.printStackTrace();
-			showMessageDialog("An error occured whilst trying to launch the program >.<");
+			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
 			tmp.deleteOnExit();
 			tmp.delete();
 			System.exit(0);
@@ -1914,91 +1873,6 @@ public class Main{
 		tmp.deleteOnExit();
 		tmp.delete();
 		System.exit(0);
-	}
-	
-	//=================================================================================================
-	//================== DIALOGUES ====================================================================
-	//=================================================================================================
-
-	/**
-	 * Shows the given object to the user.
-	 * The dialog will have a 'Save' and
-	 * 'Cancel' close option.
-	 * @param form The object to display
-	 * @param resizable Whether the user should
-	 *        be able to resize the dialog
-	 * @return True if the 'Save' option was selected
-	 */
-	protected static final boolean showOptionDialog(Object form, boolean resizable){
-		return showDialog(form, resizable, new String[]{"Save", "Cancel"});
-	}
-	
-	/**
-	 * Shows the given object to the user.
-	 * The dialog will have a 'Save' and
-	 * 'Cancel' close option.
-	 * @param form The object to display
-	 * @return True if the 'Save' option was selected
-	 */
-	protected static final boolean showOptionDialog(Object form){
-		return showOptionDialog(form, false);
-	}
-	
-	/**
-	 * Poses the given object as a yes/no option
-	 * dialog to the user.
-	 * @param msg The object to display
-	 * @return True if the user selected yes
-	 */
-	protected static final boolean showConfirmDialog(Object msg){
-		return showDialog(msg, false, new String[]{"Yes", "No"});
-	}
-	
-	/**
-	 * Shows the given object to the user in a dialog
-	 * @param msg The object to display
-	 */
-	protected static final void showMessageDialog(Object msg){
-		showMessageDialog(msg, false);
-	}
-	
-	/**
-	 * Shows the given object to the user in a dialog
-	 * @param msg The object to display
-	 * @param resizable Whether the user should
-	 *        be able to resize the dialog
-	 */
-	protected static final void showMessageDialog(Object msg, boolean resizable){
-		showDialog(msg, resizable, new String[]{"OK"});
-	}
-	
-	/**
-	 * Shows the given error message to the user
-	 * @param error The error to display
-	 */
-	protected static final void showErrorDialog(String error){
-		showMessageDialog(error);
-	}
-	
-	/**
-	 * Shows the given object as a dialog
-	 * with the given close options
-	 * @param form The dialog to display
-	 * @param resizable Whether or not the
-	 *        dialog can be resized
-	 * @param options The close options
-	 *        for the dialog
-	 * @return True if the used close option
-	 *         is the first item in the close
-	 *         options list, false otherwise
-	 */
-	protected static final boolean showDialog(Object form, boolean resizable, String[] options){
-		JOptionPane optionPane = new JOptionPane(form, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
-		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
-		dialog.setResizable(resizable);
-		dialog.setIconImage(iconSmall);
-		dialog.setVisible(true);
-		return options[0].equals(optionPane.getValue());
 	}
 	
 	//=================================================================================================
@@ -2424,59 +2298,6 @@ public class Main{
 		@Override
 		public void setRenderingMode(RenderingMode mode){
 			this.mode = mode;
-		}
-	}
-	
-	/**
-	 * MouseListener that opens the URL it is
-	 * instantiated with when triggered
-	 * @author Roan
-	 */
-	public static final class ClickableLink implements MouseListener{
-		/**
-		 * The target link
-		 */
-		private URI uri = null;
-		
-		/**
-		 * Constructs a new ClickableLink
-		 * with the given url
-		 * @param link The link to browse to
-		 *        when clicked
-		 */
-		public ClickableLink(String link){
-			try{
-				uri = new URI(link);
-			}catch(URISyntaxException e){
-				//pity
-			}
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e){
-			if(Desktop.isDesktopSupported() && uri != null){
-				try{
-					Desktop.getDesktop().browse(uri);
-				}catch(IOException e1){
-					//pity
-				}
-			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e){
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e){
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e){
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e){
 		}
 	}
 	

@@ -40,6 +40,8 @@ import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.TotPanel;
+import me.roan.util.Dialog;
+
 import sun.swing.SwingUtilities2;
 
 /**
@@ -390,7 +392,7 @@ public class Menu{
 			}
 			pconfig.add(lbacklog);
 			pconfig.add(sbacklog);
-			Main.showMessageDialog(pconfig);
+			Dialog.showMessageDialog(pconfig);
 			Main.config.backlog = (int)sbacklog.getValue();
 		});
 		layout.addActionListener((e)->{
