@@ -817,7 +817,7 @@ public class Main{
 		JLabel ver = new JLabel("<html><center><i>Version: v8.2, latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
 		info.add(ver);
 		new Thread(()->{
-			String version = checkVersion();//XXX the version number 
+			String version = checkVersion();//XXX the version number  - don't forget build.gradle
 			ver.setText("<html><center><i>Version: v8.2, latest version: " + (version == null ? "unknown :(" : version) + "</i></center></html>");
 		}, "Version Checker").start();
 		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));

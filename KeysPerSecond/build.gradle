@@ -19,7 +19,7 @@ sourceSets{
 
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
-version = 'v1.1'//Don't forget Main.java
+version = 'v8.2'//Don't forget Main.java
 shadowJar.archiveName = 'KeysPerSecond-' + project.version + '.jar'
 
 repositories{
