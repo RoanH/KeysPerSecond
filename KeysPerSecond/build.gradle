@@ -2,6 +2,8 @@ plugins{
 	id 'java'
 	id 'application'
 	id 'eclipse'
+	id 'com.github.johnrengelman.shadow' version '5.1.0'
+	id 'edu.sc.seis.launch4j' version '2.4.6'
 }
 
 sourceSets{
@@ -17,19 +19,38 @@ sourceSets{
 
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
+version = 'v1.1'//Don't forget Main.java
+shadowJar.archiveName = 'KeysPerSecond-' + project.version + '.jar'
 
 repositories{
-	maven{
-		url "$nexusPublic"
+	//Local cache
+	if(project.hasProperty("nexusPublic")){
+		maven{
+			url "$nexusPublic"
+		}
 	}
 	jcenter()
+	maven{
+		url "https://jitpack.io"
+	}
 }
 
 dependencies{
-	implementation 'me.roan:util:1.0-SNAPSHOT'
+	implementation 'com.github.RoanH:Util:v1.1'
 	implementation 'com.1stleg:jnativehook:2.1.0'
 }
 
 application{
 	mainClassName = 'me.roan.kps.Main'
+}
+
+launch4j{
+	mainClassName = application.mainClassName
+	icon = "${projectDir}/kps.ico"
+	jreMinVersion = project.sourceCompatibility
+	outfile = project.name + '-' + project.version + '.exe'
+	fileDescription = project.name
+	version = project.version.substring(1)
+	textVersion = project.version.substring(1)
+	copyright = "Roan Hofland"
 }
