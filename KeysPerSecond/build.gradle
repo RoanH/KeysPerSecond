@@ -40,7 +40,7 @@ repositories{
 }
 
 dependencies{
-	implementation 'com.github.RoanH:Util:v1.1'
+	implementation 'com.github.RoanH:Util:v1.2'
 	implementation 'com.1stleg:jnativehook:2.1.0'
 }
 

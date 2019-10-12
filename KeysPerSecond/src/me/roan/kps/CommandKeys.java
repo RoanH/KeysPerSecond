@@ -253,7 +253,7 @@ public class CommandKeys{
 		form.add(txt);
 		form.add(c);
 		form.add(a);
-		if(Dialog.showOptionDialog(form)){
+		if(Dialog.showSaveDialog(form)){
 			if(Main.lastevent == null){
 				return null;
 			}
