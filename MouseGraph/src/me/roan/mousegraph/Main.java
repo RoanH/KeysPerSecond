@@ -62,7 +62,7 @@ public class Main {
 				System.out.println("loop end");
 				graph.repaint();
 			}
-		}, 0, 100L, TimeUnit.MILLISECONDS);
+		}, 0, 10L, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
