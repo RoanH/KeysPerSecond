@@ -152,7 +152,7 @@ public class Statistics{
 		enabled.addActionListener(enabledTask);
 		enabledTask.actionPerformed(null);
 				
-		if(Dialog.showOptionDialog(panel)){
+		if(Dialog.showSaveDialog(panel)){
 			Main.config.autoSaveStats = enabled.isSelected();
 			Main.config.statsDest = ldest.getText();
 			Main.config.statsFormat = format.getText();

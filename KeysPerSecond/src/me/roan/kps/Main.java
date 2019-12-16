@@ -705,7 +705,7 @@ public class Main{
 			pvalue.add(values, BorderLayout.CENTER);
 			pconfig.add(plabels, BorderLayout.CENTER);
 			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			if(Dialog.showOptionDialog(pconfig)){
+			if(Dialog.showSaveDialog(pconfig)){
 				config.precision = values.getSelectedIndex();
 				save.setEnabled(true);
 			}
@@ -732,7 +732,7 @@ public class Main{
 			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
 			pconfig.add(glabels);
 			pconfig.add(gcomponents);
-			if(Dialog.showOptionDialog(pconfig)){
+			if(Dialog.showSaveDialog(pconfig)){
 				Main.config.graphAvg = showavg.isSelected();
 				Main.config.backlog = (int)backlog.getValue();
 				save.setEnabled(true);
@@ -802,7 +802,7 @@ public class Main{
 			pconfig.add(info, BorderLayout.PAGE_START);
 			pconfig.add(lupdate, BorderLayout.WEST);
 			pconfig.add(update, BorderLayout.CENTER);
-			if(Dialog.showOptionDialog(pconfig)){
+			if(Dialog.showSaveDialog(pconfig)){
 				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
 				save.setEnabled(true);
 			}
@@ -883,7 +883,7 @@ public class Main{
 				if(!open){
 					open = true;
 					chooser.setColor(e.getComponent().getBackground());
-					if(Dialog.showOptionDialog(chooser)){
+					if(Dialog.showSaveDialog(chooser)){
 						e.getComponent().setBackground(chooser.getColor());
 					}
 					open = false;
@@ -931,7 +931,7 @@ public class Main{
 		cform.add(lbg);
 		cform.add(cbg);
 		cform.add(spanelbg);
-		if(Dialog.showOptionDialog(cform, false)){
+		if(Dialog.showSaveDialog(cform, false)){
 			config.foreground = cfg.getBackground();
 			config.background = cbg.getBackground();
 			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
@@ -1582,7 +1582,7 @@ public class Main{
 				form.add(a);
 				form.add(s);
 			}
-			if(Dialog.showOptionDialog(form)){
+			if(Dialog.showSaveDialog(form)){
 				if(lastevent == null){
 					Dialog.showMessageDialog("No key pressed!");
 					return;
@@ -1621,7 +1621,7 @@ public class Main{
 
 			addform.add(buttons, BorderLayout.CENTER);
 
-			if(Dialog.showOptionDialog(addform)){
+			if(Dialog.showSaveDialog(addform)){
 				for(int i = 0; i < boxes.length; i++){
 					if(boxes[i].isSelected()){
 						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
@@ -1641,7 +1641,7 @@ public class Main{
 		nbuttons.add(newmouse, BorderLayout.LINE_END);
 		keyform.add(nbuttons, BorderLayout.PAGE_END);
 		
-		if(!Dialog.showOptionDialog(keyform, true)){
+		if(!Dialog.showSaveDialog(keyform, true)){
 			for(int i = 0; i < copy.size(); i++){
 				copy.get(i).visible = visibleState[i];
 				copy.get(i).setName(nameState[i]);
