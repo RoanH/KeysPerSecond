@@ -225,10 +225,7 @@ public class Main{
 		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		System.out.println("Ctrl + R: Reloads the configuration");
-		try{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1){
-		}
+		Util.installUI();
 		
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
