@@ -85,6 +85,7 @@ import me.roan.kps.ui.model.MaxNumberModel;
 import me.roan.kps.ui.model.DynamicInteger;
 import me.roan.util.ClickableLink;
 import me.roan.util.Dialog;
+import me.roan.util.ExclamationMarkPath;
 import me.roan.util.Util;
 
 /**
@@ -209,6 +210,16 @@ public class Main{
 	 * @param args - configuration file path
 	 */
 	public static void main(String[] args){
+		//Work around for a JDK bug
+		boolean relaunch = args.length != 0 && args[args.length - 1].equalsIgnoreCase("-relaunch");
+		if(relaunch){
+			String[] tmp = new String[args.length - 1];
+			System.arraycopy(args, 0, tmp, 0, tmp.length);
+			args = tmp;
+		}
+		ExclamationMarkPath.check(relaunch, args);
+		
+		//Basic setup and info
 		String config = null;
 		if(args.length >= 1){
 			config = args[0];
@@ -217,7 +228,6 @@ public class Main{
 			}
 			System.out.println("Attempting to load config: " + config);
 		}
-		relaunchFromTemp(config);
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
@@ -1796,80 +1806,6 @@ public class Main{
 		}
 		System.out.println();
 		frame.repaint();
-	}
-
-	/**
-	 * Re-launches the program from the temp directory
-	 * if the program path contains a ! this fixes a
-	 * bug in the native library loading
-	 * @param args The original command line arguments
-	 */
-	private static final void relaunchFromTemp(String args){
-		URL url = Main.class.getProtectionDomain().getCodeSource().getLocation();
-		File exe;
-		try{
-			exe = new File(url.toURI());
-		}catch(URISyntaxException e){
-			exe = new File(url.getPath());
-		}
-		if(!exe.getAbsolutePath().contains("!")){
-			return;
-		}
-		File jvm = new File(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
-		if(!jvm.exists() || !exe.exists()){
-			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
-			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-			System.exit(0);
-		}
-		File tmp = null;
-		try{
-			tmp = File.createTempFile("kps", null);
-			if(tmp.getAbsolutePath().contains("!")){
-				Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-				System.exit(0);
-			}
-			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		}catch(IOException e){
-			e.printStackTrace();
-			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-			tmp.deleteOnExit();
-			tmp.delete();
-			System.exit(0);
-		}
-		ProcessBuilder builder = new ProcessBuilder();
-		if(args != null){
-			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath(), args);
-		}else{
-			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath());
-		}
-		Process proc = null;
-		try{
-			proc = builder.start();
-		}catch(IOException e){
-			e.printStackTrace();
-			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-			tmp.deleteOnExit();
-			tmp.delete();
-			System.exit(0);
-		}
-		BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-		String line;
-		try{
-			while(proc.isAlive()){
-				while((line = in.readLine()) != null){
-					System.out.println(line);
-				}
-				try{
-					Thread.sleep(1000);
-				}catch(InterruptedException e){
-				}
-			}
-		}catch(IOException e){
-			System.err.print("Output stream chrashed :/");
-		}
-		tmp.deleteOnExit();
-		tmp.delete();
-		System.exit(0);
 	}
 	
 	//=================================================================================================
