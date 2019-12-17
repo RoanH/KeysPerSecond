@@ -68,11 +68,5 @@ Next are two other examples of possible layouts.
 Last are some very simple layouts to highlight the title-value display options.    
 ![Modes](https://i.imgur.com/gNYCSb9.png)      
 
-## Dependencies
-https://github.com/kwhat/jnativehook
-
-## Donate
-If you really like KeysPerSecond, you can consider making [donation](https://www.paypal.me/KeysPerSecond).
-
 ## History
 Project development started: 23 January 2017
