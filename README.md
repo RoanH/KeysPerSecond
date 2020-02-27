@@ -49,10 +49,11 @@ And if you find any bugs feel free to report them.
 ## Todo list / working on
 It's kinda empty here right now :c, so please suggest things c:
 
-## Downloads (Java 8 required)
-Supported operating systems: Mac (tested 10.11.6), Linux (tested Ubuntu 16.04 LTS) & Windows (tested 7, 8 & 10)    
-[Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.exe)    
-[Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.jar)
+## Downloads
+_Requires Java 8 or higher_    
+_Tested operating systems: Mac 10.11.6, Ubuntu Linux 16.04 LTS, Windows 7 & 8 & 10_    
+- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.exe)    
+- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
@@ -67,12 +68,6 @@ Next are two other examples of possible layouts.
 ![](https://i.imgur.com/fBgohIA.png)    
 Last are some very simple layouts to highlight the title-value display options.    
 ![Modes](https://i.imgur.com/gNYCSb9.png)      
-
-## Dependencies
-https://github.com/kwhat/jnativehook
-
-## Donate
-If you really like KeysPerSecond, you can consider making [donation](https://www.paypal.me/KeysPerSecond).
 
 ## History
 Project development started: 23 January 2017

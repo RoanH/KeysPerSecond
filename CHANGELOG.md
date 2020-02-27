@@ -1,40 +1,40 @@
 ## Updates
-- **2 February 2017**: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
-- **5 February 2017**: Added support for a variable update rate & changed exit key to Ctrl + U (Ctrl + O opens the osu! options menu).<br>
-- **6 February 2017**: Added the ability to configure the order in which the keys are displayed & some minor bug fixes.<br>
-- **9 February 2017**: Invert the key text color when a key is pressed.<br>
-- **10 February 2017**: Added the option to customize the GUI foreground & background colour.<br>
-- **12 February 2017**: Added the option to track all keys, show track keys or not & fixed some edge case bugs.<br>
-- **12 February 2017**: Added support for more then 10k hits on a single key & added the option to hide a tracked key.<br>
-- **12 February 2017**: Added the option to remove added keys.<br>
-- **16 February 2017**: Added support for decimal avg & cur, also added a new command key that hides the GUI.<br>
-- **17 February 2017**: Added support for transparent colours.<br>
-- **17 February 2017**: Added automatic version checking & removed the decimal point for cur since cur is an integer.<br>
-- **18 February 2017**: Added support for a variable size & added an icon to the window.<br>
-- **21 March 2017**: Major performance improvements & change opacity settings to use a percentage.<br>
-- **21 March 2017**: Made adding keys a little bit easier.<br>
-- **24 March 2017**: Added the option to pass a config file via the command line & minor bug fixes.<br>
-- **30 March 2017**: Implemented a right click dialog, pause functionality & a snap to screen edge function.<br>
-- **31 March 2017**: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.<br>
-- **1 April 2017**: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
-- **8 April 2017**: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.<br>
-- **12 April 2017**: Fix checkmark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
-- **13 April 2017**: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
-- **16 April 2017**: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
-- **17 April 2017**: Rendering fixes & fix the counters being reset when the color is changed.<br>
-- **19 April 2017**: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.<br>
-- **29 April 2017**: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs.<br>
-- **30 April 2017**: Fix an opacity bug that causes the window to be invisible with certain settings.<br>
-- **28 May 2017**: Fix a localization bug & add the option to track key-modifier combinations.<br>
-- **28 June 2017**: Added a lot of layout options.<br>
-- **28 June 2017**: Fix the position/index feature for keys not working.<br>
-- **28 June 2017**: Add warning for invalid key/row/columns combinations, improve reset menu, add a value-text horizontal rendering mode.<br>
-- **16 August 2017**: Fix several bug involving key-modifier combinations & a bug showing weird mouse button text.<br>
-- **9 November 2017**: Implement save stats feature & 6 additional rendering modes. Fix key capacity checks, changing the update rate messing up the average, fix a multi-threading issue, fix a mode loading bug. Improve startup times & overall performance. Lots of internal refactoring & optimizations.<br>
-- **15 November 2017**: Fix command keys with modifiers not working & visual enhancements for resetting.<br>
-- **24 December 2017**: Fix all known key-modifier bugs, better support for unfilled grids, internal optimizations.<br>
-- **2 June 2018**: Fix the arrow keys displaying rather broken.<br>
-- **3 June 2018**: Switch to arrow symbols with better availability, fix configuration position saving and UTF-8 support, add GitHub link to the initialisation dialog.
-- **12 September 2018**: Completely new versatible layout system, rendering modes on a per key basis, improved performance.    
-- **27 December 2018**: Variable layout size, variable layout border offset size, support for the right shift key, several other bug fixes, improved dialogs.    
-- **5 February 2019**: Changable key name, periodic stats saving, separate track all options for keys and mouse buttons, some bug fixes.
+- **2nd of February, 2017**: Added the option for the program to overlay the osu! window. This only works if osu! isn't being run in fullscreen mode.<br>
+- **5th of February, 2017**: Added support for a variable update rate & changed exit key to Ctrl + U (Ctrl + O opens the osu! options menu).<br>
+- **6th of February, 2017**: Added the ability to configure the order in which the keys are displayed & some minor bug fixes.<br>
+- **9th of February, 2017**: Invert the key text color when a key is pressed.<br>
+- **10th of February, 2017**: Added the option to customize the GUI foreground & background colour.<br>
+- **12th of February, 2017**: Added the option to track all keys, show track keys or not & fixed some edge case bugs.<br>
+- **12th of February, 2017**: Added support for more then 10k hits on a single key & added the option to hide a tracked key.<br>
+- **12th of February, 2017**: Added the option to remove added keys.<br>
+- **16th of February, 2017**: Added support for decimal avg & cur, also added a new command key that hides the GUI.<br>
+- **17th of February, 2017**: Added support for transparent colours.<br>
+- **17th of February, 2017**: Added automatic version checking & removed the decimal point for cur since cur is an integer.<br>
+- **18th of February, 2017**: Added support for a variable size & added an icon to the window.<br>
+- **21st of March, 2017**: Major performance improvements & change opacity settings to use a percentage.<br>
+- **21st of March, 2017**: Made adding keys a little bit easier.<br>
+- **24th of March, 2017**: Added the option to pass a config file via the command line & minor bug fixes.<br>
+- **30th of March, 2017**: Implemented a right click dialog, pause functionality & a snap to screen edge function.<br>
+- **31st of March, 2017**: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.<br>
+- **1st of April, 2017**: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
+- **8th of April, 2017**: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.<br>
+- **12th of April, 2017**: Fix checkmark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
+- **13th of April, 2017**: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
+- **16th of April, 2017**: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
+- **17th of April, 2017**: Rendering fixes & fix the counters being reset when the color is changed.<br>
+- **19th of April, 2017**: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.<br>
+- **29th of April, 2017**: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs.<br>
+- **30th of April, 2017**: Fix an opacity bug that causes the window to be invisible with certain settings.<br>
+- **28th of May, 2017**: Fix a localization bug & add the option to track key-modifier combinations.<br>
+- **28th of June, 2017**: Added a lot of layout options.<br>
+- **28th of June, 2017**: Fix the position/index feature for keys not working.<br>
+- **28th of June, 2017**: Add warning for invalid key/row/columns combinations, improve reset menu, add a value-text horizontal rendering mode.<br>
+- **16th of August, 2017**: Fix several bug involving key-modifier combinations & a bug showing weird mouse button text.<br>
+- **9th of November, 2017**: Implement save stats feature & 6 additional rendering modes. Fix key capacity checks, changing the update rate messing up the average, fix a multi-threading issue, fix a mode loading bug. Improve startup times & overall performance. Lots of internal refactoring & optimizations.<br>
+- **15th of November, 2017**: Fix command keys with modifiers not working & visual enhancements for resetting.<br>
+- **24th of December, 2017**: Fix all known key-modifier bugs, better support for unfilled grids, internal optimizations.<br>
+- **2nd of June, 2018**: Fix the arrow keys displaying rather broken.<br>
+- **3rd of June, 2018**: Switch to arrow symbols with better availability, fix configuration position saving and UTF-8 support, add GitHub link to the initialisation dialog.
+- **12th of September, 2018**: Completely new versatible layout system, rendering modes on a per key basis, improved performance.    
+- **27th of December, 2018**: Variable layout size, variable layout border offset size, support for the right shift key, several other bug fixes, improved dialogs.    
+- **5th of February, 2019**: Changable key name, periodic stats saving, separate track all options for keys and mouse buttons, some bug fixes.
