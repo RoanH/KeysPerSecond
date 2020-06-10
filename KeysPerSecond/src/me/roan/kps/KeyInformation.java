@@ -17,20 +17,20 @@ public final class KeyInformation implements Positionable{
 	 * The name of this key
 	 * @see Key#name
 	 */
-	protected String name;
+	public String name;
 	/**
 	 * The virtual key code of this key<br>
 	 * This code represents the key
 	 */
-	protected int keycode;
+	public int keycode;
 	/**
 	 * Whether or not this key is displayed
 	 */
-	protected boolean visible = true;
+	public boolean visible = true;
 	/**
 	 * Auto-increment for #x
 	 */
-	protected static transient volatile int autoIndex = -2;
+	public static transient volatile int autoIndex = -2;
 	/**
 	 * The x position of this panel in the layout
 	 */
@@ -64,7 +64,7 @@ public final class KeyInformation implements Positionable{
 	 * @see #name
 	 * @see #keycode 
 	 */
-	protected KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
+	public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
 		this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
 		this.name = mouse ? name : getKeyName(name, keycode);
 	}
