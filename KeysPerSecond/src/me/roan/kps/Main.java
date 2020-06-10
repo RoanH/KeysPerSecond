@@ -40,13 +40,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -681,52 +678,12 @@ public class Main{
 			save.setEnabled(true);
 		});
 		precision.addActionListener((e)->{
-			JPanel pconfig = new JPanel(new BorderLayout());
-			JLabel info1 = new JLabel("Specify how many digits should be displayed");
-			JLabel info2 = new JLabel("beyond the decimal point for the average.");
-			JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
-			plabels.add(info1);
-			plabels.add(info2);
-			JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
-			values.setSelectedIndex(config.precision);
-			JLabel vlabel = new JLabel("Precision: ");
-			JPanel pvalue = new JPanel(new BorderLayout());
-			pvalue.add(vlabel, BorderLayout.LINE_START);
-			pvalue.add(values, BorderLayout.CENTER);
-			pconfig.add(plabels, BorderLayout.CENTER);
-			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			if(Dialog.showSaveDialog(pconfig)){
-				config.precision = values.getSelectedIndex();
-				save.setEnabled(true);
-			}
+			configurePrecision();
+			save.setEnabled(true);
 		});
 		graph.addActionListener((e)->{
-			JPanel pconfig = new JPanel();
-			JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
-			JCheckBox showavg = new JCheckBox();
-			showavg.setSelected(Main.config.graphAvg);
-			JLabel lbacklog;
-			if(config.updateRate != 1000){
-				lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
-			}else{
-				lbacklog = new JLabel("Backlog (seconds): ");
-			}
-			JLabel lshowavg = new JLabel("Show average: ");
-			JPanel glabels = new JPanel(new GridLayout(2, 1));
-			JPanel gcomponents = new JPanel(new GridLayout(2, 1));
-			glabels.add(lbacklog);
-			glabels.add(lshowavg);
-			gcomponents.add(backlog);
-			gcomponents.add(showavg);
-			glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
-			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
-			pconfig.add(glabels);
-			pconfig.add(gcomponents);
-			if(Dialog.showSaveDialog(pconfig)){
-				Main.config.graphAvg = showavg.isSelected();
-				Main.config.backlog = (int)backlog.getValue();
-				save.setEnabled(true);
-			}
+			configureGraph();
+			save.setEnabled(true);
 		});
 		addkey.addActionListener((e)->{
 			KeysDialog.configureKeys();
@@ -764,38 +721,8 @@ public class Main{
 			save.setEnabled(true);
 		});
 		updaterate.addActionListener((e)->{
-			JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
-			info.add(new JLabel("Here you can change the rate at which"));
-			info.add(new JLabel("the graph, max, avg & cur are updated."));
-			JPanel pconfig = new JPanel(new BorderLayout());
-			JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
-			update.setSelectedItem(config.updateRate + "ms");
-			update.setRenderer(new DefaultListCellRenderer(){
-				/**
-				 * Serial ID
-				 */
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
-					Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-					if(((String)value).length() < 5 || ((String)value).equals("100ms")){
-						item.setForeground(Color.RED);
-					}
-					if(((String)value).length() < 4){
-						item.setForeground(Color.MAGENTA);
-					}
-					return item;
-				}
-			});
-			JLabel lupdate = new JLabel("Update rate: ");
-			pconfig.add(info, BorderLayout.PAGE_START);
-			pconfig.add(lupdate, BorderLayout.WEST);
-			pconfig.add(update, BorderLayout.CENTER);
-			if(Dialog.showSaveDialog(pconfig)){
-				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
-				save.setEnabled(true);
-			}
+			configureUpdateRate();
+			save.setEnabled(true);
 		});
 		autoSave.addActionListener((e)->{
 			Statistics.configureAutoSave(false);
@@ -850,6 +777,88 @@ public class Main{
 		conf.dispose();
 		frame.setAlwaysOnTop(config.overlay);
 		graphFrame.setAlwaysOnTop(config.overlay);
+	}
+	
+	private static final void configureGraph(){
+		JPanel pconfig = new JPanel();
+		JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
+		JCheckBox showavg = new JCheckBox();
+		showavg.setSelected(Main.config.graphAvg);
+		JLabel lbacklog;
+		if(config.updateRate != 1000){
+			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
+		}else{
+			lbacklog = new JLabel("Backlog (seconds): ");
+		}
+		JLabel lshowavg = new JLabel("Show average: ");
+		JPanel glabels = new JPanel(new GridLayout(2, 1));
+		JPanel gcomponents = new JPanel(new GridLayout(2, 1));
+		glabels.add(lbacklog);
+		glabels.add(lshowavg);
+		gcomponents.add(backlog);
+		gcomponents.add(showavg);
+		glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
+		gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
+		pconfig.add(glabels);
+		pconfig.add(gcomponents);
+		if(Dialog.showSaveDialog(pconfig)){
+			Main.config.graphAvg = showavg.isSelected();
+			Main.config.backlog = (int)backlog.getValue();
+		}
+	}
+	
+	private static final void configurePrecision(){
+		JPanel pconfig = new JPanel(new BorderLayout());
+		JLabel info1 = new JLabel("Specify how many digits should be displayed");
+		JLabel info2 = new JLabel("beyond the decimal point for the average.");
+		JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
+		plabels.add(info1);
+		plabels.add(info2);
+		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
+		values.setSelectedIndex(config.precision);
+		JLabel vlabel = new JLabel("Precision: ");
+		JPanel pvalue = new JPanel(new BorderLayout());
+		pvalue.add(vlabel, BorderLayout.LINE_START);
+		pvalue.add(values, BorderLayout.CENTER);
+		pconfig.add(plabels, BorderLayout.CENTER);
+		pconfig.add(pvalue, BorderLayout.PAGE_END);
+		if(Dialog.showSaveDialog(pconfig)){
+			config.precision = values.getSelectedIndex();
+		}
+	}
+	
+	private static final void configureUpdateRate(){
+		JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
+		info.add(new JLabel("Here you can change the rate at which"));
+		info.add(new JLabel("the graph, max, avg & cur are updated."));
+		JPanel pconfig = new JPanel(new BorderLayout());
+		JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
+		update.setSelectedItem(config.updateRate + "ms");
+		update.setRenderer(new DefaultListCellRenderer(){
+			/**
+			 * Serial ID
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
+				Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if(((String)value).length() < 5 || ((String)value).equals("100ms")){
+					item.setForeground(Color.RED);
+				}
+				if(((String)value).length() < 4){
+					item.setForeground(Color.MAGENTA);
+				}
+				return item;
+			}
+		});
+		JLabel lupdate = new JLabel("Update rate: ");
+		pconfig.add(info, BorderLayout.PAGE_START);
+		pconfig.add(lupdate, BorderLayout.WEST);
+		pconfig.add(update, BorderLayout.CENTER);
+		if(Dialog.showSaveDialog(pconfig)){
+			config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
+		}
 	}
 
 	/**
