@@ -23,7 +23,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.CommandKeys.CMD;
-import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.BasePanel;
 import me.roan.util.Dialog;
 

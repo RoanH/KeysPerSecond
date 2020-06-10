@@ -36,8 +36,6 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
-import me.roan.kps.Main.Key;
-import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.dialog.LayoutDialog;

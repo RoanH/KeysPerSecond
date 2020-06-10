@@ -1,7 +1,7 @@
 package me.roan.kps.panels;
 
-import me.roan.kps.Main.Key;
-import me.roan.kps.Main.KeyInformation;
+import me.roan.kps.Key;
+import me.roan.kps.KeyInformation;
 import me.roan.kps.RenderingMode;
 
 /**

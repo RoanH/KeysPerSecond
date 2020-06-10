@@ -38,7 +38,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import me.roan.kps.Main.Key;
 import me.roan.kps.panels.TotPanel;
 import me.roan.util.ClickableLink;
 import me.roan.util.Dialog;

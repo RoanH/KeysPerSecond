@@ -15,8 +15,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import me.roan.kps.GraphMode;
+import me.roan.kps.KeyInformation;
 import me.roan.kps.Main;
-import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.RenderingMode;
 import me.roan.kps.layout.LayoutValidator;
 import me.roan.kps.layout.Positionable;
