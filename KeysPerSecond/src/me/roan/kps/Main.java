@@ -582,61 +582,49 @@ public class Main{
 		labels.add(lallKeys);
 		labels.add(lallButtons);
 		labels.add(lmod);
-		JButton save = new JButton("Save config");
 		ctop.addActionListener((e)->{
 			config.overlay = ctop.isSelected();
-			save.setEnabled(true);
 		});
 		callKeys.addActionListener((e)->{
 			config.trackAllKeys = callKeys.isSelected();
-			save.setEnabled(true);
 		});
 		callButtons.addActionListener((e)->{
 			config.trackAllButtons = callButtons.isSelected();
-			save.setEnabled(true);
 		});
 		cmax.addActionListener((e)->{
 			config.showMax = cmax.isSelected();
-			save.setEnabled(true);
 		});
 		cavg.addActionListener((e)->{
 			config.showAvg = cavg.isSelected();
-			save.setEnabled(true);
 		});
 		ccur.addActionListener((e)->{
 			config.showCur = ccur.isSelected();
-			save.setEnabled(true);
 		});
 		cgra.addActionListener((e)->{
 			config.showGraph = cgra.isSelected();
-			save.setEnabled(true);
 		});
 		ccol.addActionListener((e)->{
 			config.customColors = ccol.isSelected();
-			save.setEnabled(true);
 		});
 		ckey.addActionListener((e)->{
 			config.showKeys = ckey.isSelected();
-			save.setEnabled(true);
 		});
 		ctot.addActionListener((e)->{
 			config.showTotal = ctot.isSelected();
-			save.setEnabled(true);
 		});
 		cmod.addActionListener((e)->{
 			config.enableModifiers = cmod.isSelected();
-			save.setEnabled(true);
 		});
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
 		JPanel buttons = new JPanel(new GridLayout(10, 1));
+		JButton save = new JButton("Save config");
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
 		JButton cmdkeys = new JButton("Commands");
-		save.setEnabled(false);
 		JButton graph = new JButton("Graph");
 		graph.setEnabled(false);
 		cgra.addActionListener((e)->{
@@ -671,27 +659,21 @@ public class Main{
 		form.add(all, BorderLayout.CENTER);
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(false);
-			save.setEnabled(true);
 		});
 		cmdkeys.addActionListener((e)->{
 			configureCommandKeys();
-			save.setEnabled(true);
 		});
 		precision.addActionListener((e)->{
 			configurePrecision();
-			save.setEnabled(true);
 		});
 		graph.addActionListener((e)->{
 			configureGraph();
-			save.setEnabled(true);
 		});
 		addkey.addActionListener((e)->{
 			KeysDialog.configureKeys();
-			save.setEnabled(true);
 		});
 		color.addActionListener((e)->{
 			configureColors();
-			save.setEnabled(true);
 		});
 		save.addActionListener((e)->{
 			config.saveConfig(false);
@@ -718,15 +700,12 @@ public class Main{
 			ctop.setSelected(config.overlay);
 			ctot.setSelected(config.showTotal);
 			cmod.setSelected(config.enableModifiers);
-			save.setEnabled(true);
 		});
 		updaterate.addActionListener((e)->{
 			configureUpdateRate();
-			save.setEnabled(true);
 		});
 		autoSave.addActionListener((e)->{
 			Statistics.configureAutoSave(false);
-			save.setEnabled(true);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
 		info.add(Util.getVersionLabel("KeysPerSecond", "v8.2"));//XXX the version number  - don't forget build.gradle
