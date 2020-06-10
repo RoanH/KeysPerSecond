@@ -38,15 +38,15 @@ public class Configuration{
 	/**
 	 * Whether or not to show the max value
 	 */
-	protected boolean showMax = true;
+	public boolean showMax = true;
 	/**
 	 * Whether or not to show the average value
 	 */
-	protected boolean showAvg = true;
+	public boolean showAvg = true;
 	/**
 	 * Whether or not to show the current value
 	 */
-	protected boolean showCur = true;
+	public boolean showCur = true;
 	/**
 	 * Whether or not to show the keys
 	 */
@@ -74,7 +74,7 @@ public class Configuration{
 	/**
 	 * Whether or not to show the total number of hits
 	 */
-	protected boolean showTotal = false;
+	public boolean showTotal = false;
 	/**
 	 * Whether or not the enable tracking key-modifier combinations
 	 */
@@ -84,7 +84,7 @@ public class Configuration{
 	/**
 	 * Key configuration data, can be serialised
 	 */
-	protected List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
+	public List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
 
 	//update rate
 	/**
@@ -261,7 +261,7 @@ public class Configuration{
 	/**
 	 * Position the graph is rendered in
 	 */
-	protected GraphMode graphMode = GraphMode.INLINE;
+	public GraphMode graphMode = GraphMode.INLINE;
 	
 	//automatic statistics saving
 	/**

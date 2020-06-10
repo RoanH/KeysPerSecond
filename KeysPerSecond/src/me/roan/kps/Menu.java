@@ -40,6 +40,7 @@ import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.TotPanel;
+import me.roan.kps.ui.dialog.LayoutDialog;
 import me.roan.util.Dialog;
 
 import sun.swing.SwingUtilities2;
@@ -396,7 +397,7 @@ public class Menu{
 			Main.config.backlog = (int)sbacklog.getValue();
 		});
 		layout.addActionListener((e)->{
-			Main.configureLayout(true);
+			LayoutDialog.configureLayout(true);
 			Main.reconfigure();
 		});
 		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.updateRate == 1000);
