@@ -1,4 +1,4 @@
-package me.roan.kps.ui.dialog;
+package me.roan.kps.gui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

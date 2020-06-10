@@ -1,6 +1,6 @@
 package me.roan.kps.layout;
 
-import me.roan.kps.ui.model.SpecialNumberModel;
+import me.roan.kps.gui.model.SpecialNumberModel;
 
 /**
  * Validator that ensures that only

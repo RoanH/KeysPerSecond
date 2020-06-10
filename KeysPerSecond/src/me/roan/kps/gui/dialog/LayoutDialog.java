@@ -1,4 +1,4 @@
-package me.roan.kps.ui.dialog;
+package me.roan.kps.gui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,12 +18,12 @@ import me.roan.kps.GraphMode;
 import me.roan.kps.KeyInformation;
 import me.roan.kps.Main;
 import me.roan.kps.RenderingMode;
+import me.roan.kps.gui.model.DynamicInteger;
+import me.roan.kps.gui.model.EndNumberModel;
+import me.roan.kps.gui.model.MaxNumberModel;
 import me.roan.kps.layout.LayoutValidator;
 import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.BasePanel;
-import me.roan.kps.ui.model.DynamicInteger;
-import me.roan.kps.ui.model.EndNumberModel;
-import me.roan.kps.ui.model.MaxNumberModel;
 import me.roan.util.Dialog;
 
 public class LayoutDialog{

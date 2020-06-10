@@ -1,4 +1,4 @@
-package me.roan.kps.ui.model;
+package me.roan.kps.gui.model;
 
 import java.util.function.Supplier;
 
