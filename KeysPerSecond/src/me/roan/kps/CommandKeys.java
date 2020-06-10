@@ -164,6 +164,7 @@ public class CommandKeys{
 	 * @param code The code to test
 	 * @return Whether the given key code is in the new format
 	 */
+	@Deprecated
 	public static boolean isNewFormat(int code){
 		return isMouseButton(code) || ((code & FORMAT_MASK) != 0);
 	}
