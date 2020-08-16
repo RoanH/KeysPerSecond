@@ -211,21 +211,12 @@ public class Main{
 	 */
 	public static void main(String[] args){
 		//Work around for a JDK bug
-		boolean relaunch = args.length != 0 && args[args.length - 1].equalsIgnoreCase("-relaunch");
-		if(relaunch){
-			String[] tmp = new String[args.length - 1];
-			System.arraycopy(args, 0, tmp, 0, tmp.length);
-			args = tmp;
-		}
-		ExclamationMarkPath.check(relaunch, args);
+		ExclamationMarkPath.check(args);
 		
 		//Basic setup and info
 		String config = null;
-		if(args.length >= 1){
+		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){
 			config = args[0];
-			for(int i = 1; i < args.length; i++){
-				config += " " + args[i];
-			}
 			System.out.println("Attempting to load config: " + config);
 		}
 		System.out.println("Control keys:");
@@ -278,10 +269,12 @@ public class Main{
 					return true;
 				});
 			}
-			if(files != null && files.length > 0){
+			if(files != null && files.length > 0 && files[0].exists()){
 				toLoad.loadConfig(files[0]);
 				Main.config = toLoad;
 				System.out.println("Loaded config file: " + files[0].getName());
+			}else{
+				System.out.println("Provided config file does not exist.");
 			}
 		}else{
 			try{
