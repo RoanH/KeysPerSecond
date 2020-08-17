@@ -17,15 +17,14 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.BasePanel;
 import me.roan.util.Dialog;
+import me.roan.util.FileSelector;
+import me.roan.util.FileSelector.FileExtension;
 
 /**
  * This class contains all the configurable
@@ -33,6 +32,9 @@ import me.roan.util.Dialog;
  * @author Roan
  */
 public class Configuration{
+	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
+	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf3");
+	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2");
 
 	//general
 	/**
@@ -353,19 +355,16 @@ public class Configuration{
 			}
 		}
 	}
-
+	
 	/**
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
 	 */
 	protected static final boolean loadConfiguration(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2", "kpsconf3"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+		File saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
+		if(saveloc == null){
 			return false;
 		}
-		File saveloc = chooser.getSelectedFile();
 		Configuration toLoad = new Configuration(saveloc);
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			if(toLoad.loadLegacyFormat(saveloc)){
@@ -1083,14 +1082,8 @@ public class Configuration{
 	 */
 	protected final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf3"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf3") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf3"));
-		if(!saveloc.exists() || (saveloc.exists() && Dialog.showConfirmDialog("File already exists, overwrite?"))){
+		File saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
+		if(saveloc != null){
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
