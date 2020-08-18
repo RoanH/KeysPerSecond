@@ -11,17 +11,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,8 +50,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
@@ -85,6 +77,7 @@ import me.roan.kps.ui.model.MaxNumberModel;
 import me.roan.kps.ui.model.DynamicInteger;
 import me.roan.util.ClickableLink;
 import me.roan.util.Dialog;
+import me.roan.util.ExclamationMarkPath;
 import me.roan.util.Util;
 
 /**
@@ -209,15 +202,15 @@ public class Main{
 	 * @param args - configuration file path
 	 */
 	public static void main(String[] args){
+		//Work around for a JDK bug
+		ExclamationMarkPath.check(args);
+		
+		//Basic setup and info
 		String config = null;
-		if(args.length >= 1){
+		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){
 			config = args[0];
-			for(int i = 1; i < args.length; i++){
-				config += " " + args[i];
-			}
 			System.out.println("Attempting to load config: " + config);
 		}
-		relaunchFromTemp(config);
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
@@ -225,10 +218,7 @@ public class Main{
 		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		System.out.println("Ctrl + R: Reloads the configuration");
-		try{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1){
-		}
+		Util.installUI();
 		
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
@@ -271,10 +261,12 @@ public class Main{
 					return true;
 				});
 			}
-			if(files != null && files.length > 0){
+			if(files != null && files.length > 0 && files[0].exists()){
 				toLoad.loadConfig(files[0]);
 				Main.config = toLoad;
 				System.out.println("Loaded config file: " + files[0].getName());
+			}else{
+				System.out.println("Provided config file does not exist.");
 			}
 		}else{
 			try{
@@ -1799,80 +1791,6 @@ public class Main{
 		}
 		System.out.println();
 		frame.repaint();
-	}
-
-	/**
-	 * Re-launches the program from the temp directory
-	 * if the program path contains a ! this fixes a
-	 * bug in the native library loading
-	 * @param args The original command line arguments
-	 */
-	private static final void relaunchFromTemp(String args){
-		URL url = Main.class.getProtectionDomain().getCodeSource().getLocation();
-		File exe;
-		try{
-			exe = new File(url.toURI());
-		}catch(URISyntaxException e){
-			exe = new File(url.getPath());
-		}
-		if(!exe.getAbsolutePath().contains("!")){
-			return;
-		}
-		File jvm = new File(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
-		if(!jvm.exists() || !exe.exists()){
-			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
-			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-			System.exit(0);
-		}
-		File tmp = null;
-		try{
-			tmp = File.createTempFile("kps", null);
-			if(tmp.getAbsolutePath().contains("!")){
-				Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-				System.exit(0);
-			}
-			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		}catch(IOException e){
-			e.printStackTrace();
-			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-			tmp.deleteOnExit();
-			tmp.delete();
-			System.exit(0);
-		}
-		ProcessBuilder builder = new ProcessBuilder();
-		if(args != null){
-			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath(), args);
-		}else{
-			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath());
-		}
-		Process proc = null;
-		try{
-			proc = builder.start();
-		}catch(IOException e){
-			e.printStackTrace();
-			Dialog.showMessageDialog("An error occured whilst trying to launch the program >.<");
-			tmp.deleteOnExit();
-			tmp.delete();
-			System.exit(0);
-		}
-		BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-		String line;
-		try{
-			while(proc.isAlive()){
-				while((line = in.readLine()) != null){
-					System.out.println(line);
-				}
-				try{
-					Thread.sleep(1000);
-				}catch(InterruptedException e){
-				}
-			}
-		}catch(IOException e){
-			System.err.print("Output stream chrashed :/");
-		}
-		tmp.deleteOnExit();
-		tmp.delete();
-		System.exit(0);
 	}
 	
 	//=================================================================================================
