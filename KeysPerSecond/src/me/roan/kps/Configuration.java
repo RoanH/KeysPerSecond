@@ -32,8 +32,17 @@ import me.roan.util.FileSelector.FileExtension;
  * @author Roan
  */
 public class Configuration{
+	/**
+	 * Extension filter for all KeysPerSecond configuration files.
+	 */
 	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
+	/**
+	 * Extension filter for the current KeysPerSecond configuration file format.
+	 */
 	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf3");
+	/**
+	 * Extension filter for legacy KeysPerSecond configuration file formats.
+	 */
 	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2");
 
 	//general

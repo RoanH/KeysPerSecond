@@ -49,6 +49,9 @@ import me.roan.util.FileSelector.FileExtension;
  * @author Roan
  */
 public class Statistics{
+	/**
+	 * Extension filter for KeysPerSecond statistics files.
+	 */
 	private static final FileExtension KPS_STATS_EXT = FileSelector.registerFileExtension("KeysPerSecond statistics", "kpsstats");
 	/**
 	 * Statistics save future
