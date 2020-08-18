@@ -1555,7 +1555,7 @@ public class Main{
 		JButton newkey = new JButton("Add Key");
 		newkey.addActionListener((evt)->{
 			JPanel form = new JPanel(new GridLayout(config.enableModifiers ? 4 : 1, 1));
-			JLabel txt = new JLabel("Press a key and click 'OK' to add it.");
+			JLabel txt = new JLabel("Press a key and click 'Save' to add it.");
 			form.add(txt);
 			JCheckBox ctrl = new JCheckBox();
 			JCheckBox alt = new JCheckBox();
