@@ -82,7 +82,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				}
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 				if(Main.config.graphAvg){
-					int y = (int)(this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - ((float)(this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * (Main.avg / (float)maxval)));
+					int y = (int)(this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - (((this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * Main.avg) / maxval));
 					g.setColor(Main.config.getForegroundColor().darker());
 					g.setStroke(avgstroke);
 					g.drawLine(Main.config.borderOffset + RenderingMode.insideOffset, y, this.getWidth() - Main.config.borderOffset - RenderingMode.insideOffset - 2, y);
