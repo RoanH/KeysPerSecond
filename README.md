@@ -9,7 +9,6 @@ I could however not find a program that worked well on my computer so I decided 
 
 The program when active looks like this:    
 ![Interface](http://i.imgur.com/9cCzB0Q.png)  ![Interface](http://i.imgur.com/bLQXABw.png)    
-![Interface](https://i.imgur.com/2HgRJwO.png)    
 There is also a right click menu to configure all the settings:    
 ![Menu](https://i.imgur.com/lltS2NK.png)    
 
@@ -42,7 +41,7 @@ And if you find any bugs feel free to report them.
 - An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
 - The snap to screen edge function works on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
-- You can pass the path to the config file to load via the commandline or a shortcut so you can skip the configuration step. Setting the program as the default program to open the configuration file with may work as well as long as you don't move the executable afterwards.
+- You can pass the path to the config file to load via the command line or a shortcut so you can skip the configuration step. Setting the program as the default program to open the configuration file with may work as well as long as you don't move the executable afterwards.
 - When resetting something it will also be printed to the console if this program is run using cmd/shell.    
 - [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
 
@@ -52,8 +51,8 @@ It's kinda empty here right now :c, so please suggest things c:
 ## Downloads
 _Requires Java 8 or higher_    
 _Tested operating systems: Mac 10.11.6, Ubuntu Linux 16.04 LTS, Windows 7 & 8 & 10_    
-- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.exe)    
-- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.2/KeysPerSecond-v8.2.jar)
+- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.3/KeysPerSecond-v8.3.exe)    
+- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.3/KeysPerSecond-v8.3.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
@@ -67,7 +66,7 @@ Next are two other examples of possible layouts.
 ![](https://i.imgur.com/ImE4zTU.png)    
 ![](https://i.imgur.com/fBgohIA.png)    
 Last are some very simple layouts to highlight the title-value display options.    
-![Modes](https://i.imgur.com/gNYCSb9.png)      
+![Modes](https://i.imgur.com/0769n9E.png)      
 
 ## History
 Project development started: 23 January 2017

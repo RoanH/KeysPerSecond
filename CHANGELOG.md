@@ -17,10 +17,10 @@
 - **30th of March, 2017**: Implemented a right click dialog, pause functionality & a snap to screen edge function.<br>
 - **31st of March, 2017**: Fix ! path bug, add arrow key moving, improve window draging, properly reset the graph, fix no on graph.<br>
 - **1st of April, 2017**: Implement 1 & 5ms update rate (CPU heavy), fix infinite instances bug, fix rendering bug, filter config selection view.<br>
-- **8th of April, 2017**: Implement a text based config format & the option to configure the program while it's running & beter arrow moving support.<br>
-- **12th of April, 2017**: Fix checkmark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
-- **13th of April, 2017**: Add pause checkmark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix trackall bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
-- **16th of April, 2017**: Added the option to track mouse buttons, added the option to save the onscreen location of the program to the config.<br>
+- **8th of April, 2017**: Implement a text based config format & the option to configure the program while it's running & better arrow moving support.<br>
+- **12th of April, 2017**: Fix check mark not being colored, fix custom colors being reset, implement config caps & defaults, fix size issue, add add key cancel button<br>
+- **13th of April, 2017**: Add pause check mark, fix overlay option, implement config reloading (ctrl + R), Fix visual glitch, fix track-all bugs, NPE workaround, fix double click = ctrl, improve command line arguments.<br>
+- **16th of April, 2017**: Added the option to track mouse buttons, added the option to save the on-screen location of the program to the config.<br>
 - **17th of April, 2017**: Rendering fixes & fix the counters being reset when the color is changed.<br>
 - **19th of April, 2017**: Fix keys not being removed when they should be, fix Win 10 rendering bug, Add cancel option for graph, size, precision & update rate, fix move keys moving the context menu & program at the same time, fix loading a new config not resetting stats.<br>
 - **29th of April, 2017**: Minor optimizations, context menu improvements & fixes, add totals panel, fix some bugs.<br>
@@ -35,6 +35,7 @@
 - **24th of December, 2017**: Fix all known key-modifier bugs, better support for unfilled grids, internal optimizations.<br>
 - **2nd of June, 2018**: Fix the arrow keys displaying rather broken.<br>
 - **3rd of June, 2018**: Switch to arrow symbols with better availability, fix configuration position saving and UTF-8 support, add GitHub link to the initialisation dialog.
-- **12th of September, 2018**: Completely new versatible layout system, rendering modes on a per key basis, improved performance.    
+- **12th of September, 2018**: Completely new versatile layout system, rendering modes on a per key basis, improved performance.    
 - **27th of December, 2018**: Variable layout size, variable layout border offset size, support for the right shift key, several other bug fixes, improved dialogs.    
-- **5th of February, 2019**: Changable key name, periodic stats saving, separate track all options for keys and mouse buttons, some bug fixes.
+- **5th of February, 2019**: Changeable key name, periodic stats saving, separate track all options for keys and mouse buttons, some bug fixes.    
+- **27th of August, 2020**: Windows style file chooser, prevent loading non-existent config files, force quoting for cli config passing, fix background transparency not being applied to non-panel areas, general aesthetic and internal improvements.
