@@ -74,7 +74,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				poly.addPoint(this.getWidth() - Main.config.borderOffset - RenderingMode.insideOffset - 2, this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - 1);
 				for(int i = 1; i <= values.size(); i++){
 					int px = (int)(Main.config.borderOffset + RenderingMode.insideOffset + ((double)(this.getWidth() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2 - 2) / (double)(Main.config.backlog - 1)) * (Main.config.backlog - i));
-					int py = (int)(this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - 1 - ((float)(this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * ((float)values.get(i - 1) / (float)maxval)));
+					int py = (int)(this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - 1 - ((float)((this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * values.get(i - 1)) / (float)maxval));
 					poly.addPoint(px, py);
 					if(i == values.size()){
 						poly.addPoint(px, this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - 1);
@@ -103,7 +103,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 			}catch(NullPointerException e){
 				//catch but do not solve, this is caused by a race
 				//condition. However adding synchronisation would impact
-				//performance more then it is worth
+				//performance more than it is worth
 			}
 		}
 	}
