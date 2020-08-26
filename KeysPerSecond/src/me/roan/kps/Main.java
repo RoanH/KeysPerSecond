@@ -321,7 +321,7 @@ public class Main{
 					max = totaltmp;
 				}
 				if(totaltmp != 0){
-					avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
+					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					TotPanel.hits += currentTmp;
 					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
