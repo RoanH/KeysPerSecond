@@ -27,6 +27,234 @@ import me.roan.kps.ui.model.MaxNumberModel;
 import me.roan.util.Dialog;
 
 public class LayoutDialog{
+	private static final Positionable avgItem = new Positionable(){
+
+		@Override
+		public void setX(int x){
+			Main.config.avg_x = x;
+		}
+
+		@Override
+		public void setY(int y){
+			Main.config.avg_y = y;
+		}
+
+		@Override
+		public void setWidth(int w){
+			Main.config.avg_w = w;
+		}
+
+		@Override
+		public void setHeight(int h){
+			Main.config.avg_h = h;
+		}
+
+		@Override
+		public String getName(){
+			return "AVG";
+		}
+
+		@Override
+		public int getX(){
+			return Main.config.avg_x;
+		}
+
+		@Override
+		public int getY(){
+			return Main.config.avg_y;
+		}
+
+		@Override
+		public int getWidth(){
+			return Main.config.avg_w;
+		}
+
+		@Override
+		public int getHeight(){
+			return Main.config.avg_h;
+		}
+
+		@Override
+		public RenderingMode getRenderingMode(){
+			return Main.config.avg_mode;
+		}
+
+		@Override
+		public void setRenderingMode(RenderingMode mode){
+			Main.config.avg_mode = mode;
+		}
+	};
+	private static final Positionable maxItem = new Positionable(){
+
+		@Override
+		public void setX(int x){
+			Main.config.max_x = x;
+		}
+
+		@Override
+		public void setY(int y){
+			Main.config.max_y = y;
+		}
+
+		@Override
+		public void setWidth(int w){
+			Main.config.max_w = w;
+		}
+
+		@Override
+		public void setHeight(int h){
+			Main.config.max_h = h;
+		}
+
+		@Override
+		public String getName(){
+			return "MAX";
+		}
+
+		@Override
+		public int getX(){
+			return Main.config.max_x;
+		}
+
+		@Override
+		public int getY(){
+			return Main.config.max_y;
+		}
+
+		@Override
+		public int getWidth(){
+			return Main.config.max_w;
+		}
+
+		@Override
+		public int getHeight(){
+			return Main.config.max_h;
+		}
+
+		@Override
+		public RenderingMode getRenderingMode(){
+			return Main.config.max_mode;
+		}
+
+		@Override
+		public void setRenderingMode(RenderingMode mode){
+			Main.config.max_mode = mode;
+		}
+	};
+	private static final Positionable curItem = new Positionable(){
+
+		@Override
+		public void setX(int x){
+			Main.config.cur_x = x;
+		}
+
+		@Override
+		public void setY(int y){
+			Main.config.cur_y = y;
+		}
+
+		@Override
+		public void setWidth(int w){
+			Main.config.cur_w = w;
+		}
+
+		@Override
+		public void setHeight(int h){
+			Main.config.cur_h = h;
+		}
+
+		@Override
+		public String getName(){
+			return "CUR";
+		}
+
+		@Override
+		public int getX(){
+			return Main.config.cur_x;
+		}
+
+		@Override
+		public int getY(){
+			return Main.config.cur_y;
+		}
+
+		@Override
+		public int getWidth(){
+			return Main.config.cur_w;
+		}
+
+		@Override
+		public int getHeight(){
+			return Main.config.cur_h;
+		}
+
+		@Override
+		public RenderingMode getRenderingMode(){
+			return Main.config.cur_mode;
+		}
+
+		@Override
+		public void setRenderingMode(RenderingMode mode){
+			Main.config.cur_mode = mode;
+		}
+	};
+	private static final Positionable totItem = new Positionable(){
+
+		@Override
+		public void setX(int x){
+			Main.config.tot_x = x;
+		}
+
+		@Override
+		public void setY(int y){
+			Main.config.tot_y = y;
+		}
+
+		@Override
+		public void setWidth(int w){
+			Main.config.tot_w = w;
+		}
+
+		@Override
+		public void setHeight(int h){
+			Main.config.tot_h = h;
+		}
+
+		@Override
+		public String getName(){
+			return "TOT";
+		}
+
+		@Override
+		public int getX(){
+			return Main.config.tot_x;
+		}
+
+		@Override
+		public int getY(){
+			return Main.config.tot_y;
+		}
+
+		@Override
+		public int getWidth(){
+			return Main.config.tot_w;
+		}
+
+		@Override
+		public int getHeight(){
+			return Main.config.tot_h;
+		}
+
+		@Override
+		public RenderingMode getRenderingMode(){
+			return Main.config.tot_mode;
+		}
+
+		@Override
+		public void setRenderingMode(RenderingMode mode){
+			Main.config.tot_mode = mode;
+		}
+	};
 
 	/**
 	 * Shows the layout configuration dialog
@@ -51,240 +279,16 @@ public class LayoutDialog{
 			createListItem(i, fields, modes, live);
 		}
 		if(Main.config.showAvg){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					Main.config.avg_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					Main.config.avg_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					Main.config.avg_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					Main.config.avg_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "AVG";
-				}
-
-				@Override
-				public int getX(){
-					return Main.config.avg_x;
-				}
-
-				@Override
-				public int getY(){
-					return Main.config.avg_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return Main.config.avg_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return Main.config.avg_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return Main.config.avg_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					Main.config.avg_mode = mode;
-				}
-			}, fields, modes, live);
+			createListItem(avgItem, fields, modes, live);
 		}
 		if(Main.config.showMax){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					Main.config.max_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					Main.config.max_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					Main.config.max_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					Main.config.max_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "MAX";
-				}
-
-				@Override
-				public int getX(){
-					return Main.config.max_x;
-				}
-
-				@Override
-				public int getY(){
-					return Main.config.max_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return Main.config.max_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return Main.config.max_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return Main.config.max_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					Main.config.max_mode = mode;
-				}
-			}, fields, modes, live);
+			createListItem(maxItem, fields, modes, live);
 		}
 		if(Main.config.showCur){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					Main.config.cur_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					Main.config.cur_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					Main.config.cur_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					Main.config.cur_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "CUR";
-				}
-
-				@Override
-				public int getX(){
-					return Main.config.cur_x;
-				}
-
-				@Override
-				public int getY(){
-					return Main.config.cur_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return Main.config.cur_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return Main.config.cur_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return Main.config.cur_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					Main.config.cur_mode = mode;
-				}
-			}, fields, modes, live);
+			createListItem(curItem, fields, modes, live);
 		}
 		if(Main.config.showTotal){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					Main.config.tot_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					Main.config.tot_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					Main.config.tot_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					Main.config.tot_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "TOT";
-				}
-
-				@Override
-				public int getX(){
-					return Main.config.tot_x;
-				}
-
-				@Override
-				public int getY(){
-					return Main.config.tot_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return Main.config.tot_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return Main.config.tot_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return Main.config.tot_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					Main.config.tot_mode = mode;
-				}
-			}, fields, modes, live);
+			createListItem(totItem, fields, modes, live);
 		}
 
 		JPanel keys = new JPanel(new BorderLayout());
