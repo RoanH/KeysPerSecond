@@ -54,8 +54,6 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseListener;
 
 import me.roan.kps.CommandKeys.CMD;
-import me.roan.kps.gui.dialog.KeysDialog;
-import me.roan.kps.gui.dialog.LayoutDialog;
 import me.roan.kps.layout.GridPanel;
 import me.roan.kps.layout.Layout;
 import me.roan.kps.panels.AvgPanel;
@@ -63,6 +61,8 @@ import me.roan.kps.panels.GraphPanel;
 import me.roan.kps.panels.MaxPanel;
 import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
+import me.roan.kps.ui.dialog.KeysDialog;
+import me.roan.kps.ui.dialog.LayoutDialog;
 import me.roan.util.ClickableLink;
 import me.roan.util.Dialog;
 import me.roan.util.ExclamationMarkPath;

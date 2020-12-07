@@ -1,4 +1,4 @@
-package me.roan.kps.gui.model;
+package me.roan.kps.ui.model;
 
 import javax.swing.AbstractSpinnerModel;
 
