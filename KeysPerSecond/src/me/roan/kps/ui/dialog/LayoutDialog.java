@@ -26,7 +26,14 @@ import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
 import me.roan.util.Dialog;
 
+/**
+ * Logic for the layout configuration dialog.
+ * @author Roan
+ */
 public class LayoutDialog{
+	/**
+	 * Positionable for the average panel.
+	 */
 	private static final Positionable avgItem = new Positionable(){
 
 		@Override
@@ -84,6 +91,9 @@ public class LayoutDialog{
 			Main.config.avg_mode = mode;
 		}
 	};
+	/**
+	 * Positionable for the maximum panel.
+	 */
 	private static final Positionable maxItem = new Positionable(){
 
 		@Override
@@ -141,6 +151,9 @@ public class LayoutDialog{
 			Main.config.max_mode = mode;
 		}
 	};
+	/**
+	 * Positionable for the current panel.
+	 */
 	private static final Positionable curItem = new Positionable(){
 
 		@Override
@@ -198,6 +211,9 @@ public class LayoutDialog{
 			Main.config.cur_mode = mode;
 		}
 	};
+	/**
+	 * Positionable for the total panel.
+	 */
 	private static final Positionable totItem = new Positionable(){
 
 		@Override
