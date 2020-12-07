@@ -27,7 +27,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
@@ -36,11 +35,12 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import me.roan.kps.panels.TotPanel;
 import me.roan.util.ClickableLink;
 import me.roan.util.Dialog;
+import me.roan.util.FileSelector;
+import me.roan.util.FileSelector.FileExtension;
 
 /**
  * Class that handles most of the more complex
@@ -48,6 +48,10 @@ import me.roan.util.Dialog;
  * @author Roan
  */
 public class Statistics{
+	/**
+	 * Extension filter for KeysPerSecond statistics files.
+	 */
+	private static final FileExtension KPS_STATS_EXT = FileSelector.registerFileExtension("KeysPerSecond statistics", "kpsstats");
 	/**
 	 * Statistics save future
 	 */
@@ -62,10 +66,6 @@ public class Statistics{
 	 * @param live Whether or not the program is already running
 	 */
 	protected static final void configureAutoSave(boolean live){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setMultiSelectionEnabled(false);
-		
 		JPanel panel = new JPanel(new BorderLayout());
 		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", Main.config.autoSaveStats);
 		
@@ -82,8 +82,9 @@ public class Statistics{
 		extras.add(seldest);
 		labels.add(new JLabel("Save location: "));
 		seldest.addActionListener((e)->{
-			if(chooser.showOpenDialog(Main.frame.isDisplayable() ? Main.frame : null) == JFileChooser.APPROVE_OPTION){
-				ldest.setText(chooser.getSelectedFile().getAbsolutePath());
+			File dir = Dialog.showFolderOpenDialog();
+			if(dir != null){
+				ldest.setText(dir.getAbsolutePath());
 			}
 		});
 		
@@ -233,14 +234,8 @@ public class Statistics{
 	 * to save to
 	 */
 	protected static void saveStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
-		if(!file.exists() || (file.exists() && Dialog.showConfirmDialog("File already exists, overwrite?"))){
+		File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
+		if(file != null){
 			if(saveStats(file)){
 				Dialog.showMessageDialog("Statistics succesfully saved");
 			}else{
@@ -282,14 +277,12 @@ public class Statistics{
 	 * Loads the statistics from a file
 	 */
 	protected static void loadStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+		File file = Dialog.showFileOpenDialog(KPS_STATS_EXT);
+		if(file == null){
 			return;
 		}
 		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
 			TotPanel.hits = in.readInt();
 			Main.avg = in.readDouble();
 			Main.max = in.readInt();

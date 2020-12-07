@@ -56,6 +56,7 @@ import org.jnativehook.mouse.NativeMouseListener;
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.layout.GridPanel;
 import me.roan.kps.layout.Layout;
+import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.GraphPanel;
 import me.roan.kps.panels.MaxPanel;
@@ -73,7 +74,7 @@ import me.roan.util.Util;
  * information about how many times
  * certain keys are pressed and what the
  * average, maximum and current
- * amount of keys pressed per second is.
+ * number of keys pressed per second is.
  * <p>
  * Besides the tracking of the assigned keys
  * this program responds to 6 key events these are:
@@ -191,21 +192,12 @@ public class Main{
 	 */
 	public static void main(String[] args){
 		//Work around for a JDK bug
-		boolean relaunch = args.length != 0 && args[args.length - 1].equalsIgnoreCase("-relaunch");
-		if(relaunch){
-			String[] tmp = new String[args.length - 1];
-			System.arraycopy(args, 0, tmp, 0, tmp.length);
-			args = tmp;
-		}
-		ExclamationMarkPath.check(relaunch, args);
+		ExclamationMarkPath.check(args);
 		
 		//Basic setup and info
 		String config = null;
-		if(args.length >= 1){
+		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){
 			config = args[0];
-			for(int i = 1; i < args.length; i++){
-				config += " " + args[i];
-			}
 			System.out.println("Attempting to load config: " + config);
 		}
 		System.out.println("Control keys:");
@@ -258,10 +250,12 @@ public class Main{
 					return true;
 				});
 			}
-			if(files != null && files.length > 0){
+			if(files != null && files.length > 0 && files[0].exists()){
 				toLoad.loadConfig(files[0]);
 				Main.config = toLoad;
 				System.out.println("Loaded config file: " + files[0].getName());
+			}else{
+				System.out.println("Provided config file does not exist.");
 			}
 		}else{
 			try{
@@ -316,7 +310,7 @@ public class Main{
 					max = totaltmp;
 				}
 				if(totaltmp != 0){
-					avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
+					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					TotPanel.hits += currentTmp;
 					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
@@ -708,7 +702,7 @@ public class Main{
 			Statistics.configureAutoSave(false);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", "v8.2"));//XXX the version number  - don't forget build.gradle
+		info.add(Util.getVersionLabel("KeysPerSecond", "v8.3"));//XXX the version number  - don't forget build.gradle
 		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
 		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
