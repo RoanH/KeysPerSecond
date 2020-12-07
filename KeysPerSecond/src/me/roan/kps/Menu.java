@@ -43,8 +43,6 @@ import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.dialog.LayoutDialog;
 import me.roan.util.Dialog;
 
-import sun.swing.SwingUtilities2;
-
 /**
  * This class handles everything related to
  * the popup menus
@@ -650,10 +648,9 @@ public class Menu{
 				g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 				g.setComposite(prev);
 			}
-			FontMetrics fm = SwingUtilities2.getFontMetrics(menuItem, g);
-			int mnemIndex = menuItem.getDisplayedMnemonicIndex();
-			int y = (22 - fm.getHeight()) / 2;
-			SwingUtilities2.drawStringUnderlineCharAt(menuItem, g, menuItem.getText(), mnemIndex, 22 + defaultTextIconGap, y + fm.getAscent());
+			FontMetrics fm = menuItem.getFontMetrics(g.getFont());
+			g.addRenderingHints(Main.desktopHints);
+			g.drawString(menuItem.getText(), 22 + defaultTextIconGap, ((22 - fm.getHeight()) / 2) + fm.getAscent());
 		}
 
 		@Override
