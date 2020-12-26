@@ -21,6 +21,10 @@ import me.roan.kps.Main;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.util.Dialog;
 
+/**
+ * Logic for the key setup dialog.
+ * @author Roan
+ */
 public class KeysDialog{
 
 	/**
@@ -62,6 +66,10 @@ public class KeysDialog{
 		}
 	}
 	
+	/**
+	 * Shows the dialog for adding an new mouse button.
+	 * @param model The model for the table listing all the keys.
+	 */
 	private static void showAddMouseButtonDialog(KeysModel model){
 		JPanel addform = new JPanel(new BorderLayout());
 		addform.add(new JLabel("Select the mouse buttons to add:"), BorderLayout.PAGE_START);
@@ -98,6 +106,10 @@ public class KeysDialog{
 		}
 	}
 	
+	/**
+	 * Shows the dialog for adding an key.
+	 * @param model The model for the table listing all the keys.
+	 */
 	private static void showAddKeyDialog(KeysModel model){
 		JPanel form = new JPanel(new GridLayout(Main.config.enableModifiers ? 4 : 1, 1));
 		JLabel txt = new JLabel("Press a key and click 'Save' to add it.");
@@ -138,6 +150,10 @@ public class KeysDialog{
 		}
 	}
 	
+	/**
+	 * Table model that displays all configured keys.
+	 * @author Roan
+	 */
 	private static class KeysModel extends DefaultTableModel{
 		/**
 		 * Serial ID
