@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -185,6 +187,10 @@ public class Main{
 	 * Dummy key for getOrDefault operations
 	 */
 	protected static final Key DUMMY_KEY;
+	/**
+	 * Best text rendering hints.
+	 */
+	public static Map<?, ?> desktopHints;
 	
 	/**
 	 * Main method
@@ -1217,5 +1223,16 @@ public class Main{
 			public void keyReleased(){
 			}
 		};
+		
+		//Request best text anti-aliasing settings
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		desktopHints = (Map<?, ?>)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+		if(desktopHints == null){
+			Map<Object, Object> map = new HashMap<Object, Object>();
+			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			desktopHints = map;
+		}else{
+			toolkit.addPropertyChangeListener("awt.font.desktophints", event->desktopHints = (Map<?, ?>)event.getNewValue());
+		}
 	}
 }
