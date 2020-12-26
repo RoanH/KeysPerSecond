@@ -71,6 +71,7 @@ import me.roan.kps.panels.KeyPanel;
 import me.roan.kps.panels.MaxPanel;
 import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
+import me.roan.kps.ui.dialog.KeysDialog;
 import me.roan.kps.ui.dialog.LayoutDialog;
 import me.roan.util.ClickableLink;
 import me.roan.util.Dialog;
@@ -130,12 +131,12 @@ public class Main{
 	 * virtual codes<br>Used to increment the count for the
 	 * keys
 	 */
-	protected static Map<Integer, Key> keys = new HashMap<Integer, Key>();
+	public static Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
 	 * The most recent key event, only
 	 * used during the initial setup
 	 */
-	protected static NativeKeyEvent lastevent;
+	public static NativeKeyEvent lastevent;
 	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
@@ -732,7 +733,7 @@ public class Main{
 			}
 		});
 		addkey.addActionListener((e)->{
-			configureKeys();
+			KeysDialog.configureKeys();
 			save.setEnabled(true);
 		});
 		color.addActionListener((e)->{
@@ -1031,192 +1032,6 @@ public class Main{
 		config.updateRate = newRate;
 		mainLoop();
 	}
-	
-	/**
-	 * Shows the key configuration dialog
-	 */
-	protected static final void configureKeys(){
-		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
-		boolean[] visibleState = new boolean[copy.size()];
-		String[] nameState = new String[copy.size()];
-		for(int i = 0; i < copy.size(); i++){
-			visibleState[i] = copy.get(i).visible;
-			nameState[i] = copy.get(i).name;
-		}
-		
-		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you can edit these fields):"), BorderLayout.PAGE_START);
-		JTable keys = new JTable();
-		DefaultTableModel model = new DefaultTableModel(){
-			/**
-			 * Serial ID
-			 */
-			private static final long serialVersionUID = -5510962859479828507L;
-
-			@Override
-			public int getRowCount(){
-				return config.keyinfo.size();
-			}
-
-			@Override
-			public int getColumnCount(){
-				return 3;
-			}
-
-			@Override
-			public Object getValueAt(int rowIndex, int columnIndex){
-				switch(columnIndex){
-				case 0:
-					return config.keyinfo.get(rowIndex).name;
-				case 1:
-					return config.keyinfo.get(rowIndex).visible;
-				case 2:
-					return false;
-				default:
-					return null;
-				}
-			}
-
-			@Override
-			public String getColumnName(int col){
-				switch(col){
-				case 0:
-					return "Key";
-				case 1:
-					return "Visible";
-				case 2:
-					return "Remove";
-				default:
-					return null;
-				}
-			}
-
-			@Override
-			public Class<?> getColumnClass(int columnIndex){
-				if(columnIndex == 1 || columnIndex == 2){
-					return Boolean.class;
-				}
-				return super.getColumnClass(columnIndex);
-			}
-
-			@Override
-			public boolean isCellEditable(int row, int col){
-				return true;
-			}
-
-			@Override
-			public void setValueAt(Object value, int row, int col){
-				switch(col){
-				case 0:
-					config.keyinfo.get(row).setName((String)value);
-					break;
-				case 1:
-					config.keyinfo.get(row).visible = (boolean)value;
-					break;
-				case 2:
-					if((boolean)value == true){
-						Main.keys.remove(config.keyinfo.get(row).keycode);
-						config.keyinfo.remove(row);
-						keys.repaint();
-					}
-					break;
-				}
-			}
-		};
-		keys.setModel(model);
-		keys.setDragEnabled(false);
-		JScrollPane pane = new JScrollPane(keys);
-		pane.setPreferredSize(new Dimension((int)keyform.getPreferredSize().getWidth() + 50, 120));
-		keyform.add(pane, BorderLayout.CENTER);
-		JButton newkey = new JButton("Add Key");
-		newkey.addActionListener((evt)->{
-			JPanel form = new JPanel(new GridLayout(config.enableModifiers ? 4 : 1, 1));
-			JLabel txt = new JLabel("Press a key and click 'Save' to add it.");
-			form.add(txt);
-			JCheckBox ctrl = new JCheckBox();
-			JCheckBox alt = new JCheckBox();
-			JCheckBox shift = new JCheckBox();
-			if(config.enableModifiers){
-				JPanel a = new JPanel(new BorderLayout());
-				JPanel c = new JPanel(new BorderLayout());
-				JPanel s = new JPanel(new BorderLayout());
-				c.add(ctrl, BorderLayout.LINE_START);
-				c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
-				a.add(alt, BorderLayout.LINE_START);
-				a.add(new JLabel("Alt"), BorderLayout.CENTER);
-				s.add(shift, BorderLayout.LINE_START);
-				s.add(new JLabel("Shift"), BorderLayout.CENTER);
-				form.add(c);
-				form.add(a);
-				form.add(s);
-			}
-			if(Dialog.showSaveDialog(form)){
-				if(lastevent == null){
-					Dialog.showMessageDialog("No key pressed!");
-					return;
-				}
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
-				int n = (CommandKeys.hasAlt(info.keycode) ? 1 : 0) + (CommandKeys.hasCtrl(info.keycode) ? 1 : 0) + (CommandKeys.hasShift(info.keycode) ? 1 : 0);
-				if(Dialog.showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
-					if(config.keyinfo.contains(info)){
-						KeyInformation.autoIndex -= 2;
-						Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
-					}else{
-						config.keyinfo.add(info);
-					}
-				}
-				model.fireTableDataChanged();
-			}
-		});
-		JButton newmouse = new JButton("Add Mouse Button");
-		newmouse.addActionListener((e)->{
-			JPanel addform = new JPanel(new BorderLayout());
-			addform.add(new JLabel("Select the mouse buttons to add:"), BorderLayout.PAGE_START);
-
-			JPanel buttons = new JPanel(new GridLayout(5, 1, 2, 0));
-			String[] names = new String[]{"M1", "M2", "M3", "M4", "M5"};
-			JCheckBox[] boxes = new JCheckBox[]{
-				new JCheckBox(names[0] + " (left click)"), 
-			    new JCheckBox(names[1] + " (right click)"), 
-			    new JCheckBox(names[2] + " (mouse wheel)"), 
-			    new JCheckBox(names[3]), 
-			    new JCheckBox(names[4])
-			};
-
-			for(JCheckBox box : boxes){
-				buttons.add(box);
-			}
-
-			addform.add(buttons, BorderLayout.CENTER);
-
-			if(Dialog.showSaveDialog(addform)){
-				for(int i = 0; i < boxes.length; i++){
-					if(boxes[i].isSelected()){
-						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
-						if(config.keyinfo.contains(key)){
-							KeyInformation.autoIndex -= 2;
-							Dialog.showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
-						}else{
-							config.keyinfo.add(key);
-						}
-					}
-				}
-				model.fireTableDataChanged();
-			}
-		});
-		JPanel nbuttons = new JPanel(new GridLayout(1, 2, 2, 0));
-		nbuttons.add(newkey, BorderLayout.LINE_START);
-		nbuttons.add(newmouse, BorderLayout.LINE_END);
-		keyform.add(nbuttons, BorderLayout.PAGE_END);
-		
-		if(!Dialog.showSaveDialog(keyform, true)){
-			for(int i = 0; i < copy.size(); i++){
-				copy.get(i).visible = visibleState[i];
-				copy.get(i).setName(nameState[i]);
-			}
-			config.keyinfo = copy;
-		}
-	}
 
 	/**
 	 * Builds the main GUI of the program
@@ -1477,20 +1292,20 @@ public class Main{
 		 * The name of this key
 		 * @see Key#name
 		 */
-		private String name;
+		public String name;
 		/**
 		 * The virtual key code of this key<br>
 		 * This code represents the key
 		 */
-		protected int keycode;
+		public int keycode;
 		/**
 		 * Whether or not this key is displayed
 		 */
-		protected boolean visible = true;
+		public boolean visible = true;
 		/**
 		 * Auto-increment for #x
 		 */
-		protected static transient volatile int autoIndex = -2;
+		public static transient volatile int autoIndex = -2;
 		/**
 		 * The x position of this panel in the layout
 		 */
@@ -1524,7 +1339,7 @@ public class Main{
 		 * @see #name
 		 * @see #keycode 
 		 */
-		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
+		public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
 			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
 			this.name = mouse ? name : getKeyName(name, keycode);
 		}

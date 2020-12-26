@@ -20,15 +20,15 @@ public class CommandKeys{
 	/**
 	 * Whether or not ctrl is down
 	 */
-	protected static boolean isCtrlDown = false;
+	public static boolean isCtrlDown = false;
 	/**
 	 * Whether or not alt is down
 	 */
-	protected static boolean isAltDown = false;
+	public static boolean isAltDown = false;
 	/**
 	 * Whether or not shift is down
 	 */
-	protected static boolean isShiftDown = false;
+	public static boolean isShiftDown = false;
 	/**
 	 * Key code block mask
 	 */
