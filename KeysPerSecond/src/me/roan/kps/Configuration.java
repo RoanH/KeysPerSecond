@@ -89,7 +89,7 @@ public class Configuration{
 	/**
 	 * Whether or not the enable tracking key-modifier combinations
 	 */
-	protected boolean enableModifiers = false;
+	public boolean enableModifiers = false;
 
 	//keys
 	/**

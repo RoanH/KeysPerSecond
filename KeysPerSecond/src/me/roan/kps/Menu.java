@@ -40,6 +40,7 @@ import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.TotPanel;
+import me.roan.kps.ui.dialog.KeysDialog;
 import me.roan.kps.ui.dialog.LayoutDialog;
 import me.roan.util.Dialog;
 
@@ -354,7 +355,7 @@ public class Menu{
 			Main.reconfigure();
 		});
 		configkeys.addActionListener((e)->{
-			Main.configureKeys();
+			KeysDialog.configureKeys();
 			Main.reconfigure();
 		});
 		colorcustom.addActionListener((e)->{
