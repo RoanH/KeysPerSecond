@@ -671,6 +671,7 @@ public class Main{
 		});
 		addkey.addActionListener((e)->{
 			KeysDialog.configureKeys();
+			save.setEnabled(true);
 		});
 		color.addActionListener((e)->{
 			configureColors();
