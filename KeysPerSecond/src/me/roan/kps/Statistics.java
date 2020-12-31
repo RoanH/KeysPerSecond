@@ -67,7 +67,24 @@ public class Statistics{
 	 * @param live Whether or not the program is already running
 	 */
 	protected static final void configureAutoSave(boolean live){
-		JPanel panel = new JPanel(new BorderLayout());
+		JPanel endPanel = new JPanel(new BorderLayout());
+		endPanel.setBorder(BorderFactory.createTitledBorder("Save on exit"));
+		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", Main.config.autoSaveStats);//TODO Add proper default values for these
+		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", Main.config.autoSaveStats);//TODO ^ & disable if not saving on exit
+
+		JPanel selectFolder = new JPanel(new BorderLayout(2, 0));
+		selectFolder.add(new JLabel("Save location: "), BorderLayout.LINE_START);
+		JTextField selectedFolder = new JTextField();//TODO add current value
+		selectFolder.add(selectedFolder, BorderLayout.CENTER);
+		JButton select = new JButton("Select");
+		selectFolder.add(select, BorderLayout.LINE_END);
+		
+		endPanel.add(saveOnExit, BorderLayout.PAGE_START);
+		endPanel.add(loadOnStart, BorderLayout.CENTER);
+		endPanel.add(selectFolder, BorderLayout.PAGE_END);
+		
+		JPanel periodicPanel = new JPanel(new BorderLayout());
+		periodicPanel.setBorder(BorderFactory.createTitledBorder("Periodic saving"));
 		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", Main.config.autoSaveStats);
 		
 		BorderLayout layout = new BorderLayout();
@@ -139,8 +156,8 @@ public class Statistics{
 		settings.add(fields, BorderLayout.CENTER);
 		settings.add(extras, BorderLayout.LINE_END);
 		
-		panel.add(enabled, BorderLayout.PAGE_START);
-		panel.add(settings, BorderLayout.CENTER);
+		periodicPanel.add(enabled, BorderLayout.PAGE_START);
+		periodicPanel.add(settings, BorderLayout.CENTER);
 		
 		ActionListener enabledTask = (e)->{
 			ldest.setEnabled(enabled.isSelected());
@@ -152,7 +169,10 @@ public class Statistics{
 		};
 		enabled.addActionListener(enabledTask);
 		enabledTask.actionPerformed(null);
-				
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(endPanel, BorderLayout.PAGE_START);
+		panel.add(periodicPanel, BorderLayout.PAGE_END);
 		if(Dialog.showSaveDialog(panel)){
 			Main.config.autoSaveStats = enabled.isSelected();
 			Main.config.statsDest = ldest.getText();
@@ -169,6 +189,7 @@ public class Statistics{
 				cancelScheduledTask();
 				Main.config.statsSaveInterval = interval;
 			}
+			//TODO save on exit logic
 		}
 	}
 	
@@ -370,7 +391,7 @@ public class Statistics{
 		 * unit is a divisor of the given number of millisecond 
 		 * and for which the a single unit of the time unit
 		 * that is one biggest is bigger than the given
-		 * number of milliseconds. If there is not bigger
+		 * number of milliseconds. If there is no bigger
 		 * unit then {@link #HOUR} is returned.
 		 * @param millis The number of milliseconds to
 		 *        find the best unit for
