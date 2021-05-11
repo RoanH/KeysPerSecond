@@ -69,12 +69,12 @@ public class Statistics{
 	protected static final void configureAutoSave(boolean live){
 		JPanel endPanel = new JPanel(new BorderLayout());
 		endPanel.setBorder(BorderFactory.createTitledBorder("Save on exit"));
-		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", Main.config.autoSaveStats);//TODO Add proper default values for these
-		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", Main.config.autoSaveStats);//TODO ^ & disable if not saving on exit
+		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", Main.config.saveStatsOnExit);//TODO Add proper default values for these
+		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", Main.config.loadStatsOnLaunch);//TODO ^ & disable if not saving on exit
 
 		JPanel selectFolder = new JPanel(new BorderLayout(2, 0));
 		selectFolder.add(new JLabel("Save location: "), BorderLayout.LINE_START);
-		JTextField selectedFolder = new JTextField();//TODO add current value
+		JTextField selectedFolder = new JTextField(Main.config.statsSaveFile);
 		selectFolder.add(selectedFolder, BorderLayout.CENTER);
 		JButton select = new JButton("Select");
 		selectFolder.add(select, BorderLayout.LINE_END);
@@ -193,6 +193,17 @@ public class Statistics{
 		}
 	}
 	
+	public static void saveStatsOnExit(){
+		try{
+			saveStats(new File(Main.config.statsSaveFile));
+		}catch(IOException e){
+			e.printStackTrace();
+			if(Dialog.showConfirmDialog("Failed to save statistics on exit.\nCause: " + e.getMessage() + "\nAttempt to save again?")){
+				saveStatsOnExit();
+			}
+		}
+	}
+	
 	/**
 	 * Shows a help dialog to the user that list some of
 	 * the available {@link DateTimeFormatter} options
@@ -258,10 +269,12 @@ public class Statistics{
 	protected static void saveStats(){
 		File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
 		if(file != null){
-			if(saveStats(file)){
+			try{
+				saveStats(file);
 				Dialog.showMessageDialog("Statistics succesfully saved");
-			}else{
-				Dialog.showErrorDialog("Failed to save the statistics!");
+			}catch(IOException e){
+				e.printStackTrace();
+				Dialog.showErrorDialog("Failed to save the statistics!\nCause: " + e.getMessage());
 			}
 		}
 	}
@@ -269,30 +282,23 @@ public class Statistics{
 	/**
 	 * Saves the statistics logged so far
 	 * @param dest The file to save to
-	 * @return True if saving was successful, 
-	 *         false otherwise
+	 * @throws IOException When an IOException occurs.
 	 */
-	private static boolean saveStats(File dest){
-		try{
-			dest.createNewFile();
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dest));
-			out.writeInt(TotPanel.hits);
-			out.writeDouble(Main.avg);
-			out.writeInt(Main.max);
-			out.writeLong(Main.n);
-			out.writeInt(Main.prev);
-			out.writeInt(Main.tmp.get());
-			for(Entry<Integer, Key> key : Main.keys.entrySet()){
-				out.writeInt(key.getKey());
-				out.writeObject(key.getValue());
-			}
-			out.flush();
-			out.close();
-			return true;
-		}catch(IOException e){
-			e.printStackTrace();
-			return false;
+	private static void saveStats(File dest) throws IOException{
+		dest.createNewFile();
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dest));
+		out.writeInt(TotPanel.hits);
+		out.writeDouble(Main.avg);
+		out.writeInt(Main.max);
+		out.writeLong(Main.n);
+		out.writeInt(Main.prev);
+		out.writeInt(Main.tmp.get());
+		for(Entry<Integer, Key> key : Main.keys.entrySet()){
+			out.writeInt(key.getKey());
+			out.writeObject(key.getValue());
 		}
+		out.flush();
+		out.close();
 	}
 
 	/**

@@ -292,6 +292,9 @@ public class Configuration{
 	 * The statistics auto saving save interval in milliseconds
 	 */
 	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
+	public boolean saveStatsOnExit = false;
+	public boolean loadStatsOnLaunch = false;
+	public String statsSaveFile = Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats";
 
 	/**
 	 * The original configuration file
