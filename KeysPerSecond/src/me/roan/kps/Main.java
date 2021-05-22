@@ -1130,6 +1130,7 @@ public class Main{
 		}catch(NativeHookException e1){
 			e1.printStackTrace();
 		}
+		Statistics.saveStatsOnExit();
 		System.exit(0);
 	}
 
