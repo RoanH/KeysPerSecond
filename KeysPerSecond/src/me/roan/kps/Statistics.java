@@ -74,10 +74,26 @@ public class Statistics{
 
 		JPanel selectFile = new JPanel(new BorderLayout(2, 0));
 		selectFile.add(new JLabel("Save location: "), BorderLayout.LINE_START);
-		JTextField selectedFile = new JTextField(Main.config.statsSaveFile);//TODO filter
+		JTextField selectedFile = new JTextField(Main.config.statsSaveFile);
 		selectFile.add(selectedFile, BorderLayout.CENTER);
 		JButton select = new JButton("Select");
 		selectFile.add(select, BorderLayout.LINE_END);
+		select.addActionListener((e)->{
+			File dir = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
+			if(dir != null){
+				selectedFile.setText(dir.getAbsolutePath());
+			}
+		});
+		
+		ActionListener stateTask = e->{
+			boolean enabled = saveOnExit.isSelected() || loadOnStart.isSelected();
+			selectedFile.setEnabled(enabled);
+			select.setEnabled(enabled);
+		};
+		
+		saveOnExit.addActionListener(stateTask);
+		loadOnStart.addActionListener(stateTask);
+		stateTask.actionPerformed(null);
 		
 		endPanel.add(saveOnExit, BorderLayout.PAGE_START);
 		endPanel.add(loadOnStart, BorderLayout.CENTER);
