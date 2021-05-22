@@ -1652,7 +1652,7 @@ public class Main{
 		desktopHints = (Map<?, ?>)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
 		if(desktopHints == null){
 			Map<Object, Object> map = new HashMap<Object, Object>();
-			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			desktopHints = map;
 		}else{
 			toolkit.addPropertyChangeListener("awt.font.desktophints", event->desktopHints = (Map<?, ?>)event.getNewValue());
