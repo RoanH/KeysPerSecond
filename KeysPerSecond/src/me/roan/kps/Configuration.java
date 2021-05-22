@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
@@ -865,11 +866,28 @@ public class Configuration{
 					}else{
 						modified = true;
 					}
+					break;
+				case "saveStatsOnExit":
+					saveStatsOnExit = Boolean.parseBoolean(args[1]);
+					break;
+				case "loadStatsOnLaunch":
+					loadStatsOnLaunch = Boolean.parseBoolean(args[1]);
+					break;
+				case "statsSaveFile":
+					statsSaveFile = args[1];
+					break;
 				}
 			}
 			if(borderOffset > cellSize - BasePanel.imageSize){
 				borderOffset = cellSize - BasePanel.imageSize;
 				modified = true;
+			}
+			if(loadStatsOnLaunch){
+				try{
+					Statistics.loadStats(new File(statsSaveFile));
+				}catch(IOException e){
+					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
+				}
 			}
 			in.close();
 			return modified;
@@ -1177,6 +1195,9 @@ public class Configuration{
 				out.println("statsDest: " + statsDest);
 				out.println("statsFormat: " + statsFormat);
 				out.println("statsSaveInterval: " + statsSaveInterval);
+				out.println("saveStatsOnExit: " + saveStatsOnExit);
+				out.println("loadStatsOnLaunch: " + loadStatsOnLaunch);
+				out.println("statsSaveFile: " + statsSaveFile);
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");

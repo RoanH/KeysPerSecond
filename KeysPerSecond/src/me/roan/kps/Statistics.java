@@ -69,19 +69,19 @@ public class Statistics{
 	protected static final void configureAutoSave(boolean live){
 		JPanel endPanel = new JPanel(new BorderLayout());
 		endPanel.setBorder(BorderFactory.createTitledBorder("Save on exit"));
-		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", Main.config.saveStatsOnExit);//TODO Add proper default values for these
-		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", Main.config.loadStatsOnLaunch);//TODO ^ & disable if not saving on exit
+		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", Main.config.saveStatsOnExit);
+		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", Main.config.loadStatsOnLaunch);
 
-		JPanel selectFolder = new JPanel(new BorderLayout(2, 0));
-		selectFolder.add(new JLabel("Save location: "), BorderLayout.LINE_START);
-		JTextField selectedFolder = new JTextField(Main.config.statsSaveFile);
-		selectFolder.add(selectedFolder, BorderLayout.CENTER);
+		JPanel selectFile = new JPanel(new BorderLayout(2, 0));
+		selectFile.add(new JLabel("Save location: "), BorderLayout.LINE_START);
+		JTextField selectedFile = new JTextField(Main.config.statsSaveFile);//TODO filter
+		selectFile.add(selectedFile, BorderLayout.CENTER);
 		JButton select = new JButton("Select");
-		selectFolder.add(select, BorderLayout.LINE_END);
+		selectFile.add(select, BorderLayout.LINE_END);
 		
 		endPanel.add(saveOnExit, BorderLayout.PAGE_START);
 		endPanel.add(loadOnStart, BorderLayout.CENTER);
-		endPanel.add(selectFolder, BorderLayout.PAGE_END);
+		endPanel.add(selectFile, BorderLayout.PAGE_END);
 		
 		JPanel periodicPanel = new JPanel(new BorderLayout());
 		periodicPanel.setBorder(BorderFactory.createTitledBorder("Periodic saving"));
@@ -189,17 +189,21 @@ public class Statistics{
 				cancelScheduledTask();
 				Main.config.statsSaveInterval = interval;
 			}
-			//TODO save on exit logic
+			Main.config.saveStatsOnExit = saveOnExit.isSelected();
+			Main.config.loadStatsOnLaunch = loadOnStart.isSelected();
+			Main.config.statsSaveFile = selectedFile.getText();
 		}
 	}
 	
 	public static void saveStatsOnExit(){
-		try{
-			saveStats(new File(Main.config.statsSaveFile));
-		}catch(IOException e){
-			e.printStackTrace();
-			if(Dialog.showConfirmDialog("Failed to save statistics on exit.\nCause: " + e.getMessage() + "\nAttempt to save again?")){
-				saveStatsOnExit();
+		if(Main.config.saveStatsOnExit){
+			try{
+				saveStats(new File(Main.config.statsSaveFile));
+			}catch(IOException e){
+				e.printStackTrace();
+				if(Dialog.showConfirmDialog("Failed to save statistics on exit.\nCause: " + e.getMessage() + "\nAttempt to save again?")){
+					saveStatsOnExit();
+				}
 			}
 		}
 	}
@@ -300,9 +304,10 @@ public class Statistics{
 		out.flush();
 		out.close();
 	}
-
+	
 	/**
-	 * Loads the statistics from a file
+	 * Loads the statistics from a file, shows
+	 * a prompt to the user for the file.
 	 */
 	protected static void loadStats(){
 		File file = Dialog.showFileOpenDialog(KPS_STATS_EXT);
@@ -310,7 +315,20 @@ public class Statistics{
 			return;
 		}
 		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+			loadStats(file);
+			Dialog.showMessageDialog("Statistics succesfully loaded");
+		}catch(IOException e){
+			Dialog.showErrorDialog("Failed to load the statistics!\nCause: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Loads the statistics from a file
+	 * @param file The file to load from.
+	 * @throws IOException When an IOException occurs.
+	 */
+	protected static void loadStats(File file) throws IOException{
+		try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
 			TotPanel.hits = in.readInt();
 			Main.avg = in.readDouble();
 			Main.max = in.readInt();
@@ -330,9 +348,9 @@ public class Statistics{
 			in.close();
 			Main.frame.repaint();
 			Main.graphFrame.repaint();
-			Dialog.showMessageDialog("Statistics succesfully loaded");
-		}catch(IOException | ClassNotFoundException e){
-			Dialog.showErrorDialog("Failed to load the statistics!");
+		}catch(ClassNotFoundException e){
+			//Shouldn't happen
+			e.printStackTrace();
 		}
 	}
 	
