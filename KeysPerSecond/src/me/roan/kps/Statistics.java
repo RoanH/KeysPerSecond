@@ -211,6 +211,10 @@ public class Statistics{
 		}
 	}
 	
+	/**
+	 * Saves the statistics so to the configured
+	 * save file if stats saving on exit is enabled.
+	 */
 	public static void saveStatsOnExit(){
 		if(Main.config.saveStatsOnExit){
 			try{
