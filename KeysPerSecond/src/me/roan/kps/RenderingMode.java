@@ -26,7 +26,7 @@ public enum RenderingMode{
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(panel.getWidth() - Main.config.borderOffset + insideOffset - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(panel.getWidth() - Main.config.borderOffset - insideOffset - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
@@ -56,7 +56,7 @@ public enum RenderingMode{
 	HORIZONTAL_NT("Value - text"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(panel.getWidth() - Main.config.borderOffset + insideOffset - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(panel.getWidth() - Main.config.borderOffset - insideOffset - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
 		}
 
 		@Override
@@ -231,12 +231,12 @@ public enum RenderingMode{
 	VERTICAL("Text above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((double)(getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
+			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
 		}
 
 		@Override

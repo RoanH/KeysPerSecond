@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
@@ -14,15 +15,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.BasePanel;
+import me.roan.util.Dialog;
+import me.roan.util.FileSelector;
+import me.roan.util.FileSelector.FileExtension;
 
 /**
  * This class contains all the configurable
@@ -30,20 +33,32 @@ import me.roan.kps.panels.BasePanel;
  * @author Roan
  */
 public class Configuration{
+	/**
+	 * Extension filter for all KeysPerSecond configuration files.
+	 */
+	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
+	/**
+	 * Extension filter for the current KeysPerSecond configuration file format.
+	 */
+	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf3");
+	/**
+	 * Extension filter for legacy KeysPerSecond configuration file formats.
+	 */
+	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2");
 
 	//general
 	/**
 	 * Whether or not to show the max value
 	 */
-	protected boolean showMax = true;
+	public boolean showMax = true;
 	/**
 	 * Whether or not to show the average value
 	 */
-	protected boolean showAvg = true;
+	public boolean showAvg = true;
 	/**
 	 * Whether or not to show the current value
 	 */
-	protected boolean showCur = true;
+	public boolean showCur = true;
 	/**
 	 * Whether or not to show the keys
 	 */
@@ -63,21 +78,25 @@ public class Configuration{
 	/**
 	 * Whether or not to track all key presses
 	 */
-	protected boolean trackAll = false;
+	protected boolean trackAllKeys = false;
+	/**
+	 * Whether or not to track all mouse button presses
+	 */
+	protected boolean trackAllButtons = false;
 	/**
 	 * Whether or not to show the total number of hits
 	 */
-	protected boolean showTotal = false;
+	public boolean showTotal = false;
 	/**
 	 * Whether or not the enable tracking key-modifier combinations
 	 */
-	protected boolean enableModifiers = false;
+	public boolean enableModifiers = false;
 
 	//keys
 	/**
 	 * Key configuration data, can be serialised
 	 */
-	protected List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
+	public List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
 
 	//update rate
 	/**
@@ -254,7 +273,38 @@ public class Configuration{
 	/**
 	 * Position the graph is rendered in
 	 */
-	protected GraphMode graphMode = GraphMode.INLINE;
+	public GraphMode graphMode = GraphMode.INLINE;
+	
+	//automatic statistics saving
+	/**
+	 * Whether or not to periodically save the stats to a file
+	 */
+	public boolean autoSaveStats = false;
+	/**
+	 * The folder to auto save stats to
+	 */
+	public String statsDest = Objects.toString(System.getProperty("user.home"), "");
+	/**
+	 * The date time formatter pattern to use for the
+	 * statistics auto saving file name
+	 */
+	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
+	/**
+	 * The statistics auto saving save interval in milliseconds
+	 */
+	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
+	/**
+	 * Whether statistics are saved on exit.
+	 */
+	public boolean saveStatsOnExit = false;
+	/**
+	 * Whether statistics are loaded on launch.
+	 */
+	public boolean loadStatsOnLaunch = false;
+	/**
+	 * The file to save/load statistics to/from on exit/launch.
+	 */
+	public String statsSaveFile = Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats";
 
 	/**
 	 * The original configuration file
@@ -311,7 +361,7 @@ public class Configuration{
 				if(toLoad.loadLegacyFormat(data)){
 					Main.config = toLoad;
 				}else{
-					Main.showErrorDialog("Failed to reload the config!");
+					Dialog.showErrorDialog("Failed to reload the config!");
 				}
 			}else{
 				boolean v2 = data.getAbsolutePath().endsWith(".kpsconf2");
@@ -327,26 +377,23 @@ public class Configuration{
 			}
 		}
 	}
-
+	
 	/**
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
 	 */
 	protected static final boolean loadConfiguration(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf", "kpsconf2", "kpsconf3"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+		File saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
+		if(saveloc == null){
 			return false;
 		}
-		File saveloc = chooser.getSelectedFile();
 		Configuration toLoad = new Configuration(saveloc);
 		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
 			if(toLoad.loadLegacyFormat(saveloc)){
-				Main.showMessageDialog("Configuration succesfully loaded");
+				Dialog.showMessageDialog("Configuration succesfully loaded");
 				Main.config = toLoad;
 			}else{
-				Main.showErrorDialog("Failed to load the config!");
+				Dialog.showErrorDialog("Failed to load the config!");
 				return false;
 			}
 		}else{
@@ -361,9 +408,9 @@ public class Configuration{
 				defaults = true;
 			}
 			if(defaults){
-				Main.showMessageDialog("Configuration succesfully loaded but some default values were used");
+				Dialog.showMessageDialog("Configuration succesfully loaded but some default values were used");
 			}else{
-				Main.showMessageDialog("Configuration succesfully loaded");
+				Dialog.showMessageDialog("Configuration succesfully loaded");
 			}
 			Main.config = toLoad;
 		}
@@ -408,17 +455,18 @@ public class Configuration{
 				if(line.startsWith("#") || line.isEmpty()){
 					continue;
 				}
-				String[] args = line.replace(" ", "").split(":");
+				String[] args = line.split(":", 2);
 				if(args[0].startsWith("keys")){
-					while((line = in.readLine()) != null && (line = line.replace(" ", "")).startsWith("-")){
+					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
 						try{
-							keyinfo.add(parseKey(line.substring(1), defaultMode, v2));
+							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode, v2));
 						}catch(Exception e){
 							modified = true;
 						}
 					}
 				}
-				switch(args[0]){
+				args[1] = args[1].trim();
+				switch(args[0].trim()){
 				case "showMax":
 					showMax = Boolean.parseBoolean(args[1]);
 					break;
@@ -435,7 +483,11 @@ public class Configuration{
 					overlay = Boolean.parseBoolean(args[1]);
 					break;
 				case "trackAllKeys":
-					trackAll = Boolean.parseBoolean(args[1]);
+					trackAllKeys = Boolean.parseBoolean(args[1]);
+					trackAllButtons = trackAllKeys;//for backwards compatibility
+					break;
+				case "trackAllButtons":
+					trackAllButtons = Boolean.parseBoolean(args[1]);
 					break;
 				case "updateRate":
 					try{
@@ -800,11 +852,51 @@ public class Configuration{
 						modified = true;
 					}
 					break;
+				case "autoSaveStats":
+					autoSaveStats = Boolean.parseBoolean(args[1]);
+					break;
+				case "statsSaveInterval":
+					try{
+						statsSaveInterval = Long.parseLong(args[1]);
+					}catch(NumberFormatException e){
+						modified = true;
+					}
+					break;
+				case "statsDest":
+					if(args.length > 1){
+						statsDest = args[1];
+					}else{
+						modified = true;
+					}
+					break;
+				case "statsFormat":
+					if(args.length > 1){
+						statsFormat = args[1];
+					}else{
+						modified = true;
+					}
+					break;
+				case "saveStatsOnExit":
+					saveStatsOnExit = Boolean.parseBoolean(args[1]);
+					break;
+				case "loadStatsOnLaunch":
+					loadStatsOnLaunch = Boolean.parseBoolean(args[1]);
+					break;
+				case "statsSaveFile":
+					statsSaveFile = args[1];
+					break;
 				}
 			}
 			if(borderOffset > cellSize - BasePanel.imageSize){
 				borderOffset = cellSize - BasePanel.imageSize;
 				modified = true;
+			}
+			if(loadStatsOnLaunch){
+				try{
+					Statistics.loadStats(new File(statsSaveFile));
+				}catch(IOException e){
+					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
+				}
 			}
 			in.close();
 			return modified;
@@ -864,7 +956,8 @@ public class Configuration{
 		boolean shift = false;
 		for(String str : args){
 			String[] comp = str.split("=", 2);
-			switch(comp[0]){
+			comp[1] = comp[1].trim();
+			switch(comp[0].trim()){
 			case "keycode":
 				code = Integer.parseInt(comp[1]);
 				break;
@@ -900,10 +993,10 @@ public class Configuration{
 				break;
 			}
 		}
+		if(!CommandKeys.isNewFormat(code)){
+			code = CommandKeys.getExtendedKeyCode(code % 1000, shift, ctrl, alt);
+		}
 		KeyInformation kinfo = new KeyInformation(name, code, visible);
-		kinfo.alt = alt;
-		kinfo.shift = shift;
-		kinfo.ctrl = ctrl;
 		kinfo.x = x;
 		kinfo.y = y;
 		kinfo.width = width;
@@ -985,7 +1078,8 @@ public class Configuration{
 				background = (Color)objin.readObject();
 				foreground = (Color)objin.readObject();
 				if(objin.available() > 0){
-					trackAll = objin.readBoolean();
+					trackAllKeys = objin.readBoolean();
+					trackAllButtons = trackAllKeys;
 					showKeys = objin.readBoolean();
 					if(objin.available() > 0){
 						version = objin.readDouble();
@@ -1026,15 +1120,9 @@ public class Configuration{
 	 *        of the program
 	 */
 	protected final void saveConfig(boolean pos){
-		boolean savepos = (!pos) ? false : (Main.showConfirmDialog("Do you want to save the onscreen position of the program?"));
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second configuration file", "kpsconf3"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		File saveloc = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsconf3") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsconf3"));
-		if(!saveloc.exists() || (saveloc.exists() && Main.showConfirmDialog("File already exists, overwrite?"))){
+		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
+		File saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
+		if(saveloc != null){
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
@@ -1045,7 +1133,8 @@ public class Configuration{
 				out.println("showTotal: " + showTotal);
 				out.println("showKeys: " + showKeys);
 				out.println("overlay: " + overlay);
-				out.println("trackAllKeys: " + trackAll);
+				out.println("trackAllKeys: " + trackAllKeys);
+				out.println("trackAllButtons: " + trackAllButtons);
 				out.println("updateRate: " + updateRate);
 				out.println("precision: " + precision);
 				out.println("enableKeyModifierCombinations: " + enableModifiers);
@@ -1110,6 +1199,15 @@ public class Configuration{
 				out.println("cellSize: " + cellSize);
 				out.println("borderOffset: " + borderOffset);
 				out.println();
+				out.println("# Stats auto saving");
+				out.println("autoSaveStats: " + autoSaveStats);
+				out.println("statsDest: " + statsDest);
+				out.println("statsFormat: " + statsFormat);
+				out.println("statsSaveInterval: " + statsSaveInterval);
+				out.println("saveStatsOnExit: " + saveStatsOnExit);
+				out.println("loadStatsOnLaunch: " + loadStatsOnLaunch);
+				out.println("statsSaveFile: " + statsSaveFile);
+				out.println();
 				out.println("# Keys");
 				out.println("keys: ");
 				for(KeyInformation i : keyinfo){
@@ -1117,10 +1215,10 @@ public class Configuration{
 				}
 				out.close();
 				out.flush();
-				Main.showMessageDialog("Configuration succesfully saved");
+				Dialog.showMessageDialog("Configuration succesfully saved");
 			}catch(Exception e1){
 				e1.printStackTrace();
-				Main.showErrorDialog("Failed to save the config!");
+				Dialog.showErrorDialog("Failed to save the config!");
 			}
 		}
 	}

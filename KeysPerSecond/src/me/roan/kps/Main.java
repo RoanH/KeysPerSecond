@@ -3,30 +3,21 @@ package me.roan.kps;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -50,24 +41,14 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableModel;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -80,28 +61,29 @@ import org.jnativehook.mouse.NativeMouseListener;
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.layout.GridPanel;
 import me.roan.kps.layout.Layout;
-import me.roan.kps.layout.LayoutValidator;
 import me.roan.kps.layout.Positionable;
 import me.roan.kps.panels.AvgPanel;
-import me.roan.kps.panels.BasePanel;
 import me.roan.kps.panels.GraphPanel;
 import me.roan.kps.panels.KeyPanel;
 import me.roan.kps.panels.MaxPanel;
 import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
-import me.roan.kps.ui.model.EndNumberModel;
-import me.roan.kps.ui.model.MaxNumberModel;
-import me.roan.kps.ui.model.DynamicInteger;
+import me.roan.kps.ui.dialog.KeysDialog;
+import me.roan.kps.ui.dialog.LayoutDialog;
+import me.roan.util.ClickableLink;
+import me.roan.util.Dialog;
+import me.roan.util.ExclamationMarkPath;
+import me.roan.util.Util;
 
 /**
  * This program can be used to display
  * information about how many times
  * certain keys are pressed and what the
  * average, maximum and current
- * amount of keys pressed per second is
- * <pre>
+ * number of keys pressed per second is.
+ * <p>
  * Besides the tracking of the assigned keys
- * this program responds to 5 key events these are:
+ * this program responds to 6 key events these are:
  * <ol><li><b>Ctrl + P</b>: Causes the program to reset the average and maximum value
  * And to print the statistics to standard output
  * </li><li><b>Ctrl + O</b>: Terminates the program
@@ -109,7 +91,7 @@ import me.roan.kps.ui.model.DynamicInteger;
  * And to print the statistics to standard output
  * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI
  * </li><li><b>Ctrl + T</b>: Pauses/resumes the counter
- * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol></pre>
+ * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol>
  * The program also constantly prints the current keys per second to
  * the standard output.<br>
  * A key is only counted as being pressed if the key has been released before
@@ -146,17 +128,17 @@ public class Main{
 	 * virtual codes<br>Used to increment the count for the
 	 * keys
 	 */
-	protected static Map<Integer, Key> keys = new HashMap<Integer, Key>();
+	public static Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
 	 * The most recent key event, only
 	 * used during the initial setup
 	 */
-	protected static NativeKeyEvent lastevent;
+	public static NativeKeyEvent lastevent;
 	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
-	protected static final GridPanel content = new GridPanel();
+	public static final GridPanel content = new GridPanel();
 	/**
 	 * Graph panel
 	 */
@@ -205,21 +187,29 @@ public class Main{
 	 * Called when a frame is closed
 	 */
 	private static final WindowListener onClose;
-
+	/**
+	 * Dummy key for getOrDefault operations
+	 */
+	private static final Key DUMMY_KEY;
+	/**
+	 * Best text rendering hints.
+	 */
+	public static Map<?, ?> desktopHints;
+	
 	/**
 	 * Main method
 	 * @param args - configuration file path
 	 */
 	public static void main(String[] args){
+		//Work around for a JDK bug
+		ExclamationMarkPath.check(args);
+		
+		//Basic setup and info
 		String config = null;
-		if(args.length >= 1){
+		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){
 			config = args[0];
-			for(int i = 1; i < args.length; i++){
-				config += " " + args[i];
-			}
 			System.out.println("Attempting to load config: " + config);
 		}
-		relaunchFromTemp(config);
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
@@ -227,10 +217,12 @@ public class Main{
 		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		System.out.println("Ctrl + R: Reloads the configuration");
-		try{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1){
-		}
+		Util.installUI();
+		
+		//Set dialog defaults
+		Dialog.setDialogIcon(iconSmall);
+		Dialog.setParentFrame(frame);
+		Dialog.setDialogTitle("Keys per second");
 
 		//Make sure the native hook is always unregistered
 		Runtime.getRuntime().addShutdownHook(new Thread(){
@@ -249,7 +241,7 @@ public class Main{
 
 		//Set configuration for the keys
 		if(config != null){
-			Configuration toLoad = new Configuration(config == null ? null : new File(config));
+			Configuration toLoad = new Configuration(new File(config));
 			int index = config.lastIndexOf(File.separatorChar);
 			File dir = new File(config.substring(0, index));
 			final String name = config.substring(index + 1);
@@ -268,10 +260,12 @@ public class Main{
 					return true;
 				});
 			}
-			if(files != null && files.length > 0){
+			if(files != null && files.length > 0 && files[0].exists()){
 				toLoad.loadConfig(files[0]);
 				Main.config = toLoad;
 				System.out.println("Loaded config file: " + files[0].getName());
+			}else{
+				System.out.println("Provided config file does not exist.");
 			}
 		}else{
 			try{
@@ -279,7 +273,7 @@ public class Main{
 			}catch(NullPointerException e){
 				e.printStackTrace();
 				try{
-					showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
+					Dialog.showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
 				}catch(Throwable t){
 					t.printStackTrace();
 				}
@@ -292,6 +286,11 @@ public class Main{
 			buildGUI();
 		}catch(IOException e){
 			e.printStackTrace();
+		}
+		
+		//Start stats saving
+		if(Main.config.autoSaveStats){
+			Statistics.saveStatsTask();
 		}
 
 		//Enter the main loop
@@ -321,7 +320,7 @@ public class Main{
 					max = totaltmp;
 				}
 				if(totaltmp != 0){
-					avg = (avg * (double)n + (double)totaltmp) / ((double)n + 1.0D);
+					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					TotPanel.hits += currentTmp;
 					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
@@ -352,7 +351,7 @@ public class Main{
 		}catch(NativeHookException ex){
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
-			showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
+			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
 			try{
 				GlobalScreen.unregisterNativeHook();
 			}catch(NativeHookException e1){
@@ -399,32 +398,28 @@ public class Main{
 	 * @param event The event that occurred
 	 */
 	private static final void releaseEvent(NativeInputEvent event){
-		Integer code = getExtendedKeyCode(event);
-		if(event instanceof NativeKeyEvent){
-			NativeKeyEvent evt = ((NativeKeyEvent)event);
-			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
-				CommandKeys.isAltDown = false;
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
-				CommandKeys.isCtrlDown = false;
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
-				CommandKeys.isShiftDown = false;
-			}
+		int code = getExtendedKeyCode(event);
+		if(code == CommandKeys.ALT){
+			CommandKeys.isAltDown = false;
+		}else if(code == CommandKeys.CTRL){
+			CommandKeys.isCtrlDown = false;
+		}else if(CommandKeys.isShift(code)){
+			CommandKeys.isShiftDown = false;
 		}
-		if(config.enableModifiers && event instanceof NativeKeyEvent){
-			NativeKeyEvent evt = ((NativeKeyEvent)event);
-			if(evt.getKeyCode() == NativeKeyEvent.VC_ALT){
+		if(config.enableModifiers){
+			if(code == CommandKeys.ALT){
 				for(Key k : keys.values()){
 					if(k.alt){
 						k.keyReleased();
 					}
 				}
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_CONTROL){
+			}else if(code == CommandKeys.CTRL){
 				for(Key k : keys.values()){
 					if(k.ctrl){
 						k.keyReleased();
 					}
 				}
-			}else if(evt.getKeyCode() == NativeKeyEvent.VC_SHIFT){
+			}else if(CommandKeys.isShift(code)){
 				for(Key k : keys.values()){
 					if(k.shift){
 						k.keyReleased();
@@ -437,9 +432,7 @@ public class Main{
 				}
 			}
 		}else{
-			if(keys.containsKey(code)){
-				keys.get(code).keyReleased();
-			}
+			keys.getOrDefault(code, DUMMY_KEY).keyReleased();
 		}
 	}
 
@@ -449,10 +442,10 @@ public class Main{
 	 */
 	private static final void pressEvent(NativeInputEvent nevent){
 		Integer code = getExtendedKeyCode(nevent);
-		if(config.trackAll && !keys.containsKey(code)){
-			if(nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), ((NativeKeyEvent)nevent).getKeyCode(), CommandKeys.isAltDown, CommandKeys.isCtrlDown, CommandKeys.isShiftDown)));
-			}else{
+		if(!keys.containsKey(code)){
+			if(config.trackAllKeys && nevent instanceof NativeKeyEvent){
+				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code)));
+			}else if(config.trackAllButtons && nevent instanceof NativeMouseEvent){
 				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
 			}
 		}
@@ -460,27 +453,28 @@ public class Main{
 			Key key = keys.get(code);
 			key.keyPressed();
 			if(config.enableModifiers){
-				if(key.alt && keys.containsKey(NativeKeyEvent.VC_ALT)){
-					keys.get(NativeKeyEvent.VC_ALT).keyReleased();
+				if(key.alt){
+					keys.getOrDefault(CommandKeys.ALT, DUMMY_KEY).keyReleased();
 				}
-				if(key.ctrl && keys.containsKey(NativeKeyEvent.VC_CONTROL)){
-					keys.get(NativeKeyEvent.VC_CONTROL).keyReleased();
+				if(key.ctrl){
+					keys.getOrDefault(CommandKeys.CTRL, DUMMY_KEY).keyReleased();
 				}
-				if(key.shift && keys.containsKey(NativeKeyEvent.VC_SHIFT)){
-					keys.get(NativeKeyEvent.VC_SHIFT).keyReleased();
+				if(key.shift){
+					keys.getOrDefault(CommandKeys.RSHIFT, DUMMY_KEY).keyReleased();
+					keys.getOrDefault(CommandKeys.LSHIFT, DUMMY_KEY).keyReleased();
 				}
 			}
 		}
 		if(nevent instanceof NativeKeyEvent){
 			NativeKeyEvent event = (NativeKeyEvent)nevent;
 			if(!CommandKeys.isAltDown){
-				CommandKeys.isAltDown = event.getKeyCode() == NativeKeyEvent.VC_ALT;
+				CommandKeys.isAltDown = code == CommandKeys.ALT;
 			}
 			if(!CommandKeys.isCtrlDown){
-				CommandKeys.isCtrlDown = event.getKeyCode() == NativeKeyEvent.VC_CONTROL;
+				CommandKeys.isCtrlDown = code == CommandKeys.CTRL;
 			}
 			if(!CommandKeys.isShiftDown){
-				CommandKeys.isShiftDown = event.getKeyCode() == NativeKeyEvent.VC_SHIFT;
+				CommandKeys.isShiftDown = CommandKeys.isShift(code);
 			}
 			lastevent = event;
 			if(config.CP.matches(event.getKeyCode())){
@@ -511,40 +505,14 @@ public class Main{
 	 */
 	private static final int getExtendedKeyCode(NativeInputEvent event){
 		if(event instanceof NativeKeyEvent){
-			return getExtendedKeyCode(((NativeKeyEvent)event).getKeyCode());
+			NativeKeyEvent key = (NativeKeyEvent)event;
+			if(!config.enableModifiers){
+				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), false, false, false);
+			}else{
+				return CommandKeys.getExtendedKeyCode(key.getKeyCode());
+			}
 		}else{
 			return -((NativeMouseEvent)event).getButton();
-		}
-	}
-
-	/**
-	 * Gets the extended key code for this event, this key code
-	 * includes modifiers
-	 * @param code The original key code
-	 * @return The extended key code for this event
-	 */
-	private static final int getExtendedKeyCode(int code){
-		if(config.enableModifiers){
-			return getExtendedKeyCode(code, CommandKeys.isShiftDown, CommandKeys.isCtrlDown, CommandKeys.isAltDown);
-		}else{
-			return code;
-		}
-	}
-
-	/**
-	 * Gets the extended key code for this event, this key code
-	 * includes modifiers
-	 * @param code The original key code
-	 * @param shift Is the shift modifer involved
-	 * @param ctrl Is the ctrl modifier involved
-	 * @param alt Is the alt modifier involved
-	 * @return The extended key code for this event
-	 */
-	private static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
-		if(code == NativeKeyEvent.VC_SHIFT || code == NativeKeyEvent.VC_CONTROL || code == NativeKeyEvent.VC_ALT){
-			return code;
-		}else{
-			return code + (shift ? 100000 : 0) + (ctrl ? 10000 : 0) + (alt ? 1000 : 0);
 		}
 	}
 
@@ -555,7 +523,7 @@ public class Main{
 	 * @return The base key code
 	 */
 	private static final int getBaseKeyCode(int code){
-		return code % 1000;
+		return code & CommandKeys.KEYCODE_MASK;
 	}
 
 	/**
@@ -567,8 +535,8 @@ public class Main{
 	 */
 	private static final void configure(){
 		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(10, 0));
-		JPanel labels = new JPanel(new GridLayout(10, 0));
+		JPanel boxes = new JPanel(new GridLayout(11, 0));
+		JPanel labels = new JPanel(new GridLayout(11, 0));
 		JCheckBox cmax = new JCheckBox();
 		JCheckBox cavg = new JCheckBox();
 		JCheckBox ccur = new JCheckBox();
@@ -576,7 +544,8 @@ public class Main{
 		JCheckBox cgra = new JCheckBox();
 		JCheckBox ctop = new JCheckBox();
 		JCheckBox ccol = new JCheckBox();
-		JCheckBox call = new JCheckBox();
+		JCheckBox callKeys = new JCheckBox();
+		JCheckBox callButtons = new JCheckBox();
 		JCheckBox ctot = new JCheckBox();
 		JCheckBox cmod = new JCheckBox();
 		cmax.setSelected(true);
@@ -590,7 +559,8 @@ public class Main{
 		JLabel lgra = new JLabel("Show graph: ");
 		JLabel ltop = new JLabel("Overlay mode: ");
 		JLabel lcol = new JLabel("Custom colours: ");
-		JLabel lall = new JLabel("Track all keys");
+		JLabel lallKeys = new JLabel("Track all keys");
+		JLabel lallButtons = new JLabel("Track all buttons");
 		JLabel ltot = new JLabel("Show total");
 		JLabel lmod = new JLabel("Key-modifier tracking");
 		ltop.setToolTipText("Requires you to run osu! out of full screen mode, known to not (always) work with the wine version of osu!");
@@ -602,7 +572,8 @@ public class Main{
 		boxes.add(cgra);
 		boxes.add(ctop);
 		boxes.add(ccol);
-		boxes.add(call);
+		boxes.add(callKeys);
+		boxes.add(callButtons);
 		boxes.add(cmod);
 		labels.add(lmax);
 		labels.add(lavg);
@@ -612,59 +583,52 @@ public class Main{
 		labels.add(lgra);
 		labels.add(ltop);
 		labels.add(lcol);
-		labels.add(lall);
+		labels.add(lallKeys);
+		labels.add(lallButtons);
 		labels.add(lmod);
-		JButton save = new JButton("Save config");
 		ctop.addActionListener((e)->{
 			config.overlay = ctop.isSelected();
-			save.setEnabled(true);
 		});
-		call.addActionListener((e)->{
-			config.trackAll = call.isSelected();
-			save.setEnabled(true);
+		callKeys.addActionListener((e)->{
+			config.trackAllKeys = callKeys.isSelected();
+		});
+		callButtons.addActionListener((e)->{
+			config.trackAllButtons = callButtons.isSelected();
 		});
 		cmax.addActionListener((e)->{
 			config.showMax = cmax.isSelected();
-			save.setEnabled(true);
 		});
 		cavg.addActionListener((e)->{
 			config.showAvg = cavg.isSelected();
-			save.setEnabled(true);
 		});
 		ccur.addActionListener((e)->{
 			config.showCur = ccur.isSelected();
-			save.setEnabled(true);
 		});
 		cgra.addActionListener((e)->{
 			config.showGraph = cgra.isSelected();
-			save.setEnabled(true);
 		});
 		ccol.addActionListener((e)->{
 			config.customColors = ccol.isSelected();
-			save.setEnabled(true);
 		});
 		ckey.addActionListener((e)->{
 			config.showKeys = ckey.isSelected();
-			save.setEnabled(true);
 		});
 		ctot.addActionListener((e)->{
 			config.showTotal = ctot.isSelected();
-			save.setEnabled(true);
 		});
 		cmod.addActionListener((e)->{
 			config.enableModifiers = cmod.isSelected();
-			save.setEnabled(true);
 		});
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
 		options.add(labels);
 		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(9, 1));
+		JPanel buttons = new JPanel(new GridLayout(10, 1));
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
 		JButton cmdkeys = new JButton("Commands");
-		save.setEnabled(false);
+		JButton save = new JButton("Save config");
 		JButton graph = new JButton("Graph");
 		graph.setEnabled(false);
 		cgra.addActionListener((e)->{
@@ -679,6 +643,7 @@ public class Main{
 		});
 		JButton precision = new JButton("Precision");
 		JButton layout = new JButton("Layout");
+		JButton autoSave = new JButton("Stats saving");
 		buttons.add(addkey);
 		buttons.add(load);
 		buttons.add(save);
@@ -686,6 +651,7 @@ public class Main{
 		buttons.add(updaterate);
 		buttons.add(color);
 		buttons.add(precision);
+		buttons.add(autoSave);
 		buttons.add(cmdkeys);
 		buttons.add(layout);
 		form.add(options, BorderLayout.CENTER);
@@ -696,12 +662,10 @@ public class Main{
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
 		layout.addActionListener((e)->{
-			configureLayout(false);
-			save.setEnabled(true);
+			LayoutDialog.configureLayout(false);
 		});
 		cmdkeys.addActionListener((e)->{
 			configureCommandKeys();
-			save.setEnabled(true);
 		});
 		precision.addActionListener((e)->{
 			JPanel pconfig = new JPanel(new BorderLayout());
@@ -718,9 +682,8 @@ public class Main{
 			pvalue.add(values, BorderLayout.CENTER);
 			pconfig.add(plabels, BorderLayout.CENTER);
 			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			if(showOptionDialog(pconfig)){
+			if(Dialog.showSaveDialog(pconfig)){
 				config.precision = values.getSelectedIndex();
-				save.setEnabled(true);
 			}
 		});
 		graph.addActionListener((e)->{
@@ -745,19 +708,16 @@ public class Main{
 			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
 			pconfig.add(glabels);
 			pconfig.add(gcomponents);
-			if(showOptionDialog(pconfig)){
+			if(Dialog.showSaveDialog(pconfig)){
 				Main.config.graphAvg = showavg.isSelected();
 				Main.config.backlog = (int)backlog.getValue();
-				save.setEnabled(true);
 			}
 		});
 		addkey.addActionListener((e)->{
-			configureKeys();
-			save.setEnabled(true);
+			KeysDialog.configureKeys();
 		});
 		color.addActionListener((e)->{
 			configureColors();
-			save.setEnabled(true);
 		});
 		save.addActionListener((e)->{
 			config.saveConfig(false);
@@ -778,12 +738,12 @@ public class Main{
 			if(config.customColors){
 				color.setEnabled(true);
 			}
-			call.setSelected(config.trackAll);
+			callKeys.setSelected(config.trackAllKeys);
+			callButtons.setSelected(config.trackAllButtons);
 			ckey.setSelected(config.showKeys);
 			ctop.setSelected(config.overlay);
 			ctot.setSelected(config.showTotal);
 			cmod.setSelected(config.enableModifiers);
-			save.setEnabled(true);
 		});
 		updaterate.addActionListener((e)->{
 			JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
@@ -814,81 +774,22 @@ public class Main{
 			pconfig.add(info, BorderLayout.PAGE_START);
 			pconfig.add(lupdate, BorderLayout.WEST);
 			pconfig.add(update, BorderLayout.CENTER);
-			if(showOptionDialog(pconfig)){
+			if(Dialog.showSaveDialog(pconfig)){
 				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
-				save.setEnabled(true);
 			}
 		});
+		autoSave.addActionListener((e)->{
+			Statistics.configureAutoSave(false);
+		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		JLabel ver = new JLabel("<html><center><i>Version: v8.0, latest version: <font color=gray>loading</font></i></center></html>", SwingConstants.CENTER);
-		info.add(ver);
-		new Thread(()->{
-			String version = checkVersion();//XXX the version number 
-			ver.setText("<html><center><i>Version: v8.0, latest version: " + (version == null ? "unknown :(" : version) + "</i></center></html>");
-		}, "Version Checker").start();
+		info.add(Util.getVersionLabel("KeysPerSecond", "v8.3"));//XXX the version number  - don't forget build.gradle
 		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
 		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
 		links.add(forum);
 		links.add(git);
-		forum.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(Desktop.isDesktopSupported()){
-					try{
-						Desktop.getDesktop().browse(new URL("https://osu.ppy.sh/community/forums/topics/552405").toURI());
-					}catch(IOException | URISyntaxException e1){
-						//pity
-					}
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e){
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e){
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e){
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e){
-			}
-		});
-		git.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(Desktop.isDesktopSupported()){
-					try{
-						Desktop.getDesktop().browse(new URL("https://github.com/RoanH/KeysPerSecond").toURI());
-					}catch(IOException | URISyntaxException e1){
-						//pity
-					}
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e){
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e){
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e){
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e){
-			}
-		});
+		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
+		git.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
 		info.add(links);
 		form.add(info, BorderLayout.PAGE_END);
 		
@@ -952,7 +853,7 @@ public class Main{
 				if(!open){
 					open = true;
 					chooser.setColor(e.getComponent().getBackground());
-					if(showOptionDialog(chooser)){
+					if(Dialog.showSaveDialog(chooser)){
 						e.getComponent().setBackground(chooser.getColor());
 					}
 					open = false;
@@ -1000,7 +901,7 @@ public class Main{
 		cform.add(lbg);
 		cform.add(cbg);
 		cform.add(spanelbg);
-		if(showOptionDialog(cform, false)){
+		if(Dialog.showSaveDialog(cform, false)){
 			config.foreground = cfg.getBackground();
 			config.background = cbg.getBackground();
 			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
@@ -1093,7 +994,7 @@ public class Main{
 			}
 		});
 
-		showMessageDialog(content);
+		Dialog.showMessageDialog(content);
 	}
 
 	/**
@@ -1106,607 +1007,6 @@ public class Main{
 		timepoints.clear();
 		config.updateRate = newRate;
 		mainLoop();
-	}
-
-	/**
-	 * Shows the layout configuration dialog
-	 * @param live Whether or not changes should be
-	 *        applied in real time
-	 */
-	protected static final void configureLayout(boolean live){
-		content.showGrid();
-		JPanel form = new JPanel(new BorderLayout());
-
-		JPanel fields = new JPanel(new GridLayout(0, 5, 2, 2));
-		JPanel modes = new JPanel(new GridLayout(0, 1, 0, 2));
-
-		fields.add(new JLabel("Key", SwingConstants.CENTER));
-		fields.add(new JLabel("X", SwingConstants.CENTER));
-		fields.add(new JLabel("Y", SwingConstants.CENTER));
-		fields.add(new JLabel("Width", SwingConstants.CENTER));
-		fields.add(new JLabel("Height", SwingConstants.CENTER));
-		modes.add(new JLabel("Mode", SwingConstants.CENTER));
-
-		for(KeyInformation i : config.keyinfo){
-			createListItem(i, fields, modes, live);
-		}
-		if(config.showAvg){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					config.avg_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					config.avg_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					config.avg_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					config.avg_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "AVG";
-				}
-
-				@Override
-				public int getX(){
-					return config.avg_x;
-				}
-
-				@Override
-				public int getY(){
-					return config.avg_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return config.avg_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return config.avg_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return config.avg_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					config.avg_mode = mode;
-				}
-			}, fields, modes, live);
-		}
-		if(config.showMax){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					config.max_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					config.max_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					config.max_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					config.max_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "MAX";
-				}
-
-				@Override
-				public int getX(){
-					return config.max_x;
-				}
-
-				@Override
-				public int getY(){
-					return config.max_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return config.max_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return config.max_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return config.max_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					config.max_mode = mode;
-				}
-			}, fields, modes, live);
-		}
-		if(config.showCur){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					config.cur_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					config.cur_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					config.cur_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					config.cur_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "CUR";
-				}
-
-				@Override
-				public int getX(){
-					return config.cur_x;
-				}
-
-				@Override
-				public int getY(){
-					return config.cur_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return config.cur_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return config.cur_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return config.cur_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					config.cur_mode = mode;
-				}
-			}, fields, modes, live);
-		}
-		if(config.showTotal){
-			createListItem(new Positionable(){
-
-				@Override
-				public void setX(int x){
-					config.tot_x = x;
-				}
-
-				@Override
-				public void setY(int y){
-					config.tot_y = y;
-				}
-
-				@Override
-				public void setWidth(int w){
-					config.tot_w = w;
-				}
-
-				@Override
-				public void setHeight(int h){
-					config.tot_h = h;
-				}
-
-				@Override
-				public String getName(){
-					return "TOT";
-				}
-
-				@Override
-				public int getX(){
-					return config.tot_x;
-				}
-
-				@Override
-				public int getY(){
-					return config.tot_y;
-				}
-
-				@Override
-				public int getWidth(){
-					return config.tot_w;
-				}
-
-				@Override
-				public int getHeight(){
-					return config.tot_h;
-				}
-
-				@Override
-				public RenderingMode getRenderingMode(){
-					return config.tot_mode;
-				}
-
-				@Override
-				public void setRenderingMode(RenderingMode mode){
-					config.tot_mode = mode;
-				}
-			}, fields, modes, live);
-		}
-
-		JPanel keys = new JPanel(new BorderLayout());
-		keys.add(fields, BorderLayout.CENTER);
-		keys.add(modes, BorderLayout.LINE_END);
-
-		JPanel view = new JPanel(new BorderLayout());
-		view.add(keys, BorderLayout.PAGE_START);
-		view.add(new JPanel(), BorderLayout.CENTER);
-		
-		JPanel gridSize = new JPanel(new GridLayout(2, 2, 0, 5));
-		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
-		gridSize.add(new JLabel("Cell size: "));
-		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(config.cellSize, BasePanel.imageSize, Integer.MAX_VALUE, 1));
-		gridSize.add(gridSpinner);
-		gridSize.add(new JLabel("Panel border offset: "));
-		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(config.borderOffset, 0, new DynamicInteger(()->(config.cellSize - BasePanel.imageSize)), 1));
-		gapSpinner.addChangeListener((e)->{
-			config.borderOffset = (int)gapSpinner.getValue();
-			if(live){
-				reconfigure();
-			}
-		});
-		gridSize.add(gapSpinner);
-		gridSpinner.addChangeListener((e)->{
-			config.cellSize = (int)gridSpinner.getValue();
-			if(config.borderOffset > config.cellSize - BasePanel.imageSize){
-				config.borderOffset = config.cellSize - BasePanel.imageSize;
-				gapSpinner.setValue(config.borderOffset);
-			}
-			if(live){
-				reconfigure();
-			}
-		});
-		
-		form.add(gridSize, BorderLayout.PAGE_START);
-		
-		JScrollPane pane = new JScrollPane(view);
-		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
-		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.setPreferredSize(new Dimension(450, 200));
-
-		form.add(pane, BorderLayout.CENTER);
-
-		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));
-		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
-		graphLayout.add(new JLabel("Graph mode: "));
-		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
-		graphMode.setSelectedItem(Main.config.graphMode);
-		graphLayout.add(graphMode);
-
-		LayoutValidator validator = new LayoutValidator();
-
-		graphLayout.add(new JLabel("Graph x position: "));
-		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, validator.getXField(), (val)->{
-			Main.config.graph_x = val;
-			if(live){
-				reconfigure();
-			}
-		}));
-		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
-		graphLayout.add(x);
-
-		graphLayout.add(new JLabel("Graph y position: "));
-		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, validator.getYField(), (val)->{
-			Main.config.graph_y = val;
-			if(live){
-				reconfigure();
-			}
-		}));
-		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
-		graphLayout.add(y);
-
-		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), (val)->{
-			Main.config.graph_w = val;
-			if(live){
-				reconfigure();
-			}
-		}));
-		graphLayout.add(w);
-
-		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), (val)->{
-			Main.config.graph_h = val;
-			if(live){
-				reconfigure();
-			}
-		}));
-		graphLayout.add(h);
-
-		graphMode.addActionListener((e)->{
-			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
-			if(graphMode.getSelectedItem() == GraphMode.INLINE){
-				x.setEnabled(true);
-				y.setEnabled(true);
-			}else{
-				x.setEnabled(false);
-				y.setEnabled(false);
-			}
-			if(live){
-				reconfigure();
-			}
-		});
-
-		form.add(graphLayout, BorderLayout.PAGE_END);
-
-		showOptionDialog(form, true);
-		content.hideGrid();
-	}
-
-	/**
-	 * Creates a editable list item for the
-	 * layout configuration dialog
-	 * @param info The positionable that links the 
-	 *        editor to the underlying data
-	 * @param fields The GUI panel that holds all the fields
-	 * @param modes The GUI panel that holds all the modes
-	 * @param live Whether or not edits should be displayed in real time
-	 */
-	private static final void createListItem(Positionable info, JPanel fields, JPanel modes, boolean live){
-		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
-
-		LayoutValidator validator = new LayoutValidator();
-
-		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), validator.getXField(), (val)->{
-			info.setX(val);
-			if(live){
-				reconfigure();
-			}
-		}));
-		fields.add(x);
-
-		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), validator.getYField(), (val)->{
-			info.setY(val);
-			if(live){
-				reconfigure();
-			}
-		}));
-		fields.add(y);
-
-		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), validator.getWidthField(), (val)->{
-			info.setWidth(val);
-			if(live){
-				reconfigure();
-			}
-		}));
-		fields.add(w);
-
-		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), validator.getHeightField(), (val)->{
-			info.setHeight(val);
-			if(live){
-				reconfigure();
-			}
-		}));
-		fields.add(h);
-
-		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
-		mode.setSelectedItem(info.getRenderingMode());
-		mode.addActionListener((e)->{
-			info.setRenderingMode((RenderingMode)mode.getSelectedItem());
-			if(live){
-				reconfigure();
-			}
-		});
-		modes.add(mode);
-	}
-
-	/**
-	 * Shows the key configuration dialog
-	 */
-	protected static final void configureKeys(){
-		List<KeyInformation> copy = new ArrayList<KeyInformation>(config.keyinfo);
-		boolean[] visibleState = new boolean[copy.size()];
-		for(int i = 0; i < copy.size(); i++){
-			visibleState[i] = copy.get(i).visible;
-		}
-		
-		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you can hide or remove them):"), BorderLayout.PAGE_START);
-		JTable keys = new JTable();
-		DefaultTableModel model = new DefaultTableModel(){
-			/**
-			 * Serial ID
-			 */
-			private static final long serialVersionUID = -5510962859479828507L;
-
-			@Override
-			public int getRowCount(){
-				return config.keyinfo.size();
-			}
-
-			@Override
-			public int getColumnCount(){
-				return 3;
-			}
-
-			@Override
-			public Object getValueAt(int rowIndex, int columnIndex){
-				switch(columnIndex){
-				case 0:
-					int n = (config.keyinfo.get(rowIndex).alt ? 1 : 0) + (config.keyinfo.get(rowIndex).ctrl ? 1 : 0) + (config.keyinfo.get(rowIndex).shift ? 1 : 0);
-					return config.keyinfo.get(rowIndex).getModifierString() + config.keyinfo.get(rowIndex).name.substring(n);
-				case 1:
-					return config.keyinfo.get(rowIndex).visible;
-				case 2:
-					return false;
-				default:
-					return null;
-				}
-			}
-
-			@Override
-			public String getColumnName(int col){
-				switch(col){
-				case 0:
-					return "Key";
-				case 1:
-					return "Visible";
-				case 2:
-					return "Remove";
-				default:
-					return null;
-				}
-			}
-
-			@Override
-			public Class<?> getColumnClass(int columnIndex){
-				if(columnIndex == 1 || columnIndex == 2){
-					return Boolean.class;
-				}
-				return super.getColumnClass(columnIndex);
-			}
-
-			@Override
-			public boolean isCellEditable(int row, int col){
-				return col != 0;
-			}
-
-			@Override
-			public void setValueAt(Object value, int row, int col){
-				if(col == 1){
-					config.keyinfo.get(row).visible = (boolean)value;
-				}else{
-					if((boolean)value == true){
-						Main.keys.remove(config.keyinfo.get(row).keycode);
-						config.keyinfo.remove(row);
-						keys.repaint();
-					}
-				}
-			}
-		};
-		keys.setModel(model);
-		keys.setDragEnabled(false);
-		JScrollPane pane = new JScrollPane(keys);
-		pane.setPreferredSize(new Dimension((int)keyform.getPreferredSize().getWidth() + 50, 120));
-		keyform.add(pane, BorderLayout.CENTER);
-		JButton newkey = new JButton("Add Key");
-		newkey.addActionListener((evt)->{
-			JPanel form = new JPanel(new GridLayout(config.enableModifiers ? 4 : 1, 1));
-			JLabel txt = new JLabel("Press a key and click 'OK' to add it.");
-			form.add(txt);
-			JCheckBox ctrl = new JCheckBox();
-			JCheckBox alt = new JCheckBox();
-			JCheckBox shift = new JCheckBox();
-			if(config.enableModifiers){
-				JPanel a = new JPanel(new BorderLayout());
-				JPanel c = new JPanel(new BorderLayout());
-				JPanel s = new JPanel(new BorderLayout());
-				c.add(ctrl, BorderLayout.LINE_START);
-				c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
-				a.add(alt, BorderLayout.LINE_START);
-				a.add(new JLabel("Alt"), BorderLayout.CENTER);
-				s.add(shift, BorderLayout.LINE_START);
-				s.add(new JLabel("Shift"), BorderLayout.CENTER);
-				form.add(c);
-				form.add(a);
-				form.add(s);
-			}
-			if(showOptionDialog(form)){
-				if(lastevent == null){
-					showMessageDialog("No key pressed!");
-					return;
-				}
-				KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastevent.getKeyCode()), lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && config.enableModifiers, false);
-				int n = (info.alt ? 1 : 0) + (info.ctrl ? 1 : 0) + (info.shift ? 1 : 0);
-				if(showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
-					if(config.keyinfo.contains(info)){
-						showMessageDialog("That key was already added before.\nIt was not added again.");
-					}else{
-						config.keyinfo.add(info);
-					}
-				}
-				model.fireTableDataChanged();
-			}
-		});
-		JButton newmouse = new JButton("Add Mouse Button");
-		newmouse.addActionListener((e)->{
-			JPanel addform = new JPanel(new BorderLayout());
-			addform.add(new JLabel("Select the mouse buttons to add:"), BorderLayout.PAGE_START);
-
-			JPanel buttons = new JPanel(new GridLayout(5, 1, 2, 0));
-			String[] names = new String[]{"M1", "M2", "M3", "M4", "M5"};
-			JCheckBox[] boxes = new JCheckBox[]{
-				new JCheckBox(names[0] + " (left click)"), 
-			    new JCheckBox(names[1] + " (left click)"), 
-			    new JCheckBox(names[2] + " (mouse wheel)"), 
-			    new JCheckBox(names[3]), 
-			    new JCheckBox(names[4])
-			};
-
-			for(JCheckBox box : boxes){
-				buttons.add(box);
-			}
-
-			addform.add(buttons, BorderLayout.CENTER);
-
-			if(showOptionDialog(addform)){
-				for(int i = 0; i < boxes.length; i++){
-					if(boxes[i].isSelected()){
-						KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
-						if(config.keyinfo.contains(key)){
-							showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
-						}else{
-							config.keyinfo.add(key);
-						}
-					}
-				}
-				model.fireTableDataChanged();
-			}
-		});
-		JPanel nbuttons = new JPanel(new GridLayout(1, 2, 2, 0));
-		nbuttons.add(newkey, BorderLayout.LINE_START);
-		nbuttons.add(newmouse, BorderLayout.LINE_END);
-		keyform.add(nbuttons, BorderLayout.PAGE_END);
-		
-		if(!showOptionDialog(keyform, true)){
-			for(int i = 0; i < copy.size(); i++){
-				copy.get(i).visible = visibleState[i];
-			}
-			config.keyinfo = copy;
-		}
 	}
 
 	/**
@@ -1734,7 +1034,7 @@ public class Main{
 	/**
 	 * Reconfigures the layout of the program
 	 */
-	protected static final void reconfigure(){
+	public static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
@@ -1748,9 +1048,9 @@ public class Main{
 			for(KeyInformation i : config.keyinfo){
 				if(!keys.containsKey(i.keycode)){
 					keys.put(i.keycode, k = new Key(i.name));
-					k.alt = i.alt;
-					k.ctrl = i.ctrl;
-					k.shift = i.shift;
+					k.alt = CommandKeys.hasAlt(i.keycode);
+					k.ctrl = CommandKeys.hasCtrl(i.keycode);
+					k.shift = CommandKeys.hasShift(i.keycode);
 				}else{
 					k = keys.get(i.keycode);
 				}
@@ -1822,45 +1122,6 @@ public class Main{
 	}
 
 	/**
-	 * Checks the KeysPerSecond version to see
-	 * if we are running the latest version
-	 * @return The latest version
-	 */
-	private static final String checkVersion(){
-		try{
-			HttpURLConnection con = (HttpURLConnection)new URL("https://api.github.com/repos/RoanH/KeysPerSecond/tags").openConnection();
-			con.setRequestMethod("GET");
-			con.addRequestProperty("Accept", "application/vnd.github.v3+json");
-			con.setConnectTimeout(10000);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String line = reader.readLine();
-			reader.close();
-			String[] versions = line.split("\"name\":\"v");
-			int max_main = 3;
-			int max_sub = 0;
-			String[] tmp;
-			for(int i = 1; i < versions.length; i++){
-				tmp = versions[i].split("\",\"")[0].split("\\.");
-				if(Integer.parseInt(tmp[0]) > max_main){
-					max_main = Integer.parseInt(tmp[0]);
-					max_sub = Integer.parseInt(tmp[1]);
-				}else if(Integer.parseInt(tmp[0]) < max_main){
-					continue;
-				}else{
-					if(Integer.parseInt(tmp[1]) > max_sub){
-						max_sub = Integer.parseInt(tmp[1]);
-					}
-				}
-			}
-			return "v" + max_main + "." + max_sub;
-		}catch(Exception e){
-			return null;
-			//No Internet access or something else is wrong,
-			//No problem though since this isn't a critical function
-		}
-	}
-
-	/**
 	 * Shuts down the program
 	 */
 	protected static final void exit(){
@@ -1869,11 +1130,12 @@ public class Main{
 		}catch(NativeHookException e1){
 			e1.printStackTrace();
 		}
+		Statistics.saveStatsOnExit();
 		System.exit(0);
 	}
 
 	/**
-	 * Resets avg, max & cur
+	 * Resets avg, max &amp; cur
 	 */
 	protected static final void resetStats(){
 		System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
@@ -1898,224 +1160,6 @@ public class Main{
 		System.out.println();
 		frame.repaint();
 	}
-
-	/**
-	 * Re-launches the program from the temp directory
-	 * if the program path contains a ! this fixes a
-	 * bug in the native library loading
-	 * @param args The original command line arguments
-	 */
-	private static final void relaunchFromTemp(String args){
-		URL url = Main.class.getProtectionDomain().getCodeSource().getLocation();
-		File exe;
-		try{
-			exe = new File(url.toURI());
-		}catch(URISyntaxException e){
-			exe = new File(url.getPath());
-		}
-		if(!exe.getAbsolutePath().contains("!")){
-			return;
-		}
-		File jvm = new File(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
-		if(!jvm.exists() || !exe.exists()){
-			System.out.println("JVM exists: " + jvm.exists() + " Executable exists: " + exe.exists());
-			showMessageDialog("An error occured whilst trying to launch the program >.<");
-			System.exit(0);
-		}
-		File tmp = null;
-		try{
-			tmp = File.createTempFile("kps", null);
-			if(tmp.getAbsolutePath().contains("!")){
-				showMessageDialog("An error occured whilst trying to launch the program >.<");
-				System.exit(0);
-			}
-			Files.copy(exe.toPath(), tmp.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		}catch(IOException e){
-			e.printStackTrace();
-			showMessageDialog("An error occured whilst trying to launch the program >.<");
-			tmp.deleteOnExit();
-			tmp.delete();
-			System.exit(0);
-		}
-		ProcessBuilder builder = new ProcessBuilder();
-		if(args != null){
-			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath(), args);
-		}else{
-			builder.command(jvm.getAbsolutePath(), "-jar", tmp.getAbsolutePath());
-		}
-		Process proc = null;
-		try{
-			proc = builder.start();
-		}catch(IOException e){
-			e.printStackTrace();
-			showMessageDialog("An error occured whilst trying to launch the program >.<");
-			tmp.deleteOnExit();
-			tmp.delete();
-			System.exit(0);
-		}
-		BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-		String line;
-		try{
-			while(proc.isAlive()){
-				while((line = in.readLine()) != null){
-					System.out.println(line);
-				}
-				try{
-					Thread.sleep(1000);
-				}catch(InterruptedException e){
-				}
-			}
-		}catch(IOException e){
-			System.err.print("Output stream chrashed :/");
-		}
-		tmp.deleteOnExit();
-		tmp.delete();
-		System.exit(0);
-	}
-
-	/**
-	 * Saves the statistics logged so far
-	 */
-	protected static void saveStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		File file = new File(chooser.getSelectedFile().getAbsolutePath().endsWith(".kpsstats") ? chooser.getSelectedFile().getAbsolutePath() : (chooser.getSelectedFile().getAbsolutePath() + ".kpsstats"));
-		if(!file.exists() || (file.exists() && showConfirmDialog("File already exists, overwrite?"))){
-			try{
-				file.createNewFile();
-				ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-				out.writeInt(TotPanel.hits);
-				out.writeDouble(avg);
-				out.writeInt(max);
-				out.writeLong(n);
-				out.writeInt(prev);
-				out.writeInt(tmp.get());
-				for(Entry<Integer, Key> key : keys.entrySet()){
-					out.writeInt(key.getKey());
-					out.writeObject(key.getValue());
-				}
-				out.flush();
-				out.close();
-				showMessageDialog("Statistics succesfully saved");
-			}catch(IOException e){
-				e.printStackTrace();
-				showErrorDialog("Failed to save the statistics!");
-			}
-		}
-	}
-
-	/**
-	 * Loads the statistics from a file
-	 */
-	protected static void loadStats(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileNameExtensionFilter("Keys per second statistics file", "kpsstats"));
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-			TotPanel.hits = in.readInt();
-			avg = in.readDouble();
-			max = in.readInt();
-			n = in.readLong();
-			prev = in.readInt();
-			tmp.set(in.readInt());
-			while(in.available() > 0){
-				Key key = keys.get(in.readInt());
-				Key obj = ((Key)in.readObject());
-				if(key != null){
-					key.count = obj.count;
-				}
-			}
-			in.close();
-			frame.repaint();
-			graphFrame.repaint();
-			showMessageDialog("Statistics succesfully loaded");
-		}catch(IOException | ClassNotFoundException e){
-			showErrorDialog("Failed to load the statistics!");
-		}
-	}
-	
-	//=================================================================================================
-	//================== DIALOGUES ====================================================================
-	//=================================================================================================
-
-	/**
-	 * Shows the given object to the user.
-	 * The dialog will have a 'Save' and
-	 * 'Cancel' close option.
-	 * @param form The object to display
-	 * @param resizable Whether the user should
-	 *        be able to resize the dialog
-	 * @return True if the 'Save' option was selected
-	 */
-	protected static final boolean showOptionDialog(Object form, boolean resizable){
-		return showDialog(form, resizable, new String[]{"Save", "Cancel"});
-	}
-	
-	/**
-	 * Shows the given object to the user.
-	 * The dialog will have a 'Save' and
-	 * 'Cancel' close option.
-	 * @param form The object to display
-	 * @return True if the 'Save' option was selected
-	 */
-	protected static final boolean showOptionDialog(Object form){
-		return showOptionDialog(form, false);
-	}
-	
-	/**
-	 * Poses the given object as a yes/no option
-	 * dialog to the user.
-	 * @param msg The object to display
-	 * @return True if the user selected yes
-	 */
-	protected static final boolean showConfirmDialog(Object msg){
-		return showDialog(msg, false, new String[]{"Yes", "No"});
-	}
-	
-	/**
-	 * Shows the given object to the user in a dialog
-	 * @param msg The object to display
-	 */
-	protected static final void showMessageDialog(Object msg){
-		showDialog(msg, false, new String[]{"OK"});
-	}
-	
-	/**
-	 * Shows the given error message to the user
-	 * @param error The error to display
-	 */
-	protected static final void showErrorDialog(String error){
-		showMessageDialog(error);
-	}
-	
-	/**
-	 * Shows the given object as a dialog
-	 * with the given close options
-	 * @param form The dialog to display
-	 * @param resizable Whether or not the
-	 *        dialog can be resized
-	 * @param options The close options
-	 *        for the dialog
-	 * @return True if the used close option
-	 *         is the first item in the close
-	 *         options list, false otherwise
-	 */
-	protected static final boolean showDialog(Object form, boolean resizable, String[] options){
-		JOptionPane optionPane = new JOptionPane(form, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
-		JDialog dialog = optionPane.createDialog(frame.isVisible() ? frame : null, "Keys per second");
-		dialog.setResizable(resizable);
-		dialog.setIconImage(iconSmall);
-		dialog.setVisible(true);
-		return options[0].equals(optionPane.getValue());
-	}
 	
 	//=================================================================================================
 	//================== NESTED CLASSES ===============================================================
@@ -2127,7 +1171,7 @@ public class Main{
 	 * is pressed
 	 * @author Roan
 	 */
-	public static final class Key implements Serializable{
+	public static class Key implements Serializable{
 		/**
 		 * Serial ID
 		 */
@@ -2144,7 +1188,7 @@ public class Main{
 		 * The key in string form<br>
 		 * For example: X
 		 */
-		public transient final String name;
+		public String name;
 		/**
 		 * The graphical display for this key
 		 */
@@ -2152,15 +1196,15 @@ public class Main{
 		/**
 		 * Whether or not alt has to be down
 		 */
-		protected transient boolean alt;
+		protected boolean alt;
 		/**
 		 * Whether or not ctrl has to be down
 		 */
-		protected transient boolean ctrl;
+		protected boolean ctrl;
 		/**
 		 * Whether or not shift has to be down
 		 */
-		protected transient boolean shift;
+		protected boolean shift;
 
 		/**
 		 * Constructs a new Key object
@@ -2186,7 +1230,7 @@ public class Main{
 		/**
 		 * Called when a key is pressed
 		 */
-		private void keyPressed(){
+		protected void keyPressed(){
 			if(!down){
 				count++;
 				down = true;
@@ -2200,7 +1244,7 @@ public class Main{
 		/**
 		 * Called when a key is released
 		 */
-		private void keyReleased(){
+		protected void keyReleased(){
 			if(down){
 				down = false;
 				if(panel != null){
@@ -2225,32 +1269,20 @@ public class Main{
 		 * The name of this key
 		 * @see Key#name
 		 */
-		private String name;
+		public String name;
 		/**
 		 * The virtual key code of this key<br>
 		 * This code represents the key
 		 */
-		protected int keycode;
+		public int keycode;
 		/**
 		 * Whether or not this key is displayed
 		 */
-		protected boolean visible = true;
-		/**
-		 * Whether or not alt is down
-		 */
-		protected boolean alt = false;
-		/**
-		 * Whether or not ctrl is down
-		 */
-		protected boolean ctrl = false;
-		/**
-		 * Whether or not shift is down
-		 */
-		protected boolean shift = false;
+		public boolean visible = true;
 		/**
 		 * Auto-increment for #x
 		 */
-		protected static transient volatile int autoIndex = -2;
+		public static transient volatile int autoIndex = -2;
 		/**
 		 * The x position of this panel in the layout
 		 */
@@ -2284,14 +1316,9 @@ public class Main{
 		 * @see #name
 		 * @see #keycode 
 		 */
-		private KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
-			if(!(code == NativeKeyEvent.VC_SHIFT || code == NativeKeyEvent.VC_CONTROL || code == NativeKeyEvent.VC_ALT)){
-				this.alt = alt;
-				this.ctrl = ctrl;
-				this.shift = shift;
-			}
-			this.name = mouse ? name : getKeyName(name, code, this.alt, this.ctrl, this.shift);
-			this.keycode = mouse ? code : getExtendedKeyCode(code, shift, ctrl, alt);
+		public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
+			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
+			this.name = mouse ? name : getKeyName(name, keycode);
 		}
 
 		/**
@@ -2299,13 +1326,10 @@ public class Main{
 		 * and modifiers
 		 * @param name The name of the key
 		 * @param code The virtual key code of the key
-		 * @param alt Whether or not alt is down
-		 * @param ctrl Whether or not ctrl is down
-		 * @param shift Whether or not shift is down
 		 * @return The full name of this given key
 		 */
-		private static final String getKeyName(String name, int code, boolean alt, boolean ctrl, boolean shift){
-			return (alt ? "a" : "") + (ctrl ? "c" : "") + (shift ? "s" : "") + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code));
+		private static final String getKeyName(String name, int code){
+			return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
 		}
 
 		/**
@@ -2321,7 +1345,19 @@ public class Main{
 			this.name = name;
 			this.keycode = code;
 			this.visible = visible;
-
+		}
+		
+		/**
+		 * Changes the display name of this
+		 * key to the given string. If {@link Key}
+		 * panels are active with the same key code
+		 * as this {@link KeyInformation} object
+		 * then their display name is also updated.
+		 * @param name The new display name
+		 */
+		public void setName(String name){
+			this.name = name;
+			keys.getOrDefault(keycode, DUMMY_KEY).name = name;
 		}
 
 		/**
@@ -2330,12 +1366,12 @@ public class Main{
 		 * @return The modifier string
 		 */
 		public String getModifierString(){
-			return (ctrl ? "Ctrl + " : "") + (alt ? "Alt + " : "") + (shift ? "Shift + " : "");
+			return (CommandKeys.hasCtrl(keycode) ? "Ctrl + " : "") + (CommandKeys.hasAlt(keycode) ? "Alt + " : "") + (CommandKeys.hasShift(keycode) ? "Shift + " : "");
 		}
 
 		@Override
 		public String toString(){
-			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",ctrl=" + ctrl + ",alt=" + alt + ",shift=" + shift + ",name=\"" + name + "\"]";
+			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",name=\"" + name + "\"]";
 		}
 
 		@Override
@@ -2362,6 +1398,7 @@ public class Main{
 			width = 2;
 			height = 3;
 			mode = RenderingMode.VERTICAL;
+			keycode = CommandKeys.getExtendedKeyCode(keycode, false, false, false);
 		}
 
 		/**
@@ -2481,6 +1518,7 @@ public class Main{
 				return "\u25BE";
 			// Begin Modifier and Control Keys
 			case NativeKeyEvent.VC_SHIFT:
+			case CommandKeys.VC_RSHIFT:
 				return "\u21D1";
 			case NativeKeyEvent.VC_CONTROL:
 				return "Ctl";
@@ -2594,5 +1632,30 @@ public class Main{
 			public void windowDeactivated(WindowEvent e){
 			}
 		};
+		DUMMY_KEY = new Key(null){
+			/**
+			 * Serial ID
+			 */
+			private static final long serialVersionUID = 5918421427659740215L;
+
+			@Override
+			public void keyPressed(){
+			}
+			
+			@Override
+			public void keyReleased(){
+			}
+		};
+		
+		//Request best text anti-aliasing settings
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		desktopHints = (Map<?, ?>)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+		if(desktopHints == null){
+			Map<Object, Object> map = new HashMap<Object, Object>();
+			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			desktopHints = map;
+		}else{
+			toolkit.addPropertyChangeListener("awt.font.desktophints", event->desktopHints = (Map<?, ?>)event.getNewValue());
+		}
 	}
 }

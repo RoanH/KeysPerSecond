@@ -1,43 +1,66 @@
 image: openjdk:8
 
 variables:
-   GIT_STRATEGY: clone
-   SSL_SELF_SIGNED: "true"
-   PROJECTNAME: "KeysPerSecond"
+  PROJECTNAME: "KeysPerSecond"
 
 before_script:
   - java -version
+  - cd ${PROJECTNAME}
+  - ls -l
+  - chmod -R 755 ./*
 
 stages:
-  - javadoc
   - compile
+  - status
+  - javadoc
+
+pending:
+  allow_failure: true
+  script: curl ${SERVER}ci/pending.sh | bash
+  stage: compile
+
+success:
+  allow_failure: true
+  script: curl ${SERVER}ci/success.sh | bash
+  when: on_success
+  stage: status
+
+failure:
+  allow_failure: true
+  script: curl ${SERVER}ci/failure.sh | bash
+  when: on_failure
+  stage: status
 
 verify:
-  script:
-    - wget ${SERVER}ci/javadoc.sh
-    - chmod 755 javadoc.sh
-    - ./javadoc.sh
+  allow_failure: true
+  script: curl ${SERVER}ci/javadoc.sh | bash
   stage: javadoc
+  coverage: '/\([0-9]{2,3}\.[0-9]{2}%\)/'
 
 javadoc:
   script:
-    - cd ${PROJECTNAME}
-    - find src -name "*.java" > sources.txt
-    - javadoc -cp "./lib/jnativehook-2.1.0/jnativehook/jar/jnativehook-2.1.0.jar:." -private @sources.txt
+    - mkdir ../javadoc
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} javadoc
+    - mv ./build/docs/javadoc/* ../javadoc
   stage: javadoc
+  environment: javadoc
+  artifacts:
+    name: "$PROJECTNAME"
+    expire_in: 1 week
+    paths:
+      - javadoc/
 
 compile:
   script:
-    - chmod -R 777 ./*
-    - cd ${PROJECTNAME}
-    - ls -l
-    - rm -rf ./bin
-    - mkdir bin
-    - find src -name "*.java" > sources.txt
-    - find lib -name "*.jar" > libs.txt
-    - libs=""
-    - while read line; do libs=$libs./$line:; done <libs.txt
-    - libs=$libs.
-    - javac -cp $libs -d ./bin -g -verbose -version -encoding "UTF-8" @sources.txt
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} shadowJar
+    - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} createExe
+    - mv ./build/libs/* ../
+    - mv ./build/launch4j/*.exe ../
   stage: compile
   environment: builds
+  artifacts:
+    name: "${PROJECTNAME}"
+    expire_in: 1 week
+    paths:
+      - ${PROJECTNAME}-*.jar
+      - ${PROJECTNAME}-*.exe

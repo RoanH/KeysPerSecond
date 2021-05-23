@@ -40,7 +40,9 @@ import me.roan.kps.Main.Key;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.TotPanel;
-import sun.swing.SwingUtilities2;
+import me.roan.kps.ui.dialog.KeysDialog;
+import me.roan.kps.ui.dialog.LayoutDialog;
+import me.roan.util.Dialog;
 
 /**
  * This class handles everything related to
@@ -121,10 +123,12 @@ public class Menu{
 		JMenuItem configkeys = new JMenuItem("Keys");
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
 		JMenuItem backlog = new JMenuItem("Backlog");
+		JMenuItem statsSaving = new JMenuItem("Stats saving");
 		JMenuItem commandkeys = new JMenuItem("Commands");
 		JMenuItem layout = new JMenuItem("Layout");
 		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
-		JCheckBoxMenuItem tAll = new JCheckBoxMenuItem("Track all keys");
+		JCheckBoxMenuItem tAllKeys = new JCheckBoxMenuItem("Track all keys");
+		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
 		JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay mode");
 		JCheckBoxMenuItem p0 = new JCheckBoxMenuItem("No digits beyond the decimal point");
 		JCheckBoxMenuItem p1 = new JCheckBoxMenuItem("1 digit beyond the decimal point");
@@ -146,6 +150,7 @@ public class Menu{
 		components.add(saveStats);
 		components.add(loadStats);
 		components.add(load);
+		components.add(statsSaving);
 		components.add(layout);
 		components.add(save);
 		components.add(snap);
@@ -161,7 +166,8 @@ public class Menu{
 		components.add(colorcustom);
 		components.add(backlog);
 		components.add(colorenable);
-		components.add(tAll);
+		components.add(tAllKeys);
+		components.add(tAllButtons);
 		components.add(overlay);
 		components.add(commandkeys);
 		components.add(p0);
@@ -224,20 +230,41 @@ public class Menu{
 		treset.addActionListener((e)->{
 			Main.resetTotals();
 		});
-		tAll.setSelected(Main.config.trackAll);
-		tAll.addActionListener((e)->{
-			Main.config.trackAll = tAll.isSelected();
+		tAllKeys.setSelected(Main.config.trackAllKeys);
+		tAllKeys.addActionListener((e)->{
+			Main.config.trackAllKeys = tAllKeys.isSelected();
 			Iterator<Entry<Integer, Key>> iter = Main.keys.entrySet().iterator();
 			while(iter.hasNext()){
 				Entry<Integer, Key> key = iter.next();
-				boolean remove = true;
-				for(KeyInformation info : Main.config.keyinfo){
-					if(info.keycode == key.getKey()){
-						remove = false;
+				if(!CommandKeys.isMouseButton(key.getKey())){
+					boolean remove = true;
+					for(KeyInformation info : Main.config.keyinfo){
+						if(info.keycode == key.getKey()){
+							remove = false;
+						}
+					}
+					if(remove){
+						iter.remove();
 					}
 				}
-				if(remove){
-					iter.remove();
+			}
+		});
+		tAllButtons.setSelected(Main.config.trackAllButtons);
+		tAllButtons.addActionListener((e)->{
+			Main.config.trackAllButtons = tAllButtons.isSelected();
+			Iterator<Entry<Integer, Key>> iter = Main.keys.entrySet().iterator();
+			while(iter.hasNext()){
+				Entry<Integer, Key> key = iter.next();
+				if(CommandKeys.isMouseButton(key.getKey())){
+					boolean remove = true;
+					for(KeyInformation info : Main.config.keyinfo){
+						if(info.keycode == key.getKey()){
+							remove = false;
+						}
+					}
+					if(remove){
+						iter.remove();
+					}
 				}
 			}
 		});
@@ -328,7 +355,7 @@ public class Menu{
 			Main.reconfigure();
 		});
 		configkeys.addActionListener((e)->{
-			Main.configureKeys();
+			KeysDialog.configureKeys();
 			Main.reconfigure();
 		});
 		colorcustom.addActionListener((e)->{
@@ -365,11 +392,11 @@ public class Menu{
 			}
 			pconfig.add(lbacklog);
 			pconfig.add(sbacklog);
-			Main.showMessageDialog(pconfig);
+			Dialog.showMessageDialog(pconfig);
 			Main.config.backlog = (int)sbacklog.getValue();
 		});
 		layout.addActionListener((e)->{
-			Main.configureLayout(true);
+			LayoutDialog.configureLayout(true);
 			Main.reconfigure();
 		});
 		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.updateRate == 1000);
@@ -493,10 +520,13 @@ public class Menu{
 			}
 		});
 		saveStats.addActionListener((e)->{
-			Main.saveStats();
+			Statistics.saveStats();
 		});
 		loadStats.addActionListener((e)->{
-			Main.loadStats();
+			Statistics.loadStats();
+		});
+		statsSaving.addActionListener((e)->{
+			Statistics.configureAutoSave(true);
 		});
 
 		reset.add(treset);
@@ -516,7 +546,8 @@ public class Menu{
 		general.add(tot);
 		general.add(keys);
 		general.add(overlay);
-		general.add(tAll);
+		general.add(tAllKeys);
+		general.add(tAllButtons);
 		general.add(modifiers);
 
 		configure.add(general);
@@ -525,6 +556,7 @@ public class Menu{
 		configure.add(rate);
 		configure.add(configcolors);
 		configure.add(precision);
+		configure.add(statsSaving);
 		configure.add(commandkeys);
 		configure.add(layout);
 
@@ -557,8 +589,10 @@ public class Menu{
 		createMenu();
 		Main.keys.clear();
 		Main.resetStats();
+		TotPanel.hits = 0;
 		Main.reconfigure();
 		Main.mainLoop();
+		KeyInformation.autoIndex = Main.config.keyinfo.size() * 2 - 2;
 		Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
 		Main.frame.setAlwaysOnTop(Main.config.overlay);
 	}
@@ -615,10 +649,9 @@ public class Menu{
 				g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 				g.setComposite(prev);
 			}
-			FontMetrics fm = SwingUtilities2.getFontMetrics(menuItem, g);
-			int mnemIndex = menuItem.getDisplayedMnemonicIndex();
-			int y = (22 - fm.getHeight()) / 2;
-			SwingUtilities2.drawStringUnderlineCharAt(menuItem, g, menuItem.getText(), mnemIndex, 22 + defaultTextIconGap, y + fm.getAscent());
+			FontMetrics fm = menuItem.getFontMetrics(g.getFont());
+			g.addRenderingHints(Main.desktopHints);
+			g.drawString(menuItem.getText(), 22 + defaultTextIconGap, ((22 - fm.getHeight()) / 2) + fm.getAscent());
 		}
 
 		@Override

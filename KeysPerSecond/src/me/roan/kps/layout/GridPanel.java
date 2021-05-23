@@ -1,6 +1,9 @@
 package me.roan.kps.layout;
 
+import java.awt.AlphaComposite;
+import java.awt.Composite;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
@@ -22,9 +25,13 @@ public class GridPanel extends JPanel{
 	private boolean showGrid = false;
 
 	@Override
-	public void paintComponent(Graphics g){
+	public void paintComponent(Graphics g1){
+		Graphics2D g = (Graphics2D)g1;
+		Composite comp = g.getComposite();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, Main.config.getBackgroundOpacity()));
 		g.setColor(Main.config.getBackgroundColor());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g.setComposite(comp);
 		if(showGrid){
 			g.setColor(ColorManager.alphaAqua);
 			for(int i = Main.config.cellSize; i < this.getWidth(); i += Main.config.cellSize){
