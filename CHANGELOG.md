@@ -39,3 +39,4 @@
 - **27th of December, 2018**: Variable layout size, variable layout border offset size, support for the right shift key, several other bug fixes, improved dialogs.    
 - **5th of February, 2019**: Changeable key name, periodic stats saving, separate track all options for keys and mouse buttons, some bug fixes.    
 - **27th of August, 2020**: Windows style file chooser, prevent loading non-existent config files, force quoting for cli config passing, fix background transparency not being applied to non-panel areas, general aesthetic and internal improvements.
+- **24th of May, 2021**: sub-pixel rendering, save/load statistics on exit/launch, jnativehook update, Java 16 compatibility fix, fix incorrect fill color border offset, prevent ESC from closing dialogs, enable the config save button by default.

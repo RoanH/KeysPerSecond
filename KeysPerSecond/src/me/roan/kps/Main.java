@@ -782,7 +782,7 @@ public class Main{
 			Statistics.configureAutoSave(false);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", "v8.3"));//XXX the version number  - don't forget build.gradle
+		info.add(Util.getVersionLabel("KeysPerSecond", "v8.4"));//XXX the version number  - don't forget build.gradle
 		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
 		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
