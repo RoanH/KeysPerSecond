@@ -33,7 +33,9 @@ repositories{
 			url "$nexusPublic"
 		}
 	}
-	jcenter()
+	maven{
+		url "https://oss.sonatype.org/content/repositories/snapshots"
+	}
 	maven{
 		url "https://jitpack.io"
 	}
@@ -41,7 +43,7 @@ repositories{
 
 dependencies{
 	implementation 'com.github.RoanH:Util:v1.6'
-	implementation 'com.1stleg:jnativehook:2.1.0'
+	implementation 'com.github.kwhat:jnativehook:2.2-20210323.163306-38'
 }
 
 application{

@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import org.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
