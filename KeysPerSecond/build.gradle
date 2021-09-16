@@ -43,7 +43,7 @@ repositories{
 
 dependencies{
 	implementation 'com.github.RoanH:Util:v1.6'
-	implementation 'com.github.kwhat:jnativehook:2.2-20210323.163306-38'
+	implementation 'com.github.kwhat:jnativehook:2.2-20210915.222335-44'
 }
 
 application{
