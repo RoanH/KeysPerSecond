@@ -594,7 +594,7 @@ public class Configuration{
 						modified = true;
 					}
 					break;
-				case "keyResetTotal":
+				case "keyResetTotals":
 					try{
 						CI = parseCommand(args[1]);
 					}catch(NumberFormatException e){
