@@ -42,7 +42,7 @@ import me.roan.kps.panels.AvgPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.dialog.KeysDialog;
 import me.roan.kps.ui.dialog.LayoutDialog;
-import me.roan.util.Dialog;
+import dev.roanh.util.Dialog;
 
 /**
  * This class handles everything related to

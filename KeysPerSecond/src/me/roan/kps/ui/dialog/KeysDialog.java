@@ -19,7 +19,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import me.roan.kps.CommandKeys;
 import me.roan.kps.Main;
 import me.roan.kps.Main.KeyInformation;
-import me.roan.util.Dialog;
+import dev.roanh.util.Dialog;
 
 /**
  * Logic for the key setup dialog.

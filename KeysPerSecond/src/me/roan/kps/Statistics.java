@@ -38,10 +38,10 @@ import javax.swing.SpinnerNumberModel;
 
 import me.roan.kps.Main.Key;
 import me.roan.kps.panels.TotPanel;
-import me.roan.util.ClickableLink;
-import me.roan.util.Dialog;
-import me.roan.util.FileSelector;
-import me.roan.util.FileSelector.FileExtension;
+import dev.roanh.util.ClickableLink;
+import dev.roanh.util.Dialog;
+import dev.roanh.util.FileSelector;
+import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * Class that handles most of the more complex

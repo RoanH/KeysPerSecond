@@ -70,10 +70,10 @@ import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.dialog.KeysDialog;
 import me.roan.kps.ui.dialog.LayoutDialog;
-import me.roan.util.ClickableLink;
-import me.roan.util.Dialog;
-import me.roan.util.ExclamationMarkPath;
-import me.roan.util.Util;
+import dev.roanh.util.ClickableLink;
+import dev.roanh.util.Dialog;
+import dev.roanh.util.ExclamationMarkPath;
+import dev.roanh.util.Util;
 
 /**
  * This program can be used to display

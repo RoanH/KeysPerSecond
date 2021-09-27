@@ -23,9 +23,9 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.Main.KeyInformation;
 import me.roan.kps.panels.BasePanel;
-import me.roan.util.Dialog;
-import me.roan.util.FileSelector;
-import me.roan.util.FileSelector.FileExtension;
+import dev.roanh.util.Dialog;
+import dev.roanh.util.FileSelector;
+import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * This class contains all the configurable

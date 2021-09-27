@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
-import me.roan.util.Dialog;
+import dev.roanh.util.Dialog;
 
 /**
  * This class is used to configure
