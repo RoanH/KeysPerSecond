@@ -282,6 +282,8 @@ public class Main{
 		}
 
 		//Build GUI
+		frame.setAlwaysOnTop(config.overlay);
+		graphFrame.setAlwaysOnTop(config.overlay);
 		try{
 			buildGUI();
 		}catch(IOException e){
@@ -828,8 +830,6 @@ public class Main{
 		}
 		conf.setVisible(false);
 		conf.dispose();
-		frame.setAlwaysOnTop(config.overlay);
-		graphFrame.setAlwaysOnTop(config.overlay);
 	}
 
 	/**
