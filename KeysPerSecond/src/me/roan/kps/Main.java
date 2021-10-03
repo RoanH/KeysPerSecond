@@ -282,8 +282,6 @@ public class Main{
 		}
 
 		//Build GUI
-		frame.setAlwaysOnTop(config.overlay);
-		graphFrame.setAlwaysOnTop(config.overlay);
 		try{
 			buildGUI();
 		}catch(IOException e){
@@ -1103,6 +1101,8 @@ public class Main{
 			}else{
 				graphFrame.setVisible(false);
 			}
+			frame.setAlwaysOnTop(config.overlay);
+			graphFrame.setAlwaysOnTop(config.overlay);
 			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
