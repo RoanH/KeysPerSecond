@@ -288,11 +288,6 @@ public class Main{
 			e.printStackTrace();
 		}
 		
-		//Start stats saving
-		if(Main.config.autoSaveStats){
-			Statistics.saveStatsTask();
-		}
-
 		//Enter the main loop
 		mainLoop();
 	}
@@ -1117,6 +1112,12 @@ public class Main{
 				frame.setVisible(true);
 			}else{
 				frame.setVisible(false);
+			}
+			
+			//Start stats saving
+			Statistics.cancelScheduledTask();
+			if(Main.config.autoSaveStats){
+				Statistics.saveStatsTask();
 			}
 		});
 	}

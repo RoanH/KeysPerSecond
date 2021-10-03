@@ -256,7 +256,7 @@ public class Statistics{
 	/**
 	 * Cancels the automatic statistics saving task
 	 */
-	private static void cancelScheduledTask(){
+	public static void cancelScheduledTask(){
 		if(statsFuture != null){
 			statsFuture.cancel(false);
 		}
