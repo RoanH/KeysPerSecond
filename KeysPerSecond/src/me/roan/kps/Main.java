@@ -205,10 +205,10 @@ public class Main{
 		ExclamationMarkPath.check(args);
 		
 		//Basic setup and info
-		String config = null;
+		String configpath = null;
 		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){
-			config = args[0];
-			System.out.println("Attempting to load config: " + config);
+			configpath = args[0];
+			System.out.println("Attempting to load config: " + configpath);
 		}
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
@@ -240,11 +240,11 @@ public class Main{
 		setupNativeHook();
 
 		//Set configuration for the keys
-		if(config != null){
-			Configuration toLoad = new Configuration(new File(config));
-			int index = config.lastIndexOf(File.separatorChar);
-			File dir = new File(config.substring(0, index));
-			final String name = config.substring(index + 1);
+		if(configpath != null){
+			Configuration toLoad = new Configuration(new File(configpath));
+			int index = configpath.lastIndexOf(File.separatorChar);
+			File dir = new File(configpath.substring(0, index));
+			final String name = configpath.substring(index + 1);
 			File[] files = null;
 			if(dir.exists()){
 				files = dir.listFiles((FilenameFilter)(f, n)->{
@@ -262,7 +262,7 @@ public class Main{
 			}
 			if(files != null && files.length > 0 && files[0].exists()){
 				toLoad.loadConfig(files[0]);
-				Main.config = toLoad;
+				config = toLoad;
 				System.out.println("Loaded config file: " + files[0].getName());
 			}else{
 				System.out.println("Provided config file does not exist.");
@@ -291,7 +291,7 @@ public class Main{
 		}
 		
 		//Start stats saving
-		if(Main.config.autoSaveStats){
+		if(config.autoSaveStats){
 			Statistics.saveStatsTask();
 		}
 
