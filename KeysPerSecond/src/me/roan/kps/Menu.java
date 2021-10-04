@@ -271,8 +271,7 @@ public class Menu{
 		overlay.setSelected(Main.config.overlay);
 		overlay.addActionListener((e)->{
 			Main.config.overlay = overlay.isSelected();
-			Main.frame.setAlwaysOnTop(Main.config.overlay);
-			Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
+			Main.reconfigure();
 		});
 		precision.add(p0);
 		precision.add(p1);
@@ -593,8 +592,6 @@ public class Menu{
 		Main.reconfigure();
 		Main.mainLoop();
 		KeyInformation.autoIndex = Main.config.keyinfo.size() * 2 - 2;
-		Main.graphFrame.setAlwaysOnTop(Main.config.overlay);
-		Main.frame.setAlwaysOnTop(Main.config.overlay);
 	}
 
 	/**

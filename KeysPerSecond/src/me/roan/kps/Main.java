@@ -288,11 +288,6 @@ public class Main{
 			e.printStackTrace();
 		}
 		
-		//Start stats saving
-		if(Main.config.autoSaveStats){
-			Statistics.saveStatsTask();
-		}
-
 		//Enter the main loop
 		mainLoop();
 	}
@@ -828,8 +823,6 @@ public class Main{
 		}
 		conf.setVisible(false);
 		conf.dispose();
-		frame.setAlwaysOnTop(config.overlay);
-		graphFrame.setAlwaysOnTop(config.overlay);
 	}
 
 	/**
@@ -1103,6 +1096,8 @@ public class Main{
 			}else{
 				graphFrame.setVisible(false);
 			}
+			frame.setAlwaysOnTop(config.overlay);
+			graphFrame.setAlwaysOnTop(config.overlay);
 			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
@@ -1117,6 +1112,12 @@ public class Main{
 				frame.setVisible(true);
 			}else{
 				frame.setVisible(false);
+			}
+			
+			//Start stats saving
+			Statistics.cancelScheduledTask();
+			if(Main.config.autoSaveStats){
+				Statistics.saveStatsTask();
 			}
 		});
 	}
