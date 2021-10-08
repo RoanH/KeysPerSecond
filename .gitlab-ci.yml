@@ -10,9 +10,15 @@ before_script:
   - chmod -R 755 ./*
 
 stages:
+  - check
   - compile
   - status
   - javadoc
+
+endings:
+  allow_failure: true
+  script: curl ${SERVER}ci/lf.sh | bash
+  stage: check
 
 pending:
   allow_failure: true
