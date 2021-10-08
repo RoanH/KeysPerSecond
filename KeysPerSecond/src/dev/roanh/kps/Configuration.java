@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -1060,57 +1059,59 @@ public class Configuration{
 	 * @param saveloc The save location
 	 * @return Whether or not the configuration was loaded successfully
 	 */
-	@SuppressWarnings("unchecked")
+	@Deprecated
 	private final boolean loadLegacyFormat(File saveloc){
-		try{
-			ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
-			keyinfo = (List<KeyInformation>)objin.readObject();
-			showMax = objin.readBoolean();
-			showCur = objin.readBoolean();
-			showAvg = objin.readBoolean();
-			showGraph = objin.readBoolean();
-			graphAvg = objin.readBoolean();
-			backlog = objin.readInt();
-			updateRate = objin.readInt();
-			double version = 3.0D;
-			if(objin.available() > 0){
-				customColors = objin.readBoolean();
-				background = (Color)objin.readObject();
-				foreground = (Color)objin.readObject();
-				if(objin.available() > 0){
-					trackAllKeys = objin.readBoolean();
-					trackAllButtons = trackAllKeys;
-					showKeys = objin.readBoolean();
-					if(objin.available() > 0){
-						version = objin.readDouble();
-					}
-				}
-			}
-			if(version >= 3.9){
-				precision = objin.readInt();
-			}
-			if(version >= 3.10){
-				opacitybg = objin.readFloat();
-				opacityfg = objin.readFloat();
-			}
-			if(version >= 4.0D){
-				objin.readDouble();
-			}
-			if(version >= 4.2D){
-				overlay = objin.readBoolean();
-			}
-			objin.close();
-			for(KeyInformation info : keyinfo){
-				if(version < 3.7D){
-					info.visible = true;
-				}
-				KeyInformation.autoIndex = keyinfo.size() * 2 + 2;
-			}
-			return true;
-		}catch(Exception e1){
-			e1.printStackTrace();
-			return false;
-		}
+		Dialog.showMessageDialog("Support for the old kpsconf file format (v4.5 and earlier) has been removed.\nPlease convert it to the new configuration file format using a version between v5.0 and v8.4.");
+		return false;
+//		try{
+//			ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
+//			keyinfo = (List<KeyInformation>)objin.readObject();
+//			showMax = objin.readBoolean();
+//			showCur = objin.readBoolean();
+//			showAvg = objin.readBoolean();
+//			showGraph = objin.readBoolean();
+//			graphAvg = objin.readBoolean();
+//			backlog = objin.readInt();
+//			updateRate = objin.readInt();
+//			double version = 3.0D;
+//			if(objin.available() > 0){
+//				customColors = objin.readBoolean();
+//				background = (Color)objin.readObject();
+//				foreground = (Color)objin.readObject();
+//				if(objin.available() > 0){
+//					trackAllKeys = objin.readBoolean();
+//					trackAllButtons = trackAllKeys;
+//					showKeys = objin.readBoolean();
+//					if(objin.available() > 0){
+//						version = objin.readDouble();
+//					}
+//				}
+//			}
+//			if(version >= 3.9){
+//				precision = objin.readInt();
+//			}
+//			if(version >= 3.10){
+//				opacitybg = objin.readFloat();
+//				opacityfg = objin.readFloat();
+//			}
+//			if(version >= 4.0D){
+//				objin.readDouble();
+//			}
+//			if(version >= 4.2D){
+//				overlay = objin.readBoolean();
+//			}
+//			objin.close();
+//			for(KeyInformation info : keyinfo){
+//				if(version < 3.7D){
+//					info.visible = true;
+//				}
+//				KeyInformation.autoIndex = keyinfo.size() * 2 + 2;
+//			}
+//			return true;
+//		}catch(Exception e1){
+//			e1.printStackTrace();
+//			return false;
+//		}
 	}
 
 	/**
