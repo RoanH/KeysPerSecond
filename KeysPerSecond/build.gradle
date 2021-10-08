@@ -45,7 +45,7 @@ dependencies{
 }
 
 application{
-	mainClassName = 'me.roan.kps.Main'
+	mainClassName = 'dev.roanh.kps.Main'
 }
 
 launch4j{
