@@ -24,7 +24,7 @@ import me.roan.kps.panels.BasePanel;
 import me.roan.kps.ui.model.DynamicInteger;
 import me.roan.kps.ui.model.EndNumberModel;
 import me.roan.kps.ui.model.MaxNumberModel;
-import me.roan.util.Dialog;
+import dev.roanh.util.Dialog;
 
 /**
  * Logic for the layout configuration dialog.

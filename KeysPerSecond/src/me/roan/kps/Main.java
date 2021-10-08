@@ -47,13 +47,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
-import org.jnativehook.NativeInputEvent;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.NativeKeyListener;
-import org.jnativehook.mouse.NativeMouseEvent;
-import org.jnativehook.mouse.NativeMouseListener;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
+import com.github.kwhat.jnativehook.NativeInputEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
+import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.layout.GridPanel;
@@ -66,10 +66,10 @@ import me.roan.kps.panels.NowPanel;
 import me.roan.kps.panels.TotPanel;
 import me.roan.kps.ui.dialog.KeysDialog;
 import me.roan.kps.ui.dialog.LayoutDialog;
-import me.roan.util.ClickableLink;
-import me.roan.util.Dialog;
-import me.roan.util.ExclamationMarkPath;
-import me.roan.util.Util;
+import dev.roanh.util.ClickableLink;
+import dev.roanh.util.Dialog;
+import dev.roanh.util.ExclamationMarkPath;
+import dev.roanh.util.Util;
 
 /**
  * This program can be used to display
@@ -284,11 +284,6 @@ public class Main{
 			e.printStackTrace();
 		}
 		
-		//Start stats saving
-		if(Main.config.autoSaveStats){
-			Statistics.saveStatsTask();
-		}
-
 		//Enter the main loop
 		mainLoop();
 	}
@@ -671,7 +666,6 @@ public class Main{
 		});
 		addkey.addActionListener((e)->{
 			KeysDialog.configureKeys();
-			save.setEnabled(true);
 		});
 		color.addActionListener((e)->{
 			configureColors();
@@ -709,7 +703,7 @@ public class Main{
 			Statistics.configureAutoSave(false);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", "v8.3"));//XXX the version number  - don't forget build.gradle
+		info.add(Util.getVersionLabel("KeysPerSecond", "v8.4"));//XXX the version number  - don't forget build.gradle
 		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
 		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
@@ -755,8 +749,6 @@ public class Main{
 		}
 		conf.setVisible(false);
 		conf.dispose();
-		frame.setAlwaysOnTop(config.overlay);
-		graphFrame.setAlwaysOnTop(config.overlay);
 	}
 	
 	private static final void configureGraph(){
@@ -1112,6 +1104,8 @@ public class Main{
 			}else{
 				graphFrame.setVisible(false);
 			}
+			frame.setAlwaysOnTop(config.overlay);
+			graphFrame.setAlwaysOnTop(config.overlay);
 			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
@@ -1127,6 +1121,12 @@ public class Main{
 			}else{
 				frame.setVisible(false);
 			}
+			
+			//Start stats saving
+			Statistics.cancelScheduledTask();
+			if(Main.config.autoSaveStats){
+				Statistics.saveStatsTask();
+			}
 		});
 	}
 
@@ -1139,6 +1139,7 @@ public class Main{
 		}catch(NativeHookException e1){
 			e1.printStackTrace();
 		}
+		Statistics.saveStatsOnExit();
 		System.exit(0);
 	}
 
@@ -1230,7 +1231,7 @@ public class Main{
 		desktopHints = (Map<?, ?>)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
 		if(desktopHints == null){
 			Map<Object, Object> map = new HashMap<Object, Object>();
-			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			desktopHints = map;
 		}else{
 			toolkit.addPropertyChangeListener("awt.font.desktophints", event->desktopHints = (Map<?, ?>)event.getNewValue());

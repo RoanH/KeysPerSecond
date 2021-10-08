@@ -70,10 +70,12 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		
 		if(isActive()){
 			g.setColor(ColorManager.activeColor);
-			g.fillRect(2 + (imageSize / 4) * 3, 
-			           2 + (imageSize / 4) * 2, 
-			           this.getWidth() - 5 - (imageSize / 4) * 5, 
-			           this.getHeight() - 4 - (imageSize / 4) * 4);
+			g.fillRect(
+				Main.config.borderOffset + (imageSize / 4) * 3,
+				Main.config.borderOffset + (imageSize / 4) * 2,
+				this.getWidth() - 2 * Main.config.borderOffset - (imageSize / 4) * 6,
+				this.getHeight() - 2 * Main.config.borderOffset - (imageSize / 4) * 4
+			);
 			g.setColor(Main.config.getBackgroundColor());
 		}else{
 			g.setColor(Main.config.getForegroundColor());

@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -16,13 +17,13 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import org.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.CommandKeys.CMD;
 import me.roan.kps.panels.BasePanel;
-import me.roan.util.Dialog;
-import me.roan.util.FileSelector;
-import me.roan.util.FileSelector.FileExtension;
+import dev.roanh.util.Dialog;
+import dev.roanh.util.FileSelector;
+import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * This class contains all the configurable
@@ -283,13 +284,25 @@ public class Configuration{
 	public String statsDest = Objects.toString(System.getProperty("user.home"), "");
 	/**
 	 * The date time formatter pattern to use for the
-	 * statis auto saving file name
+	 * statistics auto saving file name
 	 */
 	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
 	/**
 	 * The statistics auto saving save interval in milliseconds
 	 */
 	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
+	/**
+	 * Whether statistics are saved on exit.
+	 */
+	public boolean saveStatsOnExit = false;
+	/**
+	 * Whether statistics are loaded on launch.
+	 */
+	public boolean loadStatsOnLaunch = false;
+	/**
+	 * The file to save/load statistics to/from on exit/launch.
+	 */
+	public String statsSaveFile = Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats";
 
 	/**
 	 * The original configuration file
@@ -530,7 +543,7 @@ public class Configuration{
 						modified = true;
 					}
 					break;
-				case "keyResetTotal":
+				case "keyResetTotals":
 					try{
 						CI = parseCommand(args[1]);
 					}catch(NumberFormatException e){
@@ -811,11 +824,28 @@ public class Configuration{
 					}else{
 						modified = true;
 					}
+					break;
+				case "saveStatsOnExit":
+					saveStatsOnExit = Boolean.parseBoolean(args[1]);
+					break;
+				case "loadStatsOnLaunch":
+					loadStatsOnLaunch = Boolean.parseBoolean(args[1]);
+					break;
+				case "statsSaveFile":
+					statsSaveFile = args[1];
+					break;
 				}
 			}
 			if(borderOffset > cellSize - BasePanel.imageSize){
 				borderOffset = cellSize - BasePanel.imageSize;
 				modified = true;
+			}
+			if(loadStatsOnLaunch){
+				try{
+					Statistics.loadStats(new File(statsSaveFile));
+				}catch(IOException e){
+					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
+				}
 			}
 			in.close();
 			return modified;
@@ -1049,6 +1079,9 @@ public class Configuration{
 				out.println("statsDest: " + statsDest);
 				out.println("statsFormat: " + statsFormat);
 				out.println("statsSaveInterval: " + statsSaveInterval);
+				out.println("saveStatsOnExit: " + saveStatsOnExit);
+				out.println("loadStatsOnLaunch: " + loadStatsOnLaunch);
+				out.println("statsSaveFile: " + statsSaveFile);
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");

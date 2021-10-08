@@ -2,7 +2,7 @@ package me.roan.kps;
 
 import java.util.Locale;
 
-import org.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import me.roan.kps.layout.Positionable;
 

@@ -37,10 +37,10 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import me.roan.kps.panels.TotPanel;
-import me.roan.util.ClickableLink;
-import me.roan.util.Dialog;
-import me.roan.util.FileSelector;
-import me.roan.util.FileSelector.FileExtension;
+import dev.roanh.util.ClickableLink;
+import dev.roanh.util.Dialog;
+import dev.roanh.util.FileSelector;
+import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * Class that handles most of the more complex
@@ -66,7 +66,40 @@ public class Statistics{
 	 * @param live Whether or not the program is already running
 	 */
 	protected static final void configureAutoSave(boolean live){
-		JPanel panel = new JPanel(new BorderLayout());
+		JPanel endPanel = new JPanel(new BorderLayout());
+		endPanel.setBorder(BorderFactory.createTitledBorder("Save on exit"));
+		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", Main.config.saveStatsOnExit);
+		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", Main.config.loadStatsOnLaunch);
+
+		JPanel selectFile = new JPanel(new BorderLayout(2, 0));
+		selectFile.add(new JLabel("Save location: "), BorderLayout.LINE_START);
+		JTextField selectedFile = new JTextField(Main.config.statsSaveFile);
+		selectFile.add(selectedFile, BorderLayout.CENTER);
+		JButton select = new JButton("Select");
+		selectFile.add(select, BorderLayout.LINE_END);
+		select.addActionListener((e)->{
+			File dir = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
+			if(dir != null){
+				selectedFile.setText(dir.getAbsolutePath());
+			}
+		});
+		
+		ActionListener stateTask = e->{
+			boolean enabled = saveOnExit.isSelected() || loadOnStart.isSelected();
+			selectedFile.setEnabled(enabled);
+			select.setEnabled(enabled);
+		};
+		
+		saveOnExit.addActionListener(stateTask);
+		loadOnStart.addActionListener(stateTask);
+		stateTask.actionPerformed(null);
+		
+		endPanel.add(saveOnExit, BorderLayout.PAGE_START);
+		endPanel.add(loadOnStart, BorderLayout.CENTER);
+		endPanel.add(selectFile, BorderLayout.PAGE_END);
+		
+		JPanel periodicPanel = new JPanel(new BorderLayout());
+		periodicPanel.setBorder(BorderFactory.createTitledBorder("Periodic saving"));
 		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", Main.config.autoSaveStats);
 		
 		BorderLayout layout = new BorderLayout();
@@ -138,8 +171,8 @@ public class Statistics{
 		settings.add(fields, BorderLayout.CENTER);
 		settings.add(extras, BorderLayout.LINE_END);
 		
-		panel.add(enabled, BorderLayout.PAGE_START);
-		panel.add(settings, BorderLayout.CENTER);
+		periodicPanel.add(enabled, BorderLayout.PAGE_START);
+		periodicPanel.add(settings, BorderLayout.CENTER);
 		
 		ActionListener enabledTask = (e)->{
 			ldest.setEnabled(enabled.isSelected());
@@ -151,7 +184,10 @@ public class Statistics{
 		};
 		enabled.addActionListener(enabledTask);
 		enabledTask.actionPerformed(null);
-				
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(endPanel, BorderLayout.PAGE_START);
+		panel.add(periodicPanel, BorderLayout.PAGE_END);
 		if(Dialog.showSaveDialog(panel)){
 			Main.config.autoSaveStats = enabled.isSelected();
 			Main.config.statsDest = ldest.getText();
@@ -167,6 +203,26 @@ public class Statistics{
 			}else{
 				cancelScheduledTask();
 				Main.config.statsSaveInterval = interval;
+			}
+			Main.config.saveStatsOnExit = saveOnExit.isSelected();
+			Main.config.loadStatsOnLaunch = loadOnStart.isSelected();
+			Main.config.statsSaveFile = selectedFile.getText();
+		}
+	}
+	
+	/**
+	 * Saves the statistics so to the configured
+	 * save file if stats saving on exit is enabled.
+	 */
+	public static void saveStatsOnExit(){
+		if(Main.config.saveStatsOnExit){
+			try{
+				saveStats(new File(Main.config.statsSaveFile));
+			}catch(IOException e){
+				e.printStackTrace();
+				if(Dialog.showConfirmDialog("Failed to save statistics on exit.\nCause: " + e.getMessage() + "\nAttempt to save again?")){
+					saveStatsOnExit();
+				}
 			}
 		}
 	}
@@ -199,7 +255,7 @@ public class Statistics{
 	/**
 	 * Cancels the automatic statistics saving task
 	 */
-	private static void cancelScheduledTask(){
+	public static void cancelScheduledTask(){
 		if(statsFuture != null){
 			statsFuture.cancel(false);
 		}
@@ -236,10 +292,12 @@ public class Statistics{
 	protected static void saveStats(){
 		File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
 		if(file != null){
-			if(saveStats(file)){
+			try{
+				saveStats(file);
 				Dialog.showMessageDialog("Statistics succesfully saved");
-			}else{
-				Dialog.showErrorDialog("Failed to save the statistics!");
+			}catch(IOException e){
+				e.printStackTrace();
+				Dialog.showErrorDialog("Failed to save the statistics!\nCause: " + e.getMessage());
 			}
 		}
 	}
@@ -247,34 +305,28 @@ public class Statistics{
 	/**
 	 * Saves the statistics logged so far
 	 * @param dest The file to save to
-	 * @return True if saving was successful, 
-	 *         false otherwise
+	 * @throws IOException When an IOException occurs.
 	 */
-	private static boolean saveStats(File dest){
-		try{
-			dest.createNewFile();
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dest));
-			out.writeInt(TotPanel.hits);
-			out.writeDouble(Main.avg);
-			out.writeInt(Main.max);
-			out.writeLong(Main.n);
-			out.writeInt(Main.prev);
-			out.writeInt(Main.tmp.get());
-			for(Entry<Integer, Key> key : Main.keys.entrySet()){
-				out.writeInt(key.getKey());
-				out.writeObject(key.getValue());
-			}
-			out.flush();
-			out.close();
-			return true;
-		}catch(IOException e){
-			e.printStackTrace();
-			return false;
+	private static void saveStats(File dest) throws IOException{
+		dest.createNewFile();
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dest));
+		out.writeInt(TotPanel.hits);
+		out.writeDouble(Main.avg);
+		out.writeInt(Main.max);
+		out.writeLong(Main.n);
+		out.writeInt(Main.prev);
+		out.writeInt(Main.tmp.get());
+		for(Entry<Integer, Key> key : Main.keys.entrySet()){
+			out.writeInt(key.getKey());
+			out.writeObject(key.getValue());
 		}
+		out.flush();
+		out.close();
 	}
-
+	
 	/**
-	 * Loads the statistics from a file
+	 * Loads the statistics from a file, shows
+	 * a prompt to the user for the file.
 	 */
 	protected static void loadStats(){
 		File file = Dialog.showFileOpenDialog(KPS_STATS_EXT);
@@ -282,7 +334,20 @@ public class Statistics{
 			return;
 		}
 		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+			loadStats(file);
+			Dialog.showMessageDialog("Statistics succesfully loaded");
+		}catch(IOException e){
+			Dialog.showErrorDialog("Failed to load the statistics!\nCause: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Loads the statistics from a file
+	 * @param file The file to load from.
+	 * @throws IOException When an IOException occurs.
+	 */
+	protected static void loadStats(File file) throws IOException{
+		try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
 			TotPanel.hits = in.readInt();
 			Main.avg = in.readDouble();
 			Main.max = in.readInt();
@@ -302,9 +367,9 @@ public class Statistics{
 			in.close();
 			Main.frame.repaint();
 			Main.graphFrame.repaint();
-			Dialog.showMessageDialog("Statistics succesfully loaded");
-		}catch(IOException | ClassNotFoundException e){
-			Dialog.showErrorDialog("Failed to load the statistics!");
+		}catch(ClassNotFoundException e){
+			//Shouldn't happen
+			e.printStackTrace();
 		}
 	}
 	
@@ -369,7 +434,7 @@ public class Statistics{
 		 * unit is a divisor of the given number of millisecond 
 		 * and for which the a single unit of the time unit
 		 * that is one biggest is bigger than the given
-		 * number of milliseconds. If there is not bigger
+		 * number of milliseconds. If there is no bigger
 		 * unit then {@link #HOUR} is returned.
 		 * @param millis The number of milliseconds to
 		 *        find the best unit for

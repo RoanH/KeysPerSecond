@@ -7,9 +7,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
-import me.roan.util.Dialog;
+import dev.roanh.util.Dialog;
 
 /**
  * This class is used to configure
