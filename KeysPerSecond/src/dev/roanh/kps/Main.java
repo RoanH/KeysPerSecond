@@ -58,7 +58,6 @@ import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
-import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.panels.MaxPanel;
@@ -751,6 +750,9 @@ public class Main{
 		conf.dispose();
 	}
 	
+	/**
+	 * Shows a dialog to configure the graph.
+	 */
 	private static final void configureGraph(){
 		JPanel pconfig = new JPanel();
 		JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
@@ -779,6 +781,9 @@ public class Main{
 		}
 	}
 	
+	/**
+	 * Shows a dialog to configure the precision.
+	 */
 	private static final void configurePrecision(){
 		JPanel pconfig = new JPanel(new BorderLayout());
 		JLabel info1 = new JLabel("Specify how many digits should be displayed");
@@ -799,6 +804,9 @@ public class Main{
 		}
 	}
 	
+	/**
+	 * Shows a dialog to configure the update rate.
+	 */
 	private static final void configureUpdateRate(){
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
 		info.add(new JLabel("Here you can change the rate at which"));
