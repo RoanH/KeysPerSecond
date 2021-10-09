@@ -1156,13 +1156,14 @@ public class Main{
 	}
 
 	/**
-	 * Resets avg, max &amp; cur
+	 * Resets avg, max, tot &amp; cur
 	 */
 	protected static final void resetStats(){
-		System.out.println("Reset max & avg | max: " + max + " avg: " + avg);
+		System.out.println("Reset max & avg | max: " + max + " avg: " + avg + " tot: " + TotPanel.hits);
 		n = 0;
 		avg = 0;
 		max = 0;
+		TotPanel.hits = 0;
 		tmp.set(0);
 		graph.reset();
 		frame.repaint();
