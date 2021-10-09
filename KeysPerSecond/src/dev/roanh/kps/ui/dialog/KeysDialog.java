@@ -17,8 +17,8 @@ import javax.swing.table.DefaultTableModel;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.CommandKeys;
+import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
-import dev.roanh.kps.Main.KeyInformation;
 import dev.roanh.util.Dialog;
 
 /**

@@ -1,8 +1,8 @@
 package dev.roanh.kps.panels;
 
+import dev.roanh.kps.Key;
+import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.Main.Key;
-import dev.roanh.kps.Main.KeyInformation;
 
 /**
  * Panel to display the number

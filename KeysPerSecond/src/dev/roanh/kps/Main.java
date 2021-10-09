@@ -16,13 +16,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
@@ -61,10 +58,8 @@ import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
-import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.panels.GraphPanel;
-import dev.roanh.kps.panels.KeyPanel;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.panels.NowPanel;
 import dev.roanh.kps.panels.TotPanel;
@@ -100,6 +95,10 @@ import dev.roanh.util.Util;
  * @author Roan
  */
 public class Main{
+	/**
+	 * String holding the version of the program.
+	 */
+	public static final String VERSION = "v8.4";//XXX the version number  - don't forget build.gradle
 	/**
 	 * The number of seconds the average has
 	 * been calculated for
@@ -190,7 +189,7 @@ public class Main{
 	/**
 	 * Dummy key for getOrDefault operations
 	 */
-	private static final Key DUMMY_KEY;
+	protected static final Key DUMMY_KEY;
 	/**
 	 * Best text rendering hints.
 	 */
@@ -619,11 +618,11 @@ public class Main{
 		options.add(labels);
 		options.add(boxes);
 		JPanel buttons = new JPanel(new GridLayout(10, 1));
+		JButton save = new JButton("Save config");
 		JButton addkey = new JButton("Add key");
 		JButton load = new JButton("Load config");
 		JButton updaterate = new JButton("Update rate");
 		JButton cmdkeys = new JButton("Commands");
-		JButton save = new JButton("Save config");
 		JButton graph = new JButton("Graph");
 		graph.setEnabled(false);
 		cgra.addActionListener((e)->{
@@ -663,50 +662,10 @@ public class Main{
 			configureCommandKeys();
 		});
 		precision.addActionListener((e)->{
-			JPanel pconfig = new JPanel(new BorderLayout());
-			JLabel info1 = new JLabel("Specify how many digits should be displayed");
-			JLabel info2 = new JLabel("beyond the decimal point for the average.");
-			JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
-			plabels.add(info1);
-			plabels.add(info2);
-			JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
-			values.setSelectedIndex(config.precision);
-			JLabel vlabel = new JLabel("Precision: ");
-			JPanel pvalue = new JPanel(new BorderLayout());
-			pvalue.add(vlabel, BorderLayout.LINE_START);
-			pvalue.add(values, BorderLayout.CENTER);
-			pconfig.add(plabels, BorderLayout.CENTER);
-			pconfig.add(pvalue, BorderLayout.PAGE_END);
-			if(Dialog.showSaveDialog(pconfig)){
-				config.precision = values.getSelectedIndex();
-			}
+			configurePrecision();
 		});
 		graph.addActionListener((e)->{
-			JPanel pconfig = new JPanel();
-			JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
-			JCheckBox showavg = new JCheckBox();
-			showavg.setSelected(Main.config.graphAvg);
-			JLabel lbacklog;
-			if(config.updateRate != 1000){
-				lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
-			}else{
-				lbacklog = new JLabel("Backlog (seconds): ");
-			}
-			JLabel lshowavg = new JLabel("Show average: ");
-			JPanel glabels = new JPanel(new GridLayout(2, 1));
-			JPanel gcomponents = new JPanel(new GridLayout(2, 1));
-			glabels.add(lbacklog);
-			glabels.add(lshowavg);
-			gcomponents.add(backlog);
-			gcomponents.add(showavg);
-			glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
-			gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
-			pconfig.add(glabels);
-			pconfig.add(gcomponents);
-			if(Dialog.showSaveDialog(pconfig)){
-				Main.config.graphAvg = showavg.isSelected();
-				Main.config.backlog = (int)backlog.getValue();
-			}
+			configureGraph();
 		});
 		addkey.addActionListener((e)->{
 			KeysDialog.configureKeys();
@@ -741,43 +700,13 @@ public class Main{
 			cmod.setSelected(config.enableModifiers);
 		});
 		updaterate.addActionListener((e)->{
-			JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
-			info.add(new JLabel("Here you can change the rate at which"));
-			info.add(new JLabel("the graph, max, avg & cur are updated."));
-			JPanel pconfig = new JPanel(new BorderLayout());
-			JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
-			update.setSelectedItem(config.updateRate + "ms");
-			update.setRenderer(new DefaultListCellRenderer(){
-				/**
-				 * Serial ID
-				 */
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
-					Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-					if(((String)value).length() < 5 || ((String)value).equals("100ms")){
-						item.setForeground(Color.RED);
-					}
-					if(((String)value).length() < 4){
-						item.setForeground(Color.MAGENTA);
-					}
-					return item;
-				}
-			});
-			JLabel lupdate = new JLabel("Update rate: ");
-			pconfig.add(info, BorderLayout.PAGE_START);
-			pconfig.add(lupdate, BorderLayout.WEST);
-			pconfig.add(update, BorderLayout.CENTER);
-			if(Dialog.showSaveDialog(pconfig)){
-				config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
-			}
+			configureUpdateRate();
 		});
 		autoSave.addActionListener((e)->{
 			Statistics.configureAutoSave(false);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", "v8.4"));//XXX the version number  - don't forget build.gradle
+		info.add(Util.getVersionLabel("KeysPerSecond", VERSION));
 		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
 		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
 		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
@@ -823,6 +752,97 @@ public class Main{
 		}
 		conf.setVisible(false);
 		conf.dispose();
+	}
+	
+	/**
+	 * Shows a dialog to configure the graph.
+	 */
+	private static final void configureGraph(){
+		JPanel pconfig = new JPanel();
+		JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
+		JCheckBox showavg = new JCheckBox();
+		showavg.setSelected(Main.config.graphAvg);
+		JLabel lbacklog;
+		if(config.updateRate != 1000){
+			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
+		}else{
+			lbacklog = new JLabel("Backlog (seconds): ");
+		}
+		JLabel lshowavg = new JLabel("Show average: ");
+		JPanel glabels = new JPanel(new GridLayout(2, 1));
+		JPanel gcomponents = new JPanel(new GridLayout(2, 1));
+		glabels.add(lbacklog);
+		glabels.add(lshowavg);
+		gcomponents.add(backlog);
+		gcomponents.add(showavg);
+		glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
+		gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
+		pconfig.add(glabels);
+		pconfig.add(gcomponents);
+		if(Dialog.showSaveDialog(pconfig)){
+			Main.config.graphAvg = showavg.isSelected();
+			Main.config.backlog = (int)backlog.getValue();
+		}
+	}
+	
+	/**
+	 * Shows a dialog to configure the precision.
+	 */
+	private static final void configurePrecision(){
+		JPanel pconfig = new JPanel(new BorderLayout());
+		JLabel info1 = new JLabel("Specify how many digits should be displayed");
+		JLabel info2 = new JLabel("beyond the decimal point for the average.");
+		JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
+		plabels.add(info1);
+		plabels.add(info2);
+		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
+		values.setSelectedIndex(config.precision);
+		JLabel vlabel = new JLabel("Precision: ");
+		JPanel pvalue = new JPanel(new BorderLayout());
+		pvalue.add(vlabel, BorderLayout.LINE_START);
+		pvalue.add(values, BorderLayout.CENTER);
+		pconfig.add(plabels, BorderLayout.CENTER);
+		pconfig.add(pvalue, BorderLayout.PAGE_END);
+		if(Dialog.showSaveDialog(pconfig)){
+			config.precision = values.getSelectedIndex();
+		}
+	}
+	
+	/**
+	 * Shows a dialog to configure the update rate.
+	 */
+	private static final void configureUpdateRate(){
+		JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
+		info.add(new JLabel("Here you can change the rate at which"));
+		info.add(new JLabel("the graph, max, avg & cur are updated."));
+		JPanel pconfig = new JPanel(new BorderLayout());
+		JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
+		update.setSelectedItem(config.updateRate + "ms");
+		update.setRenderer(new DefaultListCellRenderer(){
+			/**
+			 * Serial ID
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
+				Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if(((String)value).length() < 5 || ((String)value).equals("100ms")){
+					item.setForeground(Color.RED);
+				}
+				if(((String)value).length() < 4){
+					item.setForeground(Color.MAGENTA);
+				}
+				return item;
+			}
+		});
+		JLabel lupdate = new JLabel("Update rate: ");
+		pconfig.add(info, BorderLayout.PAGE_START);
+		pconfig.add(lupdate, BorderLayout.WEST);
+		pconfig.add(update, BorderLayout.CENTER);
+		if(Dialog.showSaveDialog(pconfig)){
+			config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
+		}
 	}
 
 	/**
@@ -1162,432 +1182,6 @@ public class Main{
 		frame.repaint();
 	}
 	
-	//=================================================================================================
-	//================== NESTED CLASSES ===============================================================
-	//=================================================================================================
-
-	/**
-	 * This class is used to keep track
-	 * of how many times a specific key
-	 * is pressed
-	 * @author Roan
-	 */
-	public static class Key implements Serializable{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = 1263090697516120354L;
-		/**
-		 * Whether or not this key is currently pressed
-		 */
-		public transient boolean down = false;
-		/**
-		 * The total number of times this key has been pressed
-		 */
-		public int count = 0;
-		/**
-		 * The key in string form<br>
-		 * For example: X
-		 */
-		public String name;
-		/**
-		 * The graphical display for this key
-		 */
-		private transient KeyPanel panel = null;
-		/**
-		 * Whether or not alt has to be down
-		 */
-		protected boolean alt;
-		/**
-		 * Whether or not ctrl has to be down
-		 */
-		protected boolean ctrl;
-		/**
-		 * Whether or not shift has to be down
-		 */
-		protected boolean shift;
-
-		/**
-		 * Constructs a new Key object
-		 * for the key with the given
-		 * name
-		 * @param name The name of the key
-		 * @see #name
-		 */
-		private Key(String name){
-			this.name = name;
-		}
-
-		/**
-		 * Creates a new KeyPanel with this
-		 * objects as its data source
-		 * @param i The information object for this key
-		 * @return A new KeyPanel
-		 */
-		private KeyPanel getPanel(KeyInformation i){
-			return panel != null ? panel : (panel = new KeyPanel(this, i));
-		}
-
-		/**
-		 * Called when a key is pressed
-		 */
-		protected void keyPressed(){
-			if(!down){
-				count++;
-				down = true;
-				tmp.incrementAndGet();
-				if(panel != null){
-					panel.repaint();
-				}
-			}
-		}
-
-		/**
-		 * Called when a key is released
-		 */
-		protected void keyReleased(){
-			if(down){
-				down = false;
-				if(panel != null){
-					panel.repaint();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Simple class that holds all
-	 * the essential information 
-	 * about a key.
-	 * @author Roan
-	 */
-	public static final class KeyInformation implements Serializable, Positionable{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = -8669938978334898443L;
-		/**
-		 * The name of this key
-		 * @see Key#name
-		 */
-		public String name;
-		/**
-		 * The virtual key code of this key<br>
-		 * This code represents the key
-		 */
-		public int keycode;
-		/**
-		 * Whether or not this key is displayed
-		 */
-		public boolean visible = true;
-		/**
-		 * Auto-increment for #x
-		 */
-		public static transient volatile int autoIndex = -2;
-		/**
-		 * The x position of this panel in the layout
-		 */
-		protected int x = autoIndex += 2;
-		/**
-		 * The y postion of this panel in the layout
-		 */
-		protected int y = 0;
-		/**
-		 * The width of this panel in the layout
-		 */
-		protected int width = 2;
-		/**
-		 * The height of this panel in the layout
-		 */
-		protected int height = 3;
-		/**
-		 * The text rendering mode for this panel
-		 */
-		protected RenderingMode mode = RenderingMode.VERTICAL;
-
-		/**
-		 * Constructs a new KeyInformation
-		 * object with the given information
-		 * @param name The name of the key
-		 * @param code The virtual key code of the key
-		 * @param alt Whether or not alt is down
-		 * @param ctrl Whether or not ctrl is down
-		 * @param shift Whether or not shift is down
-		 * @param mouse Whether or not this is a mouse button
-		 * @see #name
-		 * @see #keycode 
-		 */
-		public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
-			this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
-			this.name = mouse ? name : getKeyName(name, keycode);
-		}
-
-		/**
-		 * Constructs the key name from the key
-		 * and modifiers
-		 * @param name The name of the key
-		 * @param code The virtual key code of the key
-		 * @return The full name of this given key
-		 */
-		private static final String getKeyName(String name, int code){
-			return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
-		}
-
-		/**
-		 * Constructs a new KeyInformation
-		 * object with the given information
-		 * @param name The name of the key
-		 * @param code The virtual key code of the key
-		 * @param visible Whether or not the key is visible
-		 * @see #name
-		 * @see #keycode
-		 */
-		protected KeyInformation(String name, int code, boolean visible){
-			this.name = name;
-			this.keycode = code;
-			this.visible = visible;
-		}
-		
-		/**
-		 * Changes the display name of this
-		 * key to the given string. If {@link Key}
-		 * panels are active with the same key code
-		 * as this {@link KeyInformation} object
-		 * then their display name is also updated.
-		 * @param name The new display name
-		 */
-		public void setName(String name){
-			this.name = name;
-			keys.getOrDefault(keycode, DUMMY_KEY).name = name;
-		}
-
-		/**
-		 * Gets a string containing all
-		 * the modifiers for this key
-		 * @return The modifier string
-		 */
-		public String getModifierString(){
-			return (CommandKeys.hasCtrl(keycode) ? "Ctrl + " : "") + (CommandKeys.hasAlt(keycode) ? "Alt + " : "") + (CommandKeys.hasShift(keycode) ? "Shift + " : "");
-		}
-
-		@Override
-		public String toString(){
-			return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",name=\"" + name + "\"]";
-		}
-
-		@Override
-		public int hashCode(){
-			return keycode;
-		}
-
-		@Override
-		public boolean equals(Object other){
-			return other instanceof KeyInformation && keycode == ((KeyInformation)other).keycode;
-		}
-
-		/**
-		 * Legacy object initialisation
-		 * @see ObjectInputStream#defaultReadObject()
-		 * @param stream The object input stream
-		 * @throws IOException When an IOException occurs
-		 * @throws ClassNotFoundException When this class cannot be found
-		 */
-		private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
-			stream.defaultReadObject();
-			x = -1;
-			y = 0;
-			width = 2;
-			height = 3;
-			mode = RenderingMode.VERTICAL;
-			keycode = CommandKeys.getExtendedKeyCode(keycode, false, false, false);
-		}
-
-		/**
-		 * Gets the key name for a key code
-		 * @param keyCode The key code
-		 * @return The key name
-		 */
-		public static String getKeyText(int keyCode){
-			switch(keyCode){
-			case NativeKeyEvent.VC_ESCAPE:
-				return "Esc";
-			// Begin Function Keys
-			case NativeKeyEvent.VC_F1:
-				return "F1";
-			case NativeKeyEvent.VC_F2:
-				return "F2";
-			case NativeKeyEvent.VC_F3:
-				return "F3";
-			case NativeKeyEvent.VC_F4:
-				return "F4";
-			case NativeKeyEvent.VC_F5:
-				return "F5";
-			case NativeKeyEvent.VC_F6:
-				return "F6";
-			case NativeKeyEvent.VC_F7:
-				return "F7";
-			case NativeKeyEvent.VC_F8:
-				return "F8";
-			case NativeKeyEvent.VC_F9:
-				return "F9";
-			case NativeKeyEvent.VC_F10:
-				return "F10";
-			case NativeKeyEvent.VC_F11:
-				return "F11";
-			case NativeKeyEvent.VC_F12:
-				return "F12";
-			case NativeKeyEvent.VC_F13:
-				return "F13";
-			case NativeKeyEvent.VC_F14:
-				return "F14";
-			case NativeKeyEvent.VC_F15:
-				return "F15";
-			case NativeKeyEvent.VC_F16:
-				return "F16";
-			case NativeKeyEvent.VC_F17:
-				return "F17";
-			case NativeKeyEvent.VC_F18:
-				return "F18";
-			case NativeKeyEvent.VC_F19:
-				return "F19";
-			case NativeKeyEvent.VC_F20:
-				return "F20";
-			case NativeKeyEvent.VC_F21:
-				return "F21";
-			case NativeKeyEvent.VC_F22:
-				return "F22";
-			case NativeKeyEvent.VC_F23:
-				return "F23";
-			case NativeKeyEvent.VC_F24:
-				return "F24";
-			// Begin Alphanumeric Zone
-			case NativeKeyEvent.VC_BACKQUOTE:
-				return "'";
-			case NativeKeyEvent.VC_MINUS:
-				return "-";
-			case NativeKeyEvent.VC_EQUALS:
-				return "=";
-			case NativeKeyEvent.VC_BACKSPACE:
-				return "\u2190";
-			case NativeKeyEvent.VC_TAB:
-				return "Tab";
-			case NativeKeyEvent.VC_CAPS_LOCK:
-				return "Cap";
-			case NativeKeyEvent.VC_OPEN_BRACKET:
-				return "(";
-			case NativeKeyEvent.VC_CLOSE_BRACKET:
-				return ")";
-			case NativeKeyEvent.VC_BACK_SLASH:
-				return "\\";
-			case NativeKeyEvent.VC_SEMICOLON:
-				return ";";
-			case NativeKeyEvent.VC_QUOTE:
-				return "\"";
-			case NativeKeyEvent.VC_ENTER:
-				return "\u21B5";
-			case NativeKeyEvent.VC_COMMA:
-				return ",";
-			case NativeKeyEvent.VC_PERIOD:
-				return ".";
-			case NativeKeyEvent.VC_SLASH:
-				return "/";
-			case NativeKeyEvent.VC_SPACE:
-				return " ";
-			// Begin Edit Key Zone
-			case NativeKeyEvent.VC_INSERT:
-				return "Ins";
-			case NativeKeyEvent.VC_DELETE:
-				return "Del";
-			case NativeKeyEvent.VC_HOME:
-				return "\u2302";
-			case NativeKeyEvent.VC_END:
-				return "End";
-			case NativeKeyEvent.VC_PAGE_UP:
-				return "\u2191";
-			case NativeKeyEvent.VC_PAGE_DOWN:
-				return "\u2193";
-			// Begin Cursor Key Zone
-			case NativeKeyEvent.VC_UP:
-				return "\u25B4";
-			case NativeKeyEvent.VC_LEFT:
-				return "\u25C2";
-			case NativeKeyEvent.VC_CLEAR:
-				return "Clr";
-			case NativeKeyEvent.VC_RIGHT:
-				return "\u25B8";
-			case NativeKeyEvent.VC_DOWN:
-				return "\u25BE";
-			// Begin Modifier and Control Keys
-			case NativeKeyEvent.VC_SHIFT:
-			case CommandKeys.VC_RSHIFT:
-				return "\u21D1";
-			case NativeKeyEvent.VC_CONTROL:
-				return "Ctl";
-			case NativeKeyEvent.VC_ALT:
-				return "Alt";
-			case NativeKeyEvent.VC_META:
-				return "\u2318";
-			default:
-				return NativeKeyEvent.getKeyText(keyCode);
-			}
-		}
-
-		@Override
-		public void setX(int x){
-			this.x = x;
-		}
-
-		@Override
-		public void setY(int y){
-			this.y = y;
-		}
-
-		@Override
-		public void setWidth(int w){
-			width = w;
-		}
-
-		@Override
-		public void setHeight(int h){
-			height = h;
-		}
-
-		@Override
-		public String getName(){
-			return name;
-		}
-
-		@Override
-		public int getX(){
-			return x;
-		}
-
-		@Override
-		public int getY(){
-			return y;
-		}
-
-		@Override
-		public int getWidth(){
-			return width;
-		}
-
-		@Override
-		public int getHeight(){
-			return height;
-		}
-
-		@Override
-		public RenderingMode getRenderingMode(){
-			return mode;
-		}
-
-		@Override
-		public void setRenderingMode(RenderingMode mode){
-			this.mode = mode;
-		}
-	}
-	
 	static{
 		Image img;
 		try{
@@ -1634,15 +1228,11 @@ public class Main{
 			}
 		};
 		DUMMY_KEY = new Key(null){
-			/**
-			 * Serial ID
-			 */
-			private static final long serialVersionUID = 5918421427659740215L;
 
 			@Override
 			public void keyPressed(){
 			}
-			
+
 			@Override
 			public void keyReleased(){
 			}

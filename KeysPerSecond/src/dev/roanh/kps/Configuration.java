@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.CommandKeys.CMD;
-import dev.roanh.kps.Main.KeyInformation;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
@@ -35,15 +34,15 @@ public class Configuration{
 	/**
 	 * Extension filter for all KeysPerSecond configuration files.
 	 */
-	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
+	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps", "kpsconf", "kpsconf2", "kpsconf3");
 	/**
 	 * Extension filter for the current KeysPerSecond configuration file format.
 	 */
-	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf3");
+	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps");
 	/**
 	 * Extension filter for legacy KeysPerSecond configuration file formats.
 	 */
-	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2");
+	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
 
 	//general
 	/**
@@ -356,24 +355,8 @@ public class Configuration{
 	protected final void reloadConfig(){
 		Configuration toLoad = new Configuration(data);
 		if(data != null){
-			if(data.getAbsolutePath().endsWith(".kpsconf")){
-				if(toLoad.loadLegacyFormat(data)){
-					Main.config = toLoad;
-				}else{
-					Dialog.showErrorDialog("Failed to reload the config!");
-				}
-			}else{
-				boolean v2 = data.getAbsolutePath().endsWith(".kpsconf2");
-				toLoad.loadNewFormat(data, v2);
-				if(v2){
-					toLoad.graph_x = 0;
-					toLoad.graph_y = -1;
-					toLoad.graph_w = -1;
-					toLoad.graph_h = 3;
-					toLoad.graphMode = GraphMode.INLINE;
-				}
-				Main.config = toLoad;
-			}
+			toLoad.load(data);
+			Main.config = toLoad;
 		}
 	}
 	
@@ -385,66 +368,41 @@ public class Configuration{
 		File saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
 			return false;
+		}else if(saveloc.getName().endsWith("kpsconf") || saveloc.getName().endsWith("kpsconf2")){
+			Dialog.showMessageDialog(
+				"You are trying to load a legacy configuration file.\n"
+				+ "This is no longer possible with this version of the program.\n"
+				+ "You should convert your configuration file first using version 8.4."
+			);
+			return false;
 		}
 		Configuration toLoad = new Configuration(saveloc);
-		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
-			if(toLoad.loadLegacyFormat(saveloc)){
-				Dialog.showMessageDialog("Configuration succesfully loaded");
-				Main.config = toLoad;
-			}else{
-				Dialog.showErrorDialog("Failed to load the config!");
-				return false;
-			}
+		if(toLoad.load(saveloc)){
+			Dialog.showMessageDialog("Configuration succesfully loaded but some default values were used");
 		}else{
-			boolean v2 = saveloc.getAbsolutePath().endsWith(".kpsconf2");
-			boolean defaults = toLoad.loadNewFormat(saveloc, v2);
-			if(v2){
-				toLoad.graph_x = 0;
-				toLoad.graph_y = -1;
-				toLoad.graph_w = -1;
-				toLoad.graph_h = 3;
-				toLoad.graphMode = GraphMode.INLINE;
-				defaults = true;
-			}
-			if(defaults){
-				Dialog.showMessageDialog("Configuration succesfully loaded but some default values were used");
-			}else{
-				Dialog.showMessageDialog("Configuration succesfully loaded");
-			}
-			Main.config = toLoad;
+			Dialog.showMessageDialog("Configuration succesfully loaded");
 		}
+		Main.config = toLoad;
+		return true;
+	}
+
+	/**
+	 * Loads a configuration file silently without
+	 * reporting non critical exceptions to the user
+	 * @param saveloc The save location
+	 * @return Whether or not the configuration was loaded successfully
+	 */
+	protected final boolean loadConfig(File saveloc){
+		load(saveloc);
 		return true;
 	}
 
 	/**
 	 * Loads a configuration file
 	 * @param saveloc The save location
-	 * @return Whether or not the configuration was loaded successfully
-	 */
-	protected final boolean loadConfig(File saveloc){
-		if(saveloc.getAbsolutePath().endsWith(".kpsconf")){
-			return loadLegacyFormat(saveloc);
-		}else{
-			boolean v2 = saveloc.getAbsolutePath().endsWith(".kpsconf2");
-			loadNewFormat(saveloc, v2);
-			if(v2){
-				graph_x = 0;
-				graph_y = -1;
-				graph_w = -1;
-				graph_h = 3;
-				graphMode = GraphMode.INLINE;
-			}
-			return true;
-		}
-	}
-
-	/**
-	 * Loads a new format configuration file
-	 * @param saveloc The save location
-	 * @param v2 Whether or not the configuration is using format v2
 	 * @return Whether or not some defaults were used
 	 */
-	private final boolean loadNewFormat(File saveloc, boolean v2){
+	private final boolean load(File saveloc){
 		boolean modified = false;
 		try{
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc), StandardCharsets.UTF_8));
@@ -458,7 +416,7 @@ public class Configuration{
 				if(args[0].startsWith("keys")){
 					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
 						try{
-							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode, v2));
+							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode));
 						}catch(Exception e){
 							modified = true;
 						}
@@ -938,11 +896,10 @@ public class Configuration{
 	 * to it's actual data
 	 * @param arg The text data
 	 * @param mode The default rendering mode to use
-	 * @param v2 Whether or not the configuration is using format v2
 	 * @return The key data
 	 */
-	private final KeyInformation parseKey(String arg, RenderingMode mode, boolean v2){
-		String[] args = arg.substring(1, arg.length() - 1).split(",", v2 ? 7 : 11);
+	private final KeyInformation parseKey(String arg, RenderingMode mode){
+		String[] args = arg.substring(1, arg.length() - 1).split(",", 8);
 		String name = null;
 		int code = -1;
 		int x = -1;
@@ -950,9 +907,6 @@ public class Configuration{
 		int width = 2;
 		int height = 3;
 		boolean visible = false;
-		boolean ctrl = false;
-		boolean alt = false;
-		boolean shift = false;
 		for(String str : args){
 			String[] comp = str.split("=", 2);
 			comp[1] = comp[1].trim();
@@ -965,15 +919,6 @@ public class Configuration{
 				break;
 			case "name":
 				name = comp[1].substring(1, comp[1].length() - 1);
-				break;
-			case "ctrl":
-				ctrl = Boolean.parseBoolean(comp[1]);
-				break;
-			case "alt":
-				alt = Boolean.parseBoolean(comp[1]);
-				break;
-			case "shift":
-				shift = Boolean.parseBoolean(comp[1]);
 				break;
 			case "x":
 				x = Integer.parseInt(comp[1]);
@@ -991,9 +936,6 @@ public class Configuration{
 				mode = RenderingMode.valueOf(comp[1]);
 				break;
 			}
-		}
-		if(!CommandKeys.isNewFormat(code)){
-			code = CommandKeys.getExtendedKeyCode(code % 1000, shift, ctrl, alt);
 		}
 		KeyInformation kinfo = new KeyInformation(name, code, visible);
 		kinfo.x = x;
@@ -1055,66 +997,6 @@ public class Configuration{
 	}
 
 	/**
-	 * Loads a legacy configuration file
-	 * @param saveloc The save location
-	 * @return Whether or not the configuration was loaded successfully
-	 */
-	@Deprecated
-	private final boolean loadLegacyFormat(File saveloc){
-		Dialog.showMessageDialog("Support for the old kpsconf file format (v4.5 and earlier) has been removed.\nPlease convert it to the new configuration file format using a version between v5.0 and v8.4.");
-		return false;
-//		try{
-//			ObjectInputStream objin = new ObjectInputStream(new FileInputStream(saveloc));
-//			keyinfo = (List<KeyInformation>)objin.readObject();
-//			showMax = objin.readBoolean();
-//			showCur = objin.readBoolean();
-//			showAvg = objin.readBoolean();
-//			showGraph = objin.readBoolean();
-//			graphAvg = objin.readBoolean();
-//			backlog = objin.readInt();
-//			updateRate = objin.readInt();
-//			double version = 3.0D;
-//			if(objin.available() > 0){
-//				customColors = objin.readBoolean();
-//				background = (Color)objin.readObject();
-//				foreground = (Color)objin.readObject();
-//				if(objin.available() > 0){
-//					trackAllKeys = objin.readBoolean();
-//					trackAllButtons = trackAllKeys;
-//					showKeys = objin.readBoolean();
-//					if(objin.available() > 0){
-//						version = objin.readDouble();
-//					}
-//				}
-//			}
-//			if(version >= 3.9){
-//				precision = objin.readInt();
-//			}
-//			if(version >= 3.10){
-//				opacitybg = objin.readFloat();
-//				opacityfg = objin.readFloat();
-//			}
-//			if(version >= 4.0D){
-//				objin.readDouble();
-//			}
-//			if(version >= 4.2D){
-//				overlay = objin.readBoolean();
-//			}
-//			objin.close();
-//			for(KeyInformation info : keyinfo){
-//				if(version < 3.7D){
-//					info.visible = true;
-//				}
-//				KeyInformation.autoIndex = keyinfo.size() * 2 + 2;
-//			}
-//			return true;
-//		}catch(Exception e1){
-//			e1.printStackTrace();
-//			return false;
-//		}
-	}
-
-	/**
 	 * Saves this configuration file
 	 * @param pos Whether or not the ask
 	 *        to save the on screen position
@@ -1127,6 +1009,8 @@ public class Configuration{
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
+				out.println("version: " + Main.VERSION);
+				out.println();
 				out.println("# General");
 				out.println("showMax: " + showMax);
 				out.println("showAvg: " + showAvg);

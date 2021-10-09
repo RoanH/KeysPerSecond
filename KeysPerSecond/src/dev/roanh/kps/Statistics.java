@@ -36,7 +36,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import dev.roanh.kps.Main.Key;
 import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;

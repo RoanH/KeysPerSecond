@@ -15,9 +15,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import dev.roanh.kps.GraphMode;
+import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.Main.KeyInformation;
 import dev.roanh.kps.layout.LayoutValidator;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
