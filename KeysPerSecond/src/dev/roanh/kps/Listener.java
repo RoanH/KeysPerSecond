@@ -85,7 +85,7 @@ public class Listener implements MouseMotionListener, MouseListener{
 
 			@Override
 			public boolean dispatchKeyEvent(KeyEvent e){
-				if(!Menu.menu.isVisible()){
+				if(!Menu.menu.isVisible() && e.getComponent() instanceof JFrame){
 					if(e.getID() == KeyEvent.KEY_PRESSED){
 						int d = e.isShiftDown() ? 3 : e.isControlDown() ? 2 : 1;
 						switch(e.getKeyCode()){
