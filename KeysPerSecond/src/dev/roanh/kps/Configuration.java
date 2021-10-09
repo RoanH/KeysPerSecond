@@ -899,7 +899,7 @@ public class Configuration{
 	 * @return The key data
 	 */
 	private final KeyInformation parseKey(String arg, RenderingMode mode){
-		String[] args = arg.substring(1, arg.length() - 1).split(",", 7);
+		String[] args = arg.substring(1, arg.length() - 1).split(",", 8);
 		String name = null;
 		int code = -1;
 		int x = -1;
