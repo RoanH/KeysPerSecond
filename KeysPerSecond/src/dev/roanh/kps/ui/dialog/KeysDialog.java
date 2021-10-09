@@ -34,6 +34,7 @@ public class KeysDialog{
 		List<KeyInformation> copy = new ArrayList<KeyInformation>(Main.config.keyinfo);
 		boolean[] visibleState = new boolean[copy.size()];
 		String[] nameState = new String[copy.size()];
+		int autoIndex = KeyInformation.autoIndex;
 		for(int i = 0; i < copy.size(); i++){
 			visibleState[i] = copy.get(i).visible;
 			nameState[i] = copy.get(i).name;
@@ -62,6 +63,7 @@ public class KeysDialog{
 				copy.get(i).visible = visibleState[i];
 				copy.get(i).setName(nameState[i]);
 			}
+			KeyInformation.autoIndex = autoIndex;
 			Main.config.keyinfo = copy;
 		}
 	}
