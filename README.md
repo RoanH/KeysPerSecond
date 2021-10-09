@@ -1,4 +1,4 @@
-# Keys Per Second ![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg) ![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)
+# Keys Per Second [![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg)](https://github.com/RoanH/KeysPerSecond/releases) ![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)
 
 KeysPerSecond is a program that counts how many times certain keys are pressed. And shows what the average, maximum and current number of keys pressed per second is. The program can also show a nice graph of the key presses over time.    
 Almost all aspects of the program are also fully customizable.   
@@ -53,8 +53,8 @@ It's kinda empty here right now :c, so please suggest things c:
 ## Downloads
 _Requires Java 8 or higher_    
 _Tested operating systems: Mac 10.11.6, Ubuntu Linux 16.04 LTS, Windows 7 & 8 & 10_    
-- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.3/KeysPerSecond-v8.3.exe)    
-- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.3/KeysPerSecond-v8.3.jar)
+- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.4/KeysPerSecond-v8.4.exe)    
+- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.4/KeysPerSecond-v8.4.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    

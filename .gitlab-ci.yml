@@ -10,9 +10,15 @@ before_script:
   - chmod -R 755 ./*
 
 stages:
+  - check
   - compile
   - status
   - javadoc
+
+endings:
+  allow_failure: true
+  script: curl ${SERVER}ci/lf.sh | bash
+  stage: check
 
 pending:
   allow_failure: true
@@ -43,7 +49,6 @@ javadoc:
     - ./gradlew -PnexusPublic=${NEXUS_PUBLIC} javadoc
     - mv ./build/docs/javadoc/* ../javadoc
   stage: javadoc
-  environment: javadoc
   artifacts:
     name: "$PROJECTNAME"
     expire_in: 1 week
@@ -57,7 +62,6 @@ compile:
     - mv ./build/libs/* ../
     - mv ./build/launch4j/*.exe ../
   stage: compile
-  environment: builds
   artifacts:
     name: "${PROJECTNAME}"
     expire_in: 1 week
