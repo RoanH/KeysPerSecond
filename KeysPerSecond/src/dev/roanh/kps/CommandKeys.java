@@ -242,7 +242,7 @@ public class CommandKeys{
 	 */
 	protected static CMD askForNewKey(){
 		JPanel form = new JPanel(new GridLayout(3, 1));
-		JLabel txt = new JLabel("Press a key and click 'OK'");
+		JLabel txt = new JLabel("Press a key and click 'Save'");
 		JPanel a = new JPanel(new BorderLayout());
 		JPanel c = new JPanel(new BorderLayout());
 		JCheckBox ctrl = new JCheckBox();
