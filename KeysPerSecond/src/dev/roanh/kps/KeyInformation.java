@@ -30,7 +30,7 @@ public final class KeyInformation implements Positionable{
 	/**
 	 * Auto-increment for #x
 	 */
-	public static transient volatile int autoIndex = -2;
+	public static volatile int autoIndex = -2;
 	/**
 	 * The x position of this panel in the layout
 	 */
