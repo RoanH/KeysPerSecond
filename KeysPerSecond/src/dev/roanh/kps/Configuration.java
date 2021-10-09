@@ -34,15 +34,15 @@ public class Configuration{
 	/**
 	 * Extension filter for all KeysPerSecond configuration files.
 	 */
-	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
+	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps", "kpsconf", "kpsconf2", "kpsconf3");
 	/**
 	 * Extension filter for the current KeysPerSecond configuration file format.
 	 */
-	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kpsconf3");
+	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps");
 	/**
 	 * Extension filter for legacy KeysPerSecond configuration file formats.
 	 */
-	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2");
+	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
 
 	//general
 	/**
@@ -365,8 +365,15 @@ public class Configuration{
 	 * @return Whether or not the config was loaded successfully
 	 */
 	protected static final boolean loadConfiguration(){
-		File saveloc = Dialog.showFileOpenDialog(KPS_NEW_EXT);
+		File saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
+			return false;
+		}else if(saveloc.getName().endsWith("kpsconf") || saveloc.getName().endsWith("kpsconf2")){
+			Dialog.showMessageDialog(
+				"You are trying to load a legacy configuration file.\n"
+				+ "This is no longer possible with this version of the program.\n"
+				+ "You should convert your configuration file first using version 8.4."
+			);
 			return false;
 		}
 		Configuration toLoad = new Configuration(saveloc);
@@ -380,7 +387,8 @@ public class Configuration{
 	}
 
 	/**
-	 * Loads a configuration file
+	 * Loads a configuration file silently without
+	 * reporting non critical exceptions to the user
 	 * @param saveloc The save location
 	 * @return Whether or not the configuration was loaded successfully
 	 */
@@ -891,7 +899,7 @@ public class Configuration{
 	 * @return The key data
 	 */
 	private final KeyInformation parseKey(String arg, RenderingMode mode){
-		String[] args = arg.substring(1, arg.length() - 1).split(",", 11);
+		String[] args = arg.substring(1, arg.length() - 1).split(",", 7);
 		String name = null;
 		int code = -1;
 		int x = -1;
@@ -1001,6 +1009,8 @@ public class Configuration{
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
+				out.println("version: " + Main.VERSION);
+				out.println();
 				out.println("# General");
 				out.println("showMax: " + showMax);
 				out.println("showAvg: " + showAvg);
