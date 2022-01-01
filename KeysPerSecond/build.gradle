@@ -2,8 +2,8 @@ plugins{
 	id 'java'
 	id 'application'
 	id 'eclipse'
-	id 'com.github.johnrengelman.shadow' version '5.1.0'
-	id 'edu.sc.seis.launch4j' version '2.4.6'
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
+	id 'edu.sc.seis.launch4j' version '2.5.1'
 }
 
 sourceSets{
@@ -30,6 +30,7 @@ repositories{
 	//Local cache
 	if(project.hasProperty("nexusPublic")){
 		maven{
+			allowInsecureProtocol = true
 			url "$nexusPublic"
 		}
 	}
@@ -49,6 +50,7 @@ application{
 }
 
 launch4j{
+	jarTask = project.tasks.shadowJar
 	mainClassName = application.mainClassName
 	icon = "${projectDir}/kps.ico"
 	jreMinVersion = project.sourceCompatibility
