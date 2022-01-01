@@ -35,14 +35,11 @@ repositories{
 		}
 	}
 	mavenCentral();
-	maven{
-		url "https://oss.sonatype.org/content/repositories/snapshots"
-	}
 }
 
 dependencies{
 	implementation 'dev.roanh.util:util:2.0'
-	implementation 'com.github.kwhat:jnativehook:2.2-20210915.222335-44'
+	implementation 'com.github.kwhat:jnativehook:2.2.1'
 }
 
 application{
