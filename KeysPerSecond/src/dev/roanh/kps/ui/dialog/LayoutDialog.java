@@ -6,10 +6,13 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -365,6 +368,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		x.setEditor(new SpecialNumberModelEditor(x));
 		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(x);
 
@@ -375,6 +379,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		y.setEditor(new SpecialNumberModelEditor(y));
 		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(y);
 
@@ -385,6 +390,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		w.setEditor(new SpecialNumberModelEditor(w));
 		graphLayout.add(w);
 
 		graphLayout.add(new JLabel("Graph height: "));
@@ -394,6 +400,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		h.setEditor(new SpecialNumberModelEditor(h));
 		graphLayout.add(h);
 
 		graphMode.addActionListener((e)->{
@@ -436,6 +443,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		x.setEditor(new SpecialNumberModelEditor(x));
 		fields.add(x);
 
 		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), validator.getYField(), (val)->{
@@ -444,6 +452,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		y.setEditor(new SpecialNumberModelEditor(y));
 		fields.add(y);
 
 		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), validator.getWidthField(), (val)->{
@@ -452,6 +461,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		w.setEditor(new SpecialNumberModelEditor(w));
 		fields.add(w);
 
 		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), validator.getHeightField(), (val)->{
@@ -460,6 +470,7 @@ public class LayoutDialog{
 				Main.reconfigure();
 			}
 		}));
+		h.setEditor(new SpecialNumberModelEditor(h));
 		fields.add(h);
 
 		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
@@ -471,5 +482,28 @@ public class LayoutDialog{
 			}
 		});
 		modes.add(mode);
+	}
+	
+	/**
+	 * Simple editor that allows edits in the default editor field.
+	 * @author Roan
+	 */
+	private static final class SpecialNumberModelEditor extends DefaultEditor{
+		/**
+		 * Serial ID.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructs a new special number model editor for the given spinner.
+		 * @param spinner The spinner to create an editor for.
+		 */
+		public SpecialNumberModelEditor(JSpinner spinner){
+			super(spinner);
+			
+			JFormattedTextField disp = getTextField();
+			disp.setEditable(true);
+			disp.setHorizontalAlignment(JTextField.RIGHT);
+		}
 	}
 }
