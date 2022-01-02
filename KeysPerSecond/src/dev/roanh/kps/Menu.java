@@ -1,9 +1,7 @@
 package dev.roanh.kps;
 
 import java.awt.AlphaComposite;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,7 +11,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -26,7 +23,6 @@ import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -36,7 +32,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -53,6 +48,7 @@ import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
+import dev.roanh.util.Util;
 
 /**
  * This class handles everything related to
@@ -588,6 +584,9 @@ public class Menu{
 		menu.add(exit);
 	}
 	
+	/**
+	 * Shows an about dialog with useful information.
+	 */
 	private static void showAbout(){
 		JPanel content = new JPanel(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
@@ -636,18 +635,24 @@ public class Menu{
 		content.add(line, gc);
 		
 		//version
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		line.add(new JLabel("<html><b>Latest version</b>: "));
+		JLabel versionLabel = new JLabel("checking...");
+		line.add(versionLabel);
+		content.add(line, gc);
 		
+		new Thread(()->{
+			String version = Util.checkVersion("RoanH", "KeysPerSecond");
+			versionLabel.setText(version.equals(Main.VERSION) ? version : (version + "  (update available)"));
+		}, "Version Checker").start();
 		
 		//contact
-		content.add(Box.createVerticalStrut(10), gc);
 		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		line.add(new JLabel("<html><b>Contact</b>: Roan Hofland</html>"));
+		line.add(new JLabel("<html><b>Contact</b>:&nbsp;&nbsp;Roan Hofland</html>"));
 		JLabel email = new JLabel("<html>&lt;<font color=blue><u>roan@roanh.dev</u></font>&gt;</html>");
 		email.addMouseListener(new ClickableLink("mailto:roan@roanh.dev"));
 		line.add(email);
 		content.add(line, gc);
-		
-		//content.add(details, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(content);
 	}
