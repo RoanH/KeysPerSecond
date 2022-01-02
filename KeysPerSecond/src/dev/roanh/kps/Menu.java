@@ -1,12 +1,19 @@
 package dev.roanh.kps;
 
 import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Composite;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -18,6 +25,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -27,8 +36,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
@@ -40,6 +51,7 @@ import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
+import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 
 /**
@@ -124,6 +136,7 @@ public class Menu{
 		JMenuItem statsSaving = new JMenuItem("Stats saving");
 		JMenuItem commandkeys = new JMenuItem("Commands");
 		JMenuItem layout = new JMenuItem("Layout");
+		JMenuItem about = new JMenuItem("About");
 		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
 		JCheckBoxMenuItem tAllKeys = new JCheckBoxMenuItem("Track all keys");
 		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
@@ -150,6 +163,7 @@ public class Menu{
 		components.add(load);
 		components.add(statsSaving);
 		components.add(layout);
+		components.add(about);
 		components.add(save);
 		components.add(snap);
 		components.add(exit);
@@ -200,6 +214,9 @@ public class Menu{
 		});
 		exit.addActionListener((e)->{
 			Main.exit();
+		});
+		about.addActionListener((e)->{
+			showAbout();
 		});
 		pause.setSelected(Main.suspended);
 		pause.addActionListener((e)->{
@@ -567,7 +584,72 @@ public class Menu{
 		menu.add(reset);
 		menu.add(pause);
 		menu.add(saveLoad);
+		menu.add(about);
 		menu.add(exit);
+	}
+	
+	private static void showAbout(){
+		JPanel content = new JPanel(new GridBagLayout());
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.weightx = 1.0D;
+		gc.gridx = 0;
+		
+		JLabel header = new JLabel("KeysPerSecond " + Main.VERSION, SwingConstants.CENTER);
+		header.setFont(new Font("Dialog", Font.BOLD, 18));
+		content.add(header, gc);
+		
+		content.add(new JLabel(
+			"<html>KeysPerSecond is an open source input statistics displayer"
+			+ "<br>released for free under the GPLv3. Any bugs and feature"
+			+ "<br>requests can be reported on GitHub.</html>"
+		), gc);
+		
+		content.add(Box.createVerticalStrut(10), gc);
+		
+		//github
+		gc.anchor = GridBagConstraints.LINE_START;
+		JPanel line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+		line.add(new JLabel("<html><b>GitHub:</b></html>", SwingConstants.LEFT), gc);
+		content.add(line, gc);
+		
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+		line.add(new JLabel("  - "));
+		JLabel label = new JLabel("<html><font color=blue><u>Main Page</u></font></html>");
+		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
+		line.add(label);
+		content.add(line, gc);
+		
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+		line.add(new JLabel("  - "));
+		label = new JLabel("<html><font color=blue><u>Issues</u></font></html>");
+		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond/issues"));
+		line.add(label);
+		line.add(new JLabel("(bugs & feature requests)"));
+		content.add(line, gc);
+		
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+		line.add(new JLabel("  - "));
+		label = new JLabel("<html><font color=blue><u>Releases</u></font></html>");
+		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond/releases"));
+		line.add(label);
+		line.add(new JLabel("(release notes & downloads)"));
+		content.add(line, gc);
+		
+		//version
+		
+		
+		//contact
+		content.add(Box.createVerticalStrut(10), gc);
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		line.add(new JLabel("<html><b>Contact</b>: Roan Hofland</html>"));
+		JLabel email = new JLabel("<html>&lt;<font color=blue><u>roan@roanh.dev</u></font>&gt;</html>");
+		email.addMouseListener(new ClickableLink("mailto:roan@roanh.dev"));
+		line.add(email);
+		content.add(line, gc);
+		
+		//content.add(details, BorderLayout.PAGE_END);
+		
+		Dialog.showMessageDialog(content);
 	}
 
 	/**
