@@ -51,6 +51,7 @@ launch4j{
 	mainClassName = application.mainClassName
 	icon = "${projectDir}/kps.ico"
 	jreMinVersion = project.sourceCompatibility
+	bundledJrePath = "%JAVA_HOME%"
 	outfile = project.name + '-' + project.version + '.exe'
 	fileDescription = project.name
 	version = project.version.substring(1)
