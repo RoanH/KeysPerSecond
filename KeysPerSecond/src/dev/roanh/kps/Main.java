@@ -98,7 +98,7 @@ public class Main{
 	/**
 	 * String holding the version of the program.
 	 */
-	public static final String VERSION = "v8.4";//XXX the version number  - don't forget build.gradle
+	public static final String VERSION = "v8.5";//XXX the version number  - don't forget build.gradle
 	/**
 	 * The number of seconds the average has
 	 * been calculated for

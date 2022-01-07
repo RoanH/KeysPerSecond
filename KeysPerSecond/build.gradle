@@ -23,7 +23,7 @@ javadoc{
 
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
-version = 'v8.4'//Don't forget Main.java
+version = 'v8.5'//Don't forget Main.java
 shadowJar.archiveName = 'KeysPerSecond-' + project.version + '.jar'
 
 repositories{
