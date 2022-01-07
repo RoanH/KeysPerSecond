@@ -124,7 +124,7 @@ public class Statistics{
 		JComboBox<Unit> timeUnit = new JComboBox<Unit>(Unit.values());
 		Unit bestUnit = Unit.fromMillis(Main.config.statsSaveInterval);
 		timeUnit.setSelectedItem(bestUnit);
-		JSpinner time = new JSpinner(new SpinnerNumberModel(new Long(Main.config.statsSaveInterval / bestUnit.unit.toMillis(1)), new Long(1), new Long(Long.MAX_VALUE), new Long(1)));
+		JSpinner time = new JSpinner(new SpinnerNumberModel(Long.valueOf(Main.config.statsSaveInterval / bestUnit.unit.toMillis(1)), Long.valueOf(1L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));
 		labels.add(new JLabel("Save interval: "));
 		fields.add(time);
 		JPanel unitPanel = new JPanel(new BorderLayout());
