@@ -92,7 +92,7 @@ import dev.roanh.util.Util;
  * A key is only counted as being pressed if the key has been released before
  * this deals with the issue of holding a key firing multiple key press events<br>
  * This program also has support for saving and loading configurations
- * @author Roan
+ * @author Roan Hofland (<a href="mailto:roan@roanh.dev">roan@roanh.dev</a>)
  */
 public class Main{
 	/**
@@ -338,6 +338,7 @@ public class Main{
 	 */
 	private static final void setupNativeHook(){
 		try{
+			System.setProperty("jnativehook.lib.path", System.getProperty("java.io.tmpdir"));
 			Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
 			logger.setLevel(Level.WARNING);
 			logger.setUseParentHandlers(false);
