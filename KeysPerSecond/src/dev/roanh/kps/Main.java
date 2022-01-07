@@ -221,7 +221,7 @@ public class Main{
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
 		Dialog.setParentFrame(frame);
-		Dialog.setDialogTitle("Keys per second");
+		Dialog.setDialogTitle("KeysPerSecond");
 
 		//Make sure the native hook is always unregistered
 		Runtime.getRuntime().addShutdownHook(new Thread(){
