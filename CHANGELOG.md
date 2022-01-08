@@ -9,13 +9,13 @@ A lot of fixes again and some better support.
     - And the `kpsconf2` format which was last used in v7.4 (replaced September 12th, 2018).
     - You can convert configuration files in this format using v8.4.
     - The current `kpsconf3` format will still load, but newly saved configuration files will use the `kps` extension.
-- Support running on M1 Mac's (RoanH/KeysPerSecond#39).
-- Fix being able to move any UI component with the arrow keys (RoanH/KeysPerSecond#31).
-- Fix the comma (,) key not being loaded properly from the configuration file (RoanH/KeysPerSecond#34).
-- Fix resetting statistics (<kbd>Ctrl</kbd>+<kbd>P</kbd>) not resetting the total number of key presses (RoanH/KeysPerSecond#42).
-- Make the Java check more flexible by reading JAVA_HOME meaning more runtimes are detected (RoanH/KeysPerSecond#49).
-- Fix overlay option and stats saving not properly loading from the config when passed via the command line (RoanH/KeysPerSecond#41).
-- Fix the reset totals command key not being properly read from the config (RoanH/KeysPerSecond#40 and RoanH/KeysPerSecond#47).
+- Support running on M1 Mac's ([#39](https://github.com/RoanH/KeysPerSecond#39)).
+- Fix being able to move any UI component with the arrow keys ([#31](https://github.com/RoanH/KeysPerSecond#31)).
+- Fix the comma (,) key not being loaded properly from the configuration file ([#34](https://github.com/RoanH/KeysPerSecond#34)).
+- Fix resetting statistics (<kbd>Ctrl</kbd>+<kbd>P</kbd>) not resetting the total number of key presses ([#42](https://github.com/RoanH/KeysPerSecond#42)).
+- Make the Java check more flexible by reading JAVA_HOME meaning more runtimes are detected ([#49](https://github.com/RoanH/KeysPerSecond#49)).
+- Fix overlay option and stats saving not properly loading from the config when passed via the command line ([#41](https://github.com/RoanH/KeysPerSecond#41)).
+- Fix the reset totals command key not being properly read from the config ([#40](https://github.com/RoanH/KeysPerSecond#40) and [#47](https://github.com/RoanH/KeysPerSecond#47)).
 - Make it possible to edit the values in the layout configuration screen with the keyboard.
 - Add an about dialog to the right click menu with general information and links.
 - Fix some dialog typos.
@@ -24,11 +24,11 @@ A lot of fixes again and some better support.
 
 ## [v8.4] 24th of May, 2021: Important fixes
 - Implement sub-pixel rendering (if your system supports it this will improve the quality of text rendering)
-- Implement support for saving/loading statistics on exit/launch (RoanH/KeysPerSecond#25)
+- Implement support for saving/loading statistics on exit/launch ([#25](https://github.com/RoanH/KeysPerSecond#25))
 - Update global keyboard/mouse listener library
   - Fixes character combinations not working (e.g. e + " = ë)
   - Resolves some rare freezes on OSX
-- Fix the program not working under Java 16 (RoanH/KeysPerSecond#30)
+- Fix the program not working under Java 16 ([#30](https://github.com/RoanH/KeysPerSecond#30))
 - Fix the border offset not properly applying to the fill color
 - Fix not being able to add the ESC key due to it closing the dialog
 - Enable the 'save config' button by default
@@ -45,9 +45,9 @@ A lot of fixes again and some better support.
 
 ## [v8.2] 5th of February, 2019: More statistics options
 - Make the display name of keys editable (can be changed in the key add screen)
-- Implement an option to periodically save the statistics to a file (RoanH/KeysPerSecond#18)
+- Implement an option to periodically save the statistics to a file ([#18](https://github.com/RoanH/KeysPerSecond#18))
 - Make it so dummy keys created by the track all keys function are read back from statistics files
-- Split the track all keys option in a track all keys and track all mouse buttons function (RoanH/KeysPerSecond#17)
+- Split the track all keys option in a track all keys and track all mouse buttons function ([#17](https://github.com/RoanH/KeysPerSecond#17))
 - Fix the right mouse button being listed as the left mouse button in the mouse button add screen
 
 ## [v8.1] 27th of December, 2018: More layout options
@@ -55,7 +55,7 @@ A lot of fixes again and some better support.
 - Add support for changing the panel border offset (basically means you can control the space between panels)
 - Tried to improve the quality of the readme file a bit >_>
 - Make the main configuration screen an actual frame so you can actually find it on the taskbar.
-- Make the add key dialog and the layout dialog resizable.
+- Make the add key dialog and the layout dialog resizeable.
 - Fix a typo on the add key dialog.
 - Restyle all the dialogs.
 - Actually make the cancel button on the add key dialog revert the visible state of keys.
@@ -88,7 +88,7 @@ P.S. Since the layout system is completely new I expect there to be at least a f
 - Add the GitHub link to the initialisation dialog.
 - Fix the configuration file not supporting UTF-8 characters.
 - Fix position saving only working when the graph is displayed in its own window.
-- Change the arrow key symbols to unicode symbols with better availability.
+- Change the arrow key symbols to Unicode symbols with better availability.
 
 ## [v7.3] 2nd of June, 2018: Fix the arrow keys
 The arrow keys displayed a bit weird...    
@@ -121,7 +121,7 @@ This release mainly focusses on fixing small bugs, most of which were in the key
 - Fix a multithreading issues (as kindly pointed out by freakode)
 - Lots of internal refactoring & optimizations
 - Improve startup times
-- Fix a bug with the rendering mode loading (bea5316ab8fdb2be34c3991d5aa83170984dda14) (RoanH/KeysPerSecond#12)
+- Fix a bug with the rendering mode loading (bea5316ab8fdb2be34c3991d5aa83170984dda14) ([#12](https://github.com/RoanH/KeysPerSecond#12))
 
 ## [v6.6] 16th of August, 2017: Key configuration bug fixes
 - Fix a bug where key-modifier versions of the original key don't show
@@ -146,7 +146,7 @@ Add a lot of layout related options:
 - Support to save & load all of the above to a configuration file.
 
 ## [v6.2] 28th of May, 2017: Fix & feature
-- Fixed a bug where localized key names would not be converted to their short form (eg. )
+- Fixed a bug where localized key names would not be converted to their short form
 - You can now track key-modifier combinations (eg. Alt+Q or Shift+5 or Ctrl+H, or Alt+Shift+Ctrl+R)
 
 ## [v6.1] 30th of April, 2017: Quick fix
@@ -288,7 +288,7 @@ Added support for a variable update rate & changed exit key to Ctrl + U
 
 ## [v3.1] 2nd of February, 2017: More options
 Added the option to force the program to be the top window.    
-This does however require osu! to not be run in fullscreen mode.
+This does however require osu! to not be run in full screen mode.
 
 ## [v3.0] 1st of February, 2017: First public release
 First stable version and added a graph.
@@ -297,4 +297,4 @@ First stable version and added a graph.
 First version with a GUI
 
 ## [v1.0] 24th of January, 2017: CLI version
-Basic version with only commandline support.
+Basic version with only command line support.
