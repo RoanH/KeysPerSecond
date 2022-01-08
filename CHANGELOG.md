@@ -9,13 +9,13 @@ A lot of fixes again and some better support.
     - And the `kpsconf2` format which was last used in v7.4 (replaced September 12th, 2018).
     - You can convert configuration files in this format using v8.4.
     - The current `kpsconf3` format will still load, but newly saved configuration files will use the `kps` extension.
-- Support running on M1 Mac's ([#39](https://github.com/RoanH/KeysPerSecond#39)).
-- Fix being able to move any UI component with the arrow keys ([#31](https://github.com/RoanH/KeysPerSecond#31)).
-- Fix the comma (,) key not being loaded properly from the configuration file ([#34](https://github.com/RoanH/KeysPerSecond#34)).
-- Fix resetting statistics (<kbd>Ctrl</kbd>+<kbd>P</kbd>) not resetting the total number of key presses ([#42](https://github.com/RoanH/KeysPerSecond#42)).
-- Make the Java check more flexible by reading JAVA_HOME meaning more runtimes are detected ([#49](https://github.com/RoanH/KeysPerSecond#49)).
-- Fix overlay option and stats saving not properly loading from the config when passed via the command line ([#41](https://github.com/RoanH/KeysPerSecond#41)).
-- Fix the reset totals command key not being properly read from the config ([#40](https://github.com/RoanH/KeysPerSecond#40) and [#47](https://github.com/RoanH/KeysPerSecond#47)).
+- Support running on M1 Mac's ([#39](https://github.com/RoanH/KeysPerSecond/issues/39)).
+- Fix being able to move any UI component with the arrow keys ([#31](https://github.com/RoanH/KeysPerSecond/issues/31)).
+- Fix the comma (,) key not being loaded properly from the configuration file ([#34](https://github.com/RoanH/KeysPerSecond/issues/34)).
+- Fix resetting statistics (<kbd>Ctrl</kbd>+<kbd>P</kbd>) not resetting the total number of key presses ([#42](https://github.com/RoanH/KeysPerSecond/issues/42)).
+- Make the Java check more flexible by reading JAVA_HOME meaning more runtimes are detected ([#49](https://github.com/RoanH/KeysPerSecond/issues/49)).
+- Fix overlay option and stats saving not properly loading from the config when passed via the command line ([#41](https://github.com/RoanH/KeysPerSecond/issues/41)).
+- Fix the reset totals command key not being properly read from the config ([#40](https://github.com/RoanH/KeysPerSecond/issues/40) and [#47](https://github.com/RoanH/KeysPerSecond/issues/47)).
 - Make it possible to edit the values in the layout configuration screen with the keyboard.
 - Add an about dialog to the right click menu with general information and links.
 - Fix some dialog typos.
@@ -24,11 +24,11 @@ A lot of fixes again and some better support.
 
 ## [v8.4] 24th of May, 2021: Important fixes
 - Implement sub-pixel rendering (if your system supports it this will improve the quality of text rendering)
-- Implement support for saving/loading statistics on exit/launch ([#25](https://github.com/RoanH/KeysPerSecond#25))
+- Implement support for saving/loading statistics on exit/launch ([#25](https://github.com/RoanH/KeysPerSecond/issues/25))
 - Update global keyboard/mouse listener library
   - Fixes character combinations not working (e.g. e + " = ë)
   - Resolves some rare freezes on OSX
-- Fix the program not working under Java 16 ([#30](https://github.com/RoanH/KeysPerSecond#30))
+- Fix the program not working under Java 16 ([#30](https://github.com/RoanH/KeysPerSecond/issues/30))
 - Fix the border offset not properly applying to the fill color
 - Fix not being able to add the ESC key due to it closing the dialog
 - Enable the 'save config' button by default
@@ -45,9 +45,9 @@ A lot of fixes again and some better support.
 
 ## [v8.2] 5th of February, 2019: More statistics options
 - Make the display name of keys editable (can be changed in the key add screen)
-- Implement an option to periodically save the statistics to a file ([#18](https://github.com/RoanH/KeysPerSecond#18))
+- Implement an option to periodically save the statistics to a file ([#18](https://github.com/RoanH/KeysPerSecond/issues/18))
 - Make it so dummy keys created by the track all keys function are read back from statistics files
-- Split the track all keys option in a track all keys and track all mouse buttons function ([#17](https://github.com/RoanH/KeysPerSecond#17))
+- Split the track all keys option in a track all keys and track all mouse buttons function ([#17](https://github.com/RoanH/KeysPerSecond/issues/17))
 - Fix the right mouse button being listed as the left mouse button in the mouse button add screen
 
 ## [v8.1] 27th of December, 2018: More layout options
@@ -121,7 +121,7 @@ This release mainly focusses on fixing small bugs, most of which were in the key
 - Fix a multithreading issues (as kindly pointed out by freakode)
 - Lots of internal refactoring & optimizations
 - Improve startup times
-- Fix a bug with the rendering mode loading (bea5316ab8fdb2be34c3991d5aa83170984dda14) ([#12](https://github.com/RoanH/KeysPerSecond#12))
+- Fix a bug with the rendering mode loading (bea5316ab8fdb2be34c3991d5aa83170984dda14) ([#12](https://github.com/RoanH/KeysPerSecond/issues/12))
 
 ## [v6.6] 16th of August, 2017: Key configuration bug fixes
 - Fix a bug where key-modifier versions of the original key don't show
