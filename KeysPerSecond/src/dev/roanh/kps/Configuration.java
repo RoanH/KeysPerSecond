@@ -898,13 +898,7 @@ public class Configuration{
 				break;
 			}
 		}
-		KeyInformation kinfo = new KeyInformation(name, code, visible);
-		kinfo.x = x;
-		kinfo.y = y;
-		kinfo.width = width;
-		kinfo.height = height;
-		kinfo.mode = mode;
-		return kinfo;
+		return new KeyInformation(name, code, visible, x, y, width, height, mode);
 	}
 
 	/**

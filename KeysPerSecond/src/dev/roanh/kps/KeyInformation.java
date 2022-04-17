@@ -56,11 +56,16 @@ public final class KeyInformation extends Positionable{
 	 * @param name The name of the key
 	 * @param code The virtual key code of the key
 	 * @param visible Whether or not the key is visible
+	 * @param x The x position of the key panel.
+	 * @param y The y position of the key panel.
+	 * @param width The width of the key panel.
+	 * @param height The height of the key panel.
+	 * @param mode The text rendering mode of the key panel.
 	 * @see #name
 	 * @see #keycode
 	 */
-	protected KeyInformation(String name, int code, boolean visible){
-		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
+	protected KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
+		super(x, y, width, height, mode);
 		this.name = name;
 		this.keycode = code;
 		this.visible = visible;
