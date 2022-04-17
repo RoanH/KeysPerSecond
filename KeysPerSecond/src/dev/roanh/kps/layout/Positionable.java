@@ -3,74 +3,123 @@ package dev.roanh.kps.layout;
 import dev.roanh.kps.RenderingMode;
 
 /**
- * Configuration interface for panels
- * that can be added to the layout
+ * Configuration for panels that can 
+ * be added to the layout.
  * @author Roan
  */
-public abstract interface Positionable{
+public abstract class Positionable{
+	/**
+	 * The x position of the panel.
+	 */
+	private int x;
+	/**
+	 * The y position of the panel.
+	 */
+	private int y;
+	/**
+	 * The width of the panel.
+	 */
+	private int width;
+	/**
+	 * The height of the panel.
+	 */
+	private int height;
+	/**
+	 * The text rendering mode of the panel.
+	 */
+	private RenderingMode mode;
+	
+	public Positionable(int x, int y, int width, int height, RenderingMode mode){
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.mode = mode;
+	}
+	
 	/**
 	 * Sets the x position for this panel
 	 * @param x The new x position
 	 */
-	public abstract void setX(int x);
+	public void setX(int x){
+		this.x = x;
+	}
 
 	/**
-	 * Sets the y position for htis panel
+	 * Sets the y position for this panel
 	 * @param y The new y position
 	 */
-	public abstract void setY(int y);
+	public void setY(int y){
+		this.y = y;
+	}
 
 	/**
 	 * Sets the width for this panel
 	 * @param w The new width
 	 */
-	public abstract void setWidth(int w);
+	public void setWidth(int w){
+		width = w;
+	}
 
 	/**
 	 * Sets the height for this panel
 	 * @param h The new height
 	 */
-	public abstract void setHeight(int h);
+	public void setHeight(int h){
+		height = h;
+	}
 
 	/**
 	 * Gets the display name for this panel
 	 * @return The display name for this panel
 	 */
-	public abstract String getName();
+	public abstract String getName();//TODO keep this abstract or not? -- could reuse this base class for graphs but those do not have a title currently
 
 	/**
 	 * Gets the x position for this panel
 	 * @return The x position for this panel
 	 */
-	public abstract int getX();
+	public int getX(){
+		return x;
+	}
 
 	/**
 	 * Gets the y position for this panel
 	 * @return The y position for this panel
 	 */
-	public abstract int getY();
+	public int getY(){
+		return y;
+	}
 
 	/**
 	 * Gets the width for this panel
 	 * @return The width for this panel
 	 */
-	public abstract int getWidth();
+	public int getWidth(){
+		return width;
+	}
 
 	/**
 	 * Gets the height for this panel
 	 * @return The height for this panel
 	 */
-	public abstract int getHeight();
+	public int getHeight(){
+		return height;
+	}
 
 	/**
 	 * Gets the rendering mode for this panel
 	 * @return The rendering mode for this panel
 	 */
-	public abstract RenderingMode getRenderingMode();
+	public RenderingMode getRenderingMode(){
+		return mode;
+	}
 
 	/**
 	 * Sets the rendering mode for this panel
 	 * @param mode The new rendering mode
 	 */
-	public abstract void setRenderingMode(RenderingMode mode);
+	public void setRenderingMode(RenderingMode mode){
+		this.mode = mode;
+	}
 }

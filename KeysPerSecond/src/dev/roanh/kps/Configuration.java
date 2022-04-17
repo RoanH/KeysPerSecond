@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.CommandKeys.CMD;
+import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
@@ -153,86 +154,34 @@ public class Configuration{
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
 
 	//special panels / layout
-	/**
-	 * The x position of the average panel
-	 */
-	public int avg_x = -1;
-	/**
-	 * The y position of the average panel
-	 */
-	public int avg_y = 0;
-	/**
-	 * The width of the average panel
-	 */
-	public int avg_w = 2;
-	/**
-	 * The height of the average panel
-	 */
-	public int avg_h = 3;
-	/**
-	 * The text rendering mode of the average panel
-	 */
-	public RenderingMode avg_mode = RenderingMode.VERTICAL;
-	/**
-	 * The x position of the max panel
-	 */
-	public int max_x = -1;
-	/**
-	 * The y position of the max panel
-	 */
-	public int max_y = 0;
-	/**
-	 * The width position of the max panel
-	 */
-	public int max_w = 2;
-	/**
-	 * The height of the max panel
-	 */
-	public int max_h = 3;
-	/**
-	 * The text rendering mode of the max panel
-	 */
-	public RenderingMode max_mode = RenderingMode.VERTICAL;
-	/**
-	 * The x position of the current panel
-	 */
-	public int cur_x = -1;
-	/**
-	 * The y position of the current panel
-	 */
-	public int cur_y = 0;
-	/**
-	 * The width of the current panel
-	 */
-	public int cur_w = 2;
-	/**
-	 * The height of the current panel
-	 */
-	public int cur_h = 3;
-	/**
-	 * The text rendering mode of the current panel
-	 */
-	public RenderingMode cur_mode = RenderingMode.VERTICAL;
-	/**
-	 * The x position of the total panel
-	 */
-	public int tot_x = -1;
-	/**
-	 * The y position of the total panel
-	 */
-	public int tot_y = 0;
-	/**
-	 * The width of the total panel
-	 */
-	public int tot_w = 2;
-	/**
-	 * The height o the total panel
-	 */
-	public int tot_h = 3;
-	/**
-	 * The text rendering mode of the total panel
-	 */
-	public RenderingMode tot_mode = RenderingMode.VERTICAL;
+	public Positionable avgPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
+		
+		@Override
+		public String getName(){
+			return "AVG";
+		}
+	};
+	public Positionable maxPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
+		
+		@Override
+		public String getName(){
+			return "MAX";
+		}
+	};
+	public Positionable curPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
+		
+		@Override
+		public String getName(){
+			return "CUR";
+		}
+	};
+	public Positionable totPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
+		
+		@Override
+		public String getName(){
+			return "AVG";
+		}
+	};
 	/**
 	 * The offset from the border of a panel
 	 * to the actual panel content
@@ -625,140 +574,140 @@ public class Configuration{
 					break;
 				case "maxX":
 					try{
-						max_x = Integer.parseInt(args[1]);
+						maxPanel.setX(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "maxY":
 					try{
-						max_y = Integer.parseInt(args[1]);
+						maxPanel.setY(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "maxWidth":
 					try{
-						max_w = Integer.parseInt(args[1]);
+						maxPanel.setWidth(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "maxHeight":
 					try{
-						max_h = Integer.parseInt(args[1]);
+						maxPanel.setHeight(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "maxMode":
 					try{
-						max_mode = RenderingMode.valueOf(args[1]);
+						maxPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
 					}catch(IllegalArgumentException e){
 						modified = true;
 					}
 					break;
 				case "avgX":
 					try{
-						avg_x = Integer.parseInt(args[1]);
+						avgPanel.setX(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "avgY":
 					try{
-						avg_y = Integer.parseInt(args[1]);
+						avgPanel.setY(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "avgWidth":
 					try{
-						avg_w = Integer.parseInt(args[1]);
+						avgPanel.setWidth(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "avgHeight":
 					try{
-						avg_h = Integer.parseInt(args[1]);
+						avgPanel.setHeight(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "avgMode":
 					try{
-						avg_mode = RenderingMode.valueOf(args[1]);
+						avgPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
 					}catch(IllegalArgumentException e){
 						modified = true;
 					}
 					break;
 				case "curX":
 					try{
-						cur_x = Integer.parseInt(args[1]);
+						curPanel.setX(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "curY":
 					try{
-						cur_y = Integer.parseInt(args[1]);
+						curPanel.setY(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "curWidth":
 					try{
-						cur_w = Integer.parseInt(args[1]);
+						curPanel.setWidth(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "curHeight":
 					try{
-						cur_h = Integer.parseInt(args[1]);
+						curPanel.setHeight(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "curMode":
 					try{
-						cur_mode = RenderingMode.valueOf(args[1]);
+						curPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
 					}catch(IllegalArgumentException e){
 						modified = true;
 					}
 					break;
 				case "totX":
 					try{
-						tot_x = Integer.parseInt(args[1]);
+						totPanel.setX(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "totY":
 					try{
-						tot_y = Integer.parseInt(args[1]);
+						totPanel.setY(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "totWidth":
 					try{
-						tot_w = Integer.parseInt(args[1]);
+						totPanel.setWidth(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "totHeight":
 					try{
-						tot_h = Integer.parseInt(args[1]);
+						totPanel.setHeight(Integer.parseInt(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "totMode":
 					try{
-						tot_mode = RenderingMode.valueOf(args[1]);
+						totPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
 					}catch(IllegalArgumentException e){
 						modified = true;
 					}
@@ -1056,26 +1005,26 @@ public class Configuration{
 				out.println("keyReload: " + CR.toSaveString());
 				out.println();
 				out.println("# Layout");
-				out.println("maxX: " + max_x);
-				out.println("maxY: " + max_y);
-				out.println("maxWidth: " + max_w);
-				out.println("maxHeight: " + max_h);
-				out.println("maxMode: " + max_mode.name());
-				out.println("avgX: " + avg_x);
-				out.println("avgY: " + avg_y);
-				out.println("avgWidth: " + avg_w);
-				out.println("avgHeight: " + avg_h);
-				out.println("avgMode: " + avg_mode.name());
-				out.println("curX: " + cur_x);
-				out.println("curY: " + cur_y);
-				out.println("curWidth: " + cur_w);
-				out.println("curHeight: " + cur_h);
-				out.println("curMode: " + cur_mode.name());
-				out.println("totX: " + tot_x);
-				out.println("totY: " + tot_y);
-				out.println("totWidth: " + tot_w);
-				out.println("totHeight: " + tot_h);
-				out.println("totMode: " + tot_mode.name());
+				out.println("maxX: " + maxPanel.getX());
+				out.println("maxY: " + maxPanel.getY());
+				out.println("maxWidth: " + maxPanel.getWidth());
+				out.println("maxHeight: " + maxPanel.getHeight());
+				out.println("maxMode: " + maxPanel.getRenderingMode().name());
+				out.println("avgX: " + avgPanel.getX());
+				out.println("avgY: " + avgPanel.getY());
+				out.println("avgWidth: " + avgPanel.getWidth());
+				out.println("avgHeight: " + avgPanel.getHeight());
+				out.println("avgMode: " + avgPanel.getRenderingMode().name());
+				out.println("curX: " + curPanel.getX());
+				out.println("curY: " + curPanel.getY());
+				out.println("curWidth: " + curPanel.getWidth());
+				out.println("curHeight: " + curPanel.getHeight());
+				out.println("curMode: " + curPanel.getRenderingMode().name());
+				out.println("totX: " + totPanel.getX());
+				out.println("totY: " + totPanel.getY());
+				out.println("totWidth: " + totPanel.getWidth());
+				out.println("totHeight: " + totPanel.getHeight());
+				out.println("totMode: " + totPanel.getRenderingMode().name());
 				out.println("graphX: " + graph_x);
 				out.println("graphY: " + graph_y);
 				out.println("graphWidth: " + graph_w);
