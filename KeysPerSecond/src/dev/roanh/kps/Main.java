@@ -1062,9 +1062,6 @@ public class Main{
 			for(KeyInformation i : config.keyinfo){
 				if(!keys.containsKey(i.keycode)){
 					keys.put(i.keycode, k = new Key(i.name));
-					k.alt = CommandKeys.hasAlt(i.keycode);
-					k.ctrl = CommandKeys.hasCtrl(i.keycode);
-					k.shift = CommandKeys.hasShift(i.keycode);
 				}else{
 					k = keys.get(i.keycode);
 				}
@@ -1230,6 +1227,10 @@ public class Main{
 			}
 		};
 		DUMMY_KEY = new Key(null){
+			/**
+			 * Serial ID.
+			 */
+			private static final long serialVersionUID = -2793377459874900432L;
 
 			@Override
 			public void keyPressed(){
