@@ -1,5 +1,7 @@
 package dev.roanh.kps;
 
+import java.io.Serializable;
+
 import dev.roanh.kps.panels.KeyPanel;
 
 /**
@@ -8,7 +10,11 @@ import dev.roanh.kps.panels.KeyPanel;
  * is pressed
  * @author Roan
  */
-public class Key{
+public class Key implements Serializable{
+	/**
+	 * Serial ID.
+	 */
+	private static final long serialVersionUID = 6902618211485788012L;
 	/**
 	 * Whether or not this key is currently pressed
 	 */

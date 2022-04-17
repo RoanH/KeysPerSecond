@@ -1230,6 +1230,10 @@ public class Main{
 			}
 		};
 		DUMMY_KEY = new Key(null){
+			/**
+			 * Serial ID.
+			 */
+			private static final long serialVersionUID = -2793377459874900432L;
 
 			@Override
 			public void keyPressed(){
