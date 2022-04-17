@@ -37,26 +37,26 @@ public final class MaxPanel extends BasePanel{
 
 	@Override
 	public int getLayoutX(){
-		return Main.config.max_x;
+		return Main.config.maxPanel.getX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return Main.config.max_y;
+		return Main.config.maxPanel.getY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return Main.config.max_w;
+		return Main.config.maxPanel.getWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return Main.config.max_h;
+		return Main.config.maxPanel.getHeight();
 	}
 
 	@Override
 	protected RenderingMode getRenderingMode(){
-		return Main.config.max_mode;
+		return Main.config.maxPanel.getRenderingMode();
 	}
 }
