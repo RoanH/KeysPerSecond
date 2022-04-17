@@ -29,6 +29,15 @@ public abstract class Positionable{
 	 */
 	private RenderingMode mode;
 	
+	/**
+	 * Constructs a new positionable with the given
+	 * position, size and rendering mode.
+	 * @param x The x position.
+	 * @param y The y position.
+	 * @param width The panel width.
+	 * @param height The panel height.
+	 * @param mode The panel rendering mode.
+	 */
 	public Positionable(int x, int y, int width, int height, RenderingMode mode){
 		this.x = x;
 		this.y = y;
