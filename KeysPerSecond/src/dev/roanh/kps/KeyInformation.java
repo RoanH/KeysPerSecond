@@ -12,7 +12,7 @@ import dev.roanh.kps.layout.Positionable;
  * about a key.
  * @author Roan
  */
-public final class KeyInformation implements Positionable{
+public final class KeyInformation extends Positionable{
 	/**
 	 * The name of this key
 	 * @see Key#name
@@ -31,26 +31,6 @@ public final class KeyInformation implements Positionable{
 	 * Auto-increment for #x
 	 */
 	public static volatile int autoIndex = -2;
-	/**
-	 * The x position of this panel in the layout
-	 */
-	protected int x = autoIndex += 2;
-	/**
-	 * The y postion of this panel in the layout
-	 */
-	protected int y = 0;
-	/**
-	 * The width of this panel in the layout
-	 */
-	protected int width = 2;
-	/**
-	 * The height of this panel in the layout
-	 */
-	protected int height = 3;
-	/**
-	 * The text rendering mode for this panel
-	 */
-	protected RenderingMode mode = RenderingMode.VERTICAL;
 
 	/**
 	 * Constructs a new KeyInformation
@@ -65,8 +45,30 @@ public final class KeyInformation implements Positionable{
 	 * @see #keycode 
 	 */
 	public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
+		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
 		this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
 		this.name = mouse ? name : getKeyName(name, keycode);
+	}
+
+	/**
+	 * Constructs a new KeyInformation
+	 * object with the given information
+	 * @param name The name of the key
+	 * @param code The virtual key code of the key
+	 * @param visible Whether or not the key is visible
+	 * @param x The x position of the key panel.
+	 * @param y The y position of the key panel.
+	 * @param width The width of the key panel.
+	 * @param height The height of the key panel.
+	 * @param mode The text rendering mode of the key panel.
+	 * @see #name
+	 * @see #keycode
+	 */
+	protected KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
+		super(x, y, width, height, mode);
+		this.name = name;
+		this.keycode = code;
+		this.visible = visible;
 	}
 
 	/**
@@ -78,21 +80,6 @@ public final class KeyInformation implements Positionable{
 	 */
 	protected static final String getKeyName(String name, int code){
 		return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
-	}
-
-	/**
-	 * Constructs a new KeyInformation
-	 * object with the given information
-	 * @param name The name of the key
-	 * @param code The virtual key code of the key
-	 * @param visible Whether or not the key is visible
-	 * @see #name
-	 * @see #keycode
-	 */
-	protected KeyInformation(String name, int code, boolean visible){
-		this.name = name;
-		this.keycode = code;
-		this.visible = visible;
 	}
 	
 	/**
@@ -119,7 +106,7 @@ public final class KeyInformation implements Positionable{
 
 	@Override
 	public String toString(){
-		return "[keycode=" + keycode + ",x=" + x + ",y=" + y + ",width=" + width + ",height=" + height + ",mode=" + mode.name() + ",visible=" + visible + ",name=\"" + name + "\"]";
+		return "[keycode=" + keycode + ",x=" + getX() + ",y=" + getY() + ",width=" + getWidth() + ",height=" + getHeight() + ",mode=" + getRenderingMode().name() + ",visible=" + visible + ",name=\"" + name + "\"]";
 	}
 
 	@Override
@@ -263,57 +250,7 @@ public final class KeyInformation implements Positionable{
 	}
 
 	@Override
-	public void setX(int x){
-		this.x = x;
-	}
-
-	@Override
-	public void setY(int y){
-		this.y = y;
-	}
-
-	@Override
-	public void setWidth(int w){
-		width = w;
-	}
-
-	@Override
-	public void setHeight(int h){
-		height = h;
-	}
-
-	@Override
 	public String getName(){
 		return name;
-	}
-
-	@Override
-	public int getX(){
-		return x;
-	}
-
-	@Override
-	public int getY(){
-		return y;
-	}
-
-	@Override
-	public int getWidth(){
-		return width;
-	}
-
-	@Override
-	public int getHeight(){
-		return height;
-	}
-
-	@Override
-	public RenderingMode getRenderingMode(){
-		return mode;
-	}
-
-	@Override
-	public void setRenderingMode(RenderingMode mode){
-		this.mode = mode;
 	}
 }

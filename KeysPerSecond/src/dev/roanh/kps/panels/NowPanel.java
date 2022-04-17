@@ -41,26 +41,26 @@ public final class NowPanel extends BasePanel{
 
 	@Override
 	public int getLayoutX(){
-		return Main.config.cur_x;
+		return Main.config.curPanel.getX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return Main.config.cur_y;
+		return Main.config.curPanel.getY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return Main.config.cur_w;
+		return Main.config.curPanel.getWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return Main.config.cur_h;
+		return Main.config.curPanel.getHeight();
 	}
 
 	@Override
 	protected RenderingMode getRenderingMode(){
-		return Main.config.cur_mode;
+		return Main.config.curPanel.getRenderingMode();
 	}
 }

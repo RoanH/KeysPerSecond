@@ -41,26 +41,26 @@ public final class TotPanel extends BasePanel{
 
 	@Override
 	public int getLayoutX(){
-		return Main.config.tot_x;
+		return Main.config.totPanel.getX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return Main.config.tot_y;
+		return Main.config.totPanel.getY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return Main.config.tot_w;
+		return Main.config.totPanel.getWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return Main.config.tot_h;
+		return Main.config.totPanel.getHeight();
 	}
 
 	@Override
 	protected RenderingMode getRenderingMode(){
-		return Main.config.tot_mode;
+		return Main.config.totPanel.getRenderingMode();
 	}
 }

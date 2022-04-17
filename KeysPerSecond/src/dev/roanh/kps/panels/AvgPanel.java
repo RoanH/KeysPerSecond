@@ -37,26 +37,26 @@ public final class AvgPanel extends BasePanel{
 
 	@Override
 	public int getLayoutX(){
-		return Main.config.avg_x;
+		return Main.config.avgPanel.getX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return Main.config.avg_y;
+		return Main.config.avgPanel.getY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return Main.config.avg_w;
+		return Main.config.avgPanel.getWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return Main.config.avg_h;
+		return Main.config.avgPanel.getHeight();
 	}
 
 	@Override
 	protected RenderingMode getRenderingMode(){
-		return Main.config.avg_mode;
+		return Main.config.avgPanel.getRenderingMode();
 	}
 }
