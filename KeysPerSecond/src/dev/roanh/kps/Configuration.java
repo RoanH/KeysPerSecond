@@ -154,6 +154,9 @@ public class Configuration{
 	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
 
 	//special panels / layout
+	/**
+	 * Configuration for the average panel.
+	 */
 	public Positionable avgPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
 		
 		@Override
@@ -161,6 +164,9 @@ public class Configuration{
 			return "AVG";
 		}
 	};
+	/**
+	 * Configuration for the max panel.
+	 */
 	public Positionable maxPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
 		
 		@Override
@@ -168,6 +174,9 @@ public class Configuration{
 			return "MAX";
 		}
 	};
+	/**
+	 * Configuration for the current panel.
+	 */
 	public Positionable curPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
 		
 		@Override
@@ -175,6 +184,9 @@ public class Configuration{
 			return "CUR";
 		}
 	};
+	/**
+	 * Configuration for the total panel.
+	 */
 	public Positionable totPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
 		
 		@Override
