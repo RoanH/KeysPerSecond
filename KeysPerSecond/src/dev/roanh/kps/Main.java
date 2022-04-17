@@ -1062,11 +1062,11 @@ public class Main{
 			for(KeyInformation i : config.keyinfo){
 				if(!keys.containsKey(i.keycode)){
 					keys.put(i.keycode, k = new Key(i.name));
-				}else{
-					k = keys.get(i.keycode);
 					k.alt = CommandKeys.hasAlt(i.keycode);
 					k.ctrl = CommandKeys.hasCtrl(i.keycode);
 					k.shift = CommandKeys.hasShift(i.keycode);
+				}else{
+					k = keys.get(i.keycode);
 				}
 				if(config.showKeys && i.visible){
 					content.add(k.getPanel(i));
