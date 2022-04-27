@@ -1,4 +1,4 @@
-# <img src="KeysPerSecond/src/kps.png" alt="drawing" width="40"/> KeysPerSecond [![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg)](https://github.com/RoanH/KeysPerSecond/releases) [![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)](#downloads)
+# <img src="KeysPerSecond/src/kps.png" alt="icon" width="40"/> KeysPerSecond [![](https://img.shields.io/github/release/RoanH/KeysPerSecond.svg)](https://github.com/RoanH/KeysPerSecond/releases) [![](https://img.shields.io/github/downloads/RoanH/KeysPerSecond/total.svg)](#downloads)
 
 KeysPerSecond is a program that counts how many times certain keys and mouse buttons are pressed. It can also various statistics such as the average, maximum and current number of pressed per second. The program can also show a nice graph of the key presses over time. Almost all aspects of the program are also fully customizable.   
 
