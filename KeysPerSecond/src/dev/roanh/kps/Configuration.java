@@ -964,7 +964,8 @@ public class Configuration{
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
-				out.println("version: " + Main.VERSION);
+				out.println("version: ");
+				out.println(Main.VERSION);
 				out.println();
 				out.println("# General");
 				out.println("showMax: " + showMax);

@@ -6,13 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.time.Clock;
-import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -217,7 +219,7 @@ public class Statistics{
 	public static void saveStatsOnExit(){
 		if(Main.config.saveStatsOnExit){
 			try{
-				saveStats(new File(Main.config.statsSaveFile));
+				saveStats(Paths.get(Main.config.statsSaveFile));
 			}catch(IOException e){
 				e.printStackTrace();
 				if(Dialog.showConfirmDialog("Failed to save statistics on exit.\nCause: " + e.getMessage() + "\nAttempt to save again?")){
@@ -272,12 +274,11 @@ public class Statistics{
 		cancelScheduledTask();
 		statsFuture = statsScheduler.scheduleAtFixedRate(()->{
 			try{
-				File parent = new File(Main.config.statsDest);
-				parent.mkdirs();
-				File target = new File(parent, DateTimeFormatter.ofPattern(Main.config.statsFormat).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
-				target.createNewFile();
+				Path target = Paths.get(Main.config.statsDest);
+				Files.createDirectories(target);
+				target.resolve(DateTimeFormatter.ofPattern(Main.config.statsFormat).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
 				saveStats(target);
-			}catch(IOException | NullPointerException | IllegalArgumentException | DateTimeException e){
+			}catch(Exception e){
 				//Main priority here is to not interrupt whatever the user is doing
 				e.printStackTrace();
 			}
@@ -293,7 +294,7 @@ public class Statistics{
 		File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
 		if(file != null){
 			try{
-				saveStats(file);
+				saveStats(file.toPath());
 				Dialog.showMessageDialog("Statistics succesfully saved");
 			}catch(IOException e){
 				e.printStackTrace();
@@ -307,21 +308,46 @@ public class Statistics{
 	 * @param dest The file to save to
 	 * @throws IOException When an IOException occurs.
 	 */
-	private static void saveStats(File dest) throws IOException{
-		dest.createNewFile();
-		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dest));
-		out.writeInt(TotPanel.hits);
-		out.writeDouble(Main.avg);
-		out.writeInt(Main.max);
-		out.writeLong(Main.n);
-		out.writeInt(Main.prev);
-		out.writeInt(Main.tmp.get());
-		for(Entry<Integer, Key> key : Main.keys.entrySet()){
-			out.writeInt(key.getKey());
-			out.writeObject(key.getValue());
+	private static void saveStats(Path dest) throws IOException{
+		try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(dest, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING))){
+			out.println("version: ");
+			out.println(Main.VERSION);
+			out.println();
+			out.println("# General");
+			out.print("total: ");
+			out.println(TotPanel.hits);
+			out.print("average: ");
+			out.println(Main.avg);
+			out.print("maximum: ");
+			out.println(Main.max);
+			out.print("seconds: ");
+			out.println(Main.n);
+			out.print("previous: ");
+			out.println(Main.prev);
+			out.print("current: ");
+			out.println(Main.tmp.get());
+			out.println();
+			out.println("# Keys");
+			out.println("keys:");
+			for(Entry<Integer, Key> entry : Main.keys.entrySet()){
+				Key key = entry.getValue();
+				out.print("  - [keycode=");
+				out.print(entry.getKey());
+				out.print(",count=");
+				out.print(key.count);
+				out.print(",alt=");
+				out.print(key.alt);
+				out.print(",ctrl=");
+				out.print(key.ctrl);
+				out.print(",shift=");
+				out.print(key.shift);
+				out.print(",name=\"");
+				out.print(key.name);
+				out.println("\"]");
+			}
+			out.flush();
+			out.close();
 		}
-		out.flush();
-		out.close();
 	}
 	
 	/**

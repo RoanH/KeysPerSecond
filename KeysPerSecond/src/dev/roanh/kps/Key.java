@@ -10,11 +10,7 @@ import dev.roanh.kps.panels.KeyPanel;
  * is pressed
  * @author Roan
  */
-public class Key implements Serializable{
-	/**
-	 * Serial ID.
-	 */
-	private static final long serialVersionUID = 6902618211485788012L;
+public class Key{
 	/**
 	 * Whether or not this key is currently pressed
 	 */
@@ -44,6 +40,14 @@ public class Key implements Serializable{
 	 * Whether or not shift has to be down
 	 */
 	protected boolean shift;
+	
+	protected Key(String name, int count, boolean alt, boolean ctrl, boolean shift){
+		this(name);
+		this.count = count;
+		this.alt = alt;
+		this.ctrl = ctrl;
+		this.shift = shift;
+	}
 
 	/**
 	 * Constructs a new Key object
