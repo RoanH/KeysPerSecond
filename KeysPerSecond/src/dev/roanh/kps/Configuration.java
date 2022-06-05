@@ -6,11 +6,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -811,8 +811,9 @@ public class Configuration{
 			}
 			if(loadStatsOnLaunch){
 				try{
-					Statistics.loadStats(new File(statsSaveFile));
-				}catch(IOException e){
+					Statistics.loadStats(Paths.get(statsSaveFile));
+				}catch(Exception e){
+					e.printStackTrace();
 					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
 				}
 			}
@@ -964,7 +965,8 @@ public class Configuration{
 			try{
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
 				//general
-				out.println("version: " + Main.VERSION);
+				out.print("version: ");
+				out.println(Main.VERSION);
 				out.println();
 				out.println("# General");
 				out.println("showMax: " + showMax);

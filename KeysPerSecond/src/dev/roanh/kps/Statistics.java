@@ -4,15 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.nio.charset.MalformedInputException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.time.Clock;
-import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -52,6 +56,10 @@ public class Statistics{
 	 * Extension filter for KeysPerSecond statistics files.
 	 */
 	private static final FileExtension KPS_STATS_EXT = FileSelector.registerFileExtension("KeysPerSecond statistics", "kpsstats");
+	/**
+	 * Regex used to parse key lines in the statistics save file.
+	 */
+	private static final Pattern STATS_LINE_REGEX = Pattern.compile("^  - \\[keycode=(\\d+),count=(\\d+),alt=(true|false),ctrl=(true|false),shift=(true|false),name=\\\"(.*)\\\"]$");
 	/**
 	 * Statistics save future
 	 */
@@ -217,7 +225,7 @@ public class Statistics{
 	public static void saveStatsOnExit(){
 		if(Main.config.saveStatsOnExit){
 			try{
-				saveStats(new File(Main.config.statsSaveFile));
+				saveStats(Paths.get(Main.config.statsSaveFile));
 			}catch(IOException e){
 				e.printStackTrace();
 				if(Dialog.showConfirmDialog("Failed to save statistics on exit.\nCause: " + e.getMessage() + "\nAttempt to save again?")){
@@ -272,12 +280,11 @@ public class Statistics{
 		cancelScheduledTask();
 		statsFuture = statsScheduler.scheduleAtFixedRate(()->{
 			try{
-				File parent = new File(Main.config.statsDest);
-				parent.mkdirs();
-				File target = new File(parent, DateTimeFormatter.ofPattern(Main.config.statsFormat).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
-				target.createNewFile();
+				Path target = Paths.get(Main.config.statsDest);
+				Files.createDirectories(target);
+				target.resolve(DateTimeFormatter.ofPattern(Main.config.statsFormat).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
 				saveStats(target);
-			}catch(IOException | NullPointerException | IllegalArgumentException | DateTimeException e){
+			}catch(Exception e){
 				//Main priority here is to not interrupt whatever the user is doing
 				e.printStackTrace();
 			}
@@ -293,7 +300,7 @@ public class Statistics{
 		File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
 		if(file != null){
 			try{
-				saveStats(file);
+				saveStats(file.toPath());
 				Dialog.showMessageDialog("Statistics succesfully saved");
 			}catch(IOException e){
 				e.printStackTrace();
@@ -307,21 +314,46 @@ public class Statistics{
 	 * @param dest The file to save to
 	 * @throws IOException When an IOException occurs.
 	 */
-	private static void saveStats(File dest) throws IOException{
-		dest.createNewFile();
-		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dest));
-		out.writeInt(TotPanel.hits);
-		out.writeDouble(Main.avg);
-		out.writeInt(Main.max);
-		out.writeLong(Main.n);
-		out.writeInt(Main.prev);
-		out.writeInt(Main.tmp.get());
-		for(Entry<Integer, Key> key : Main.keys.entrySet()){
-			out.writeInt(key.getKey());
-			out.writeObject(key.getValue());
+	private static void saveStats(Path dest) throws IOException{
+		try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(dest, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING))){
+			out.print("version: ");
+			out.println(Main.VERSION);
+			out.println();
+			out.println("# General");
+			out.print("total: ");
+			out.println(TotPanel.hits);
+			out.print("average: ");
+			out.println(Main.avg);
+			out.print("maximum: ");
+			out.println(Main.max);
+			out.print("seconds: ");
+			out.println(Main.n);
+			out.print("previous: ");
+			out.println(Main.prev);
+			out.print("current: ");
+			out.println(Main.tmp.get());
+			out.println();
+			out.println("# Keys");
+			out.println("keys:");
+			for(Entry<Integer, Key> entry : Main.keys.entrySet()){
+				Key key = entry.getValue();
+				out.print("  - [keycode=");
+				out.print(entry.getKey());
+				out.print(",count=");
+				out.print(key.count);
+				out.print(",alt=");
+				out.print(key.alt);
+				out.print(",ctrl=");
+				out.print(key.ctrl);
+				out.print(",shift=");
+				out.print(key.shift);
+				out.print(",name=\"");
+				out.print(key.name);
+				out.println("\"]");
+			}
+			out.flush();
+			out.close();
 		}
-		out.flush();
-		out.close();
 	}
 	
 	/**
@@ -334,9 +366,10 @@ public class Statistics{
 			return;
 		}
 		try{
-			loadStats(file);
+			loadStats(file.toPath());
 			Dialog.showMessageDialog("Statistics succesfully loaded");
-		}catch(IOException e){
+		}catch(Exception e){
+			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to load the statistics!\nCause: " + e.getMessage());
 		}
 	}
@@ -344,33 +377,82 @@ public class Statistics{
 	/**
 	 * Loads the statistics from a file
 	 * @param file The file to load from.
-	 * @throws IOException When an IOException occurs.
+	 * @throws Exception When an Exception occurs.
 	 */
-	protected static void loadStats(File file) throws IOException{
-		try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
-			TotPanel.hits = in.readInt();
-			Main.avg = in.readDouble();
-			Main.max = in.readInt();
-			Main.n = in.readLong();
-			Main.prev = in.readInt();
-			Main.tmp.set(in.readInt());
-			while(in.available() > 0){
-				int code = in.readInt();
-				Key key = Main.keys.get(code);
-				Key obj = ((Key)in.readObject());
-				if(key != null){
-					key.count = obj.count;
-				}else{
-					Main.keys.put(code, obj);
+	protected static void loadStats(Path file) throws Exception{
+		try(BufferedReader in = Files.newBufferedReader(file)){
+			String line;
+			while((line = in.readLine()) != null){
+				if(line.startsWith("#") || line.isEmpty()){
+					continue;
+				}
+				
+				String[] args = line.split(":", 2);
+				String value = args.length > 1 ? args[1].trim() : null;
+				switch(args[0]){
+				case "version":
+					break;
+				case "total":
+					TotPanel.hits = Integer.parseInt(value);
+					break;
+				case "average":
+					Main.avg = Double.parseDouble(value);
+					break;
+				case "maximum":
+					Main.max = Integer.parseInt(value);
+					break;
+				case "seconds":
+					Main.n = Long.parseLong(value);
+					break;
+				case "previous":
+					Main.prev = Integer.parseInt(value);
+					break;
+				case "current":
+					Main.tmp.set(Integer.parseInt(value));
+					break;
+				case "keys":
+					while(true){
+						in.mark(100);
+						line = in.readLine();
+						if(line == null){
+							break;
+						}
+						
+						Matcher m = STATS_LINE_REGEX.matcher(line);
+						if(m.matches()){
+							int code = Integer.parseInt(m.group(1));
+							Key key = Main.keys.get(code);
+							if(key == null){
+								key = new Key(
+									m.group(6),
+									Integer.parseInt(m.group(2)),
+									Boolean.parseBoolean(m.group(3)),
+									Boolean.parseBoolean(m.group(4)),
+									Boolean.parseBoolean(m.group(5))
+								);
+								Main.keys.put(code, key);
+							}else{
+								key.count = Integer.parseInt(m.group(2));
+							}
+						}else{
+							in.reset();
+							break;
+						}
+					}
+					break;
+				default:
+					throw new IllegalArgumentException("Cannot parse line: " + line);
 				}
 			}
 			in.close();
-			Main.frame.repaint();
-			Main.graphFrame.repaint();
-		}catch(ClassNotFoundException e){
-			//Shouldn't happen
-			e.printStackTrace();
+		}catch(MalformedInputException e){
+			throw new UnsupportedOperationException("Loading legacy statistics files is unsupported in this version.", e);
+		}catch(Exception e){
+			throw e;
 		}
+
+		Main.frame.repaint();
+		Main.graphFrame.repaint();
 	}
 	
 	/**

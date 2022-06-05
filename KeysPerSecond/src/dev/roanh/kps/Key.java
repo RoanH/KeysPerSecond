@@ -1,7 +1,5 @@
 package dev.roanh.kps;
 
-import java.io.Serializable;
-
 import dev.roanh.kps.panels.KeyPanel;
 
 /**
@@ -10,11 +8,7 @@ import dev.roanh.kps.panels.KeyPanel;
  * is pressed
  * @author Roan
  */
-public class Key implements Serializable{
-	/**
-	 * Serial ID.
-	 */
-	private static final long serialVersionUID = 6902618211485788012L;
+public class Key{
 	/**
 	 * Whether or not this key is currently pressed
 	 */
@@ -44,6 +38,23 @@ public class Key implements Serializable{
 	 * Whether or not shift has to be down
 	 */
 	protected boolean shift;
+	
+	/**
+	 * Constructs a new Key object with the given name,
+	 * hit count and modifier keys.
+	 * @param name The name of this key.
+	 * @param count The number of times this key was hit so far.
+	 * @param alt Whether alt has to be down for this key.
+	 * @param ctrl Whether ctrl has to be down for this key.
+	 * @param shift Whether shift has to be down for this key.
+	 */
+	protected Key(String name, int count, boolean alt, boolean ctrl, boolean shift){
+		this(name);
+		this.count = count;
+		this.alt = alt;
+		this.ctrl = ctrl;
+		this.shift = shift;
+	}
 
 	/**
 	 * Constructs a new Key object
