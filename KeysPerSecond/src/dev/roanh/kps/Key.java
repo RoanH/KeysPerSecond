@@ -1,7 +1,5 @@
 package dev.roanh.kps;
 
-import java.io.Serializable;
-
 import dev.roanh.kps.panels.KeyPanel;
 
 /**
