@@ -813,6 +813,7 @@ public class Configuration{
 				try{
 					Statistics.loadStats(Paths.get(statsSaveFile));
 				}catch(Exception e){
+					e.printStackTrace();
 					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
 				}
 			}

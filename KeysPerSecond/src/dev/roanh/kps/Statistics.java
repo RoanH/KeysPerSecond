@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -365,6 +366,7 @@ public class Statistics{
 			loadStats(file.toPath());
 			Dialog.showMessageDialog("Statistics succesfully loaded");
 		}catch(Exception e){
+			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to load the statistics!\nCause: " + e.getMessage());
 		}
 	}
@@ -417,10 +419,10 @@ public class Statistics{
 						if(m.matches()){
 							int code = Integer.parseInt(m.group(1));
 							Key key = Main.keys.get(code);
-							if(null == null){
+							if(key == null){
 								key = new Key(
 									m.group(6),
-									Integer.parseInt(m.group(3)),
+									Integer.parseInt(m.group(2)),
 									Boolean.parseBoolean(m.group(3)),
 									Boolean.parseBoolean(m.group(4)),
 									Boolean.parseBoolean(m.group(5))
@@ -440,6 +442,8 @@ public class Statistics{
 				}
 			}
 			in.close();
+		}catch(MalformedInputException e){
+			throw new UnsupportedOperationException("Loading legacy statistics files is unsupported in this version.", e);
 		}catch(Exception e){
 			throw e;
 		}
