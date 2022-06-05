@@ -56,6 +56,9 @@ public class Statistics{
 	 * Extension filter for KeysPerSecond statistics files.
 	 */
 	private static final FileExtension KPS_STATS_EXT = FileSelector.registerFileExtension("KeysPerSecond statistics", "kpsstats");
+	/**
+	 * Regex used to parse key lines in the statistics save file.
+	 */
 	private static final Pattern STATS_LINE_REGEX = Pattern.compile("^  - \\[keycode=(\\d+),count=(\\d+),alt=(true|false),ctrl=(true|false),shift=(true|false),name=\\\"(.*)\\\"]$");
 	/**
 	 * Statistics save future
