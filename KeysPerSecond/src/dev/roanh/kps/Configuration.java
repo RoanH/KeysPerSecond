@@ -267,13 +267,21 @@ public class Configuration{
 	 * The original configuration file
 	 */
 	private Path data;
-
+	
 	/**
 	 * Constructs a new configuration object
 	 * @param data The data file
 	 */
 	protected Configuration(Path data){
 		this.data = data;
+	}
+	
+	/**
+	 * Gets the location on disk for this configuration file.
+	 * @return The on disk location of the configuration file.
+	 */
+	public final Path getPath(){
+		return data;
 	}
 
 	/**

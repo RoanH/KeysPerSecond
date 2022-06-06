@@ -14,10 +14,16 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -240,36 +246,22 @@ public class Main{
 
 		//Set configuration for the keys
 		if(config != null){
-			Configuration toLoad = new Configuration(new File(config));
-			int index = config.lastIndexOf(File.separatorChar);
-			File dir = new File(config.substring(0, index));
-			final String name = config.substring(index + 1);
-			File[] files = null;
-			if(dir.exists()){
-				files = dir.listFiles((FilenameFilter)(f, n)->{
-					for(int i = 0; i < name.length(); i++){
-						char ch = name.charAt(i);
-						if(ch == '?'){
-							continue;
-						}
-						if(i >= n.length() || ch != n.charAt(i)){
-							return false;
-						}
-					}
-					return true;
-				});
-			}
-			if(files != null && files.length > 0 && files[0].exists()){
-				toLoad.loadConfig(files[0]);
-				Main.config = toLoad;
-				System.out.println("Loaded config file: " + files[0].getName());
-			}else{
-				System.out.println("Provided config file does not exist.");
+			try{
+				Configuration toLoad = parseConfiguration(config);
+				if(toLoad != null){
+					Main.config = toLoad;
+					System.out.println("Loaded config file: " + toLoad.getPath().toString());
+				}else{
+					System.out.println("The provided config file does not exist.");
+				}
+			}catch(IOException e){
+				e.printStackTrace();
+				Dialog.showErrorDialog("Failed to load the given configuration file\nCause: " + e.getMessage());
 			}
 		}else{
 			try{
 				configure();
-			}catch(NullPointerException e){
+			}catch(Exception e){
 				e.printStackTrace();
 				try{
 					Dialog.showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
@@ -289,6 +281,48 @@ public class Main{
 		
 		//Enter the main loop
 		mainLoop();
+	}
+	
+	private static final Configuration parseConfiguration(String config) throws IOException{
+		try{
+			Path path = Paths.get(config);
+			Configuration toLoad = new Configuration(path);
+			toLoad.loadConfig(path);
+			return toLoad;
+		}catch(InvalidPathException e){
+			int index = config.lastIndexOf(File.separatorChar);
+			try{
+				Path dir = Paths.get(config.substring(0, index));
+				final String name = config.substring(index + 1);
+				Filter<Path> filter = p->{
+					String other = p.getFileName().toString();
+					for(int i = 0; i < name.length(); i++){
+						char ch = name.charAt(i);
+						if(ch == '?'){
+							continue;
+						}
+						if(i >= other.length() || ch != other.charAt(i)){
+							return false;
+						}
+					}
+					return true;
+				};
+				
+				try(DirectoryStream<Path> files = Files.newDirectoryStream(dir, filter)){
+					Iterator<Path> iter = files.iterator();
+					if(iter.hasNext()){
+						Path path = iter.next();
+						Configuration toLoad = new Configuration(path);
+						toLoad.loadConfig(path);
+						return toLoad;
+					}
+				}
+				
+				return null;
+			}catch(InvalidPathException e2){
+				return null;
+			}
+		}
 	}
 
 	/**
