@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.MalformedInputException;
@@ -86,9 +85,9 @@ public class Statistics{
 		JButton select = new JButton("Select");
 		selectFile.add(select, BorderLayout.LINE_END);
 		select.addActionListener((e)->{
-			File dir = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
+			Path dir = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
 			if(dir != null){
-				selectedFile.setText(dir.getAbsolutePath());
+				selectedFile.setText(dir.toAbsolutePath().toString());
 			}
 		});
 		
@@ -123,9 +122,9 @@ public class Statistics{
 		extras.add(seldest);
 		labels.add(new JLabel("Save location: "));
 		seldest.addActionListener((e)->{
-			File dir = Dialog.showFolderOpenDialog();
+			Path dir = Dialog.showFolderOpenDialog();
 			if(dir != null){
-				ldest.setText(dir.getAbsolutePath());
+				ldest.setText(dir.toAbsolutePath().toString());
 			}
 		});
 		
@@ -297,10 +296,10 @@ public class Statistics{
 	 * to save to
 	 */
 	protected static void saveStats(){
-		File file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
+		Path file = Dialog.showFileSaveDialog(KPS_STATS_EXT, "stats");
 		if(file != null){
 			try{
-				saveStats(file.toPath());
+				saveStats(file);
 				Dialog.showMessageDialog("Statistics succesfully saved");
 			}catch(IOException e){
 				e.printStackTrace();
@@ -361,12 +360,13 @@ public class Statistics{
 	 * a prompt to the user for the file.
 	 */
 	protected static void loadStats(){
-		File file = Dialog.showFileOpenDialog(KPS_STATS_EXT);
+		Path file = Dialog.showFileOpenDialog(KPS_STATS_EXT);
 		if(file == null){
 			return;
 		}
+		
 		try{
-			loadStats(file.toPath());
+			loadStats(file);
 			Dialog.showMessageDialog("Statistics succesfully loaded");
 		}catch(Exception e){
 			e.printStackTrace();
