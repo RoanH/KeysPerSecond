@@ -283,12 +283,25 @@ public class Main{
 		mainLoop();
 	}
 	
+	/**
+	 * Parses the given command line argument configuration file by
+	 * loading the file from disk while treating unknown characters
+	 * as wildcards to deal with Windows argument encoding issues.
+	 * @param config The configuration file path.
+	 * @return The loaded configuration file or <code>null</code>
+	 *         if the file was not found.
+	 * @throws IOException When an IOException occurs.
+	 */
 	private static final Configuration parseConfiguration(String config) throws IOException{
 		try{
 			Path path = Paths.get(config);
-			Configuration toLoad = new Configuration(path);
-			toLoad.loadConfig(path);
-			return toLoad;
+			if(Files.exists(path)){
+				Configuration toLoad = new Configuration(path);
+				toLoad.loadConfig(path);
+				return toLoad;
+			}else{
+				return null;
+			}
 		}catch(InvalidPathException e){
 			int index = config.lastIndexOf(File.separatorChar);
 			try{
