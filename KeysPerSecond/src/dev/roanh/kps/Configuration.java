@@ -4,13 +4,11 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -268,13 +266,13 @@ public class Configuration{
 	/**
 	 * The original configuration file
 	 */
-	private File data;
+	private Path data;
 
 	/**
 	 * Constructs a new configuration object
 	 * @param data The data file
 	 */
-	protected Configuration(File data){
+	protected Configuration(Path data){
 		this.data = data;
 	}
 
@@ -326,10 +324,10 @@ public class Configuration{
 	 * @return Whether or not the config was loaded successfully
 	 */
 	protected static final boolean loadConfiguration(){
-		File saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
+		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
 			return false;
-		}else if(saveloc.getName().endsWith("kpsconf") || saveloc.getName().endsWith("kpsconf2")){
+		}else if(saveloc.getFileName().toString().endsWith("kpsconf") || saveloc.getFileName().toString().endsWith("kpsconf2")){
 			Dialog.showMessageDialog(
 				"You are trying to load a legacy configuration file.\n"
 				+ "This is no longer possible with this version of the program.\n"
@@ -353,7 +351,7 @@ public class Configuration{
 	 * @param saveloc The save location
 	 * @return Whether or not the configuration was loaded successfully
 	 */
-	protected final boolean loadConfig(File saveloc){
+	protected final boolean loadConfig(Path saveloc){
 		load(saveloc);
 		return true;
 	}
@@ -363,10 +361,9 @@ public class Configuration{
 	 * @param saveloc The save location
 	 * @return Whether or not some defaults were used
 	 */
-	private final boolean load(File saveloc){
+	private final boolean load(Path saveloc){
 		boolean modified = false;
-		try{
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(saveloc), StandardCharsets.UTF_8));
+		try(BufferedReader in = Files.newBufferedReader(saveloc)){
 			RenderingMode defaultMode = RenderingMode.VERTICAL;
 			String line;
 			while((line = in.readLine()) != null){
@@ -960,10 +957,9 @@ public class Configuration{
 	 */
 	protected final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
-		File saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
+		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
 		if(saveloc != null){
-			try{
-				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveloc), StandardCharsets.UTF_8));
+			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE))){
 				//general
 				out.print("version: ");
 				out.println(Main.VERSION);
