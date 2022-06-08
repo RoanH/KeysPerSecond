@@ -301,6 +301,10 @@ public enum RenderingMode{
 			return getPanelInsideWidth(panel);
 		}
 	},
+	/**
+	 * Rendering mode where only the panel title
+	 * is displayed in the center.
+	 */
 	TEXT_ONLY("Text only"){
 
 		@Override
@@ -335,6 +339,10 @@ public enum RenderingMode{
 			return 1;
 		}
 	},
+	/**
+	 * Rendering mode where only the panel value
+	 * is displayed in the center.
+	 */
 	VALUE_ONLY("Value only"){
 
 		@Override
