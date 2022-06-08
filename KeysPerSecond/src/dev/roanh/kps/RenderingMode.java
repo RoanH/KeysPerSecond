@@ -485,12 +485,11 @@ public enum RenderingMode{
 	 * Points returned by this class are dynamic and change on a call
 	 * to either {@link #getTitleDrawPosition(Graphics2D, BasePanel, String, Font)}
 	 * or {@link #getValueDrawPosition(Graphics2D, BasePanel, String, Font)}.
-	 * @param g The graphics used to draw the title
-	 * @param panel The panel the title will be drawn on
-	 * @param title The title that is going to be drawn
-	 * @param font The font with which the title is going to be drawn
-	 * @return The location at which the title should be drawn or
-	 *         <code>null</code> if no title should be drawn.
+	 * @param g The graphics used to draw the title.
+	 * @param panel The panel the title will be drawn on.
+	 * @param title The title that is going to be drawn.
+	 * @param font The font with which the title is going to be drawn.
+	 * @return The location at which the title should be drawn.
 	 */
 	protected Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
 		setTitleDrawPositionImpl(g.getFontMetrics(font), g, font, panel, title);
@@ -502,12 +501,11 @@ public enum RenderingMode{
 	 * Points returned by this class are dynamic and change on a call
 	 * to either {@link #getTitleDrawPosition(Graphics2D, BasePanel, String, Font)}
 	 * or {@link #getValueDrawPosition(Graphics2D, BasePanel, String, Font)}.
-	 * @param g The graphics used to draw the value
-	 * @param panel The panel the value will be drawn on
-	 * @param value The value that is going to be drawn
-	 * @param font The font with which the value is going to be drawn
-	 * @return The location at which the value should be drawn or
-	 *         <code>null</code> if no title should be drawn.
+	 * @param g The graphics used to draw the value.
+	 * @param panel The panel the value will be drawn on.
+	 * @param value The value that is going to be drawn.
+	 * @param font The font with which the value is going to be drawn.
+	 * @return The location at which the value should be drawn.
 	 */
 	protected Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
 		setValueDrawPositionImpl(g.getFontMetrics(font), g, font, panel, value);
