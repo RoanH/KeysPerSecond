@@ -383,7 +383,13 @@ public enum RenderingMode{
 	 * enum constant, used in dialogs
 	 */
 	private final String name;
+	/**
+	 * Whether this rendering mode renders a panel title.
+	 */
 	private final boolean text;
+	/**
+	 * Whether this rendering mode renders a panel value.
+	 */
 	private final boolean value;
 	/**
 	 * Cache point that is constantly being reused and
@@ -400,18 +406,25 @@ public enum RenderingMode{
 	private static final char[] ref = new char[]{'R'};
 	/**
 	 * Offset from the panel border offset to the inside
-	 * of the panel (inside the image)
+	 * of the panel (inside the image).
 	 */
 	public static final int insideOffset = 3;
 	
+	/**
+	 * Constructs a new RenderingMode
+	 * with the given name.
+	 * @param name The display name of the mode.
+	 */
 	private RenderingMode(String name){
 		this(name, true, true);
 	}
 
 	/**
 	 * Constructs a new RenderingMode
-	 * with the given name
-	 * @param name The display name of the mode
+	 * with the given name and display settings.
+	 * @param name The display name of the mode.
+	 * @param text Whether to render a panel title or not.
+	 * @param value Whether to render a panel value or not.
 	 */
 	private RenderingMode(String name, boolean text, boolean value){
 		this.name = name;
