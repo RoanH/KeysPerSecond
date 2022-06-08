@@ -186,6 +186,9 @@ public class CommandKeys{
 	 * @author Roan
 	 */
 	protected static class CMD{
+		/**
+		 * Command key that never activates.
+		 */
 		protected static final CMD NONE = new CMD(0, false, false){
 			@Override
 			public String toSaveString(){
