@@ -305,7 +305,7 @@ public enum RenderingMode{
 	 * Rendering mode where only the panel title
 	 * is displayed in the center.
 	 */
-	TEXT_ONLY("Text only"){
+	TEXT_ONLY("Text only", true, false){
 
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
@@ -331,19 +331,19 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveValueHeight(BasePanel panel){
-			return 1;
+			return 0;
 		}
 
 		@Override
 		protected int getEffectiveValueWidth(BasePanel panel){
-			return 1;
+			return 0;
 		}
 	},
 	/**
 	 * Rendering mode where only the panel value
 	 * is displayed in the center.
 	 */
-	VALUE_ONLY("Value only"){
+	VALUE_ONLY("Value only", false, true){
 
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
@@ -359,12 +359,12 @@ public enum RenderingMode{
 
 		@Override
 		protected int getEffectiveTitleHeight(BasePanel panel){
-			return 1;
+			return 0;
 		}
 
 		@Override
 		protected int getEffectiveTitleWidth(BasePanel panel){
-			return 1;
+			return 0;
 		}
 
 		@Override
@@ -382,7 +382,9 @@ public enum RenderingMode{
 	 * The display name of the
 	 * enum constant, used in dialogs
 	 */
-	private String name;
+	private final String name;
+	private final boolean text;
+	private final boolean value;
 	/**
 	 * Cache point that is constantly being reused and
 	 * returned by the methods from this enum. This prevents
@@ -401,14 +403,20 @@ public enum RenderingMode{
 	 * of the panel (inside the image)
 	 */
 	public static final int insideOffset = 3;
+	
+	private RenderingMode(String name){
+		this(name, true, true);
+	}
 
 	/**
 	 * Constructs a new RenderingMode
 	 * with the given name
-	 * @param n The display name of the mode
+	 * @param name The display name of the mode
 	 */
-	private RenderingMode(String n){
-		name = n;
+	private RenderingMode(String name, boolean text, boolean value){
+		this.name = name;
+		this.text = text;
+		this.value = value;
 	}
 
 	/**
@@ -660,13 +668,13 @@ public enum RenderingMode{
 		 * @param panel The panel to draw this title on
 		 */
 		public final void renderTitle(String title, Graphics2D g, BasePanel panel){
-			if(titleLen != title.length()){
-				titleLen = title.length();
-				titleFont = mode.getTitleFont(title, g, panel, titleFont);
-				titlePos = mode.getTitleDrawPosition(g, panel, title, titleFont).getLocation();
-			}
+			if(mode.text){
+				if(titleLen != title.length()){
+					titleLen = title.length();
+					titleFont = mode.getTitleFont(title, g, panel, titleFont);
+					titlePos = mode.getTitleDrawPosition(g, panel, title, titleFont).getLocation();
+				}
 
-			if(titlePos != null){
 				g.setFont(titleFont);
 				g.drawString(title, titlePos.x, titlePos.y);
 			}
@@ -680,13 +688,13 @@ public enum RenderingMode{
 		 * @param panel The panel to draw this value on
 		 */
 		public final void renderValue(String value, Graphics2D g, BasePanel panel){
-			if(valueLen != value.length()){
-				valueLen = value.length();
-				valueFont = mode.getValueFont(value, g, panel, valueFont);
-				valuePos = mode.getValueDrawPosition(g, panel, value, valueFont).getLocation();
-			}
+			if(mode.value){
+				if(valueLen != value.length()){
+					valueLen = value.length();
+					valueFont = mode.getValueFont(value, g, panel, valueFont);
+					valuePos = mode.getValueDrawPosition(g, panel, value, valueFont).getLocation();
+				}
 
-			if(valuePos != null){
 				g.setFont(valueFont);
 				g.drawString(value, valuePos.x, valuePos.y);
 			}
