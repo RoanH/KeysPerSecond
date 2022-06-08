@@ -837,6 +837,10 @@ public class Configuration{
 	 * @return The command key data
 	 */
 	private final CMD parseCommand(String arg){
+		if(arg.equals(CMD.NONE.toSaveString())){
+			return CMD.NONE;
+		}
+		
 		String[] args = arg.substring(1, arg.length() - 1).split(",");
 		int code = -10;
 		boolean alt = false;
@@ -855,6 +859,7 @@ public class Configuration{
 				break;
 			}
 		}
+		
 		return new CMD(code, alt, ctrl);
 	}
 
