@@ -186,6 +186,22 @@ public class CommandKeys{
 	 * @author Roan
 	 */
 	protected static class CMD{
+		protected static final CMD NONE = new CMD(0, false, false){
+			@Override
+			public String toSaveString(){
+				return "unbound";
+			}
+			
+			@Override
+			public String toString(){
+				return "Unbound";
+			}
+			
+			@Override
+			protected boolean matches(int keycode){
+				return false;
+			}
+		};
 		/**
 		 * Whether or not alt has
 		 * to be pressed
@@ -219,7 +235,7 @@ public class CommandKeys{
 		 * @param keycode The key that was pressed
 		 * @return Whether or not this key code triggers this command key
 		 */
-		protected final boolean matches(int keycode){
+		protected boolean matches(int keycode){
 			return (this.keycode == keycode) && (this.alt == isAltDown) && (this.ctrl == isCtrlDown);
 		}
 
@@ -242,7 +258,7 @@ public class CommandKeys{
 	 */
 	protected static CMD askForNewKey(){
 		JPanel form = new JPanel(new GridLayout(3, 1));
-		JLabel txt = new JLabel("Press a key and click 'Save'");
+		JLabel txt = new JLabel("Press a key and click 'Save' or press 'Unbind'");
 		JPanel a = new JPanel(new BorderLayout());
 		JPanel c = new JPanel(new BorderLayout());
 		JCheckBox ctrl = new JCheckBox();
@@ -254,15 +270,19 @@ public class CommandKeys{
 		form.add(txt);
 		form.add(c);
 		form.add(a);
-		if(Dialog.showSaveDialog(form)){
+		
+		switch(Dialog.showDialog(form, false, new String[]{"Save", "Unbind", "Cancel"})){
+		case 0:
 			if(Main.lastevent == null){
 				return null;
 			}
+			
 			CMD cmd = new CMD(Main.lastevent.getKeyCode(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
-			if(Dialog.showConfirmDialog("Set command key to: " + cmd.toString())){
-				return cmd;
-			}
+			return Dialog.showConfirmDialog("Set command key to: " + cmd.toString()) ? cmd : null;
+		case 1:
+			return CMD.NONE;
+		default:
+			return null;
 		}
-		return null;
 	}
 }
