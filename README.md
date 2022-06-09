@@ -46,13 +46,13 @@ And if you find any bugs feel free to report them. If you have any features you'
 - You can pass the path to the config file to load via the command line or a shortcut so you can skip the configuration step. Setting the program as the default program to open the configuration file with may work as well as long as you don't move the executable afterwards.
 - When resetting something it will also be printed to the console if this program is running using cmd/shell.    
 - [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
-- If you have an old config (kpsconf1 or kpsconf2) then you need to convert it with version 8.4 to load it in more recent versions.  
+- If you have an old configuration file (kpsconf1 or kpsconf2) then you need to convert it with version 8.4 to load it in more recent versions.  
 
 ## Downloads
 _Requires Java 8 or higher_    
 _Tested operating systems: Mac 10.11.6 & M1, Ubuntu Linux 16.04 LTS, Windows 7 & 8 & 10 & 11_    
-- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.5/KeysPerSecond-v8.5.exe)    
-- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.5/KeysPerSecond-v8.5.jar)
+- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.6/KeysPerSecond-v8.6.exe)    
+- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.6/KeysPerSecond-v8.6.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
@@ -65,7 +65,7 @@ The following two examples show the layout while it is being edited. All the pan
 Next are two other examples of possible layouts.    
 ![](https://i.imgur.com/ImE4zTU.png)    
 ![](https://i.imgur.com/IE5ySQa.png)    
-Last are some very simple layouts to highlight the title-value display options.    
+Last are some very simple layouts to highlight more of the title-value display options.    
 ![Modes](https://i.imgur.com/0769n9E.png)      
 
 ## History

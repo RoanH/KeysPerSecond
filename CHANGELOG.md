@@ -1,6 +1,14 @@
 # Updates
 All releases can be found on the [releases page](https://github.com/RoanH/KeysPerSecond/releases).
 
+## [v8.6] 9th of June, 2022: Fix Statistics Saving
+- Fix statistics saving and loading being being broken ([#51](https://github.com/RoanH/KeysPerSecond/issues/51) and [#57](https://github.com/RoanH/KeysPerSecond/issues/57)).
+- Implement a new text based statistics saving format (meaning you can manually edit key counts if you want).
+- Implement a text only rendering mode.
+- Implement a value only rendering mode.
+- Make it possible to unbind command keys, effectively disabling them ([#45](https://github.com/RoanH/KeysPerSecond/issues/45)).
+- Dependency updates & internal improvements.
+
 ## [v8.5] 7th of January, 2022: Better Support
 A lot of fixes again and some better support.
 
