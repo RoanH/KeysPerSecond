@@ -43,7 +43,7 @@ And if you find any bugs feel free to report them. If you have any features you'
 - An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
 - The snap to screen edge function works on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
-- You can pass the path to the config file to load via the command line or a shortcut so you can skip the configuration step. Setting the program as the default program to open the configuration file with may work as well as long as you don't move the executable afterwards.
+- You can configure a configuration to open on launch, see [this wiki page](https://github.com/RoanH/KeysPerSecond/wiki) for more details. Essentially, you can pass the path to the config file to load via the command line or a shortcut or set the program as the default program to open `.kps` files.
 - When resetting something it will also be printed to the console if this program is running using cmd/shell.    
 - [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
 - If you have an old configuration file (kpsconf1 or kpsconf2) then you need to convert it with version 8.4 to load it in more recent versions.  
