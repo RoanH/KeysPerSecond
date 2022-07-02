@@ -36,17 +36,13 @@ And if you find any bugs feel free to report them. If you have any features you'
 
 ## Notes
 - The horizontal line in the graph represents the average number of keys pressed per second.
-- You can add any key, and any number of keys to the program.
-- You can also track mouse buttons with this program.
-- The overlay option is far from perfect, it just asks the OS to place the program on top. It'll not overlay most full screen games.
+- You can add any number of keys or mouse buttons to the program.
 - To change a GUI colour in the colours menu, click on the current colour
-- An opacity of 100% means completely opaque and an opacity of 0% means completely transparent.
-- The snap to screen edge function works on multi-monitor setups.
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
 - You can configure a configuration to open on launch, see [this wiki page](https://github.com/RoanH/KeysPerSecond/wiki) for more details. Essentially, you can pass the path to the config file to load via the command line or a shortcut or set the program as the default program to open `.kps` files.
 - When resetting something it will also be printed to the console if this program is running using cmd/shell.    
-- [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
-- If you have an old configuration file (kpsconf1 or kpsconf2) then you need to convert it with version 8.4 to load it in more recent versions.  
+- The overlay option is far from perfect, it just asks the OS to place the program on top. It'll not overlay most full screen games. [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
+- If you have an old configuration file (kpsconf1 or kpsconf2) then you need to convert it with [version 8.4](https://github.com/RoanH/KeysPerSecond/releases/tag/v8.4) to load it in more recent versions.  
 
 ## Downloads
 _Requires Java 8 or higher_    
