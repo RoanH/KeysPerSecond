@@ -38,7 +38,7 @@ repositories{
 }
 
 dependencies{
-	implementation 'dev.roanh.util:util:2.1'
+	implementation 'dev.roanh.util:util:2.4'
 	implementation 'com.github.kwhat:jnativehook:2.2.1'
 }
 
