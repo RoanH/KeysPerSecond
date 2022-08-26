@@ -47,7 +47,7 @@ public class LayoutValidator{
 	private FieldListener height = new FieldListener();
 
 	/**
-	 * Constructs and initialises a new LayoutValidator
+	 * Constructs and initialises a new LayoutValidator.
 	 */
 	public LayoutValidator(){
 		x.incompatible = width;
@@ -135,6 +135,14 @@ public class LayoutValidator{
 		 */
 		public final void setModel(SpecialNumberModel model){
 			this.model = model;
+		}
+		
+		/**
+		 * Gets the model for this field listener.
+		 * @return The model for this field listener.
+		 */
+		public final SpecialNumberModel getModel(){
+			return model;
 		}
 	}
 }

@@ -21,6 +21,7 @@ package dev.roanh.kps.ui.dialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.function.IntConsumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -45,6 +46,7 @@ import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.ui.model.DynamicInteger;
 import dev.roanh.kps.ui.model.EndNumberModel;
 import dev.roanh.kps.ui.model.MaxNumberModel;
+import dev.roanh.kps.ui.model.SpecialNumberModel.ValueChangeListener;
 import dev.roanh.util.Dialog;
 
 /**
@@ -214,40 +216,24 @@ public class LayoutDialog{
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
 
 		LayoutValidator validator = new LayoutValidator();
+		validator.getXField().setModel(new EndNumberModel(info.getX(), validator.getXField(), update(info::setX, live)));
+		validator.getYField().setModel(new EndNumberModel(info.getY(), validator.getYField(), update(info::setY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(info.getWidth(), validator.getWidthField(), update(info::setWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(info.getHeight(), validator.getHeightField(), update(info::setHeight, live)));
 
-		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), validator.getXField(), (val)->{
-			info.setX(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner x = new JSpinner(validator.getXField().getModel());
 		x.setEditor(new SpecialNumberModelEditor(x));
 		fields.add(x);
 
-		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), validator.getYField(), (val)->{
-			info.setY(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner y = new JSpinner(validator.getYField().getModel());
 		y.setEditor(new SpecialNumberModelEditor(y));
 		fields.add(y);
 
-		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), validator.getWidthField(), (val)->{
-			info.setWidth(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner w = new JSpinner(validator.getWidthField().getModel());
 		w.setEditor(new SpecialNumberModelEditor(w));
 		fields.add(w);
 
-		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), validator.getHeightField(), (val)->{
-			info.setHeight(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner h = new JSpinner(validator.getHeightField().getModel());
 		h.setEditor(new SpecialNumberModelEditor(h));
 		fields.add(h);
 
@@ -260,6 +246,23 @@ public class LayoutDialog{
 			}
 		});
 		modes.add(mode);
+	}
+	
+	/**
+	 * Construct a value change listener that set
+	 * new values to the given field and optionally
+	 * updates the main GUI.
+	 * @param field The field to update with new values.
+	 * @param live Whether to update the GUI on updates.
+	 * @return The newly constructed change listener.
+	 */
+	private static final ValueChangeListener update(IntConsumer field, boolean live){
+		return val->{
+			field.accept(val);
+			if(live){
+				Main.reconfigure();
+			}
+		};
 	}
 	
 	/**
