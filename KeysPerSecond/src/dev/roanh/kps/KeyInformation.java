@@ -48,6 +48,7 @@ public final class KeyInformation extends Positionable{
 	/**
 	 * Auto-increment for #x
 	 */
+	@Deprecated
 	public static volatile int autoIndex = -2;
 
 	/**
