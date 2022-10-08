@@ -294,34 +294,66 @@ public class Configuration{
 		this.data = data;
 	}
 	
+	/**
+	 * Gets the x position of the graph.
+	 * @return The x position of the graph.
+	 */
 	public final int getGraphX(){
 		return graph_x;
 	}
 	
+	/**
+	 * Gets the y position of the graph.
+	 * @return The y position of the graph.
+	 */
 	public final int getGraphY(){
 		return graph_y;
 	}
 	
+	/**
+	 * Gets the width of the graph.
+	 * @return The width of the graph.
+	 */
 	public final int getGraphWidth(){
 		return graph_w;
 	}	
 	
+	/**
+	 * Gets the height of the graph.
+	 * @return The height of the graph.
+	 */
 	public final int getGraphHeight(){
 		return graph_h;
 	}
 	
+	/**
+	 * Sets the x position of the graph.
+	 * @param x The new x position.
+	 */
 	public final void setGraphX(int x){
 		graph_x = x;
 	}
 	
+	/**
+	 * Sets the y position of the graph.
+	 * @param y The new y position.
+	 */
 	public final void setGraphY(int y){
 		graph_y = y;
 	}
 	
+	/**
+	 * Sets the width of the graph in cells.
+	 * @param width The new width of the graph.
+	 */
 	public final void setGraphWidth(int width){
 		graph_w = width;
 	}
 	
+	/**
+	 * Sets the height of the graph in cells.
+	 * @param height The new height of the graph.
+	 */
 	public final void setGraphHeight(int height){
 		graph_h = height;
 	}
