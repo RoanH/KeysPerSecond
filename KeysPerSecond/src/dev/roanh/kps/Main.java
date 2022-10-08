@@ -382,7 +382,7 @@ public class Main{
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					TotPanel.hits += currentTmp;
-					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
+					System.out.println("Current keys per second: " + totaltmp);
 				}
 				graph.addPoint(totaltmp);
 				graph.repaint();
