@@ -1175,7 +1175,7 @@ public class Main{
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.graph_w * config.cellSize, config.graph_h * config.cellSize);
+					graphFrame.setSize(config.getGraphWidth() * config.cellSize, config.getGraphHeight() * config.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{

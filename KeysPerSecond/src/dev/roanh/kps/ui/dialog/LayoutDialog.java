@@ -140,10 +140,10 @@ public class LayoutDialog{
 		graphLayout.add(graphMode);
 
 		LayoutValidator validator = new LayoutValidator();
-		validator.getXField().setModel(new EndNumberModel(Main.config.graph_x, validator.getXField(), update(Main.config::setGraphX, live)));
-		validator.getYField().setModel(new EndNumberModel(Main.config.graph_y, validator.getYField(), update(Main.config::setGraphY, live)));
-		validator.getWidthField().setModel(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), update(Main.config::setGraphWidth, live)));
-		validator.getHeightField().setModel(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), update(Main.config::setGraphHeight, live)));
+		validator.getXField().setModel(new EndNumberModel(Main.config.getGraphX(), validator.getXField(), update(Main.config::setGraphX, live)));
+		validator.getYField().setModel(new EndNumberModel(Main.config.getGraphY(), validator.getYField(), update(Main.config::setGraphY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(Main.config.getGraphWidth(), validator.getWidthField(), update(Main.config::setGraphWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(Main.config.getGraphHeight(), validator.getHeightField(), update(Main.config::setGraphHeight, live)));
 
 		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(validator.getXField().getModel());

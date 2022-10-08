@@ -230,21 +230,21 @@ public class Configuration{
 	 */
 	public boolean graphAvg = true;
 	/**
-	 * The x position of the graph
+	 * The x position of the graph (-1 is end)
 	 */
-	public int graph_x = 0;
+	private int graph_x = 0;
 	/**
-	 * The y position of the graph
+	 * The y position of the graph (-1 is end)
 	 */
-	public int graph_y = -1;
+	private int graph_y = -1;
 	/**
-	 * The width of the graph
+	 * The width of the graph (-1 is max)
 	 */
-	public int graph_w = -1;
+	private int graph_w = -1;
 	/**
-	 * The height of the graph
+	 * The height of the graph (-1 is max)
 	 */
-	public int graph_h = 3;
+	private int graph_h = 3;
 	/**
 	 * Position the graph is rendered in
 	 */
