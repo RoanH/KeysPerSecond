@@ -294,6 +294,38 @@ public class Configuration{
 		this.data = data;
 	}
 	
+	public final int getGraphX(){
+		return graph_x;
+	}
+	
+	public final int getGraphY(){
+		return graph_y;
+	}
+	
+	public final int getGraphWidth(){
+		return graph_w;
+	}	
+	
+	public final int getGraphHeight(){
+		return graph_h;
+	}
+	
+	public final void setGraphX(int x){
+		graph_x = x;
+	}
+	
+	public final void setGraphY(int y){
+		graph_y = y;
+	}
+	
+	public final void setGraphWidth(int width){
+		graph_w = width;
+	}
+	
+	public final void setGraphHeight(int height){
+		graph_h = height;
+	}
+	
 	/**
 	 * Gets the location on disk for this configuration file.
 	 * @return The on disk location of the configuration file.

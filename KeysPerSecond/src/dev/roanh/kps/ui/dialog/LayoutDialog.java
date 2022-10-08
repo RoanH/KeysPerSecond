@@ -140,46 +140,30 @@ public class LayoutDialog{
 		graphLayout.add(graphMode);
 
 		LayoutValidator validator = new LayoutValidator();
+		validator.getXField().setModel(new EndNumberModel(Main.config.graph_x, validator.getXField(), update(Main.config::setGraphX, live)));
+		validator.getYField().setModel(new EndNumberModel(Main.config.graph_y, validator.getYField(), update(Main.config::setGraphY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), update(Main.config::setGraphWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), update(Main.config::setGraphHeight, live)));
 
 		graphLayout.add(new JLabel("Graph x position: "));
-		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, validator.getXField(), (val)->{
-			Main.config.graph_x = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner x = new JSpinner(validator.getXField().getModel());
 		x.setEditor(new SpecialNumberModelEditor(x));
 		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(x);
 
 		graphLayout.add(new JLabel("Graph y position: "));
-		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, validator.getYField(), (val)->{
-			Main.config.graph_y = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner y = new JSpinner(validator.getYField().getModel());
 		y.setEditor(new SpecialNumberModelEditor(y));
 		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(y);
 
 		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), (val)->{
-			Main.config.graph_w = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner w = new JSpinner(validator.getWidthField().getModel());
 		w.setEditor(new SpecialNumberModelEditor(w));
 		graphLayout.add(w);
 
 		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), (val)->{
-			Main.config.graph_h = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner h = new JSpinner(validator.getHeightField().getModel());
 		h.setEditor(new SpecialNumberModelEditor(h));
 		graphLayout.add(h);
 
