@@ -185,7 +185,7 @@ public class Main{
 	/**
 	 * The loop timer
 	 */
-	protected static ScheduledExecutorService timer = null;
+	protected static ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 	/**
 	 * The loop timer task
 	 */
@@ -363,11 +363,10 @@ public class Main{
 	 * maximum keys per second
 	 */
 	protected static final void mainLoop(){
-		if(timer == null){
-			timer = Executors.newSingleThreadScheduledExecutor();
-		}else{
+		if(future != null){
 			future.cancel(false);
 		}
+		
 		future = timer.scheduleAtFixedRate(()->{
 			if(!suspended){
 				int currentTmp = tmp.getAndSet(0);
