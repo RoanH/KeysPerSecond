@@ -84,7 +84,7 @@ public class Statistics{
 	/**
 	 * Periodic statistics save scheduler
 	 */
-	protected static ScheduledExecutorService statsScheduler = null;
+	protected static ScheduledExecutorService statsScheduler = Executors.newSingleThreadScheduledExecutor();
 
 	/**
 	 * Show the auto save statistics configuration dialog
@@ -291,9 +291,6 @@ public class Statistics{
 	 * one and stars a new one.
 	 */
 	public static void saveStatsTask(){
-		if(statsScheduler == null){
-			statsScheduler = Executors.newSingleThreadScheduledExecutor();
-		}
 		cancelScheduledTask();
 		statsFuture = statsScheduler.scheduleAtFixedRate(()->{
 			try{

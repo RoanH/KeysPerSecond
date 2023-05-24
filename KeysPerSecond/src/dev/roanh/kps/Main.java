@@ -185,7 +185,7 @@ public class Main{
 	/**
 	 * The loop timer
 	 */
-	protected static ScheduledExecutorService timer = null;
+	protected static ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 	/**
 	 * The loop timer task
 	 */
@@ -363,11 +363,10 @@ public class Main{
 	 * maximum keys per second
 	 */
 	protected static final void mainLoop(){
-		if(timer == null){
-			timer = Executors.newSingleThreadScheduledExecutor();
-		}else{
+		if(future != null){
 			future.cancel(false);
 		}
+		
 		future = timer.scheduleAtFixedRate(()->{
 			if(!suspended){
 				int currentTmp = tmp.getAndSet(0);
@@ -382,7 +381,7 @@ public class Main{
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					TotPanel.hits += currentTmp;
-					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
+					System.out.println("Current keys per second: " + totaltmp);
 				}
 				graph.addPoint(totaltmp);
 				graph.repaint();
@@ -1176,7 +1175,7 @@ public class Main{
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.graph_w * config.cellSize, config.graph_h * config.cellSize);
+					graphFrame.setSize(config.getGraphWidth() * config.cellSize, config.getGraphHeight() * config.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{

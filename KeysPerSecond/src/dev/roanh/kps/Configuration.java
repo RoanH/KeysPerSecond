@@ -230,21 +230,21 @@ public class Configuration{
 	 */
 	public boolean graphAvg = true;
 	/**
-	 * The x position of the graph
+	 * The x position of the graph (-1 is end)
 	 */
-	public int graph_x = 0;
+	private int graphX = 0;
 	/**
-	 * The y position of the graph
+	 * The y position of the graph (-1 is end)
 	 */
-	public int graph_y = -1;
+	private int graphY = -1;
 	/**
-	 * The width of the graph
+	 * The width of the graph (-1 is max)
 	 */
-	public int graph_w = -1;
+	private int graphWidth = -1;
 	/**
-	 * The height of the graph
+	 * The height of the graph (-1 is max)
 	 */
-	public int graph_h = 3;
+	private int graphHeight = 3;
 	/**
 	 * Position the graph is rendered in
 	 */
@@ -292,6 +292,70 @@ public class Configuration{
 	 */
 	protected Configuration(Path data){
 		this.data = data;
+	}
+	
+	/**
+	 * Gets the x position of the graph.
+	 * @return The x position of the graph.
+	 */
+	public final int getGraphX(){
+		return graphX;
+	}
+	
+	/**
+	 * Gets the y position of the graph.
+	 * @return The y position of the graph.
+	 */
+	public final int getGraphY(){
+		return graphY;
+	}
+	
+	/**
+	 * Gets the width of the graph.
+	 * @return The width of the graph.
+	 */
+	public final int getGraphWidth(){
+		return graphWidth;
+	}	
+	
+	/**
+	 * Gets the height of the graph.
+	 * @return The height of the graph.
+	 */
+	public final int getGraphHeight(){
+		return graphHeight;
+	}
+	
+	/**
+	 * Sets the x position of the graph.
+	 * @param x The new x position.
+	 */
+	public final void setGraphX(int x){
+		graphX = x;
+	}
+	
+	/**
+	 * Sets the y position of the graph.
+	 * @param y The new y position.
+	 */
+	public final void setGraphY(int y){
+		graphY = y;
+	}
+	
+	/**
+	 * Sets the width of the graph in cells.
+	 * @param width The new width of the graph.
+	 */
+	public final void setGraphWidth(int width){
+		graphWidth = width;
+	}
+	
+	/**
+	 * Sets the height of the graph in cells.
+	 * @param height The new height of the graph.
+	 */
+	public final void setGraphHeight(int height){
+		graphHeight = height;
 	}
 	
 	/**
@@ -749,28 +813,28 @@ public class Configuration{
 					break;
 				case "graphX":
 					try{
-						graph_x = Integer.parseInt(args[1]);
+						graphX = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphY":
 					try{
-						graph_y = Integer.parseInt(args[1]);
+						graphY = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphWidth":
 					try{
-						graph_w = Integer.parseInt(args[1]);
+						graphWidth = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphHeight":
 					try{
-						graph_h = Integer.parseInt(args[1]);
+						graphHeight = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
@@ -1060,10 +1124,10 @@ public class Configuration{
 				out.println("totWidth: " + totPanel.getWidth());
 				out.println("totHeight: " + totPanel.getHeight());
 				out.println("totMode: " + totPanel.getRenderingMode().name());
-				out.println("graphX: " + graph_x);
-				out.println("graphY: " + graph_y);
-				out.println("graphWidth: " + graph_w);
-				out.println("graphHeight: " + graph_h);
+				out.println("graphX: " + graphX);
+				out.println("graphY: " + graphY);
+				out.println("graphWidth: " + graphWidth);
+				out.println("graphHeight: " + graphHeight);
 				out.println("graphMode: " + graphMode.name());
 				out.println("cellSize: " + cellSize);
 				out.println("borderOffset: " + borderOffset);

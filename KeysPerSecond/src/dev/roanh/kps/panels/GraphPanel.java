@@ -144,21 +144,21 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 
 	@Override
 	public int getLayoutX(){
-		return Main.config.graph_x;
+		return Main.config.getGraphX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return Main.config.graph_y;
+		return Main.config.getGraphY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return Main.config.graph_w;
+		return Main.config.getGraphWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return Main.config.graph_h;
+		return Main.config.getGraphHeight();
 	}
 }
