@@ -58,6 +58,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	private int lastKey = -1;
 	/**
 	 * The text field showing the most recently pressed key.
+	 * @see #lastKey
 	 */
 	private JTextField pressed = new JTextField("<press a key>", 25);
 	/**
