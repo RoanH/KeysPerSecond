@@ -171,17 +171,6 @@ public class CommandKeys implements KeyPressListener, KeyReleaseListener{
 	}
 	
 	/**
-	 * Tests if the given key code is in the 
-	 * new keycode format.
-	 * @param code The code to test
-	 * @return Whether the given key code is in the new format
-	 */
-	@Deprecated
-	public static boolean isNewFormat(int code){
-		return isMouseButton(code) || ((code & FORMAT_MASK) != 0);
-	}
-	
-	/**
 	 * Checks if the given code represents
 	 * a mouse button
 	 * @param code The code to check
@@ -202,20 +191,21 @@ public class CommandKeys implements KeyPressListener, KeyReleaseListener{
 		return code & CommandKeys.KEYCODE_MASK;
 	}
 	
-//	/**
-//	 * Gets a string containing all
-//	 * the modifiers for this key
-//	 * @return The modifier string
-//	 */
+	/**
+	 * Gets a string with all the modifiers for the given extended key code.<br>
+	 * For example: <code>Ctrl + S</code>
+	 * @param code The extended keycode to format.
+	 * @return The key string with modifier keys.
+	 */
 	public static String formatExtendedCode(int code){
-		String name = NativeKeyEvent.getKeyText(getBaseKeyCode(code));//TODO process name
-		if(CommandKeys.hasCtrl(code)){
+		String name = KeyInformation.getKeyText(getBaseKeyCode(code));
+		if(hasCtrl(code)){
 			name = "Ctrl + " + name;
 		}
-		if(CommandKeys.hasAlt(code)){
+		if(hasAlt(code)){
 			name = "Alt + " + name;
 		}
-		if(CommandKeys.hasShift(code)){
+		if(hasShift(code)){
 			name = "Shift + " + name;
 		}
 		return name;
@@ -224,24 +214,24 @@ public class CommandKeys implements KeyPressListener, KeyReleaseListener{
 	@Override
 	public void onKeyRelease(int code){
 		if(code == NativeKeyEvent.VC_ALT){
-			CommandKeys.isAltDown = false;
+			isAltDown = false;
 		}else if(code == NativeKeyEvent.VC_CONTROL){
-			CommandKeys.isCtrlDown = false;
+			isCtrlDown = false;
 		}else if(code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT){
-			CommandKeys.isShiftDown = false;
+			isShiftDown = false;
 		}
 	}
 
 	@Override
 	public void onKeyPress(int code){
-		if(!CommandKeys.isAltDown){
-			CommandKeys.isAltDown = code == NativeKeyEvent.VC_ALT;
+		if(!isAltDown){
+			isAltDown = code == NativeKeyEvent.VC_ALT;
 		}
-		if(!CommandKeys.isCtrlDown){
-			CommandKeys.isCtrlDown = code == NativeKeyEvent.VC_CONTROL;
+		if(!isCtrlDown){
+			isCtrlDown = code == NativeKeyEvent.VC_CONTROL;
 		}
-		if(!CommandKeys.isShiftDown){
-			CommandKeys.isShiftDown = code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT;
+		if(!isShiftDown){
+			isShiftDown = code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT;
 		}
 	}
 

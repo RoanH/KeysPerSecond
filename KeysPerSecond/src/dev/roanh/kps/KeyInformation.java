@@ -48,7 +48,6 @@ public final class KeyInformation extends Positionable{
 	/**
 	 * Auto-increment for #x
 	 */
-	@Deprecated
 	public static volatile int autoIndex = -2;
 
 	/**
@@ -69,6 +68,12 @@ public final class KeyInformation extends Positionable{
 		this.name = mouse ? name : getKeyName(name, keycode);
 	}
 	
+	/**
+	 * Constructs a new KeyInformation object with the given key name and extended code key.
+	 * @param name The key name.
+	 * @param extCode The extended key code.
+	 * @see CommandKeys#getExtendedKeyCode(int)
+	 */
 	public KeyInformation(String name, int extCode){
 		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
 		this.keycode = extCode;
