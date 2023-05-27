@@ -260,6 +260,12 @@ public class Main{
 			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
 			System.exit(1);
 		}
+		
+		//register default event handlers
+		eventManager.registerButtonPressListener(Main::pressEventButton);
+		eventManager.registerButtonReleaseListener(Main::releaseEventButton);
+		eventManager.registerKeyPressListener(Main::pressEventKey);
+		eventManager.registerKeyReleaseListener(Main::pressEventKey);
 
 		//Set configuration for the keys
 		if(config != null){
@@ -394,97 +400,13 @@ public class Main{
 		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
 	}
 
-	/**
-	 * Registers the native libraries and
-	 * registers event handlers for key
-	 * press events
-	 */
-	@Deprecated
-	private static final void setupNativeHook(){
-		try{
-			System.setProperty("jnativehook.lib.path", System.getProperty("java.io.tmpdir"));
-			Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-			logger.setLevel(Level.WARNING);
-			logger.setUseParentHandlers(false);
-			GlobalScreen.registerNativeHook();
-		}catch(NativeHookException ex){
-			System.err.println("There was a problem registering the native hook.");
-			System.err.println(ex.getMessage());
-			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
-			try{
-				GlobalScreen.unregisterNativeHook();
-			}catch(NativeHookException e1){
-				e1.printStackTrace();
-			}
-			System.exit(1);
-		}
-		GlobalScreen.addNativeKeyListener(new NativeKeyListener(){
-
-			@Override
-			public void nativeKeyPressed(NativeKeyEvent event){
-				pressEvent(event);//TODO relocate via event manager etc
-			}
-
-			@Override
-			public void nativeKeyReleased(NativeKeyEvent event){
-				releaseEvent(event);
-			}
-
-			@Override
-			public void nativeKeyTyped(NativeKeyEvent event){
-			}
-		});
-		GlobalScreen.addNativeMouseListener(new NativeMouseListener(){
-
-			@Override
-			public void nativeMouseClicked(NativeMouseEvent event){
-			}
-
-			@Override
-			public void nativeMousePressed(NativeMouseEvent event){
-				pressEvent(event);
-			}
-
-			@Override
-			public void nativeMouseReleased(NativeMouseEvent event){
-				releaseEvent(event);
-			}
-		});
-	}
-	
 	@Deprecated
 	private static final void releaseEventButton(int button){
-		int code = getExtendedKeyCode(event);
-		if(code == CommandKeys.ALT){
-			CommandKeys.isAltDown = false;
-		}else if(code == CommandKeys.CTRL){
-			CommandKeys.isCtrlDown = false;
-		}else if(CommandKeys.isShift(code)){
-			CommandKeys.isShiftDown = false;
-		}
+		int code = getExtendedButtonCode(button);
 		if(config.enableModifiers){
-			if(code == CommandKeys.ALT){
-				for(Key k : keys.values()){
-					if(k.alt){
-						k.keyReleased();
-					}
-				}
-			}else if(code == CommandKeys.CTRL){
-				for(Key k : keys.values()){
-					if(k.ctrl){
-						k.keyReleased();
-					}
-				}
-			}else if(CommandKeys.isShift(code)){
-				for(Key k : keys.values()){
-					if(k.shift){
-						k.keyReleased();
-					}
-				}
-			}
 			for(Entry<Integer, Key> k : keys.entrySet()){
 				if(getBaseKeyCode(code) == getBaseKeyCode(k.getKey())){
-					k.getValue().keyReleased();
+					k.getValue().keyReleased();//TODO fairly sure we do not do alt/shift/ctrl for buttons
 				}
 			}
 		}else{
@@ -536,10 +458,10 @@ public class Main{
 	
 	@Deprecated
 	private static final void pressEventButton(int button){
-		Integer code = getExtendedKeyCode(nevent);
+		Integer code = getExtendedButtonCode(button);
 		
 		if(config.trackAllButtons && !keys.containsKey(code)){
-			keys.put(code, new Key("M" + button);
+			keys.put(code, new Key("M" + button));
 		}
 		
 		if(!suspended && keys.containsKey(code)){
@@ -616,23 +538,22 @@ public class Main{
 		}
 	}
 
-	/**
-	 * Gets the extended key code for this event, this key code
-	 * includes modifiers
-	 * @param event The event that occurred
-	 * @return The extended key code for this event
-	 */
-	private static final int getExtendedKeyCode(NativeInputEvent event){
-		if(event instanceof NativeKeyEvent){
-			NativeKeyEvent key = (NativeKeyEvent)event;
-			if(!config.enableModifiers){
-				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), false, false, false);
-			}else{
-				return CommandKeys.getExtendedKeyCode(key.getKeyCode());
-			}
+//	/**
+//	 * Gets the extended key code for this event, this key code
+//	 * includes modifiers
+//	 * @param event The event that occurred
+//	 * @return The extended key code for this event
+//	 */
+	private static final int getExtendedKeyCode(int rawCode){
+		if(!config.enableModifiers){
+			return CommandKeys.getExtendedKeyCode(rawCode, false, false, false);
 		}else{
-			return -((NativeMouseEvent)event).getButton();
+			return CommandKeys.getExtendedKeyCode(rawCode);
 		}
+	}
+	
+	private static final int getExtendedButtonCode(int button){
+		return -button;//TODO this function is plain trivial lol
 	}
 
 	/**

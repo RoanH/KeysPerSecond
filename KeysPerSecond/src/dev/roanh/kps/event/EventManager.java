@@ -20,6 +20,7 @@ package dev.roanh.kps.event;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import dev.roanh.kps.event.listener.ButtonPressListener;
 import dev.roanh.kps.event.listener.ButtonReleaseListener;
@@ -27,15 +28,26 @@ import dev.roanh.kps.event.listener.KeyPressListener;
 import dev.roanh.kps.event.listener.KeyReleaseListener;
 
 public class EventManager{
-	private List<KeyPressListener> keyPressListeners = new ArrayList<KeyPressListener>();
-	private List<KeyReleaseListener> keyReleaseListeners = new ArrayList<KeyReleaseListener>();
-	private List<ButtonPressListener> buttonPressListeners = new ArrayList<ButtonPressListener>();
-	private List<ButtonReleaseListener> buttonReleaseListeners = new ArrayList<ButtonReleaseListener>();
+	private List<KeyPressListener> keyPressListeners = new CopyOnWriteArrayList<KeyPressListener>();
+	private List<KeyReleaseListener> keyReleaseListeners = new CopyOnWriteArrayList<KeyReleaseListener>();
+	private List<ButtonPressListener> buttonPressListeners = new CopyOnWriteArrayList<ButtonPressListener>();
+	private List<ButtonReleaseListener> buttonReleaseListeners = new CopyOnWriteArrayList<ButtonReleaseListener>();
 	
-	//TODO this class is not thread safe but it should be because listeners can be added and removed on the fly
 	
 	public void registerKeyPressListener(KeyPressListener listener){
 		keyPressListeners.add(listener);
+	}
+	
+	public void registerKeyReleaseListener(KeyReleaseListener listener){
+		keyReleaseListeners.add(listener);
+	}
+	
+	public void registerButtonPressListener(ButtonPressListener listener){
+		buttonPressListeners.add(listener);
+	}
+	
+	public void registerButtonReleaseListener(ButtonReleaseListener listener){
+		buttonReleaseListeners.add(listener);
 	}
 	
 	
