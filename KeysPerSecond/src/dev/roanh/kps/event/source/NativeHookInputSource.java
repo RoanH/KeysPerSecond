@@ -30,7 +30,6 @@ import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.InputSource;
-import dev.roanh.util.Dialog;
 
 public class NativeHookInputSource extends InputSource implements NativeKeyListener, NativeMouseListener{
 

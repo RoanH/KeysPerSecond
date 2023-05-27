@@ -20,12 +20,15 @@ package dev.roanh.kps;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
+import dev.roanh.kps.event.listener.KeyPressListener;
+import dev.roanh.kps.event.listener.KeyReleaseListener;
+
 /**
- * This class is used to configure
- * the command keys for the program
+ * This class is used to manage the command keys for
+ * the program and anything else that requires modifiers.
  * @author Roan
  */
-public class CommandKeys{
+public class CommandKeys implements KeyPressListener, KeyReleaseListener{
 	/**
 	 * Whether or not ctrl is down
 	 */
@@ -205,7 +208,7 @@ public class CommandKeys{
 //	 * @return The modifier string
 //	 */
 	public static String formatExtendedCode(int code){
-		String name = NativeKeyEvent.getKeyText(getBaseKeyCode(code));
+		String name = NativeKeyEvent.getKeyText(getBaseKeyCode(code));//TODO process name
 		if(CommandKeys.hasCtrl(code)){
 			name = "Ctrl + " + name;
 		}
@@ -216,6 +219,30 @@ public class CommandKeys{
 			name = "Shift + " + name;
 		}
 		return name;
+	}
+
+	@Override
+	public void onKeyRelease(int code){
+		if(code == NativeKeyEvent.VC_ALT){
+			CommandKeys.isAltDown = false;
+		}else if(code == NativeKeyEvent.VC_CONTROL){
+			CommandKeys.isCtrlDown = false;
+		}else if(code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT){
+			CommandKeys.isShiftDown = false;
+		}
+	}
+
+	@Override
+	public void onKeyPress(int code){
+		if(!CommandKeys.isAltDown){
+			CommandKeys.isAltDown = code == NativeKeyEvent.VC_ALT;
+		}
+		if(!CommandKeys.isCtrlDown){
+			CommandKeys.isCtrlDown = code == NativeKeyEvent.VC_CONTROL;
+		}
+		if(!CommandKeys.isShiftDown){
+			CommandKeys.isShiftDown = code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT;
+		}
 	}
 
 	/**

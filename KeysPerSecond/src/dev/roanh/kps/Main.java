@@ -52,8 +52,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -73,13 +71,8 @@ import javax.swing.SwingUtilities;
 
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.NativeInputEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
-import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 
-import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
@@ -262,6 +255,11 @@ public class Main{
 			System.exit(1);
 		}
 		
+		//register command handlers
+		CommandKeys listener = new CommandKeys();
+		eventManager.registerKeyPressListener(listener);
+		eventManager.registerKeyReleaseListener(listener);
+		
 		//Set configuration for the keys
 		if(config != null){
 			try{
@@ -302,6 +300,7 @@ public class Main{
 		eventManager.registerButtonReleaseListener(Main::releaseEventButton);
 		eventManager.registerKeyPressListener(Main::pressEventKey);
 		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
+		eventManager.registerKeyPressListener(Main::triggerCommandKeys);
 		
 		//Enter the main loop
 		mainLoop();
@@ -401,23 +400,12 @@ public class Main{
 		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
 	}
 
-	@Deprecated
 	private static final void releaseEventButton(int button){
-		int code = getExtendedButtonCode(button);
-		keys.getOrDefault(code, DUMMY_KEY).keyReleased();
+		keys.getOrDefault(getExtendedButtonCode(button), DUMMY_KEY).keyReleased();
 	}
 
-	@Deprecated
 	private static final void releaseEventKey(int rawCode){
 		int code = getExtendedKeyCode(rawCode);
-		
-		if(code == CommandKeys.ALT){
-			CommandKeys.isAltDown = false;
-		}else if(code == CommandKeys.CTRL){
-			CommandKeys.isCtrlDown = false;
-		}else if(CommandKeys.isShift(code)){
-			CommandKeys.isShiftDown = false;
-		}
 		
 		if(config.enableModifiers){
 			if(code == CommandKeys.ALT){
@@ -449,31 +437,30 @@ public class Main{
 		}
 	}
 	
-	@Deprecated
 	private static final void pressEventButton(int button){
-		Integer code = getExtendedButtonCode(button);
+		int code = getExtendedButtonCode(button);
+		Key key = keys.get(code);
 		
-		if(config.trackAllButtons && !keys.containsKey(code)){
-			keys.put(code, new Key("M" + button));
+		if(config.trackAllButtons && key == null){
+			key = new Key("M" + button);
+			keys.put(code, key);
 		}
 		
-		if(!suspended && keys.containsKey(code)){
-			Key key = keys.get(code);
+		if(!suspended && key != null){
 			key.keyPressed();
 		}
 	}
 
-	@Deprecated
 	private static final void pressEventKey(int rawCode){
-		Integer code = getExtendedKeyCode(rawCode);
+		int code = getExtendedKeyCode(rawCode);
+		Key key = keys.get(code);
 		
-		//TODO we're kinda checking for containment again like 4 lines down...
-		if(config.trackAllKeys && !keys.containsKey(code)){
-			keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code)));
+		if(config.trackAllKeys && key == null){
+			key = new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code));
+			keys.put(code, key);
 		}
 		
-		if(!suspended && keys.containsKey(code)){
-			Key key = keys.get(code);
+		if(!suspended && key != null){
 			key.keyPressed();
 			if(config.enableModifiers){
 				if(key.alt){
@@ -488,32 +475,23 @@ public class Main{
 				}
 			}
 		}
-		
-		if(!CommandKeys.isAltDown){
-			CommandKeys.isAltDown = code == CommandKeys.ALT;
-		}
-		if(!CommandKeys.isCtrlDown){
-			CommandKeys.isCtrlDown = code == CommandKeys.CTRL;
-		}
-		if(!CommandKeys.isShiftDown){
-			CommandKeys.isShiftDown = CommandKeys.isShift(code);
-		}
-		
-		//TODO should be a map and somewhere else
-		if(config.getCommandResetStats().matches(rawCode)){
+	}
+	
+	private static void triggerCommandKeys(int code){
+		if(config.getCommandResetStats().matches(code)){
 			resetStats();
-		}else if(config.getCommandExit().matches(rawCode)){
+		}else if(config.getCommandExit().matches(code)){
 			exit();
-		}else if(config.getCommandResetTotals().matches(rawCode)){
+		}else if(config.getCommandResetTotals().matches(code)){
 			resetTotals();
-		}else if(config.getCommandHide().matches(rawCode)){
+		}else if(config.getCommandHide().matches(code)){
 			if(frame.getContentPane().getComponentCount() != 0){
 				frame.setVisible(!frame.isVisible());
 			}
-		}else if(config.getCommandPause().matches(rawCode)){
+		}else if(config.getCommandPause().matches(code)){
 			suspended = !suspended;
 			Menu.pause.setSelected(suspended);
-		}else if(config.getCommandReload().matches(rawCode)){
+		}else if(config.getCommandReload().matches(code)){
 			config.reloadConfig();
 			Menu.resetData();
 		}
