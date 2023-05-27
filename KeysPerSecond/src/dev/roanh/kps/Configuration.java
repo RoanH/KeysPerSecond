@@ -398,50 +398,98 @@ public class Configuration{
 		return customColors ? foreground : Color.CYAN;
 	}
 
+	/**
+	 * Gets the command for resetting stats.
+	 * @return The command for resetting stats.
+	 */
 	public CMD getCommandResetStats(){
 		return commandResetStats;
 	}
 
+	/**
+	 * Sets the command for resetting stats.
+	 * @param command The new command for resetting stats.
+	 */
 	public void setCommandResetStats(CMD command){
 		commandResetStats = command;
 	}
 
+	/**
+	 * Gets the command for resetting totals.
+	 * @return The command for resetting totals.
+	 */
 	public CMD getCommandResetTotals(){
 		return commandResetTotals;
 	}
 
+	/**
+	 * Sets the command for resetting totals.
+	 * @param command The new command for resetting totals.
+	 */
 	public void setCommandResetTotals(CMD command){
 		commandResetTotals = command;
 	}
 	
+	/**
+	 * Gets the command for hiding the window.
+	 * @return The command for hiding the window.
+	 */
 	public CMD getCommandHide(){
 		return commandHide;
 	}
 
+	/**
+	 * Sets the command for hiding the window.
+	 * @param command The new command for hiding the window.
+	 */
 	public void setCommandHide(CMD command){
 		commandHide = command;
 	}
 	
+	/**
+	 * Gets the command for pausing updates.
+	 * @return The command for pausing updates.
+	 */
 	public CMD getCommandPause(){
 		return commandPause;
 	}
 
+	/**
+	 * Sets the command for pausing updates.
+	 * @param command The new command for pausing updates.
+	 */
 	public void setCommandPause(CMD command){
 		commandPause = command;
 	}
 	
+	/**
+	 * Gets the command for reloading the configuration.
+	 * @return The command for reloading the configuration.
+	 */
 	public CMD getCommandReload(){
 		return commandReload;
 	}
 
+	/**
+	 * Sets the command for reloading the configuration.
+	 * @param command The new command for reloading the configuration.
+	 */
 	public void setCommandReload(CMD command){
 		commandReload = command;
 	}
 	
+	/**
+	 * Gets the command for exiting the application.
+	 * @return The command for exiting the application.
+	 */
 	public CMD getCommandExit(){
 		return commandExit;
 	}
 
+	/**
+	 * Sets the command for exiting the application.
+	 * @param command The new command for exiting the application.
+	 */
 	public void setCommandExit(CMD command){
 		commandExit = command;
 	}
