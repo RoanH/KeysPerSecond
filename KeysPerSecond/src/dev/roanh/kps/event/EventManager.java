@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps.event;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -26,12 +27,16 @@ import dev.roanh.kps.event.listener.ButtonReleaseListener;
 import dev.roanh.kps.event.listener.KeyPressListener;
 import dev.roanh.kps.event.listener.KeyReleaseListener;
 
+/**
+ * Class responsible for managing input events.
+ * @author Roan
+ */
 public class EventManager{
 	private List<KeyPressListener> keyPressListeners = new CopyOnWriteArrayList<KeyPressListener>();
 	private List<KeyReleaseListener> keyReleaseListeners = new CopyOnWriteArrayList<KeyReleaseListener>();
 	private List<ButtonPressListener> buttonPressListeners = new CopyOnWriteArrayList<ButtonPressListener>();
 	private List<ButtonReleaseListener> buttonReleaseListeners = new CopyOnWriteArrayList<ButtonReleaseListener>();
-	
+	private List<InputSource> sources = new ArrayList<InputSource>();
 	
 	public void registerKeyPressListener(KeyPressListener listener){
 		keyPressListeners.add(listener);
@@ -49,8 +54,6 @@ public class EventManager{
 		buttonReleaseListeners.add(listener);
 	}
 	
-	
-	
 	public void fireKeyPressEvent(int code){
 		for(KeyPressListener listener : keyPressListeners){
 			listener.onKeyPress(code);
@@ -64,33 +67,34 @@ public class EventManager{
 	}
 	
 	public void fireButtonReleaseEvent(int button){
-		// TODO Auto-generated method stub
-		
+		for(ButtonReleaseListener listener : buttonReleaseListeners){
+			listener.onButtonRelease(button);
+		}
 	}
-
-
 
 	public void fireButtonPressEvent(int button){
-		// TODO Auto-generated method stub
-		
+		for(ButtonPressListener listener : buttonPressListeners){
+			listener.onButtonPress(button);
+		}
 	}
-	
-	
-	public void subscribe(){
-		
-	}
-	
-	public void unsubscribe(){
-		
-	}
-
 
 	public void registerInputSource(InputSource source){
-		// TODO Auto-generated method stub
-		
+		sources.add(source);
 	}
 
 	public void unregisterKeyPressListener(KeyPressListener listener){
 		keyPressListeners.remove(listener);
+	}
+
+	public void unregisterButtonPressListener(ButtonPressListener listener){
+		buttonPressListeners.remove(listener);
+	}
+
+	public void unregisterKeyReleaseListener(KeyReleaseListener listener){
+		keyReleaseListeners.remove(listener);
+	}
+
+	public void unregisterButtonReleaseListener(ButtonReleaseListener listener){
+		buttonReleaseListeners.remove(listener);
 	}
 }
