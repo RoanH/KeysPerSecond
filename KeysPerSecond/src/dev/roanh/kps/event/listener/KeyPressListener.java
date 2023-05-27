@@ -18,8 +18,19 @@
  */
 package dev.roanh.kps.event.listener;
 
+import dev.roanh.kps.event.EventManager;
+
+/**
+ * Listener called when a key was pressed.
+ * @author Roan
+ * @see EventManager
+ */
 @FunctionalInterface
 public abstract interface KeyPressListener{
 
+	/**
+	 * Called when a key was pressed.
+	 * @param code The key code of the key that was pressed.
+	 */
 	public abstract void onKeyPress(int code);
 }

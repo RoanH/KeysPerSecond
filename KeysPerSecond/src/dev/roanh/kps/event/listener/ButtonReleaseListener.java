@@ -18,8 +18,19 @@
  */
 package dev.roanh.kps.event.listener;
 
+import dev.roanh.kps.event.EventManager;
+
+/**
+ * Listener called when a mouse button was released.
+ * @author Roan
+ * @see EventManager
+ */
 @FunctionalInterface
 public abstract interface ButtonReleaseListener{
 
+	/**
+	 * Called when a mouse button was released.
+	 * @param button The ID of the button that was released.
+	 */
 	public abstract void onButtonRelease(int button);
 }

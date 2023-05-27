@@ -471,6 +471,10 @@ public class Main{
 		}
 	}
 	
+	/**
+	 * Handles a received key press and triggers command keys.
+	 * @param code The received key press key code.
+	 */
 	private static void triggerCommandKeys(int code){
 		if(config.getCommandResetStats().matches(code)){
 			resetStats();
@@ -491,12 +495,12 @@ public class Main{
 		}
 	}
 
-//	/**
-//	 * Gets the extended key code for this event, this key code
-//	 * includes modifiers
-//	 * @param event The event that occurred
-//	 * @return The extended key code for this event
-//	 */
+	/**
+	 * Gets the extended key code for this event, this key code
+	 * includes modifiers
+	 * @param rawCode The received key code for the key that was pressed.
+	 * @return The extended key code for this event
+	 */
 	private static final int getExtendedKeyCode(int rawCode){
 		if(!config.enableModifiers){
 			return CommandKeys.getExtendedKeyCode(rawCode, false, false, false);
@@ -505,8 +509,13 @@ public class Main{
 		}
 	}
 	
+	/**
+	 * Gets the extended button code for this event.
+	 * @param button The button that was pressed.
+	 * @return The extended key code for this event
+	 */
 	public static final int getExtendedButtonCode(int button){
-		return -button;//TODO this function is plain trivial lol
+		return -button;
 	}
 
 	/**

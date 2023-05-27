@@ -18,8 +18,19 @@
  */
 package dev.roanh.kps.event.listener;
 
+import dev.roanh.kps.event.EventManager;
+
+/**
+ * Listener called when a mouse button was pressed.
+ * @author Roan
+ * @see EventManager
+ */
 @FunctionalInterface
 public abstract interface ButtonPressListener{
 
+	/**
+	 * Called when a mouse button was pressed.
+	 * @param button The ID of the button that was pressed.
+	 */
 	public abstract void onButtonPress(int button);
 }

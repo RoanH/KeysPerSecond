@@ -18,8 +18,19 @@
  */
 package dev.roanh.kps.event.listener;
 
+import dev.roanh.kps.event.EventManager;
+
+/**
+ * Listener called when a key was released.
+ * @author Roan
+ * @see EventManager
+ */
 @FunctionalInterface
 public interface KeyReleaseListener{
 
+	/**
+	 * Called when a key was released.
+	 * @param code The key code of the key that was released.
+	 */
 	public abstract void onKeyRelease(int code);
 }

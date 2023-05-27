@@ -31,8 +31,17 @@ import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.InputSource;
 
+/**
+ * Input source of key and mouse event as reported by JNativeHook.
+ * @author Roan
+ */
 public class NativeHookInputSource extends InputSource implements NativeKeyListener, NativeMouseListener{
 
+	/**
+	 * Constructs a new JNativeHook input source.
+	 * @param manager The event manager to report to.
+	 * @throws NativeHookException When some exception occurs.
+	 */
 	public NativeHookInputSource(EventManager manager) throws NativeHookException{
 		super(manager);
 		
@@ -50,6 +59,9 @@ public class NativeHookInputSource extends InputSource implements NativeKeyListe
 		GlobalScreen.addNativeMouseListener(this);
 	}
 	
+	/**
+	 * Cleans up all resources used by JNativeHook.
+	 */
 	private void cleanup(){
 		try{
 			GlobalScreen.unregisterNativeHook();
