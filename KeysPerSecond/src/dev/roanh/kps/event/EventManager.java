@@ -32,68 +32,135 @@ import dev.roanh.kps.event.listener.KeyReleaseListener;
  * @author Roan
  */
 public class EventManager{
+	/**
+	 * List of registered key press listeners.
+	 */
 	private List<KeyPressListener> keyPressListeners = new CopyOnWriteArrayList<KeyPressListener>();
+	/**
+	 * List of registered key release listeners.
+	 */
 	private List<KeyReleaseListener> keyReleaseListeners = new CopyOnWriteArrayList<KeyReleaseListener>();
+	/**
+	 * List of registered mouse button press listeners.
+	 */
 	private List<ButtonPressListener> buttonPressListeners = new CopyOnWriteArrayList<ButtonPressListener>();
+	/**
+	 * List of registered mouse button release listeners.
+	 */
 	private List<ButtonReleaseListener> buttonReleaseListeners = new CopyOnWriteArrayList<ButtonReleaseListener>();
+	/**
+	 * List of input sources providing input to this event manager.
+	 */
 	private List<InputSource> sources = new ArrayList<InputSource>();
 	
+	/**
+	 * Registers a new key press listener to this manager.
+	 * @param listener The listener to register.
+	 */
 	public void registerKeyPressListener(KeyPressListener listener){
 		keyPressListeners.add(listener);
 	}
 	
+	/**
+	 * Registers a new key release listener to this manager.
+	 * @param listener The listener to register.
+	 */
 	public void registerKeyReleaseListener(KeyReleaseListener listener){
 		keyReleaseListeners.add(listener);
 	}
 	
+	/**
+	 * Registers a new mouse button press listener to this manager.
+	 * @param listener The listener to register.
+	 */
 	public void registerButtonPressListener(ButtonPressListener listener){
 		buttonPressListeners.add(listener);
 	}
 	
+	/**
+	 * Registers a new mouse button release listener to this manager.
+	 * @param listener The listener to register.
+	 */
 	public void registerButtonReleaseListener(ButtonReleaseListener listener){
 		buttonReleaseListeners.add(listener);
 	}
 	
+	/**
+	 * Fires a new press event for the key with the given key code.
+	 * @param code The key code of the key that was pressed.
+	 */
 	public void fireKeyPressEvent(int code){
 		for(KeyPressListener listener : keyPressListeners){
 			listener.onKeyPress(code);
 		}
 	}
 	
+	/**
+	 * Fires a new release event for the key with the given key code.
+	 * @param code The key code of the key that was release.
+	 */
 	public void fireKeyReleaseEvent(int code){
 		for(KeyReleaseListener listener : keyReleaseListeners){
 			listener.onKeyRelease(code);
 		}
 	}
 	
+	/**
+	 * Fires a new release event for the button with the given ID.
+	 * @param button The ID of the button that was released.
+	 */
 	public void fireButtonReleaseEvent(int button){
 		for(ButtonReleaseListener listener : buttonReleaseListeners){
 			listener.onButtonRelease(button);
 		}
 	}
 
+	/**
+	 * Fires a new press event for the button with the given ID.
+	 * @param button The ID of the button that was pressed.
+	 */
 	public void fireButtonPressEvent(int button){
 		for(ButtonPressListener listener : buttonPressListeners){
 			listener.onButtonPress(button);
 		}
 	}
 
+	/**
+	 * Registers a new input source to this event manager.
+	 * @param source The input soruce to register.
+	 */
 	public void registerInputSource(InputSource source){
 		sources.add(source);
 	}
 
+	/**
+	 * Unregisters a key press listener from this manager.
+	 * @param listener The listener to unregister.
+	 */
 	public void unregisterKeyPressListener(KeyPressListener listener){
 		keyPressListeners.remove(listener);
 	}
 
+	/**
+	 * Unregisters a button press listener from this manager.
+	 * @param listener The listener to unregister.
+	 */
 	public void unregisterButtonPressListener(ButtonPressListener listener){
 		buttonPressListeners.remove(listener);
 	}
 
+	/**
+	 * Unregisters a key release listener from this manager.
+	 * @param listener The listener to unregister.
+	 */
 	public void unregisterKeyReleaseListener(KeyReleaseListener listener){
 		keyReleaseListeners.remove(listener);
 	}
 
+	/**
+	 * Unregisters a button release listener from this manager.
+	 * @param listener The listener to unregister.
+	 */
 	public void unregisterButtonReleaseListener(ButtonReleaseListener listener){
 		buttonReleaseListeners.remove(listener);
 	}
