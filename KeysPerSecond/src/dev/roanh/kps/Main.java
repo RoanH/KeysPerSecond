@@ -149,12 +149,6 @@ public class Main{
 	 */
 	public static Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
-	 * The most recent key event, only
-	 * used during the initial setup
-	 */
-	@Deprecated
-	public static NativeKeyEvent lastevent;
-	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
