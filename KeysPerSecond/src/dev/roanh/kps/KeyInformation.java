@@ -209,9 +209,9 @@ public final class KeyInformation extends Positionable{
 		case NativeKeyEvent.VC_CAPS_LOCK:
 			return "Cap";
 		case NativeKeyEvent.VC_OPEN_BRACKET:
-			return "(";
+			return "[";
 		case NativeKeyEvent.VC_CLOSE_BRACKET:
-			return ")";
+			return "]";
 		case NativeKeyEvent.VC_BACK_SLASH:
 			return "\\";
 		case NativeKeyEvent.VC_SEMICOLON:

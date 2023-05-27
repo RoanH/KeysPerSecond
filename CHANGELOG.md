@@ -1,6 +1,13 @@
 # Updates
 All releases can be found on the [releases page](https://github.com/RoanH/KeysPerSecond/releases).
 
+## [v8.7] 26th of August, 2022: Some Fixes
+- Fix a file open dialog being shown on Mac and Linux when trying to save a configuration ([#61](https://github.com/RoanH/KeysPerSecond/issues/61) and [#67](https://github.com/RoanH/KeysPerSecond/issues/67))
+- Fix loading mouse buttons from a configuration not working ([#63](https://github.com/RoanH/KeysPerSecond/issues/63))
+- Fix incorrect square bracket detection ([#60](https://github.com/RoanH/KeysPerSecond/issues/60))
+- Fix the file chooser on Mac and Linux not following the general OS style
+- Fix a rare exception when configuring the layout ([#59](https://github.com/RoanH/KeysPerSecond/issues/59))
+
 ## [v8.6] 9th of June, 2022: Fix Statistics Saving
 - Fix statistics saving and loading being being broken ([#51](https://github.com/RoanH/KeysPerSecond/issues/51) and [#57](https://github.com/RoanH/KeysPerSecond/issues/57)).
 - Implement a new text based statistics saving format (meaning you can manually edit key counts if you want).
