@@ -18,23 +18,17 @@
  */
 package dev.roanh.kps;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
-import dev.roanh.util.Dialog;
+import dev.roanh.kps.event.listener.KeyPressListener;
+import dev.roanh.kps.event.listener.KeyReleaseListener;
 
 /**
- * This class is used to configure
- * the command keys for the program
+ * This class is used to manage the command keys for
+ * the program and anything else that requires modifiers.
  * @author Roan
  */
-public class CommandKeys{
+public class CommandKeys implements KeyPressListener, KeyReleaseListener{
 	/**
 	 * Whether or not ctrl is down
 	 */
@@ -104,7 +98,7 @@ public class CommandKeys{
 	 * @param code The key code to get the extended key code for
 	 * @return The extended key code for this code
 	 */
-	protected static final int getExtendedKeyCode(int code){
+	public static final int getExtendedKeyCode(int code){
 		return getExtendedKeyCode(code, isShiftDown, isCtrlDown, isAltDown);
 	}
 	
@@ -117,7 +111,7 @@ public class CommandKeys{
 	 * @param alt If alt is involved
 	 * @return The extended key code for this event
 	 */
-	protected static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
+	public static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
 		if(code == NativeKeyEvent.VC_SHIFT){
 			return LSHIFT;
 		}else if(code == VC_RSHIFT){
@@ -177,17 +171,6 @@ public class CommandKeys{
 	}
 	
 	/**
-	 * Tests if the given key code is in the 
-	 * new keycode format.
-	 * @param code The code to test
-	 * @return Whether the given key code is in the new format
-	 */
-	@Deprecated
-	public static boolean isNewFormat(int code){
-		return isMouseButton(code) || ((code & FORMAT_MASK) != 0);
-	}
-	
-	/**
 	 * Checks if the given code represents
 	 * a mouse button
 	 * @param code The code to check
@@ -197,17 +180,71 @@ public class CommandKeys{
 	public static boolean isMouseButton(int code){
 		return (code & MOUSE_MASK) != 0;
 	}
+	
+	/**
+	 * Gets the base key code for the extended key code,
+	 * this is the key code without modifiers
+	 * @param code The extended key code
+	 * @return The base key code
+	 */
+	public static final int getBaseKeyCode(int code){
+		return code & CommandKeys.KEYCODE_MASK;
+	}
+	
+	/**
+	 * Gets a string with all the modifiers for the given extended key code.<br>
+	 * For example: <code>Ctrl + S</code>
+	 * @param code The extended keycode to format.
+	 * @return The key string with modifier keys.
+	 */
+	public static String formatExtendedCode(int code){
+		String name = KeyInformation.getKeyText(getBaseKeyCode(code));
+		if(hasCtrl(code)){
+			name = "Ctrl + " + name;
+		}
+		if(hasAlt(code)){
+			name = "Alt + " + name;
+		}
+		if(hasShift(code)){
+			name = "Shift + " + name;
+		}
+		return name;
+	}
+
+	@Override
+	public void onKeyRelease(int code){
+		if(code == NativeKeyEvent.VC_ALT){
+			isAltDown = false;
+		}else if(code == NativeKeyEvent.VC_CONTROL){
+			isCtrlDown = false;
+		}else if(code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT){
+			isShiftDown = false;
+		}
+	}
+
+	@Override
+	public void onKeyPress(int code){
+		if(!isAltDown){
+			isAltDown = code == NativeKeyEvent.VC_ALT;
+		}
+		if(!isCtrlDown){
+			isCtrlDown = code == NativeKeyEvent.VC_CONTROL;
+		}
+		if(!isShiftDown){
+			isShiftDown = code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT;
+		}
+	}
 
 	/**
 	 * Simple class to represent
 	 * a command key
 	 * @author Roan
 	 */
-	protected static class CMD{
+	public static class CMD{
 		/**
 		 * Command key that never activates.
 		 */
-		protected static final CMD NONE = new CMD(0, false, false){
+		public static final CMD NONE = new CMD(0, false, false){
 			@Override
 			public String toSaveString(){
 				return "unbound";
@@ -244,7 +281,7 @@ public class CommandKeys{
 		 * @param alt Whether or not alt has to be pressed
 		 * @param ctrl Whether or not ctrl has to be pressed
 		 */
-		protected CMD(int keycode, boolean alt, boolean ctrl){
+		public CMD(int keycode, boolean alt, boolean ctrl){
 			this.alt = alt;
 			this.ctrl = ctrl;
 			this.keycode = keycode;
@@ -270,40 +307,6 @@ public class CommandKeys{
 		 */
 		public String toSaveString(){
 			return "[keycode=" + keycode + ",ctrl=" + ctrl + ",alt=" + alt + "]";
-		}
-	}
-
-	/**
-	 * Prompts the user for a new command key
-	 * @return The new command key or null
-	 */
-	protected static CMD askForNewKey(){
-		JPanel form = new JPanel(new GridLayout(3, 1));
-		JLabel txt = new JLabel("Press a key and click 'Save' or press 'Unbind'");
-		JPanel a = new JPanel(new BorderLayout());
-		JPanel c = new JPanel(new BorderLayout());
-		JCheckBox ctrl = new JCheckBox();
-		JCheckBox alt = new JCheckBox();
-		c.add(ctrl, BorderLayout.LINE_START);
-		c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
-		a.add(alt, BorderLayout.LINE_START);
-		a.add(new JLabel("Alt"), BorderLayout.CENTER);
-		form.add(txt);
-		form.add(c);
-		form.add(a);
-		
-		switch(Dialog.showDialog(form, false, new String[]{"Save", "Unbind", "Cancel"})){
-		case 0:
-			if(Main.lastevent == null){
-				return null;
-			}
-			
-			CMD cmd = new CMD(Main.lastevent.getKeyCode(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
-			return Dialog.showConfirmDialog("Set command key to: " + cmd.toString()) ? cmd : null;
-		case 1:
-			return CMD.NONE;
-		default:
-			return null;
 		}
 	}
 }
