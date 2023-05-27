@@ -48,6 +48,7 @@ public final class KeyInformation extends Positionable{
 	/**
 	 * Auto-increment for #x
 	 */
+	@Deprecated
 	public static volatile int autoIndex = -2;
 
 	/**
@@ -66,6 +67,12 @@ public final class KeyInformation extends Positionable{
 		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
 		this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
 		this.name = mouse ? name : getKeyName(name, keycode);
+	}
+	
+	public KeyInformation(String name, int extCode){
+		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
+		this.keycode = extCode;
+		this.name = getKeyName(name, keycode);
 	}
 
 	/**
@@ -110,16 +117,7 @@ public final class KeyInformation extends Positionable{
 	 */
 	public void setName(String name){
 		this.name = name;
-		Main.keys.getOrDefault(keycode, Main.DUMMY_KEY).name = name;
-	}
-
-	/**
-	 * Gets a string containing all
-	 * the modifiers for this key
-	 * @return The modifier string
-	 */
-	public String getModifierString(){
-		return (CommandKeys.hasCtrl(keycode) ? "Ctrl + " : "") + (CommandKeys.hasAlt(keycode) ? "Alt + " : "") + (CommandKeys.hasShift(keycode) ? "Shift + " : "");
+		Main.keys.getOrDefault(keycode, Main.DUMMY_KEY).name = name;//TODO name stored in multiple places...
 	}
 
 	@Override

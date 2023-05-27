@@ -439,7 +439,7 @@ public class Main{
 				}
 			}
 			for(Entry<Integer, Key> k : keys.entrySet()){
-				if(getBaseKeyCode(code) == getBaseKeyCode(k.getKey())){
+				if(CommandKeys.getBaseKeyCode(code) == CommandKeys.getBaseKeyCode(k.getKey())){
 					k.getValue().keyReleased();
 				}
 			}
@@ -532,18 +532,8 @@ public class Main{
 		}
 	}
 	
-	private static final int getExtendedButtonCode(int button){
+	public static final int getExtendedButtonCode(int button){
 		return -button;//TODO this function is plain trivial lol
-	}
-
-	/**
-	 * Gets the base key code for the extended key code,
-	 * this is the key code without modifiers
-	 * @param code The extended key code
-	 * @return The base key code
-	 */
-	private static final int getBaseKeyCode(int code){
-		return code & CommandKeys.KEYCODE_MASK;
 	}
 
 	/**

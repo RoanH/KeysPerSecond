@@ -104,7 +104,7 @@ public class CommandKeys{
 	 * @param code The key code to get the extended key code for
 	 * @return The extended key code for this code
 	 */
-	protected static final int getExtendedKeyCode(int code){
+	public static final int getExtendedKeyCode(int code){
 		return getExtendedKeyCode(code, isShiftDown, isCtrlDown, isAltDown);
 	}
 	
@@ -117,7 +117,7 @@ public class CommandKeys{
 	 * @param alt If alt is involved
 	 * @return The extended key code for this event
 	 */
-	protected static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
+	public static final int getExtendedKeyCode(int code, boolean shift, boolean ctrl, boolean alt){
 		if(code == NativeKeyEvent.VC_SHIFT){
 			return LSHIFT;
 		}else if(code == VC_RSHIFT){
@@ -196,6 +196,35 @@ public class CommandKeys{
 	 */
 	public static boolean isMouseButton(int code){
 		return (code & MOUSE_MASK) != 0;
+	}
+	
+	/**
+	 * Gets the base key code for the extended key code,
+	 * this is the key code without modifiers
+	 * @param code The extended key code
+	 * @return The base key code
+	 */
+	public static final int getBaseKeyCode(int code){
+		return code & CommandKeys.KEYCODE_MASK;
+	}
+	
+//	/**
+//	 * Gets a string containing all
+//	 * the modifiers for this key
+//	 * @return The modifier string
+//	 */
+	public static String formatExtendedCode(int code){
+		String name = NativeKeyEvent.getKeyText(getBaseKeyCode(code));
+		if(CommandKeys.hasCtrl(code)){
+			name = "Ctrl + " + name;
+		}
+		if(CommandKeys.hasAlt(code)){
+			name = "Alt + " + name;
+		}
+		if(CommandKeys.hasShift(code)){
+			name = "Shift + " + name;
+		}
+		return name;
 	}
 
 	/**
