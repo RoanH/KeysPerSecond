@@ -265,7 +265,7 @@ public class Main{
 		eventManager.registerButtonPressListener(Main::pressEventButton);
 		eventManager.registerButtonReleaseListener(Main::releaseEventButton);
 		eventManager.registerKeyPressListener(Main::pressEventKey);
-		eventManager.registerKeyReleaseListener(Main::pressEventKey);
+		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
 
 		//Set configuration for the keys
 		if(config != null){
