@@ -80,6 +80,8 @@ import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
 import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 
 import dev.roanh.kps.CommandKeys.CMD;
+import dev.roanh.kps.event.EventManager;
+import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.AvgPanel;
@@ -156,6 +158,7 @@ public class Main{
 	 * The most recent key event, only
 	 * used during the initial setup
 	 */
+	@Deprecated
 	public static NativeKeyEvent lastevent;
 	/**
 	 * Main panel used for showing all the sub panels that
@@ -218,6 +221,7 @@ public class Main{
 	 * Best text rendering hints.
 	 */
 	public static Map<?, ?> desktopHints;
+	public static EventManager eventManager = new EventManager();
 	
 	/**
 	 * Main method
@@ -246,21 +250,16 @@ public class Main{
 		Dialog.setDialogIcon(iconSmall);
 		Dialog.setParentFrame(frame);
 		Dialog.setDialogTitle("KeysPerSecond");
-
-		//Make sure the native hook is always unregistered
-		Runtime.getRuntime().addShutdownHook(new Thread(){
-			@Override
-			public void run(){
-				try{
-					GlobalScreen.unregisterNativeHook();
-				}catch(NativeHookException e1){
-					e1.printStackTrace();
-				}
-			}
-		});
-
-		//Initialise native library and register event handlers
-		setupNativeHook();
+		
+		//register input sources
+		try{
+			eventManager.registerInputSource(new NativeHookInputSource(eventManager));
+		}catch(NativeHookException ex){
+			System.err.println("There was a problem registering the native hook.");
+			System.err.println(ex.getMessage());
+			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
+			System.exit(1);
+		}
 
 		//Set configuration for the keys
 		if(config != null){
@@ -401,6 +400,7 @@ public class Main{
 	 * registers event handlers for key
 	 * press events
 	 */
+	@Deprecated
 	private static final void setupNativeHook(){
 		try{
 			System.setProperty("jnativehook.lib.path", System.getProperty("java.io.tmpdir"));
@@ -423,7 +423,7 @@ public class Main{
 
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event){
-				pressEvent(event);
+				pressEvent(event);//TODO relocate via event manager etc
 			}
 
 			@Override
@@ -452,12 +452,9 @@ public class Main{
 			}
 		});
 	}
-
-	/**
-	 * Called when a key is released
-	 * @param event The event that occurred
-	 */
-	private static final void releaseEvent(NativeInputEvent event){
+	
+	@Deprecated
+	private static final void releaseEventButton(int button){
 		int code = getExtendedKeyCode(event);
 		if(code == CommandKeys.ALT){
 			CommandKeys.isAltDown = false;
@@ -496,19 +493,83 @@ public class Main{
 		}
 	}
 
-	/**
-	 * Called when a key is pressed
-	 * @param nevent The event that occurred
-	 */
-	private static final void pressEvent(NativeInputEvent nevent){
+	@Deprecated
+	private static final void releaseEventKey(int rawCode){
+		int code = getExtendedKeyCode(rawCode);
+		
+		if(code == CommandKeys.ALT){
+			CommandKeys.isAltDown = false;
+		}else if(code == CommandKeys.CTRL){
+			CommandKeys.isCtrlDown = false;
+		}else if(CommandKeys.isShift(code)){
+			CommandKeys.isShiftDown = false;
+		}
+		
+		if(config.enableModifiers){
+			if(code == CommandKeys.ALT){
+				for(Key k : keys.values()){
+					if(k.alt){
+						k.keyReleased();
+					}
+				}
+			}else if(code == CommandKeys.CTRL){
+				for(Key k : keys.values()){
+					if(k.ctrl){
+						k.keyReleased();
+					}
+				}
+			}else if(CommandKeys.isShift(code)){
+				for(Key k : keys.values()){
+					if(k.shift){
+						k.keyReleased();
+					}
+				}
+			}
+			for(Entry<Integer, Key> k : keys.entrySet()){
+				if(getBaseKeyCode(code) == getBaseKeyCode(k.getKey())){
+					k.getValue().keyReleased();
+				}
+			}
+		}else{
+			keys.getOrDefault(code, DUMMY_KEY).keyReleased();
+		}
+	}
+	
+	@Deprecated
+	private static final void pressEventButton(int button){
 		Integer code = getExtendedKeyCode(nevent);
-		if(!keys.containsKey(code)){
-			if(config.trackAllKeys && nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code)));
-			}else if(config.trackAllButtons && nevent instanceof NativeMouseEvent){
-				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
+		
+		if(config.trackAllButtons && !keys.containsKey(code)){
+			keys.put(code, new Key("M" + button);
+		}
+		
+		if(!suspended && keys.containsKey(code)){
+			Key key = keys.get(code);
+			key.keyPressed();
+			if(config.enableModifiers){//TODO do we even handle ALT + Button? No right?
+				if(key.alt){
+					keys.getOrDefault(CommandKeys.ALT, DUMMY_KEY).keyReleased();
+				}
+				if(key.ctrl){
+					keys.getOrDefault(CommandKeys.CTRL, DUMMY_KEY).keyReleased();
+				}
+				if(key.shift){
+					keys.getOrDefault(CommandKeys.RSHIFT, DUMMY_KEY).keyReleased();
+					keys.getOrDefault(CommandKeys.LSHIFT, DUMMY_KEY).keyReleased();
+				}
 			}
 		}
+	}
+
+	@Deprecated
+	private static final void pressEventKey(int rawCode){
+		Integer code = getExtendedKeyCode(rawCode);
+		
+		//TODO we're kinda checking for containment again like 4 lines down...
+		if(config.trackAllKeys && !keys.containsKey(code)){
+			keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code)));
+		}
+		
 		if(!suspended && keys.containsKey(code)){
 			Key key = keys.get(code);
 			key.keyPressed();
@@ -525,35 +586,34 @@ public class Main{
 				}
 			}
 		}
-		if(nevent instanceof NativeKeyEvent){
-			NativeKeyEvent event = (NativeKeyEvent)nevent;
-			if(!CommandKeys.isAltDown){
-				CommandKeys.isAltDown = code == CommandKeys.ALT;
+		
+		if(!CommandKeys.isAltDown){
+			CommandKeys.isAltDown = code == CommandKeys.ALT;
+		}
+		if(!CommandKeys.isCtrlDown){
+			CommandKeys.isCtrlDown = code == CommandKeys.CTRL;
+		}
+		if(!CommandKeys.isShiftDown){
+			CommandKeys.isShiftDown = CommandKeys.isShift(code);
+		}
+		
+		//TODO should be a map and somewhere else
+		if(config.CP.matches(rawCode)){
+			resetStats();
+		}else if(config.CU.matches(rawCode)){
+			exit();
+		}else if(config.CI.matches(rawCode)){
+			resetTotals();
+		}else if(config.CY.matches(rawCode)){
+			if(frame.getContentPane().getComponentCount() != 0){
+				frame.setVisible(!frame.isVisible());
 			}
-			if(!CommandKeys.isCtrlDown){
-				CommandKeys.isCtrlDown = code == CommandKeys.CTRL;
-			}
-			if(!CommandKeys.isShiftDown){
-				CommandKeys.isShiftDown = CommandKeys.isShift(code);
-			}
-			lastevent = event;
-			if(config.CP.matches(event.getKeyCode())){
-				resetStats();
-			}else if(config.CU.matches(event.getKeyCode())){
-				exit();
-			}else if(config.CI.matches(event.getKeyCode())){
-				resetTotals();
-			}else if(config.CY.matches(event.getKeyCode())){
-				if(frame.getContentPane().getComponentCount() != 0){
-					frame.setVisible(!frame.isVisible());
-				}
-			}else if(config.CT.matches(event.getKeyCode())){
-				suspended = !suspended;
-				Menu.pause.setSelected(suspended);
-			}else if(config.CR.matches(event.getKeyCode())){
-				config.reloadConfig();
-				Menu.resetData();
-			}
+		}else if(config.CT.matches(rawCode)){
+			suspended = !suspended;
+			Menu.pause.setSelected(suspended);
+		}else if(config.CR.matches(rawCode)){
+			config.reloadConfig();
+			Menu.resetData();
 		}
 	}
 

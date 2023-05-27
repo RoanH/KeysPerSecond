@@ -18,14 +18,50 @@
  */
 package dev.roanh.kps.event;
 
-public class EventManager{
+import java.util.ArrayList;
+import java.util.List;
 
+import dev.roanh.kps.event.listener.ButtonPressListener;
+import dev.roanh.kps.event.listener.ButtonReleaseListener;
+import dev.roanh.kps.event.listener.KeyPressListener;
+import dev.roanh.kps.event.listener.KeyReleaseListener;
+
+public class EventManager{
+	private List<KeyPressListener> keyPressListeners = new ArrayList<KeyPressListener>();
+	private List<KeyReleaseListener> keyReleaseListeners = new ArrayList<KeyReleaseListener>();
+	private List<ButtonPressListener> buttonPressListeners = new ArrayList<ButtonPressListener>();
+	private List<ButtonReleaseListener> buttonReleaseListeners = new ArrayList<ButtonReleaseListener>();
+	
+	//TODO this class is not thread safe but it should be because listeners can be added and removed on the fly
+	
+	public void registerKeyPressListener(KeyPressListener listener){
+		keyPressListeners.add(listener);
+	}
 	
 	
 	
+	public void fireKeyPressEvent(int code){
+		for(KeyPressListener listener : keyPressListeners){
+			listener.onKeyPress(code);
+		}
+	}
 	
-	public void fireKeyPresseEvent(int code){
-		//TODO, also args
+	public void fireKeyReleaseEvent(int code){
+		for(KeyReleaseListener listener : keyReleaseListeners){
+			listener.onKeyRelease(code);
+		}
+	}
+	
+	public void fireButtonReleaseEvent(int button){
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	public void fireButtonPressEvent(int button){
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
@@ -34,6 +70,12 @@ public class EventManager{
 	}
 	
 	public void unsubscribe(){
+		
+	}
+
+
+	public void registerInputSource(InputSource source){
+		// TODO Auto-generated method stub
 		
 	}
 }
