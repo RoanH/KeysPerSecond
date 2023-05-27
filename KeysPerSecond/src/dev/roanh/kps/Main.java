@@ -403,15 +403,7 @@ public class Main{
 	@Deprecated
 	private static final void releaseEventButton(int button){
 		int code = getExtendedButtonCode(button);
-		if(config.enableModifiers){
-			for(Entry<Integer, Key> k : keys.entrySet()){
-				if(getBaseKeyCode(code) == getBaseKeyCode(k.getKey())){
-					k.getValue().keyReleased();//TODO fairly sure we do not do alt/shift/ctrl for buttons
-				}
-			}
-		}else{
-			keys.getOrDefault(code, DUMMY_KEY).keyReleased();
-		}
+		keys.getOrDefault(code, DUMMY_KEY).keyReleased();
 	}
 
 	@Deprecated
@@ -467,18 +459,6 @@ public class Main{
 		if(!suspended && keys.containsKey(code)){
 			Key key = keys.get(code);
 			key.keyPressed();
-			if(config.enableModifiers){//TODO do we even handle ALT + Button? No right?
-				if(key.alt){
-					keys.getOrDefault(CommandKeys.ALT, DUMMY_KEY).keyReleased();
-				}
-				if(key.ctrl){
-					keys.getOrDefault(CommandKeys.CTRL, DUMMY_KEY).keyReleased();
-				}
-				if(key.shift){
-					keys.getOrDefault(CommandKeys.RSHIFT, DUMMY_KEY).keyReleased();
-					keys.getOrDefault(CommandKeys.LSHIFT, DUMMY_KEY).keyReleased();
-				}
-			}
 		}
 	}
 
