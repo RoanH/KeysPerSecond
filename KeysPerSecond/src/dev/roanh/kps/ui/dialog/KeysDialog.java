@@ -52,10 +52,23 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -1799584925602660258L;
+	/**
+	 * The extended key code for the most recent key press.
+	 */
 	private int lastKey = -1;
+	/**
+	 * The text field showing the most recently pressed key.
+	 */
 	private JTextField pressed = new JTextField("<press a key>", 25);
+	/**
+	 * Table model showing all added keys and buttons.
+	 */
 	private KeysModel model = new KeysModel();
 	
+	/**
+	 * Constructs a new KeysDialog.
+	 * @see #configureKeys()
+	 */
 	private KeysDialog(){
 		super(new BorderLayout());
 		
@@ -111,6 +124,12 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		add(right, BorderLayout.LINE_END);
 	}
 	
+	/**
+	 * Constructs a new button that when pressed registers a mouse button.
+	 * @param code The ID of the mouse button to register.
+	 * @param text The display text for the button.
+	 * @return The constructed button.
+	 */
 	private JButton newButton(int code, String text){
 		JButton button = new JButton(text);
 		button.addActionListener(e->{
@@ -127,6 +146,11 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		return button;
 	}
 	
+	/**
+	 * Registers a new key to be tracked. The key that will be
+	 * registered is tracked by {@link #lastKey}.
+	 * @see #lastKey
+	 */
 	private void commitKey(){
 		if(lastKey == -1){
 			Dialog.showMessageDialog("Please press a key first.");
