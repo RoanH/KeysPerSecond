@@ -147,27 +147,27 @@ public class Configuration{
 	/**
 	 * Reset stats command key
 	 */
-	protected CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
+	private CMD commandResetStats = new CMD(NativeKeyEvent.VC_P, false, true);
 	/**
 	 * Reset totals command key
 	 */
-	protected CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
+	private CMD commandResetTotals = new CMD(NativeKeyEvent.VC_I, false, true);
 	/**
 	 * Exit command key
 	 */
-	protected CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
+	private CMD commandExit = new CMD(NativeKeyEvent.VC_U, false, true);
 	/**
 	 * Hide/show command key
 	 */
-	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
+	private CMD commandHide = new CMD(NativeKeyEvent.VC_Y, false, true);
 	/**
 	 * Pause command key
 	 */
-	protected CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
+	private CMD commandPause = new CMD(NativeKeyEvent.VC_T, false, true);
 	/**
 	 * Reload command key
 	 */
-	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
+	private CMD commandReload = new CMD(NativeKeyEvent.VC_R, false, true);
 
 	//special panels / layout
 	/**
@@ -398,6 +398,54 @@ public class Configuration{
 		return customColors ? foreground : Color.CYAN;
 	}
 
+	public CMD getCommandResetStats(){
+		return commandResetStats;
+	}
+
+	public void setCommandResetStats(CMD command){
+		commandResetStats = command;
+	}
+
+	public CMD getCommandResetTotals(){
+		return commandResetTotals;
+	}
+
+	public void setCommandResetTotals(CMD command){
+		commandResetTotals = command;
+	}
+	
+	public CMD getCommandHide(){
+		return commandHide;
+	}
+
+	public void setCommandHide(CMD command){
+		commandHide = command;
+	}
+	
+	public CMD getCommandPause(){
+		return commandPause;
+	}
+
+	public void setCommandPause(CMD command){
+		commandPause = command;
+	}
+	
+	public CMD getCommandReload(){
+		return commandReload;
+	}
+
+	public void setCommandReload(CMD command){
+		commandReload = command;
+	}
+	
+	public CMD getCommandExit(){
+		return commandExit;
+	}
+
+	public void setCommandExit(CMD command){
+		commandExit = command;
+	}
+
 	/**
 	 * Reloads the configuration from file
 	 */
@@ -587,42 +635,42 @@ public class Configuration{
 					break;
 				case "keyResetStats":
 					try{
-						CP = parseCommand(args[1]);
+						setCommandResetStats(parseCommand(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyExit":
 					try{
-						CU = parseCommand(args[1]);
+						commandExit = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyResetTotals":
 					try{
-						CI = parseCommand(args[1]);
+						commandResetTotals = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyHide":
 					try{
-						CY = parseCommand(args[1]);
+						commandHide = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyPause":
 					try{
-						CT = parseCommand(args[1]);
+						commandPause = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyReload":
 					try{
-						CR = parseCommand(args[1]);
+						commandReload = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
@@ -1096,12 +1144,12 @@ public class Configuration{
 					out.println();
 				}
 				out.println("# Command keys");
-				out.println("keyResetStats: " + CP.toSaveString());
-				out.println("keyExit: " + CU.toSaveString());
-				out.println("keyResetTotals: " + CI.toSaveString());
-				out.println("keyHide: " + CY.toSaveString());
-				out.println("keyPause: " + CT.toSaveString());
-				out.println("keyReload: " + CR.toSaveString());
+				out.println("keyResetStats: " + getCommandResetStats().toSaveString());
+				out.println("keyExit: " + commandExit.toSaveString());
+				out.println("keyResetTotals: " + commandResetTotals.toSaveString());
+				out.println("keyHide: " + commandHide.toSaveString());
+				out.println("keyPause: " + commandPause.toSaveString());
+				out.println("keyReload: " + commandReload.toSaveString());
 				out.println();
 				out.println("# Layout");
 				out.println("maxX: " + maxPanel.getX());

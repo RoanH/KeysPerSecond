@@ -89,6 +89,7 @@ import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.panels.NowPanel;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
 import dev.roanh.util.ClickableLink;
@@ -499,20 +500,20 @@ public class Main{
 		}
 		
 		//TODO should be a map and somewhere else
-		if(config.CP.matches(rawCode)){
+		if(config.getCommandResetStats().matches(rawCode)){
 			resetStats();
-		}else if(config.CU.matches(rawCode)){
+		}else if(config.getCommandExit().matches(rawCode)){
 			exit();
-		}else if(config.CI.matches(rawCode)){
+		}else if(config.getCommandResetTotals().matches(rawCode)){
 			resetTotals();
-		}else if(config.CY.matches(rawCode)){
+		}else if(config.getCommandHide().matches(rawCode)){
 			if(frame.getContentPane().getComponentCount() != 0){
 				frame.setVisible(!frame.isVisible());
 			}
-		}else if(config.CT.matches(rawCode)){
+		}else if(config.getCommandPause().matches(rawCode)){
 			suspended = !suspended;
 			Menu.pause.setSelected(suspended);
-		}else if(config.CR.matches(rawCode)){
+		}else if(config.getCommandReload().matches(rawCode)){
 			config.reloadConfig();
 			Menu.resetData();
 		}
@@ -675,7 +676,7 @@ public class Main{
 			LayoutDialog.configureLayout(false);
 		});
 		cmdkeys.addActionListener((e)->{
-			configureCommandKeys();
+			CommandKeysDialog.configureCommandKeys();
 		});
 		precision.addActionListener((e)->{
 			configurePrecision();
@@ -940,90 +941,6 @@ public class Main{
 			cbg.setForeground(prevbg);
 		}
 		frame.repaint();
-	}
-
-	/**
-	 * Show the command key configuration dialog
-	 */
-	protected static final void configureCommandKeys(){
-		JPanel content = new JPanel(new GridLayout(6, 2, 10, 2));
-
-		JLabel lcp = new JLabel("Reset stats:");
-		JLabel lcu = new JLabel("Exit the program:");
-		JLabel lci = new JLabel("Reset totals:");
-		JLabel lcy = new JLabel("Show/hide GUI:");
-		JLabel lct = new JLabel("Pause/Resume:");
-		JLabel lcr = new JLabel("Reload config:");
-
-		JButton bcp = new JButton(config.CP.toString());
-		JButton bcu = new JButton(config.CU.toString());
-		JButton bci = new JButton(config.CI.toString());
-		JButton bcy = new JButton(config.CY.toString());
-		JButton bct = new JButton(config.CT.toString());
-		JButton bcr = new JButton(config.CR.toString());
-
-		content.add(lcp);
-		content.add(bcp);
-
-		content.add(lcu);
-		content.add(bcu);
-
-		content.add(lci);
-		content.add(bci);
-
-		content.add(lcy);
-		content.add(bcy);
-
-		content.add(lct);
-		content.add(bct);
-
-		content.add(lcr);
-		content.add(bcr);
-
-		bcp.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CP = cmd;
-				bcp.setText(cmd.toString());
-			}
-		});
-		bci.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CI = cmd;
-				bci.setText(cmd.toString());
-			}
-		});
-		bcu.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CU = cmd;
-				bcu.setText(cmd.toString());
-			}
-		});
-		bcy.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CY = cmd;
-				bcy.setText(cmd.toString());
-			}
-		});
-		bct.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CT = cmd;
-				bct.setText(cmd.toString());
-			}
-		});
-		bcr.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CR = cmd;
-				bcr.setText(cmd.toString());
-			}
-		});
-
-		Dialog.showMessageDialog(content);
 	}
 
 	/**

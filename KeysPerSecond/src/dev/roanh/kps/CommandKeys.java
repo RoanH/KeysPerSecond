@@ -18,16 +18,7 @@
  */
 package dev.roanh.kps;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-
-import dev.roanh.util.Dialog;
 
 /**
  * This class is used to configure
@@ -232,11 +223,11 @@ public class CommandKeys{
 	 * a command key
 	 * @author Roan
 	 */
-	protected static class CMD{
+	public static class CMD{
 		/**
 		 * Command key that never activates.
 		 */
-		protected static final CMD NONE = new CMD(0, false, false){
+		public static final CMD NONE = new CMD(0, false, false){
 			@Override
 			public String toSaveString(){
 				return "unbound";
@@ -273,7 +264,7 @@ public class CommandKeys{
 		 * @param alt Whether or not alt has to be pressed
 		 * @param ctrl Whether or not ctrl has to be pressed
 		 */
-		protected CMD(int keycode, boolean alt, boolean ctrl){
+		public CMD(int keycode, boolean alt, boolean ctrl){
 			this.alt = alt;
 			this.ctrl = ctrl;
 			this.keycode = keycode;
@@ -299,40 +290,6 @@ public class CommandKeys{
 		 */
 		public String toSaveString(){
 			return "[keycode=" + keycode + ",ctrl=" + ctrl + ",alt=" + alt + "]";
-		}
-	}
-
-	/**
-	 * Prompts the user for a new command key
-	 * @return The new command key or null
-	 */
-	protected static CMD askForNewKey(){
-		JPanel form = new JPanel(new GridLayout(3, 1));
-		JLabel txt = new JLabel("Press a key and click 'Save' or press 'Unbind'");
-		JPanel a = new JPanel(new BorderLayout());
-		JPanel c = new JPanel(new BorderLayout());
-		JCheckBox ctrl = new JCheckBox();
-		JCheckBox alt = new JCheckBox();
-		c.add(ctrl, BorderLayout.LINE_START);
-		c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
-		a.add(alt, BorderLayout.LINE_START);
-		a.add(new JLabel("Alt"), BorderLayout.CENTER);
-		form.add(txt);
-		form.add(c);
-		form.add(a);
-		
-		switch(Dialog.showDialog(form, false, new String[]{"Save", "Unbind", "Cancel"})){
-		case 0:
-			if(Main.lastevent == null){
-				return null;
-			}
-			
-			CMD cmd = new CMD(Main.lastevent.getKeyCode(), isAltDown || alt.isSelected(), isCtrlDown || ctrl.isSelected());
-			return Dialog.showConfirmDialog("Set command key to: " + cmd.toString()) ? cmd : null;
-		case 1:
-			return CMD.NONE;
-		default:
-			return null;
 		}
 	}
 }
