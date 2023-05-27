@@ -18,9 +18,21 @@
  */
 package dev.roanh.kps.event;
 
+/**
+ * Abstract base class for providers of input events.
+ * @author Roan
+ */
 public abstract class InputSource{
+	/**
+	 * The event manager to report input to.
+	 */
 	protected EventManager manager;
 	
+	/**
+	 * Constructs a new input source with the
+	 * given event manager to report to.
+	 * @param manager The event manager to report to.
+	 */
 	public InputSource(EventManager manager){
 		this.manager = manager;
 	}
