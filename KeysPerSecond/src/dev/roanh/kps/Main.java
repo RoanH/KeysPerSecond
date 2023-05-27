@@ -261,12 +261,6 @@ public class Main{
 			System.exit(1);
 		}
 		
-		//register default event handlers
-		eventManager.registerButtonPressListener(Main::pressEventButton);
-		eventManager.registerButtonReleaseListener(Main::releaseEventButton);
-		eventManager.registerKeyPressListener(Main::pressEventKey);
-		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
-
 		//Set configuration for the keys
 		if(config != null){
 			try{
@@ -301,6 +295,12 @@ public class Main{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
+		//register default event handlers
+		eventManager.registerButtonPressListener(Main::pressEventButton);
+		eventManager.registerButtonReleaseListener(Main::releaseEventButton);
+		eventManager.registerKeyPressListener(Main::pressEventKey);
+		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
 		
 		//Enter the main loop
 		mainLoop();
