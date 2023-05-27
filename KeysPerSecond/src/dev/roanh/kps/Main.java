@@ -209,6 +209,9 @@ public class Main{
 	 * Best text rendering hints.
 	 */
 	public static Map<?, ?> desktopHints;
+	/**
+	 * Event manager responsible for forwarding input events.
+	 */
 	public static EventManager eventManager = new EventManager();
 	
 	/**
@@ -394,10 +397,18 @@ public class Main{
 		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * Handles a mouse button release event.
+	 * @param button The ID of the button that was released.
+	 */
 	private static final void releaseEventButton(int button){
 		keys.getOrDefault(getExtendedButtonCode(button), DUMMY_KEY).keyReleased();
 	}
 
+	/**
+	 * Handles a key release event.
+	 * @param rawCode The key code of the key that was released.
+	 */
 	private static final void releaseEventKey(int rawCode){
 		int code = getExtendedKeyCode(rawCode);
 		
@@ -431,6 +442,10 @@ public class Main{
 		}
 	}
 	
+	/**
+	 * Handles a button press event.
+	 * @param button The ID of the button that was pressed.
+	 */
 	private static final void pressEventButton(int button){
 		int code = getExtendedButtonCode(button);
 		Key key = keys.get(code);
@@ -445,6 +460,10 @@ public class Main{
 		}
 	}
 
+	/**
+	 * Handles a key press event.
+	 * @param rawCode The key code of the key that was pressed.
+	 */
 	private static final void pressEventKey(int rawCode){
 		int code = getExtendedKeyCode(rawCode);
 		Key key = keys.get(code);
