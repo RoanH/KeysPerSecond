@@ -12,7 +12,7 @@ The program when active looks like this:
 ![Interface](https://media.roanh.dev/keyspersecond/kps1.png)  ![Preview](https://media.roanh.dev/keyspersecond/preview.gif)    
 ![Interface](https://media.roanh.dev/keyspersecond/kps2.png)    
 There is also a right click menu to configure all the settings:    
-![Menu](https://media.roanh.dev/keyspersecond/remnu.png)    
+![Menu](https://media.roanh.dev/keyspersecond/rmenu.png)    
 
 For each configured key the program will show how many times it was pressed. By default it will also show the maximum, average and current number of keys pressed per second.
 When enabled it can also show a graph of the number of keys pressed per second over time and the total number of keys pressed.
