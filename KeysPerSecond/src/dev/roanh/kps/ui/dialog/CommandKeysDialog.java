@@ -114,7 +114,7 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 	 * @param current The current command key.
 	 * @return The new command key or null.
 	 */
-	protected CMD askForNewKey(CMD current){
+	private CMD askForNewKey(CMD current){
 		JPanel form = new JPanel(new GridLayout(2, 1));
 		JLabel txt = new JLabel("Press a key and click 'Save' or press 'Unbind'");
 		lastKey = -1;
