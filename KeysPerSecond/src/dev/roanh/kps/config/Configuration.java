@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps;
+package dev.roanh.kps.config;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -35,6 +35,11 @@ import java.util.concurrent.TimeUnit;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
+import dev.roanh.kps.GraphMode;
+import dev.roanh.kps.KeyInformation;
+import dev.roanh.kps.Main;
+import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
@@ -123,19 +128,19 @@ public class Configuration{
 	/**
 	 * Foreground color
 	 */
-	protected Color foreground = Color.CYAN;
+	public Color foreground = Color.CYAN;
 	/**
 	 * Background color
 	 */
-	protected Color background = Color.BLACK;
+	public Color background = Color.BLACK;
 	/**
 	 * Foreground opacity in case transparency is enabled
 	 */
-	protected float opacityfg = 1.0F;
+	public float opacityfg = 1.0F;
 	/**
 	 * Background opacity in case transparency is enabled
 	 */
-	protected float opacitybg = 1.0F;
+	public float opacitybg = 1.0F;
 
 	//precision
 	/**
@@ -290,7 +295,7 @@ public class Configuration{
 	 * Constructs a new configuration object
 	 * @param data The data file
 	 */
-	protected Configuration(Path data){
+	public Configuration(Path data){
 		this.data = data;
 	}
 	
@@ -493,11 +498,107 @@ public class Configuration{
 	public void setCommandExit(CMD command){
 		commandExit = command;
 	}
-
+	
+	/**
+	 * Gets the update rate for statistic panels.
+	 * @return The current update rate.
+	 */
+	public int getUpdateRate(){
+		return updateRate;
+	}
+	
+	/**
+	 * Checks if all mouse buttons are tracked.
+	 * @return True if all mouse buttons are tracked.
+	 */
+	public boolean isTrackAllButtons(){
+		return trackAllButtons;
+	}
+	
+	/**
+	 * Checks if all keys are tracked.
+	 * @return True if all keys are tracked.
+	 */
+	public boolean isTrackAllKeys(){
+		return trackAllKeys;
+	}
+	
+	/**
+	 * Sets whether all keys are tracked.
+	 * @param track True to track all keys.
+	 */
+	public void setTrackAllKeys(boolean track){
+		trackAllKeys = track;
+	}
+	
+	/**
+	 * Sets whether all mouse buttons are tracked.
+	 * @param track True to track all mouse buttons.
+	 */
+	public void setTrackAllButtons(boolean track){
+		trackAllButtons = track;
+	}
+	
+	/**
+	 * Sets whether overlay mode is enabled.
+	 * @param overlay True to enable overlay mode.
+	 */
+	public void setOverlayMode(boolean overlay){
+		this.overlay = overlay;
+	}
+	
+	/**
+	 * Enables or disables custom colours.
+	 * @param custom True to enable custom colours.
+	 */
+	public void setCustomColors(boolean custom){
+		customColors = custom;
+	}
+	
+	/**
+	 * Sets if tracked keys are shown.
+	 * @param show True if tracked key panels should be visible.
+	 */
+	public void setShowKeys(boolean show){
+		showKeys = show;
+	}
+	
+	/**
+	 * Checks if custom colours are configured for the application.
+	 * @return True if custom colours are configured.
+	 */
+	public boolean hasCustomColors(){
+		return customColors;
+	}
+	
+	/**
+	 * Checks if overlay mode is enabled.
+	 * @return True if overlay mode is enabled.
+	 */
+	public boolean isOverlayMode(){
+		return overlay;
+	}
+	
+	/**
+	 * Checks if tracked keys are shown.
+	 * @return True if tracked key panels are visible.
+	 */
+	public boolean showKeys(){
+		return showKeys;
+	}
+	
+	/**
+	 * Sets the update rate for aggregate panels.
+	 * @param rate The new update rate in milliseconds.
+	 */
+	public void setUpdateRate(int rate){
+		updateRate = rate;
+	}
+	
 	/**
 	 * Reloads the configuration from file
 	 */
-	protected final void reloadConfig(){
+	public final void reloadConfig(){
 		Configuration toLoad = new Configuration(data);
 		if(data != null){
 			toLoad.load(data);
@@ -509,7 +610,7 @@ public class Configuration{
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
 	 */
-	protected static final boolean loadConfiguration(){
+	public static final boolean loadConfiguration(){
 		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
 			return false;
@@ -537,7 +638,7 @@ public class Configuration{
 	 * @param saveloc The save location
 	 * @return Whether or not the configuration was loaded successfully
 	 */
-	protected final boolean loadConfig(Path saveloc){
+	public final boolean loadConfig(Path saveloc){
 		load(saveloc);
 		return true;
 	}
@@ -1146,7 +1247,7 @@ public class Configuration{
 	 *        to save the on screen position
 	 *        of the program
 	 */
-	protected final void saveConfig(boolean pos){
+	public final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
 		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
 		if(saveloc != null){

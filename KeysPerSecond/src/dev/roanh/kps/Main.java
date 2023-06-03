@@ -73,6 +73,7 @@ import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
+import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
@@ -164,7 +165,7 @@ public class Main{
 	/**
 	 * The program's main frame
 	 */
-	protected static final JFrame frame = new JFrame("KeysPerSecond");
+	public static final JFrame frame = new JFrame("KeysPerSecond");
 	/**
 	 * Whether or not the counter is paused
 	 */
@@ -184,7 +185,7 @@ public class Main{
 	/**
 	 * Frame for the graph
 	 */
-	protected static JFrame graphFrame = new JFrame("KeysPerSecond");
+	public static JFrame graphFrame = new JFrame("KeysPerSecond");
 	/**
 	 * The layout for the main panel of the program
 	 */
@@ -390,11 +391,11 @@ public class Main{
 				content.repaint();
 				prev = totaltmp;
 				timepoints.addFirst(currentTmp);
-				if(timepoints.size() >= 1000 / config.updateRate){
+				if(timepoints.size() >= 1000 / config.getUpdateRate()){
 					timepoints.removeLast();
 				}
 			}
-		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
+		}, 0, config.getUpdateRate(), TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -450,7 +451,7 @@ public class Main{
 		int code = getExtendedButtonCode(button);
 		Key key = keys.get(code);
 		
-		if(config.trackAllButtons && key == null){
+		if(config.isTrackAllButtons() && key == null){
 			key = new Key("M" + button);
 			keys.put(code, key);
 		}
@@ -468,7 +469,7 @@ public class Main{
 		int code = getExtendedKeyCode(rawCode);
 		Key key = keys.get(code);
 		
-		if(config.trackAllKeys && key == null){
+		if(config.isTrackAllKeys() && key == null){
 			key = new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code));
 			keys.put(code, key);
 		}
@@ -598,13 +599,13 @@ public class Main{
 		labels.add(lallButtons);
 		labels.add(lmod);
 		ctop.addActionListener((e)->{
-			config.overlay = ctop.isSelected();
+			config.setOverlayMode(ctop.isSelected());
 		});
 		callKeys.addActionListener((e)->{
-			config.trackAllKeys = callKeys.isSelected();
+			config.setTrackAllKeys(callKeys.isSelected());
 		});
 		callButtons.addActionListener((e)->{
-			config.trackAllButtons = callButtons.isSelected();
+			config.setTrackAllButtons(callButtons.isSelected());
 		});
 		cmax.addActionListener((e)->{
 			config.showMax = cmax.isSelected();
@@ -619,10 +620,10 @@ public class Main{
 			config.showGraph = cgra.isSelected();
 		});
 		ccol.addActionListener((e)->{
-			config.customColors = ccol.isSelected();
+			config.setCustomColors(ccol.isSelected());
 		});
 		ckey.addActionListener((e)->{
-			config.showKeys = ckey.isSelected();
+			config.setShowKeys(ckey.isSelected());
 		});
 		ctot.addActionListener((e)->{
 			config.showTotal = ctot.isSelected();
@@ -705,14 +706,14 @@ public class Main{
 			if(config.showGraph){
 				graph.setEnabled(true);
 			}
-			ccol.setSelected(config.customColors);
-			if(config.customColors){
+			ccol.setSelected(config.hasCustomColors());
+			if(config.hasCustomColors()){
 				color.setEnabled(true);
 			}
-			callKeys.setSelected(config.trackAllKeys);
-			callButtons.setSelected(config.trackAllButtons);
-			ckey.setSelected(config.showKeys);
-			ctop.setSelected(config.overlay);
+			callKeys.setSelected(config.isTrackAllKeys());
+			callButtons.setSelected(config.isTrackAllButtons());
+			ckey.setSelected(config.showKeys());
+			ctop.setSelected(config.isOverlayMode());
 			ctot.setSelected(config.showTotal);
 			cmod.setSelected(config.enableModifiers);
 		});
@@ -780,8 +781,8 @@ public class Main{
 		JCheckBox showavg = new JCheckBox();
 		showavg.setSelected(Main.config.graphAvg);
 		JLabel lbacklog;
-		if(config.updateRate != 1000){
-			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
+		if(config.getUpdateRate() != 1000){
+			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.getUpdateRate()) + "): ");
 		}else{
 			lbacklog = new JLabel("Backlog (seconds): ");
 		}
@@ -834,7 +835,7 @@ public class Main{
 		info.add(new JLabel("the graph, max, avg & cur are updated."));
 		JPanel pconfig = new JPanel(new BorderLayout());
 		JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
-		update.setSelectedItem(config.updateRate + "ms");
+		update.setSelectedItem(config.getUpdateRate() + "ms");
 		update.setRenderer(new DefaultListCellRenderer(){
 			/**
 			 * Serial ID
@@ -858,7 +859,7 @@ public class Main{
 		pconfig.add(lupdate, BorderLayout.WEST);
 		pconfig.add(update, BorderLayout.CENTER);
 		if(Dialog.showSaveDialog(pconfig)){
-			config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
+			config.setUpdateRate(Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2)));
 		}
 	}
 
@@ -948,10 +949,10 @@ public class Main{
 	 * @param newRate The new update rate
 	 */
 	protected static final void changeUpdateRate(int newRate){
-		n *= (double)config.updateRate / (double)newRate;
+		n *= (double)config.getUpdateRate() / (double)newRate;
 		tmp.set(0);
 		timepoints.clear();
-		config.updateRate = newRate;
+		config.setUpdateRate(newRate);
 		mainLoop();
 	}
 
@@ -985,7 +986,7 @@ public class Main{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			try{
-				ColorManager.prepareImages(config.customColors);
+				ColorManager.prepareImages(config.hasCustomColors());
 			}catch(IOException e){
 				e.printStackTrace();
 			}
@@ -1000,7 +1001,7 @@ public class Main{
 				}else{
 					k = keys.get(i.keycode);
 				}
-				if(config.showKeys && i.visible){
+				if(config.showKeys() && i.visible){
 					content.add(k.getPanel(i));
 					k.getPanel(i).sizeChanged();
 					panels++;
@@ -1049,8 +1050,8 @@ public class Main{
 			}else{
 				graphFrame.setVisible(false);
 			}
-			frame.setAlwaysOnTop(config.overlay);
-			graphFrame.setAlwaysOnTop(config.overlay);
+			frame.setAlwaysOnTop(config.isOverlayMode());
+			graphFrame.setAlwaysOnTop(config.isOverlayMode());
 			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
