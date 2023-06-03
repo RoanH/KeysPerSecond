@@ -62,6 +62,7 @@ import javax.swing.plaf.basic.BasicMenuUI;
 
 import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
 import dev.roanh.util.ClickableLink;
@@ -254,7 +255,7 @@ public class Menu{
 			Main.graph.reset();
 		});
 		commandkeys.addActionListener((e)->{
-			Main.configureCommandKeys();
+			CommandKeysDialog.configureCommandKeys();
 		});
 		treset.addActionListener((e)->{
 			Main.resetTotals();

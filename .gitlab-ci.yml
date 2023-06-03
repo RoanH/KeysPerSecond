@@ -1,6 +1,7 @@
 image: openjdk:8
 
 variables:
+  NAME: "${CI_PROJECT_NAME}-${CI_PIPELINE_ID}-${CI_BUILD_REF_NAME}"
   PROJECTNAME: "KeysPerSecond"
 
 before_script:
@@ -50,7 +51,7 @@ javadoc:
     - mv ./build/docs/javadoc/* ../javadoc
   stage: javadoc
   artifacts:
-    name: "$PROJECTNAME"
+    name: "${NAME} [Javadoc]"
     expire_in: 1 week
     paths:
       - javadoc/
@@ -63,7 +64,7 @@ compile:
     - mv ./build/launch4j/*.exe ../
   stage: compile
   artifacts:
-    name: "${PROJECTNAME}"
+    name: "${NAME}"
     expire_in: 1 week
     paths:
       - ${PROJECTNAME}-*.jar

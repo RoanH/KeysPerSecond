@@ -20,16 +20,19 @@ package dev.roanh.kps.ui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
@@ -37,13 +40,140 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
+import dev.roanh.kps.event.listener.KeyPressListener;
 import dev.roanh.util.Dialog;
 
 /**
  * Logic for the key setup dialog.
  * @author Roan
  */
-public class KeysDialog{
+public class KeysDialog extends JPanel implements KeyPressListener{
+	/**
+	 * Serial ID.
+	 */
+	private static final long serialVersionUID = -1799584925602660258L;
+	/**
+	 * The extended key code for the most recent key press.
+	 */
+	private int lastKey = -1;
+	/**
+	 * The text field showing the most recently pressed key.
+	 * @see #lastKey
+	 */
+	private JTextField pressed = new JTextField("<press a key>", 25);
+	/**
+	 * Table model showing all added keys and buttons.
+	 */
+	private KeysModel model = new KeysModel();
+	
+	/**
+	 * Constructs a new KeysDialog.
+	 * @see #configureKeys()
+	 */
+	private KeysDialog(){
+		super(new BorderLayout());
+		
+		//left panel showing added keys
+		JPanel left = new JPanel(new BorderLayout());
+		left.setBorder(BorderFactory.createTitledBorder("Currently added keys"));
+		left.add(new JLabel("You can remove a key or update its display name and visbility below."), BorderLayout.PAGE_START);
+		JTable keys = new JTable();
+		keys.setModel(model);
+		keys.setDragEnabled(false);
+		JScrollPane pane = new JScrollPane(keys);
+		pane.setPreferredSize(new Dimension((int)this.getPreferredSize().getWidth() + 50, 200));
+		left.add(pane, BorderLayout.CENTER);
+		
+		//right panel for adding keys/buttons
+		JPanel right = new JPanel(new GridLayout(2, 1));
+		
+		//adding keys
+		JPanel addKey = new JPanel(new BorderLayout());
+		addKey.setBorder(BorderFactory.createTitledBorder("Keys"));
+		pressed.setHorizontalAlignment(JTextField.CENTER);
+		pressed.setEditable(false);
+		addKey.add(pressed, BorderLayout.CENTER);
+		JButton add = new JButton("Add key");
+		add.addActionListener(e->commitKey());
+		addKey.add(add, BorderLayout.PAGE_END);
+		right.add(addKey, BorderLayout.PAGE_START);
+		
+		//adding buttons
+		JPanel addButton = new JPanel(new GridBagLayout());
+		addButton.setBorder(BorderFactory.createTitledBorder("Mouse Buttons"));
+		GridBagConstraints cons = new GridBagConstraints();
+		cons.weightx = 1;
+		cons.weighty = 1;
+		cons.fill = GridBagConstraints.BOTH;
+		cons.gridheight = 1;
+		cons.gridwidth = 2;
+		cons.gridx = 0;
+		cons.gridy = 0;
+		addButton.add(newButton(1, "M1 (left click)"), cons);
+		cons.gridy = 1;
+		addButton.add(newButton(2, "M2 (right click)"), cons);
+		cons.gridy = 2;
+		addButton.add(newButton(3, "M3 (mouse wheel)"), cons);
+		cons.gridy = 3;
+		cons.gridwidth = 1;
+		addButton.add(newButton(4, "M4"), cons);
+		cons.gridx = 1;
+		addButton.add(newButton(5, "M5"), cons);
+		right.add(addButton, BorderLayout.CENTER);
+		
+		add(left, BorderLayout.CENTER);
+		add(right, BorderLayout.LINE_END);
+	}
+	
+	/**
+	 * Constructs a new button that when pressed registers a mouse button.
+	 * @param code The ID of the mouse button to register.
+	 * @param text The display text for the button.
+	 * @return The constructed button.
+	 */
+	private JButton newButton(int code, String text){
+		JButton button = new JButton(text);
+		button.addActionListener(e->{
+			KeyInformation key = new KeyInformation("M" + code, Main.getExtendedButtonCode(code), false, false, false, true);
+			if(Main.config.keyinfo.contains(key)){
+				KeyInformation.autoIndex -= 2;
+				Dialog.showMessageDialog("The M" + code + " button was already added before.\nIt was not added again.");
+			}else{
+				Main.config.keyinfo.add(key);
+				model.fireTableDataChanged();
+			}
+		});
+		
+		return button;
+	}
+	
+	/**
+	 * Registers a new key to be tracked. The key that will be
+	 * registered is tracked by {@link #lastKey}.
+	 * @see #lastKey
+	 */
+	private void commitKey(){
+		if(lastKey == -1){
+			Dialog.showMessageDialog("Please press a key first.");
+			return;
+		}
+		
+		KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastKey), lastKey);
+		if(Main.config.keyinfo.contains(info)){
+			KeyInformation.autoIndex -= 2;
+			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
+		}else{
+			Main.config.keyinfo.add(info);
+			model.fireTableDataChanged();
+		}
+	}
+	
+	@Override
+	public void onKeyPress(int code){
+		lastKey = Main.config.enableModifiers ? CommandKeys.getExtendedKeyCode(code) : CommandKeys.getExtendedKeyCode(code, false, false, false);
+		pressed.setText("<" + CommandKeys.formatExtendedCode(lastKey) + ">");
+		pressed.repaint();
+	}
 
 	/**
 	 * Shows the key configuration dialog
@@ -58,25 +188,9 @@ public class KeysDialog{
 			nameState[i] = copy.get(i).name;
 		}
 		
-		JPanel keyform = new JPanel(new BorderLayout());
-		keyform.add(new JLabel("Currently added keys (you can edit these fields):"), BorderLayout.PAGE_START);
-		JTable keys = new JTable();
-		KeysModel model = new KeysModel();
-		keys.setModel(model);
-		keys.setDragEnabled(false);
-		JScrollPane pane = new JScrollPane(keys);
-		pane.setPreferredSize(new Dimension((int)keyform.getPreferredSize().getWidth() + 50, 120));
-		keyform.add(pane, BorderLayout.CENTER);
-		JButton newkey = new JButton("Add Key");
-		newkey.addActionListener(e->showAddKeyDialog(model));
-		JButton newmouse = new JButton("Add Mouse Button");
-		newmouse.addActionListener(e->showAddMouseButtonDialog(model));
-		JPanel nbuttons = new JPanel(new GridLayout(1, 2, 2, 0));
-		nbuttons.add(newkey, BorderLayout.LINE_START);
-		nbuttons.add(newmouse, BorderLayout.LINE_END);
-		keyform.add(nbuttons, BorderLayout.PAGE_END);
-		
-		if(!Dialog.showSaveDialog(keyform, true)){
+		KeysDialog dialog = new KeysDialog();
+		Main.eventManager.registerKeyPressListener(dialog);
+		if(!Dialog.showSaveDialog(dialog, true)){
 			for(int i = 0; i < copy.size(); i++){
 				copy.get(i).visible = visibleState[i];
 				copy.get(i).setName(nameState[i]);
@@ -84,90 +198,8 @@ public class KeysDialog{
 			KeyInformation.autoIndex = autoIndex;
 			Main.config.keyinfo = copy;
 		}
-	}
-	
-	/**
-	 * Shows the dialog for adding an new mouse button.
-	 * @param model The model for the table listing all the keys.
-	 */
-	private static void showAddMouseButtonDialog(KeysModel model){
-		JPanel addform = new JPanel(new BorderLayout());
-		addform.add(new JLabel("Select the mouse buttons to add:"), BorderLayout.PAGE_START);
-
-		JPanel buttons = new JPanel(new GridLayout(5, 1, 2, 0));
-		String[] names = new String[]{"M1", "M2", "M3", "M4", "M5"};
-		JCheckBox[] boxes = new JCheckBox[]{
-			new JCheckBox(names[0] + " (left click)"), 
-			new JCheckBox(names[1] + " (right click)"), 
-			new JCheckBox(names[2] + " (mouse wheel)"), 
-			new JCheckBox(names[3]), 
-			new JCheckBox(names[4])
-		};
-
-		for(JCheckBox box : boxes){
-			buttons.add(box);
-		}
-
-		addform.add(buttons, BorderLayout.CENTER);
-
-		if(Dialog.showSaveDialog(addform)){
-			for(int i = 0; i < boxes.length; i++){
-				if(boxes[i].isSelected()){
-					KeyInformation key = new KeyInformation(names[i], -(i + 1), false, false, false, true);
-					if(Main.config.keyinfo.contains(key)){
-						KeyInformation.autoIndex -= 2;
-						Dialog.showMessageDialog("The " + names[i] + " button was already added before.\nIt was not added again.");
-					}else{
-						Main.config.keyinfo.add(key);
-					}
-				}
-			}
-			model.fireTableDataChanged();
-		}
-	}
-	
-	/**
-	 * Shows the dialog for adding an key.
-	 * @param model The model for the table listing all the keys.
-	 */
-	private static void showAddKeyDialog(KeysModel model){
-		JPanel form = new JPanel(new GridLayout(Main.config.enableModifiers ? 4 : 1, 1));
-		JLabel txt = new JLabel("Press a key and click 'Save' to add it.");
-		form.add(txt);
-		JCheckBox ctrl = new JCheckBox();
-		JCheckBox alt = new JCheckBox();
-		JCheckBox shift = new JCheckBox();
-		if(Main.config.enableModifiers){
-			JPanel a = new JPanel(new BorderLayout());
-			JPanel c = new JPanel(new BorderLayout());
-			JPanel s = new JPanel(new BorderLayout());
-			c.add(ctrl, BorderLayout.LINE_START);
-			c.add(new JLabel("Ctrl"), BorderLayout.CENTER);
-			a.add(alt, BorderLayout.LINE_START);
-			a.add(new JLabel("Alt"), BorderLayout.CENTER);
-			s.add(shift, BorderLayout.LINE_START);
-			s.add(new JLabel("Shift"), BorderLayout.CENTER);
-			form.add(c);
-			form.add(a);
-			form.add(s);
-		}
-		if(Dialog.showSaveDialog(form)){
-			if(Main.lastevent == null){
-				Dialog.showMessageDialog("No key pressed!");
-				return;
-			}
-			KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(Main.lastevent.getKeyCode()), Main.lastevent.getKeyCode(), (alt.isSelected() || CommandKeys.isAltDown) && Main.config.enableModifiers, (ctrl.isSelected() || CommandKeys.isCtrlDown) && Main.config.enableModifiers, (shift.isSelected() || CommandKeys.isShiftDown) && Main.config.enableModifiers, false);
-			int n = (CommandKeys.hasAlt(info.keycode) ? 1 : 0) + (CommandKeys.hasCtrl(info.keycode) ? 1 : 0) + (CommandKeys.hasShift(info.keycode) ? 1 : 0);
-			if(Dialog.showConfirmDialog("Add the " + info.getModifierString() + info.name.substring(n) + " key?")){
-				if(Main.config.keyinfo.contains(info)){
-					KeyInformation.autoIndex -= 2;
-					Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
-				}else{
-					Main.config.keyinfo.add(info);
-				}
-			}
-			model.fireTableDataChanged();
-		}
+		
+		Main.eventManager.unregisterKeyPressListener(dialog);
 	}
 	
 	/**

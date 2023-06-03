@@ -147,27 +147,27 @@ public class Configuration{
 	/**
 	 * Reset stats command key
 	 */
-	protected CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
+	private CMD commandResetStats = new CMD(NativeKeyEvent.VC_P, false, true);
 	/**
 	 * Reset totals command key
 	 */
-	protected CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
+	private CMD commandResetTotals = new CMD(NativeKeyEvent.VC_I, false, true);
 	/**
 	 * Exit command key
 	 */
-	protected CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
+	private CMD commandExit = new CMD(NativeKeyEvent.VC_U, false, true);
 	/**
 	 * Hide/show command key
 	 */
-	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
+	private CMD commandHide = new CMD(NativeKeyEvent.VC_Y, false, true);
 	/**
 	 * Pause command key
 	 */
-	protected CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
+	private CMD commandPause = new CMD(NativeKeyEvent.VC_T, false, true);
 	/**
 	 * Reload command key
 	 */
-	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
+	private CMD commandReload = new CMD(NativeKeyEvent.VC_R, false, true);
 
 	//special panels / layout
 	/**
@@ -230,21 +230,21 @@ public class Configuration{
 	 */
 	public boolean graphAvg = true;
 	/**
-	 * The x position of the graph
+	 * The x position of the graph (-1 is end)
 	 */
-	public int graph_x = 0;
+	private int graphX = 0;
 	/**
-	 * The y position of the graph
+	 * The y position of the graph (-1 is end)
 	 */
-	public int graph_y = -1;
+	private int graphY = -1;
 	/**
-	 * The width of the graph
+	 * The width of the graph (-1 is max)
 	 */
-	public int graph_w = -1;
+	private int graphWidth = -1;
 	/**
-	 * The height of the graph
+	 * The height of the graph (-1 is max)
 	 */
-	public int graph_h = 3;
+	private int graphHeight = 3;
 	/**
 	 * Position the graph is rendered in
 	 */
@@ -295,6 +295,70 @@ public class Configuration{
 	}
 	
 	/**
+	 * Gets the x position of the graph.
+	 * @return The x position of the graph.
+	 */
+	public final int getGraphX(){
+		return graphX;
+	}
+	
+	/**
+	 * Gets the y position of the graph.
+	 * @return The y position of the graph.
+	 */
+	public final int getGraphY(){
+		return graphY;
+	}
+	
+	/**
+	 * Gets the width of the graph.
+	 * @return The width of the graph.
+	 */
+	public final int getGraphWidth(){
+		return graphWidth;
+	}	
+	
+	/**
+	 * Gets the height of the graph.
+	 * @return The height of the graph.
+	 */
+	public final int getGraphHeight(){
+		return graphHeight;
+	}
+	
+	/**
+	 * Sets the x position of the graph.
+	 * @param x The new x position.
+	 */
+	public final void setGraphX(int x){
+		graphX = x;
+	}
+	
+	/**
+	 * Sets the y position of the graph.
+	 * @param y The new y position.
+	 */
+	public final void setGraphY(int y){
+		graphY = y;
+	}
+	
+	/**
+	 * Sets the width of the graph in cells.
+	 * @param width The new width of the graph.
+	 */
+	public final void setGraphWidth(int width){
+		graphWidth = width;
+	}
+	
+	/**
+	 * Sets the height of the graph in cells.
+	 * @param height The new height of the graph.
+	 */
+	public final void setGraphHeight(int height){
+		graphHeight = height;
+	}
+	
+	/**
 	 * Gets the location on disk for this configuration file.
 	 * @return The on disk location of the configuration file.
 	 */
@@ -332,6 +396,102 @@ public class Configuration{
 	 */
 	public final Color getForegroundColor(){
 		return customColors ? foreground : Color.CYAN;
+	}
+
+	/**
+	 * Gets the command for resetting stats.
+	 * @return The command for resetting stats.
+	 */
+	public CMD getCommandResetStats(){
+		return commandResetStats;
+	}
+
+	/**
+	 * Sets the command for resetting stats.
+	 * @param command The new command for resetting stats.
+	 */
+	public void setCommandResetStats(CMD command){
+		commandResetStats = command;
+	}
+
+	/**
+	 * Gets the command for resetting totals.
+	 * @return The command for resetting totals.
+	 */
+	public CMD getCommandResetTotals(){
+		return commandResetTotals;
+	}
+
+	/**
+	 * Sets the command for resetting totals.
+	 * @param command The new command for resetting totals.
+	 */
+	public void setCommandResetTotals(CMD command){
+		commandResetTotals = command;
+	}
+	
+	/**
+	 * Gets the command for hiding the window.
+	 * @return The command for hiding the window.
+	 */
+	public CMD getCommandHide(){
+		return commandHide;
+	}
+
+	/**
+	 * Sets the command for hiding the window.
+	 * @param command The new command for hiding the window.
+	 */
+	public void setCommandHide(CMD command){
+		commandHide = command;
+	}
+	
+	/**
+	 * Gets the command for pausing updates.
+	 * @return The command for pausing updates.
+	 */
+	public CMD getCommandPause(){
+		return commandPause;
+	}
+
+	/**
+	 * Sets the command for pausing updates.
+	 * @param command The new command for pausing updates.
+	 */
+	public void setCommandPause(CMD command){
+		commandPause = command;
+	}
+	
+	/**
+	 * Gets the command for reloading the configuration.
+	 * @return The command for reloading the configuration.
+	 */
+	public CMD getCommandReload(){
+		return commandReload;
+	}
+
+	/**
+	 * Sets the command for reloading the configuration.
+	 * @param command The new command for reloading the configuration.
+	 */
+	public void setCommandReload(CMD command){
+		commandReload = command;
+	}
+	
+	/**
+	 * Gets the command for exiting the application.
+	 * @return The command for exiting the application.
+	 */
+	public CMD getCommandExit(){
+		return commandExit;
+	}
+
+	/**
+	 * Sets the command for exiting the application.
+	 * @param command The new command for exiting the application.
+	 */
+	public void setCommandExit(CMD command){
+		commandExit = command;
 	}
 
 	/**
@@ -523,42 +683,42 @@ public class Configuration{
 					break;
 				case "keyResetStats":
 					try{
-						CP = parseCommand(args[1]);
+						setCommandResetStats(parseCommand(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyExit":
 					try{
-						CU = parseCommand(args[1]);
+						commandExit = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyResetTotals":
 					try{
-						CI = parseCommand(args[1]);
+						commandResetTotals = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyHide":
 					try{
-						CY = parseCommand(args[1]);
+						commandHide = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyPause":
 					try{
-						CT = parseCommand(args[1]);
+						commandPause = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyReload":
 					try{
-						CR = parseCommand(args[1]);
+						commandReload = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
@@ -749,28 +909,28 @@ public class Configuration{
 					break;
 				case "graphX":
 					try{
-						graph_x = Integer.parseInt(args[1]);
+						graphX = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphY":
 					try{
-						graph_y = Integer.parseInt(args[1]);
+						graphY = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphWidth":
 					try{
-						graph_w = Integer.parseInt(args[1]);
+						graphWidth = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphHeight":
 					try{
-						graph_h = Integer.parseInt(args[1]);
+						graphHeight = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
@@ -1032,12 +1192,12 @@ public class Configuration{
 					out.println();
 				}
 				out.println("# Command keys");
-				out.println("keyResetStats: " + CP.toSaveString());
-				out.println("keyExit: " + CU.toSaveString());
-				out.println("keyResetTotals: " + CI.toSaveString());
-				out.println("keyHide: " + CY.toSaveString());
-				out.println("keyPause: " + CT.toSaveString());
-				out.println("keyReload: " + CR.toSaveString());
+				out.println("keyResetStats: " + getCommandResetStats().toSaveString());
+				out.println("keyExit: " + commandExit.toSaveString());
+				out.println("keyResetTotals: " + commandResetTotals.toSaveString());
+				out.println("keyHide: " + commandHide.toSaveString());
+				out.println("keyPause: " + commandPause.toSaveString());
+				out.println("keyReload: " + commandReload.toSaveString());
 				out.println();
 				out.println("# Layout");
 				out.println("maxX: " + maxPanel.getX());
@@ -1060,10 +1220,10 @@ public class Configuration{
 				out.println("totWidth: " + totPanel.getWidth());
 				out.println("totHeight: " + totPanel.getHeight());
 				out.println("totMode: " + totPanel.getRenderingMode().name());
-				out.println("graphX: " + graph_x);
-				out.println("graphY: " + graph_y);
-				out.println("graphWidth: " + graph_w);
-				out.println("graphHeight: " + graph_h);
+				out.println("graphX: " + graphX);
+				out.println("graphY: " + graphY);
+				out.println("graphWidth: " + graphWidth);
+				out.println("graphHeight: " + graphHeight);
 				out.println("graphMode: " + graphMode.name());
 				out.println("cellSize: " + cellSize);
 				out.println("borderOffset: " + borderOffset);
