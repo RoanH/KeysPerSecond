@@ -394,7 +394,7 @@ public class Statistics{
 	 * @param file The file to load from.
 	 * @throws Exception When an Exception occurs.
 	 */
-	protected static void loadStats(Path file) throws Exception{
+	public static void loadStats(Path file) throws Exception{
 		try(BufferedReader in = Files.newBufferedReader(file)){
 			String line;
 			while((line = in.readLine()) != null){

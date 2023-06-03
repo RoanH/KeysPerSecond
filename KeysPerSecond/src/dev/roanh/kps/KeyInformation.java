@@ -94,7 +94,7 @@ public final class KeyInformation extends Positionable{
 	 * @see #name
 	 * @see #keycode
 	 */
-	protected KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
+	public KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
 		super(x, y, width, height, mode);
 		this.name = name;
 		this.keycode = code;

@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 
 import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.CommandKeys.CMD;
-import dev.roanh.kps.Configuration;
+import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.event.listener.KeyPressListener;
 import dev.roanh.kps.Main;
 import dev.roanh.util.Dialog;
