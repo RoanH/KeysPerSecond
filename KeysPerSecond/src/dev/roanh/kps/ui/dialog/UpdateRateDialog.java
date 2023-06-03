@@ -74,13 +74,12 @@ public class UpdateRateDialog extends JPanel{
 		@Override
 		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
 			Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-			
-			if(((String)value).length() < 5 || ((String)value).equals("100ms")){
-				item.setForeground(Color.RED);
-			}
-			
-			if(((String)value).length() < 4){
+
+			UpdateRate rate = (UpdateRate)value;
+			if(rate.isVeryHigh()){
 				item.setForeground(Color.MAGENTA);
+			}else if(rate.isHigh()){
+				item.setForeground(Color.RED);
 			}
 			
 			return item;

@@ -49,6 +49,14 @@ public enum UpdateRate{
 		return ms;
 	}
 	
+	public boolean isHigh(){
+		return ms < 100;
+	}
+	
+	public boolean isVeryHigh(){
+		return ms < 10;
+	}
+	
 	@Override
 	public String toString(){
 		return ms + "ms";
