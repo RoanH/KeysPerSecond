@@ -69,7 +69,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
@@ -1080,11 +1079,6 @@ public class Main{
 	 * Shuts down the program
 	 */
 	protected static final void exit(){
-		try{
-			GlobalScreen.unregisterNativeHook();
-		}catch(NativeHookException e1){
-			e1.printStackTrace();
-		}
 		Statistics.saveStatsOnExit();
 		System.exit(0);
 	}
