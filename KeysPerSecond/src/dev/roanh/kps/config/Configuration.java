@@ -122,7 +122,7 @@ public class Configuration{
 	/**
 	 * The amount of milliseconds a single time frame takes
 	 */
-	protected int updateRate = 1000;
+	protected UpdateRate updateRate = UpdateRate.MS_1000;
 
 	//colors
 	/**
@@ -503,8 +503,16 @@ public class Configuration{
 	 * Gets the update rate for statistic panels.
 	 * @return The current update rate.
 	 */
-	public int getUpdateRate(){
+	public UpdateRate getUpdateRate(){
 		return updateRate;
+	}
+	
+	/**
+	 * Gets the update rate for statistic panels.
+	 * @return The current update rate in milliseconds.
+	 */
+	public int getUpdateRateMs(){
+		return updateRate.getRate();
 	}
 	
 	/**
@@ -589,9 +597,9 @@ public class Configuration{
 	
 	/**
 	 * Sets the update rate for aggregate panels.
-	 * @param rate The new update rate in milliseconds.
+	 * @param rate The new update rate.
 	 */
-	public void setUpdateRate(int rate){
+	public void setUpdateRate(UpdateRate rate){
 		updateRate = rate;
 	}
 	
@@ -693,13 +701,9 @@ public class Configuration{
 					break;
 				case "updateRate":
 					try{
-						updateRate = Integer.parseInt(args[1]);
-						if(1000 % updateRate != 0 || updateRate <= 0){
-							updateRate = 1000;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						updateRate = 1000;
+						updateRate = UpdateRate.fromMs(Integer.parseInt(args[1]));
+					}catch(IllegalArgumentException e){
+						updateRate = UpdateRate.MS_1000;
 						modified = true;
 					}
 					break;

@@ -61,6 +61,7 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
@@ -168,7 +169,6 @@ public class Menu{
 		JCheckBoxMenuItem graph = new JCheckBoxMenuItem("Enable graph");
 		JCheckBoxMenuItem keys = new JCheckBoxMenuItem("Show keys");
 		JCheckBoxMenuItem graphavg = new JCheckBoxMenuItem("Show average");
-		JCheckBoxMenuItem[] rates = new JCheckBoxMenuItem[12];
 		JCheckBoxMenuItem modifiers = new JCheckBoxMenuItem("Key-modifier tracking");
 		JMenuItem save = new JMenuItem("Save config");
 		JMenuItem load = new JMenuItem("Load config");
@@ -415,8 +415,8 @@ public class Menu{
 			JPanel pconfig = new JPanel();
 			JSpinner sbacklog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
 			JLabel lbacklog;
-			if(Main.config.getUpdateRate() != 1000){
-				lbacklog = new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRate()) + "): ");
+			if(Main.config.getUpdateRate() != UpdateRate.MS_1000){
+				lbacklog = new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): ");
 			}else{
 				lbacklog = new JLabel("Backlog (seconds): ");
 			}
@@ -429,118 +429,23 @@ public class Menu{
 			LayoutDialog.configureLayout(true);
 			Main.reconfigure();
 		});
-		rates[0] = new JCheckBoxMenuItem("1000ms", Main.config.getUpdateRate() == 1000);
-		rates[0].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(1000);
-			rates[0].setSelected(true);
-		});
-		rate.add(rates[0]);
-		rates[1] = new JCheckBoxMenuItem("500ms", Main.config.getUpdateRate() == 500);
-		rates[1].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(500);
-			rates[1].setSelected(true);
-		});
-		rate.add(rates[1]);
-		rates[2] = new JCheckBoxMenuItem("250ms", Main.config.getUpdateRate() == 250);
-		rates[2].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(250);
-			rates[2].setSelected(true);
-		});
-		rate.add(rates[2]);
-		rates[3] = new JCheckBoxMenuItem("200ms", Main.config.getUpdateRate() == 200);
-		rates[3].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(200);
-			rates[3].setSelected(true);
-		});
-		rate.add(rates[3]);
-		rates[4] = new JCheckBoxMenuItem("125ms", Main.config.getUpdateRate() == 125);
-		rates[4].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(125);
-			rates[4].setSelected(true);
-		});
-		rate.add(rates[4]);
-		rates[5] = new JCheckBoxMenuItem("100ms", Main.config.getUpdateRate() == 100);
-		rates[5].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(100);
-			rates[5].setSelected(true);
-		});
-		rate.add(rates[5]);
-		rates[6] = new JCheckBoxMenuItem("50ms", Main.config.getUpdateRate() == 50);
-		rates[6].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(50);
-			rates[6].setSelected(true);
-		});
-		rate.add(rates[6]);
-		rates[7] = new JCheckBoxMenuItem("25ms", Main.config.getUpdateRate() == 25);
-		rates[7].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(25);
-			rates[7].setSelected(true);
-		});
-		rate.add(rates[7]);
-		rates[8] = new JCheckBoxMenuItem("20ms", Main.config.getUpdateRate() == 20);
-		rates[8].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(20);
-			rates[8].setSelected(true);
-		});
-		rate.add(rates[8]);
-		rates[9] = new JCheckBoxMenuItem("10ms", Main.config.getUpdateRate() == 10);
-		rates[9].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(10);
-			rates[9].setSelected(true);
-		});
-		rate.add(rates[9]);
-		rates[10] = new JCheckBoxMenuItem("5ms", Main.config.getUpdateRate() == 5);
-		rates[10].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(5);
-			rates[10].setSelected(true);
-		});
-		rate.add(rates[10]);
-		rates[11] = new JCheckBoxMenuItem("1ms", Main.config.getUpdateRate() == 1);
-		rates[11].addActionListener((e)->{
-			for(JCheckBoxMenuItem item : rates){
-				item.setSelected(false);
-			}
-			Main.changeUpdateRate(1);
-			rates[11].setSelected(true);
-		});
-		rate.add(rates[11]);
-		for(JMenuItem e : rates){
-			components.add(e);
-			e.setUI(new MenuItemUI());
+		
+		List<JCheckBoxMenuItem> rates = new ArrayList<JCheckBoxMenuItem>();
+		for(UpdateRate val : UpdateRate.values()){
+			JCheckBoxMenuItem item = new JCheckBoxMenuItem(val.toString(), Main.config.getUpdateRate() == val);
+			item.addActionListener(e->{
+				for(JCheckBoxMenuItem box : rates){
+					box.setSelected(false);
+				}
+				Main.changeUpdateRate(val);
+				item.setSelected(true);
+			});
+			rates.add(item);
+			rate.add(item);
+			components.add(item);
+			item.setUI(new MenuItemUI());
 		}
+		
 		save.addActionListener((e)->{
 			Main.config.saveConfig(true);
 		});
