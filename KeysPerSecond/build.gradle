@@ -29,7 +29,7 @@ repositories{
 	mavenCentral();
 }
 
-version = 'v1.0'
+version = 'v8.7'//Don't forget Main.java
 shadowJar.archiveName = 'KeysPerSecond-' + version + '.jar'
 eclipse.classpath.downloadSources = true
 eclipse.classpath.downloadJavadoc = true
