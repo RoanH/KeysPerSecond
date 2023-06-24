@@ -57,7 +57,7 @@ public class UpdateRateDialog extends JPanel{
 		info.add(new JLabel("Here you can change the rate at which"));
 		info.add(new JLabel("the graph, max, avg & cur are updated."));
 		
-		update.setSelectedItem(Main.config.getUpdateRate() + "ms");
+		update.setSelectedItem(Main.config.getUpdateRate());
 		update.setRenderer(new RateCellRenderer());
 		
 		add(info, BorderLayout.PAGE_START);
