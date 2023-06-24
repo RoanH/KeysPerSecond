@@ -33,13 +33,23 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.util.Dialog;
 
+/**
+ * Dialog for configuring the update rate of the program.
+ * @author Roan
+ */
 public class UpdateRateDialog extends JPanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -726535693978900995L;
+	/**
+	 * The combo box listing available update rates.
+	 */
 	private JComboBox<UpdateRate> update = new JComboBox<UpdateRate>(UpdateRate.values());
 	
+	/**
+	 * Constructs a new update rate configuration dialog.
+	 */
 	private UpdateRateDialog(){
 		super(new BorderLayout());
 		
@@ -65,6 +75,10 @@ public class UpdateRateDialog extends JPanel{
 		}
 	}
 	
+	/**
+	 * Special cell renderer than colours high and very high update rates.
+	 * @author Roan
+	 */
 	private static final class RateCellRenderer extends DefaultListCellRenderer{
 		/**
 		 * Serial ID
