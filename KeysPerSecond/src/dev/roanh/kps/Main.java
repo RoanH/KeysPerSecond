@@ -20,7 +20,6 @@ package dev.roanh.kps;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -55,14 +54,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -73,6 +70,7 @@ import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
@@ -85,6 +83,7 @@ import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
+import dev.roanh.kps.ui.dialog.UpdateRateDialog;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.ExclamationMarkPath;
@@ -390,11 +389,11 @@ public class Main{
 				content.repaint();
 				prev = totaltmp;
 				timepoints.addFirst(currentTmp);
-				if(timepoints.size() >= 1000 / config.getUpdateRate()){
+				if(timepoints.size() >= 1000 / config.getUpdateRateMs()){
 					timepoints.removeLast();
 				}
 			}
-		}, 0, config.getUpdateRate(), TimeUnit.MILLISECONDS);
+		}, 0, config.getUpdateRateMs(), TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -717,7 +716,7 @@ public class Main{
 			cmod.setSelected(config.enableModifiers);
 		});
 		updaterate.addActionListener((e)->{
-			configureUpdateRate();
+			UpdateRateDialog.configureUpdateRate();
 		});
 		autoSave.addActionListener((e)->{
 			Statistics.configureAutoSave(false);
@@ -780,8 +779,8 @@ public class Main{
 		JCheckBox showavg = new JCheckBox();
 		showavg.setSelected(Main.config.graphAvg);
 		JLabel lbacklog;
-		if(config.getUpdateRate() != 1000){
-			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.getUpdateRate()) + "): ");
+		if(config.getUpdateRate() != UpdateRate.MS_1000){
+			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.getUpdateRateMs()) + "): ");
 		}else{
 			lbacklog = new JLabel("Backlog (seconds): ");
 		}
@@ -825,43 +824,6 @@ public class Main{
 		}
 	}
 	
-	/**
-	 * Shows a dialog to configure the update rate.
-	 */
-	private static final void configureUpdateRate(){
-		JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
-		info.add(new JLabel("Here you can change the rate at which"));
-		info.add(new JLabel("the graph, max, avg & cur are updated."));
-		JPanel pconfig = new JPanel(new BorderLayout());
-		JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
-		update.setSelectedItem(config.getUpdateRate() + "ms");
-		update.setRenderer(new DefaultListCellRenderer(){
-			/**
-			 * Serial ID
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
-				Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				if(((String)value).length() < 5 || ((String)value).equals("100ms")){
-					item.setForeground(Color.RED);
-				}
-				if(((String)value).length() < 4){
-					item.setForeground(Color.MAGENTA);
-				}
-				return item;
-			}
-		});
-		JLabel lupdate = new JLabel("Update rate: ");
-		pconfig.add(info, BorderLayout.PAGE_START);
-		pconfig.add(lupdate, BorderLayout.WEST);
-		pconfig.add(update, BorderLayout.CENTER);
-		if(Dialog.showSaveDialog(pconfig)){
-			config.setUpdateRate(Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2)));
-		}
-	}
-
 	/**
 	 * Shows the color configuration dialog
 	 */
@@ -947,8 +909,8 @@ public class Main{
 	 * Changes the update rate
 	 * @param newRate The new update rate
 	 */
-	protected static final void changeUpdateRate(int newRate){
-		n *= (double)config.getUpdateRate() / (double)newRate;
+	protected static final void changeUpdateRate(UpdateRate newRate){
+		n *= (double)config.getUpdateRateMs() / (double)newRate.getRate();
 		tmp.set(0);
 		timepoints.clear();
 		config.setUpdateRate(newRate);
