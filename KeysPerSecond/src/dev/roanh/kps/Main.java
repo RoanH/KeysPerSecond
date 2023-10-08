@@ -1129,15 +1129,16 @@ public class Main{
 			}
 		};
 		
-		//Request best text anti-aliasing settings
+		//Request the best text anti-aliasing settings
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		desktopHints = (Map<?, ?>)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+		Map<Object, Object> defaultHints = new HashMap<Object, Object>();
+		defaultHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		if(desktopHints == null){
-			Map<Object, Object> map = new HashMap<Object, Object>();
-			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			desktopHints = map;
-		}else{
-			toolkit.addPropertyChangeListener("awt.font.desktophints", event->desktopHints = (Map<?, ?>)event.getNewValue());
+			desktopHints = defaultHints;
 		}
+		toolkit.addPropertyChangeListener("awt.font.desktophints", event->{
+			desktopHints = event.getNewValue() == null ? defaultHints : (Map<?, ?>)event.getNewValue();
+		});
 	}
 }
