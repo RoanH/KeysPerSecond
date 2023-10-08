@@ -212,7 +212,7 @@ public class Configuration{
 		
 		@Override
 		public String getName(){
-			return "AVG";
+			return "TOT";
 		}
 	};
 	/**
