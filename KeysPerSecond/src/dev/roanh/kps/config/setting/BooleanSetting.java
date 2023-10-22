@@ -30,10 +30,10 @@ public class BooleanSetting extends Setting<Boolean>{
 
 	@Override
 	protected boolean parse(String data){
-		if(data.equalsIgnoreCase("true")){
+		if("true".equalsIgnoreCase(data)){
 			update(true);
 			return false;
-		}else if(data.equalsIgnoreCase("false")){
+		}else if("false".equalsIgnoreCase(data)){
 			update(false);
 			return false;
 		}else{

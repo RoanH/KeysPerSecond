@@ -20,6 +20,7 @@ package dev.roanh.kps.panels;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.setting.AveragePanelSettings;
 
 /**
  * Panel used to display the
@@ -35,6 +36,8 @@ public final class AvgPanel extends BasePanel{
 	 * Static instance of this panel that is reused all the time
 	 */
 	public static final AvgPanel INSTANCE = new AvgPanel();
+	
+	private AveragePanelSettings settings;
 
 	/**
 	 * Constructs a new average panel
@@ -45,7 +48,7 @@ public final class AvgPanel extends BasePanel{
 
 	@Override
 	protected String getTitle(){
-		return "AVG";
+		return settings.getName();
 	}
 
 	@Override

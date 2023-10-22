@@ -53,10 +53,15 @@ public class ConfigParser{
 	private Map<String, Setting<?>> settings;
 	
 	
+	
+	
+	
+//	private boolean parseSettings()
+	
 	private boolean parseSetting(String key, String data){
 		Setting<?> setting = settings.get(key);
 		if(setting == null){
-			//TODO unknown key silently ignore or report
+			//TODO unknown key silently ignore or report -- probably legacy actually
 		}
 		
 		return setting.parse(data);

@@ -18,36 +18,19 @@
  */
 package dev.roanh.kps.config;
 
-import java.io.PrintWriter;
+import java.util.Map;
 
-public abstract class Setting<T>{
-	protected final String key;
-	protected T value;
-	private T defaultValue;
+public abstract interface SettingGroup{
+
+	public abstract boolean parse(Map<String, String> data);
 	
-	protected Setting(String key, T defaultValue){
-		this.key = key;
-		this.defaultValue = defaultValue;
-		value = defaultValue;
-	}
-	
-	protected abstract boolean parse(String data);
-	
-	protected abstract void write(PrintWriter out);
-	
-	public String getKey(){
-		return key;
-	}
-	
-	public void update(T newValue){
-		value = newValue;
-	}
-	
-	public void reset(){
-		value = defaultValue;
-	}
-	
-	public T getValue(){
-		return value;
+	public default boolean findAndParse(Map<String, String> data, Setting<?> setting){
+		String val = data.get(setting.getKey());
+		if(val == null){
+			setting.reset();
+			return true;
+		}else{
+			return setting.parse(val);
+		}
 	}
 }

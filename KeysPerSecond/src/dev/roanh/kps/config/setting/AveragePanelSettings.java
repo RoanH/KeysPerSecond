@@ -16,38 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config;
+package dev.roanh.kps.config.setting;
 
-import java.io.PrintWriter;
+import java.util.Map;
 
-public abstract class Setting<T>{
-	protected final String key;
-	protected T value;
-	private T defaultValue;
+public class AveragePanelSettings extends PanelSettings{
+	private PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
 	
-	protected Setting(String key, T defaultValue){
-		this.key = key;
-		this.defaultValue = defaultValue;
-		value = defaultValue;
+	@Override
+	public boolean parse(Map<String, String> data){
+		return super.parse(data) | findAndParse(data, precision);
 	}
 	
-	protected abstract boolean parse(String data);
-	
-	protected abstract void write(PrintWriter out);
-	
-	public String getKey(){
-		return key;
+	public void setPrecision(int value){
+		precision.update(value);
 	}
 	
-	public void update(T newValue){
-		value = newValue;
+	public int getPrecision(){
+		return precision.getValue();
 	}
 	
-	public void reset(){
-		value = defaultValue;
-	}
-	
-	public T getValue(){
-		return value;
+	public String formatAvg(double value){
+		return precision.format(value);
 	}
 }

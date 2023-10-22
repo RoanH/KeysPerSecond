@@ -16,38 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config;
+package dev.roanh.kps.config.setting;
 
-import java.io.PrintWriter;
+public class PrecisionSetting extends IntSetting{
+	private String format;
 
-public abstract class Setting<T>{
-	protected final String key;
-	protected T value;
-	private T defaultValue;
-	
-	protected Setting(String key, T defaultValue){
-		this.key = key;
-		this.defaultValue = defaultValue;
-		value = defaultValue;
+	protected PrecisionSetting(String key, int min, int max, int defaultValue){
+		super(key, min, max, defaultValue);
 	}
 	
-	protected abstract boolean parse(String data);
-	
-	protected abstract void write(PrintWriter out);
-	
-	public String getKey(){
-		return key;
+	public String format(double value){
+		return String.format(format, value);
 	}
-	
-	public void update(T newValue){
-		value = newValue;
-	}
-	
-	public void reset(){
-		value = defaultValue;
-	}
-	
-	public T getValue(){
-		return value;
+
+	@Override
+	public void update(Integer newValue){
+		super.update(newValue);
+		format = "%1$." + getValue() + "f";
 	}
 }
