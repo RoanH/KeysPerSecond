@@ -8,23 +8,15 @@ plugins{
 
 sourceSets{
 	main{
-		java{
-			srcDirs = ['src']
-		}
-		resources{
-			srcDirs = ['src']
-		}
+		java.srcDirs = ['src']
+		resources.srcDirs = ['resources']
 	}
 }
 
-javadoc{
-	options.memberLevel = JavadocMemberLevel.PRIVATE
+dependencies{
+	implementation 'dev.roanh.util:util:2.4'
+	implementation 'com.github.kwhat:jnativehook:2.2.1'
 }
-
-compileJava.options.encoding = 'UTF-8'
-sourceCompatibility = 1.8
-version = 'v8.6'//Don't forget Main.java
-shadowJar.archiveName = 'KeysPerSecond-' + project.version + '.jar'
 
 repositories{
 	//Local cache
@@ -37,14 +29,14 @@ repositories{
 	mavenCentral();
 }
 
-dependencies{
-	implementation 'dev.roanh.util:util:2.4'
-	implementation 'com.github.kwhat:jnativehook:2.2.1'
-}
-
-application{
-	mainClassName = 'dev.roanh.kps.Main'
-}
+version = 'v8.7'//Don't forget Main.java
+shadowJar.archiveName = 'KeysPerSecond-' + version + '.jar'
+eclipse.classpath.downloadSources = true
+eclipse.classpath.downloadJavadoc = true
+compileJava.options.encoding = 'UTF-8'
+sourceCompatibility = 1.8
+javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
+application.mainClassName = 'dev.roanh.kps.Main'
 
 launch4j{
 	jarTask = project.tasks.shadowJar

@@ -21,6 +21,7 @@ package dev.roanh.kps.ui.dialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.function.IntConsumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -45,6 +46,7 @@ import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.ui.model.DynamicInteger;
 import dev.roanh.kps.ui.model.EndNumberModel;
 import dev.roanh.kps.ui.model.MaxNumberModel;
+import dev.roanh.kps.ui.model.SpecialNumberModel.ValueChangeListener;
 import dev.roanh.util.Dialog;
 
 /**
@@ -138,46 +140,30 @@ public class LayoutDialog{
 		graphLayout.add(graphMode);
 
 		LayoutValidator validator = new LayoutValidator();
+		validator.getXField().setModel(new EndNumberModel(Main.config.getGraphX(), validator.getXField(), update(Main.config::setGraphX, live)));
+		validator.getYField().setModel(new EndNumberModel(Main.config.getGraphY(), validator.getYField(), update(Main.config::setGraphY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(Main.config.getGraphWidth(), validator.getWidthField(), update(Main.config::setGraphWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(Main.config.getGraphHeight(), validator.getHeightField(), update(Main.config::setGraphHeight, live)));
 
 		graphLayout.add(new JLabel("Graph x position: "));
-		JSpinner x = new JSpinner(new EndNumberModel(Main.config.graph_x, validator.getXField(), (val)->{
-			Main.config.graph_x = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner x = new JSpinner(validator.getXField().getModel());
 		x.setEditor(new SpecialNumberModelEditor(x));
 		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(x);
 
 		graphLayout.add(new JLabel("Graph y position: "));
-		JSpinner y = new JSpinner(new EndNumberModel(Main.config.graph_y, validator.getYField(), (val)->{
-			Main.config.graph_y = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner y = new JSpinner(validator.getYField().getModel());
 		y.setEditor(new SpecialNumberModelEditor(y));
 		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
 		graphLayout.add(y);
 
 		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner w = new JSpinner(new MaxNumberModel(Main.config.graph_w, validator.getWidthField(), (val)->{
-			Main.config.graph_w = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner w = new JSpinner(validator.getWidthField().getModel());
 		w.setEditor(new SpecialNumberModelEditor(w));
 		graphLayout.add(w);
 
 		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner h = new JSpinner(new MaxNumberModel(Main.config.graph_h, validator.getHeightField(), (val)->{
-			Main.config.graph_h = val;
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner h = new JSpinner(validator.getHeightField().getModel());
 		h.setEditor(new SpecialNumberModelEditor(h));
 		graphLayout.add(h);
 
@@ -214,40 +200,24 @@ public class LayoutDialog{
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
 
 		LayoutValidator validator = new LayoutValidator();
+		validator.getXField().setModel(new EndNumberModel(info.getX(), validator.getXField(), update(info::setX, live)));
+		validator.getYField().setModel(new EndNumberModel(info.getY(), validator.getYField(), update(info::setY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(info.getWidth(), validator.getWidthField(), update(info::setWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(info.getHeight(), validator.getHeightField(), update(info::setHeight, live)));
 
-		JSpinner x = new JSpinner(new EndNumberModel(info.getX(), validator.getXField(), (val)->{
-			info.setX(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner x = new JSpinner(validator.getXField().getModel());
 		x.setEditor(new SpecialNumberModelEditor(x));
 		fields.add(x);
 
-		JSpinner y = new JSpinner(new EndNumberModel(info.getY(), validator.getYField(), (val)->{
-			info.setY(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner y = new JSpinner(validator.getYField().getModel());
 		y.setEditor(new SpecialNumberModelEditor(y));
 		fields.add(y);
 
-		JSpinner w = new JSpinner(new MaxNumberModel(info.getWidth(), validator.getWidthField(), (val)->{
-			info.setWidth(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner w = new JSpinner(validator.getWidthField().getModel());
 		w.setEditor(new SpecialNumberModelEditor(w));
 		fields.add(w);
 
-		JSpinner h = new JSpinner(new MaxNumberModel(info.getHeight(), validator.getHeightField(), (val)->{
-			info.setHeight(val);
-			if(live){
-				Main.reconfigure();
-			}
-		}));
+		JSpinner h = new JSpinner(validator.getHeightField().getModel());
 		h.setEditor(new SpecialNumberModelEditor(h));
 		fields.add(h);
 
@@ -260,6 +230,23 @@ public class LayoutDialog{
 			}
 		});
 		modes.add(mode);
+	}
+	
+	/**
+	 * Construct a value change listener that set
+	 * new values to the given field and optionally
+	 * updates the main GUI.
+	 * @param field The field to update with new values.
+	 * @param live Whether to update the GUI on updates.
+	 * @return The newly constructed change listener.
+	 */
+	private static final ValueChangeListener update(IntConsumer field, boolean live){
+		return val->{
+			field.accept(val);
+			if(live){
+				Main.reconfigure();
+			}
+		};
 	}
 	
 	/**

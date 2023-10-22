@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps;
+package dev.roanh.kps.config;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -35,6 +35,11 @@ import java.util.concurrent.TimeUnit;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
+import dev.roanh.kps.GraphMode;
+import dev.roanh.kps.KeyInformation;
+import dev.roanh.kps.Main;
+import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
@@ -117,25 +122,25 @@ public class Configuration{
 	/**
 	 * The amount of milliseconds a single time frame takes
 	 */
-	protected int updateRate = 1000;
+	protected UpdateRate updateRate = UpdateRate.MS_1000;
 
 	//colors
 	/**
 	 * Foreground color
 	 */
-	protected Color foreground = Color.CYAN;
+	public Color foreground = Color.CYAN;
 	/**
 	 * Background color
 	 */
-	protected Color background = Color.BLACK;
+	public Color background = Color.BLACK;
 	/**
 	 * Foreground opacity in case transparency is enabled
 	 */
-	protected float opacityfg = 1.0F;
+	public float opacityfg = 1.0F;
 	/**
 	 * Background opacity in case transparency is enabled
 	 */
-	protected float opacitybg = 1.0F;
+	public float opacitybg = 1.0F;
 
 	//precision
 	/**
@@ -147,27 +152,27 @@ public class Configuration{
 	/**
 	 * Reset stats command key
 	 */
-	protected CMD CP = new CMD(NativeKeyEvent.VC_P, false, true);
+	private CMD commandResetStats = new CMD(NativeKeyEvent.VC_P, false, true);
 	/**
 	 * Reset totals command key
 	 */
-	protected CMD CI = new CMD(NativeKeyEvent.VC_I, false, true);
+	private CMD commandResetTotals = new CMD(NativeKeyEvent.VC_I, false, true);
 	/**
 	 * Exit command key
 	 */
-	protected CMD CU = new CMD(NativeKeyEvent.VC_U, false, true);
+	private CMD commandExit = new CMD(NativeKeyEvent.VC_U, false, true);
 	/**
 	 * Hide/show command key
 	 */
-	protected CMD CY = new CMD(NativeKeyEvent.VC_Y, false, true);
+	private CMD commandHide = new CMD(NativeKeyEvent.VC_Y, false, true);
 	/**
 	 * Pause command key
 	 */
-	protected CMD CT = new CMD(NativeKeyEvent.VC_T, false, true);
+	private CMD commandPause = new CMD(NativeKeyEvent.VC_T, false, true);
 	/**
 	 * Reload command key
 	 */
-	protected CMD CR = new CMD(NativeKeyEvent.VC_R, false, true);
+	private CMD commandReload = new CMD(NativeKeyEvent.VC_R, false, true);
 
 	//special panels / layout
 	/**
@@ -207,7 +212,7 @@ public class Configuration{
 		
 		@Override
 		public String getName(){
-			return "AVG";
+			return "TOT";
 		}
 	};
 	/**
@@ -230,21 +235,21 @@ public class Configuration{
 	 */
 	public boolean graphAvg = true;
 	/**
-	 * The x position of the graph
+	 * The x position of the graph (-1 is end)
 	 */
-	public int graph_x = 0;
+	private int graphX = 0;
 	/**
-	 * The y position of the graph
+	 * The y position of the graph (-1 is end)
 	 */
-	public int graph_y = -1;
+	private int graphY = -1;
 	/**
-	 * The width of the graph
+	 * The width of the graph (-1 is max)
 	 */
-	public int graph_w = -1;
+	private int graphWidth = -1;
 	/**
-	 * The height of the graph
+	 * The height of the graph (-1 is max)
 	 */
-	public int graph_h = 3;
+	private int graphHeight = 3;
 	/**
 	 * Position the graph is rendered in
 	 */
@@ -290,8 +295,72 @@ public class Configuration{
 	 * Constructs a new configuration object
 	 * @param data The data file
 	 */
-	protected Configuration(Path data){
+	public Configuration(Path data){
 		this.data = data;
+	}
+	
+	/**
+	 * Gets the x position of the graph.
+	 * @return The x position of the graph.
+	 */
+	public final int getGraphX(){
+		return graphX;
+	}
+	
+	/**
+	 * Gets the y position of the graph.
+	 * @return The y position of the graph.
+	 */
+	public final int getGraphY(){
+		return graphY;
+	}
+	
+	/**
+	 * Gets the width of the graph.
+	 * @return The width of the graph.
+	 */
+	public final int getGraphWidth(){
+		return graphWidth;
+	}	
+	
+	/**
+	 * Gets the height of the graph.
+	 * @return The height of the graph.
+	 */
+	public final int getGraphHeight(){
+		return graphHeight;
+	}
+	
+	/**
+	 * Sets the x position of the graph.
+	 * @param x The new x position.
+	 */
+	public final void setGraphX(int x){
+		graphX = x;
+	}
+	
+	/**
+	 * Sets the y position of the graph.
+	 * @param y The new y position.
+	 */
+	public final void setGraphY(int y){
+		graphY = y;
+	}
+	
+	/**
+	 * Sets the width of the graph in cells.
+	 * @param width The new width of the graph.
+	 */
+	public final void setGraphWidth(int width){
+		graphWidth = width;
+	}
+	
+	/**
+	 * Sets the height of the graph in cells.
+	 * @param height The new height of the graph.
+	 */
+	public final void setGraphHeight(int height){
+		graphHeight = height;
 	}
 	
 	/**
@@ -335,9 +404,209 @@ public class Configuration{
 	}
 
 	/**
+	 * Gets the command for resetting stats.
+	 * @return The command for resetting stats.
+	 */
+	public CMD getCommandResetStats(){
+		return commandResetStats;
+	}
+
+	/**
+	 * Sets the command for resetting stats.
+	 * @param command The new command for resetting stats.
+	 */
+	public void setCommandResetStats(CMD command){
+		commandResetStats = command;
+	}
+
+	/**
+	 * Gets the command for resetting totals.
+	 * @return The command for resetting totals.
+	 */
+	public CMD getCommandResetTotals(){
+		return commandResetTotals;
+	}
+
+	/**
+	 * Sets the command for resetting totals.
+	 * @param command The new command for resetting totals.
+	 */
+	public void setCommandResetTotals(CMD command){
+		commandResetTotals = command;
+	}
+	
+	/**
+	 * Gets the command for hiding the window.
+	 * @return The command for hiding the window.
+	 */
+	public CMD getCommandHide(){
+		return commandHide;
+	}
+
+	/**
+	 * Sets the command for hiding the window.
+	 * @param command The new command for hiding the window.
+	 */
+	public void setCommandHide(CMD command){
+		commandHide = command;
+	}
+	
+	/**
+	 * Gets the command for pausing updates.
+	 * @return The command for pausing updates.
+	 */
+	public CMD getCommandPause(){
+		return commandPause;
+	}
+
+	/**
+	 * Sets the command for pausing updates.
+	 * @param command The new command for pausing updates.
+	 */
+	public void setCommandPause(CMD command){
+		commandPause = command;
+	}
+	
+	/**
+	 * Gets the command for reloading the configuration.
+	 * @return The command for reloading the configuration.
+	 */
+	public CMD getCommandReload(){
+		return commandReload;
+	}
+
+	/**
+	 * Sets the command for reloading the configuration.
+	 * @param command The new command for reloading the configuration.
+	 */
+	public void setCommandReload(CMD command){
+		commandReload = command;
+	}
+	
+	/**
+	 * Gets the command for exiting the application.
+	 * @return The command for exiting the application.
+	 */
+	public CMD getCommandExit(){
+		return commandExit;
+	}
+
+	/**
+	 * Sets the command for exiting the application.
+	 * @param command The new command for exiting the application.
+	 */
+	public void setCommandExit(CMD command){
+		commandExit = command;
+	}
+	
+	/**
+	 * Gets the update rate for statistic panels.
+	 * @return The current update rate.
+	 */
+	public UpdateRate getUpdateRate(){
+		return updateRate;
+	}
+	
+	/**
+	 * Gets the update rate for statistic panels.
+	 * @return The current update rate in milliseconds.
+	 */
+	public int getUpdateRateMs(){
+		return updateRate.getRate();
+	}
+	
+	/**
+	 * Checks if all mouse buttons are tracked.
+	 * @return True if all mouse buttons are tracked.
+	 */
+	public boolean isTrackAllButtons(){
+		return trackAllButtons;
+	}
+	
+	/**
+	 * Checks if all keys are tracked.
+	 * @return True if all keys are tracked.
+	 */
+	public boolean isTrackAllKeys(){
+		return trackAllKeys;
+	}
+	
+	/**
+	 * Sets whether all keys are tracked.
+	 * @param track True to track all keys.
+	 */
+	public void setTrackAllKeys(boolean track){
+		trackAllKeys = track;
+	}
+	
+	/**
+	 * Sets whether all mouse buttons are tracked.
+	 * @param track True to track all mouse buttons.
+	 */
+	public void setTrackAllButtons(boolean track){
+		trackAllButtons = track;
+	}
+	
+	/**
+	 * Sets whether overlay mode is enabled.
+	 * @param overlay True to enable overlay mode.
+	 */
+	public void setOverlayMode(boolean overlay){
+		this.overlay = overlay;
+	}
+	
+	/**
+	 * Enables or disables custom colours.
+	 * @param custom True to enable custom colours.
+	 */
+	public void setCustomColors(boolean custom){
+		customColors = custom;
+	}
+	
+	/**
+	 * Sets if tracked keys are shown.
+	 * @param show True if tracked key panels should be visible.
+	 */
+	public void setShowKeys(boolean show){
+		showKeys = show;
+	}
+	
+	/**
+	 * Checks if custom colours are configured for the application.
+	 * @return True if custom colours are configured.
+	 */
+	public boolean hasCustomColors(){
+		return customColors;
+	}
+	
+	/**
+	 * Checks if overlay mode is enabled.
+	 * @return True if overlay mode is enabled.
+	 */
+	public boolean isOverlayMode(){
+		return overlay;
+	}
+	
+	/**
+	 * Checks if tracked keys are shown.
+	 * @return True if tracked key panels are visible.
+	 */
+	public boolean showKeys(){
+		return showKeys;
+	}
+	
+	/**
+	 * Sets the update rate for aggregate panels.
+	 * @param rate The new update rate.
+	 */
+	public void setUpdateRate(UpdateRate rate){
+		updateRate = rate;
+	}
+	
+	/**
 	 * Reloads the configuration from file
 	 */
-	protected final void reloadConfig(){
+	public final void reloadConfig(){
 		Configuration toLoad = new Configuration(data);
 		if(data != null){
 			toLoad.load(data);
@@ -349,7 +618,7 @@ public class Configuration{
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
 	 */
-	protected static final boolean loadConfiguration(){
+	public static final boolean loadConfiguration(){
 		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
 			return false;
@@ -377,7 +646,7 @@ public class Configuration{
 	 * @param saveloc The save location
 	 * @return Whether or not the configuration was loaded successfully
 	 */
-	protected final boolean loadConfig(Path saveloc){
+	public final boolean loadConfig(Path saveloc){
 		load(saveloc);
 		return true;
 	}
@@ -432,13 +701,9 @@ public class Configuration{
 					break;
 				case "updateRate":
 					try{
-						updateRate = Integer.parseInt(args[1]);
-						if(1000 % updateRate != 0 || updateRate <= 0){
-							updateRate = 1000;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						updateRate = 1000;
+						updateRate = UpdateRate.fromMs(Integer.parseInt(args[1]));
+					}catch(IllegalArgumentException e){
+						updateRate = UpdateRate.MS_1000;
 						modified = true;
 					}
 					break;
@@ -523,42 +788,42 @@ public class Configuration{
 					break;
 				case "keyResetStats":
 					try{
-						CP = parseCommand(args[1]);
+						setCommandResetStats(parseCommand(args[1]));
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyExit":
 					try{
-						CU = parseCommand(args[1]);
+						commandExit = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyResetTotals":
 					try{
-						CI = parseCommand(args[1]);
+						commandResetTotals = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyHide":
 					try{
-						CY = parseCommand(args[1]);
+						commandHide = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyPause":
 					try{
-						CT = parseCommand(args[1]);
+						commandPause = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "keyReload":
 					try{
-						CR = parseCommand(args[1]);
+						commandReload = parseCommand(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
@@ -749,28 +1014,28 @@ public class Configuration{
 					break;
 				case "graphX":
 					try{
-						graph_x = Integer.parseInt(args[1]);
+						graphX = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphY":
 					try{
-						graph_y = Integer.parseInt(args[1]);
+						graphY = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphWidth":
 					try{
-						graph_w = Integer.parseInt(args[1]);
+						graphWidth = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
 					break;
 				case "graphHeight":
 					try{
-						graph_h = Integer.parseInt(args[1]);
+						graphHeight = Integer.parseInt(args[1]);
 					}catch(NumberFormatException e){
 						modified = true;
 					}
@@ -986,7 +1251,7 @@ public class Configuration{
 	 *        to save the on screen position
 	 *        of the program
 	 */
-	protected final void saveConfig(boolean pos){
+	public final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
 		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
 		if(saveloc != null){
@@ -1032,12 +1297,12 @@ public class Configuration{
 					out.println();
 				}
 				out.println("# Command keys");
-				out.println("keyResetStats: " + CP.toSaveString());
-				out.println("keyExit: " + CU.toSaveString());
-				out.println("keyResetTotals: " + CI.toSaveString());
-				out.println("keyHide: " + CY.toSaveString());
-				out.println("keyPause: " + CT.toSaveString());
-				out.println("keyReload: " + CR.toSaveString());
+				out.println("keyResetStats: " + getCommandResetStats().toSaveString());
+				out.println("keyExit: " + commandExit.toSaveString());
+				out.println("keyResetTotals: " + commandResetTotals.toSaveString());
+				out.println("keyHide: " + commandHide.toSaveString());
+				out.println("keyPause: " + commandPause.toSaveString());
+				out.println("keyReload: " + commandReload.toSaveString());
 				out.println();
 				out.println("# Layout");
 				out.println("maxX: " + maxPanel.getX());
@@ -1060,10 +1325,10 @@ public class Configuration{
 				out.println("totWidth: " + totPanel.getWidth());
 				out.println("totHeight: " + totPanel.getHeight());
 				out.println("totMode: " + totPanel.getRenderingMode().name());
-				out.println("graphX: " + graph_x);
-				out.println("graphY: " + graph_y);
-				out.println("graphWidth: " + graph_w);
-				out.println("graphHeight: " + graph_h);
+				out.println("graphX: " + graphX);
+				out.println("graphY: " + graphY);
+				out.println("graphWidth: " + graphWidth);
+				out.println("graphHeight: " + graphHeight);
 				out.println("graphMode: " + graphMode.name());
 				out.println("cellSize: " + cellSize);
 				out.println("borderOffset: " + borderOffset);

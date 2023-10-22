@@ -20,7 +20,6 @@ package dev.roanh.kps;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -52,34 +51,28 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.NativeInputEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
-import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
 
-import dev.roanh.kps.CommandKeys.CMD;
+import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.event.EventManager;
+import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.AvgPanel;
@@ -87,8 +80,10 @@ import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.panels.NowPanel;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
+import dev.roanh.kps.ui.dialog.UpdateRateDialog;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.ExclamationMarkPath;
@@ -122,7 +117,7 @@ public class Main{
 	/**
 	 * String holding the version of the program.
 	 */
-	public static final String VERSION = "v8.6";//XXX the version number  - don't forget build.gradle
+	public static final String VERSION = "v8.7";//XXX the version number  - don't forget build.gradle
 	/**
 	 * The number of seconds the average has
 	 * been calculated for
@@ -153,11 +148,6 @@ public class Main{
 	 */
 	public static Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
-	 * The most recent key event, only
-	 * used during the initial setup
-	 */
-	public static NativeKeyEvent lastevent;
-	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
@@ -173,7 +163,7 @@ public class Main{
 	/**
 	 * The program's main frame
 	 */
-	protected static final JFrame frame = new JFrame("KeysPerSecond");
+	public static final JFrame frame = new JFrame("KeysPerSecond");
 	/**
 	 * Whether or not the counter is paused
 	 */
@@ -185,7 +175,7 @@ public class Main{
 	/**
 	 * The loop timer
 	 */
-	protected static ScheduledExecutorService timer = null;
+	protected static ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 	/**
 	 * The loop timer task
 	 */
@@ -193,7 +183,7 @@ public class Main{
 	/**
 	 * Frame for the graph
 	 */
-	protected static JFrame graphFrame = new JFrame("KeysPerSecond");
+	public static JFrame graphFrame = new JFrame("KeysPerSecond");
 	/**
 	 * The layout for the main panel of the program
 	 */
@@ -218,6 +208,10 @@ public class Main{
 	 * Best text rendering hints.
 	 */
 	public static Map<?, ?> desktopHints;
+	/**
+	 * Event manager responsible for forwarding input events.
+	 */
+	public static EventManager eventManager = new EventManager();
 	
 	/**
 	 * Main method
@@ -246,22 +240,22 @@ public class Main{
 		Dialog.setDialogIcon(iconSmall);
 		Dialog.setParentFrame(frame);
 		Dialog.setDialogTitle("KeysPerSecond");
-
-		//Make sure the native hook is always unregistered
-		Runtime.getRuntime().addShutdownHook(new Thread(){
-			@Override
-			public void run(){
-				try{
-					GlobalScreen.unregisterNativeHook();
-				}catch(NativeHookException e1){
-					e1.printStackTrace();
-				}
-			}
-		});
-
-		//Initialise native library and register event handlers
-		setupNativeHook();
-
+		
+		//register input sources
+		try{
+			eventManager.registerInputSource(new NativeHookInputSource(eventManager));
+		}catch(NativeHookException ex){
+			System.err.println("There was a problem registering the native hook.");
+			System.err.println(ex.getMessage());
+			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
+			System.exit(1);
+		}
+		
+		//register command handlers
+		CommandKeys listener = new CommandKeys();
+		eventManager.registerKeyPressListener(listener);
+		eventManager.registerKeyReleaseListener(listener);
+		
 		//Set configuration for the keys
 		if(config != null){
 			try{
@@ -296,6 +290,13 @@ public class Main{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
+		//register default event handlers
+		eventManager.registerButtonPressListener(Main::pressEventButton);
+		eventManager.registerButtonReleaseListener(Main::releaseEventButton);
+		eventManager.registerKeyPressListener(Main::pressEventKey);
+		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
+		eventManager.registerKeyPressListener(Main::triggerCommandKeys);
 		
 		//Enter the main loop
 		mainLoop();
@@ -363,11 +364,10 @@ public class Main{
 	 * maximum keys per second
 	 */
 	protected static final void mainLoop(){
-		if(timer == null){
-			timer = Executors.newSingleThreadScheduledExecutor();
-		}else{
+		if(future != null){
 			future.cancel(false);
 		}
+		
 		future = timer.scheduleAtFixedRate(()->{
 			if(!suspended){
 				int currentTmp = tmp.getAndSet(0);
@@ -382,90 +382,35 @@ public class Main{
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					TotPanel.hits += currentTmp;
-					System.out.println("Current keys per second: " + totaltmp + " time frame: " + tmp);
+					System.out.println("Current keys per second: " + totaltmp);
 				}
 				graph.addPoint(totaltmp);
 				graph.repaint();
 				content.repaint();
 				prev = totaltmp;
 				timepoints.addFirst(currentTmp);
-				if(timepoints.size() >= 1000 / config.updateRate){
+				if(timepoints.size() >= 1000 / config.getUpdateRateMs()){
 					timepoints.removeLast();
 				}
 			}
-		}, 0, config.updateRate, TimeUnit.MILLISECONDS);
+		}, 0, config.getUpdateRateMs(), TimeUnit.MILLISECONDS);
 	}
 
 	/**
-	 * Registers the native libraries and
-	 * registers event handlers for key
-	 * press events
+	 * Handles a mouse button release event.
+	 * @param button The ID of the button that was released.
 	 */
-	private static final void setupNativeHook(){
-		try{
-			System.setProperty("jnativehook.lib.path", System.getProperty("java.io.tmpdir"));
-			Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-			logger.setLevel(Level.WARNING);
-			logger.setUseParentHandlers(false);
-			GlobalScreen.registerNativeHook();
-		}catch(NativeHookException ex){
-			System.err.println("There was a problem registering the native hook.");
-			System.err.println(ex.getMessage());
-			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
-			try{
-				GlobalScreen.unregisterNativeHook();
-			}catch(NativeHookException e1){
-				e1.printStackTrace();
-			}
-			System.exit(1);
-		}
-		GlobalScreen.addNativeKeyListener(new NativeKeyListener(){
-
-			@Override
-			public void nativeKeyPressed(NativeKeyEvent event){
-				pressEvent(event);
-			}
-
-			@Override
-			public void nativeKeyReleased(NativeKeyEvent event){
-				releaseEvent(event);
-			}
-
-			@Override
-			public void nativeKeyTyped(NativeKeyEvent event){
-			}
-		});
-		GlobalScreen.addNativeMouseListener(new NativeMouseListener(){
-
-			@Override
-			public void nativeMouseClicked(NativeMouseEvent event){
-			}
-
-			@Override
-			public void nativeMousePressed(NativeMouseEvent event){
-				pressEvent(event);
-			}
-
-			@Override
-			public void nativeMouseReleased(NativeMouseEvent event){
-				releaseEvent(event);
-			}
-		});
+	private static final void releaseEventButton(int button){
+		keys.getOrDefault(getExtendedButtonCode(button), DUMMY_KEY).keyReleased();
 	}
 
 	/**
-	 * Called when a key is released
-	 * @param event The event that occurred
+	 * Handles a key release event.
+	 * @param rawCode The key code of the key that was released.
 	 */
-	private static final void releaseEvent(NativeInputEvent event){
-		int code = getExtendedKeyCode(event);
-		if(code == CommandKeys.ALT){
-			CommandKeys.isAltDown = false;
-		}else if(code == CommandKeys.CTRL){
-			CommandKeys.isCtrlDown = false;
-		}else if(CommandKeys.isShift(code)){
-			CommandKeys.isShiftDown = false;
-		}
+	private static final void releaseEventKey(int rawCode){
+		int code = getExtendedKeyCode(rawCode);
+		
 		if(config.enableModifiers){
 			if(code == CommandKeys.ALT){
 				for(Key k : keys.values()){
@@ -487,7 +432,7 @@ public class Main{
 				}
 			}
 			for(Entry<Integer, Key> k : keys.entrySet()){
-				if(getBaseKeyCode(code) == getBaseKeyCode(k.getKey())){
+				if(CommandKeys.getBaseKeyCode(code) == CommandKeys.getBaseKeyCode(k.getKey())){
 					k.getValue().keyReleased();
 				}
 			}
@@ -495,22 +440,39 @@ public class Main{
 			keys.getOrDefault(code, DUMMY_KEY).keyReleased();
 		}
 	}
+	
+	/**
+	 * Handles a button press event.
+	 * @param button The ID of the button that was pressed.
+	 */
+	private static final void pressEventButton(int button){
+		int code = getExtendedButtonCode(button);
+		Key key = keys.get(code);
+		
+		if(config.isTrackAllButtons() && key == null){
+			key = new Key("M" + button);
+			keys.put(code, key);
+		}
+		
+		if(!suspended && key != null){
+			key.keyPressed();
+		}
+	}
 
 	/**
-	 * Called when a key is pressed
-	 * @param nevent The event that occurred
+	 * Handles a key press event.
+	 * @param rawCode The key code of the key that was pressed.
 	 */
-	private static final void pressEvent(NativeInputEvent nevent){
-		Integer code = getExtendedKeyCode(nevent);
-		if(!keys.containsKey(code)){
-			if(config.trackAllKeys && nevent instanceof NativeKeyEvent){
-				keys.put(code, new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(((NativeKeyEvent)nevent).getKeyCode()), code)));
-			}else if(config.trackAllButtons && nevent instanceof NativeMouseEvent){
-				keys.put(code, new Key("M" + ((NativeMouseEvent)nevent).getButton()));
-			}
+	private static final void pressEventKey(int rawCode){
+		int code = getExtendedKeyCode(rawCode);
+		Key key = keys.get(code);
+		
+		if(config.isTrackAllKeys() && key == null){
+			key = new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code));
+			keys.put(code, key);
 		}
-		if(!suspended && keys.containsKey(code)){
-			Key key = keys.get(code);
+		
+		if(!suspended && key != null){
 			key.keyPressed();
 			if(config.enableModifiers){
 				if(key.alt){
@@ -525,65 +487,53 @@ public class Main{
 				}
 			}
 		}
-		if(nevent instanceof NativeKeyEvent){
-			NativeKeyEvent event = (NativeKeyEvent)nevent;
-			if(!CommandKeys.isAltDown){
-				CommandKeys.isAltDown = code == CommandKeys.ALT;
+	}
+	
+	/**
+	 * Handles a received key press and triggers command keys.
+	 * @param code The received key press key code.
+	 */
+	private static void triggerCommandKeys(int code){
+		if(config.getCommandResetStats().matches(code)){
+			resetStats();
+		}else if(config.getCommandExit().matches(code)){
+			exit();
+		}else if(config.getCommandResetTotals().matches(code)){
+			resetTotals();
+		}else if(config.getCommandHide().matches(code)){
+			if(frame.getContentPane().getComponentCount() != 0){
+				frame.setVisible(!frame.isVisible());
 			}
-			if(!CommandKeys.isCtrlDown){
-				CommandKeys.isCtrlDown = code == CommandKeys.CTRL;
-			}
-			if(!CommandKeys.isShiftDown){
-				CommandKeys.isShiftDown = CommandKeys.isShift(code);
-			}
-			lastevent = event;
-			if(config.CP.matches(event.getKeyCode())){
-				resetStats();
-			}else if(config.CU.matches(event.getKeyCode())){
-				exit();
-			}else if(config.CI.matches(event.getKeyCode())){
-				resetTotals();
-			}else if(config.CY.matches(event.getKeyCode())){
-				if(frame.getContentPane().getComponentCount() != 0){
-					frame.setVisible(!frame.isVisible());
-				}
-			}else if(config.CT.matches(event.getKeyCode())){
-				suspended = !suspended;
-				Menu.pause.setSelected(suspended);
-			}else if(config.CR.matches(event.getKeyCode())){
-				config.reloadConfig();
-				Menu.resetData();
-			}
+		}else if(config.getCommandPause().matches(code)){
+			suspended = !suspended;
+			Menu.pause.setSelected(suspended);
+		}else if(config.getCommandReload().matches(code)){
+			config.reloadConfig();
+			Menu.resetData();
 		}
 	}
 
 	/**
 	 * Gets the extended key code for this event, this key code
 	 * includes modifiers
-	 * @param event The event that occurred
+	 * @param rawCode The received key code for the key that was pressed.
 	 * @return The extended key code for this event
 	 */
-	private static final int getExtendedKeyCode(NativeInputEvent event){
-		if(event instanceof NativeKeyEvent){
-			NativeKeyEvent key = (NativeKeyEvent)event;
-			if(!config.enableModifiers){
-				return CommandKeys.getExtendedKeyCode(key.getKeyCode(), false, false, false);
-			}else{
-				return CommandKeys.getExtendedKeyCode(key.getKeyCode());
-			}
+	private static final int getExtendedKeyCode(int rawCode){
+		if(!config.enableModifiers){
+			return CommandKeys.getExtendedKeyCode(rawCode, false, false, false);
 		}else{
-			return -((NativeMouseEvent)event).getButton();
+			return CommandKeys.getExtendedKeyCode(rawCode);
 		}
 	}
-
+	
 	/**
-	 * Gets the base key code for the extended key code,
-	 * this is the key code without modifiers
-	 * @param code The extended key code
-	 * @return The base key code
+	 * Gets the extended button code for this event.
+	 * @param button The button that was pressed.
+	 * @return The extended key code for this event
 	 */
-	private static final int getBaseKeyCode(int code){
-		return code & CommandKeys.KEYCODE_MASK;
+	public static final int getExtendedButtonCode(int button){
+		return -button;
 	}
 
 	/**
@@ -647,13 +597,13 @@ public class Main{
 		labels.add(lallButtons);
 		labels.add(lmod);
 		ctop.addActionListener((e)->{
-			config.overlay = ctop.isSelected();
+			config.setOverlayMode(ctop.isSelected());
 		});
 		callKeys.addActionListener((e)->{
-			config.trackAllKeys = callKeys.isSelected();
+			config.setTrackAllKeys(callKeys.isSelected());
 		});
 		callButtons.addActionListener((e)->{
-			config.trackAllButtons = callButtons.isSelected();
+			config.setTrackAllButtons(callButtons.isSelected());
 		});
 		cmax.addActionListener((e)->{
 			config.showMax = cmax.isSelected();
@@ -668,10 +618,10 @@ public class Main{
 			config.showGraph = cgra.isSelected();
 		});
 		ccol.addActionListener((e)->{
-			config.customColors = ccol.isSelected();
+			config.setCustomColors(ccol.isSelected());
 		});
 		ckey.addActionListener((e)->{
-			config.showKeys = ckey.isSelected();
+			config.setShowKeys(ckey.isSelected());
 		});
 		ctot.addActionListener((e)->{
 			config.showTotal = ctot.isSelected();
@@ -725,7 +675,7 @@ public class Main{
 			LayoutDialog.configureLayout(false);
 		});
 		cmdkeys.addActionListener((e)->{
-			configureCommandKeys();
+			CommandKeysDialog.configureCommandKeys();
 		});
 		precision.addActionListener((e)->{
 			configurePrecision();
@@ -754,19 +704,19 @@ public class Main{
 			if(config.showGraph){
 				graph.setEnabled(true);
 			}
-			ccol.setSelected(config.customColors);
-			if(config.customColors){
+			ccol.setSelected(config.hasCustomColors());
+			if(config.hasCustomColors()){
 				color.setEnabled(true);
 			}
-			callKeys.setSelected(config.trackAllKeys);
-			callButtons.setSelected(config.trackAllButtons);
-			ckey.setSelected(config.showKeys);
-			ctop.setSelected(config.overlay);
+			callKeys.setSelected(config.isTrackAllKeys());
+			callButtons.setSelected(config.isTrackAllButtons());
+			ckey.setSelected(config.showKeys());
+			ctop.setSelected(config.isOverlayMode());
 			ctot.setSelected(config.showTotal);
 			cmod.setSelected(config.enableModifiers);
 		});
 		updaterate.addActionListener((e)->{
-			configureUpdateRate();
+			UpdateRateDialog.configureUpdateRate();
 		});
 		autoSave.addActionListener((e)->{
 			Statistics.configureAutoSave(false);
@@ -829,8 +779,8 @@ public class Main{
 		JCheckBox showavg = new JCheckBox();
 		showavg.setSelected(Main.config.graphAvg);
 		JLabel lbacklog;
-		if(config.updateRate != 1000){
-			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.updateRate) + "): ");
+		if(config.getUpdateRate() != UpdateRate.MS_1000){
+			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.getUpdateRateMs()) + "): ");
 		}else{
 			lbacklog = new JLabel("Backlog (seconds): ");
 		}
@@ -874,43 +824,6 @@ public class Main{
 		}
 	}
 	
-	/**
-	 * Shows a dialog to configure the update rate.
-	 */
-	private static final void configureUpdateRate(){
-		JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
-		info.add(new JLabel("Here you can change the rate at which"));
-		info.add(new JLabel("the graph, max, avg & cur are updated."));
-		JPanel pconfig = new JPanel(new BorderLayout());
-		JComboBox<String> update = new JComboBox<String>(new String[]{"1000ms", "500ms", "250ms", "200ms", "125ms", "100ms", "50ms", "25ms", "20ms", "10ms", "5ms", "1ms"});
-		update.setSelectedItem(config.updateRate + "ms");
-		update.setRenderer(new DefaultListCellRenderer(){
-			/**
-			 * Serial ID
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
-				Component item = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				if(((String)value).length() < 5 || ((String)value).equals("100ms")){
-					item.setForeground(Color.RED);
-				}
-				if(((String)value).length() < 4){
-					item.setForeground(Color.MAGENTA);
-				}
-				return item;
-			}
-		});
-		JLabel lupdate = new JLabel("Update rate: ");
-		pconfig.add(info, BorderLayout.PAGE_START);
-		pconfig.add(lupdate, BorderLayout.WEST);
-		pconfig.add(update, BorderLayout.CENTER);
-		if(Dialog.showSaveDialog(pconfig)){
-			config.updateRate = Integer.parseInt(((String)update.getSelectedItem()).substring(0, ((String)update.getSelectedItem()).length() - 2));
-		}
-	}
-
 	/**
 	 * Shows the color configuration dialog
 	 */
@@ -993,98 +906,14 @@ public class Main{
 	}
 
 	/**
-	 * Show the command key configuration dialog
-	 */
-	protected static final void configureCommandKeys(){
-		JPanel content = new JPanel(new GridLayout(6, 2, 10, 2));
-
-		JLabel lcp = new JLabel("Reset stats:");
-		JLabel lcu = new JLabel("Exit the program:");
-		JLabel lci = new JLabel("Reset totals:");
-		JLabel lcy = new JLabel("Show/hide GUI:");
-		JLabel lct = new JLabel("Pause/Resume:");
-		JLabel lcr = new JLabel("Reload config:");
-
-		JButton bcp = new JButton(config.CP.toString());
-		JButton bcu = new JButton(config.CU.toString());
-		JButton bci = new JButton(config.CI.toString());
-		JButton bcy = new JButton(config.CY.toString());
-		JButton bct = new JButton(config.CT.toString());
-		JButton bcr = new JButton(config.CR.toString());
-
-		content.add(lcp);
-		content.add(bcp);
-
-		content.add(lcu);
-		content.add(bcu);
-
-		content.add(lci);
-		content.add(bci);
-
-		content.add(lcy);
-		content.add(bcy);
-
-		content.add(lct);
-		content.add(bct);
-
-		content.add(lcr);
-		content.add(bcr);
-
-		bcp.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CP = cmd;
-				bcp.setText(cmd.toString());
-			}
-		});
-		bci.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CI = cmd;
-				bci.setText(cmd.toString());
-			}
-		});
-		bcu.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CU = cmd;
-				bcu.setText(cmd.toString());
-			}
-		});
-		bcy.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CY = cmd;
-				bcy.setText(cmd.toString());
-			}
-		});
-		bct.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CT = cmd;
-				bct.setText(cmd.toString());
-			}
-		});
-		bcr.addActionListener((e)->{
-			CMD cmd = CommandKeys.askForNewKey();
-			if(cmd != null){
-				config.CR = cmd;
-				bcr.setText(cmd.toString());
-			}
-		});
-
-		Dialog.showMessageDialog(content);
-	}
-
-	/**
 	 * Changes the update rate
 	 * @param newRate The new update rate
 	 */
-	protected static final void changeUpdateRate(int newRate){
-		n *= (double)config.updateRate / (double)newRate;
+	protected static final void changeUpdateRate(UpdateRate newRate){
+		n *= (double)config.getUpdateRateMs() / (double)newRate.getRate();
 		tmp.set(0);
 		timepoints.clear();
-		config.updateRate = newRate;
+		config.setUpdateRate(newRate);
 		mainLoop();
 	}
 
@@ -1118,7 +947,7 @@ public class Main{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			try{
-				ColorManager.prepareImages(config.customColors);
+				ColorManager.prepareImages(config.hasCustomColors());
 			}catch(IOException e){
 				e.printStackTrace();
 			}
@@ -1133,7 +962,7 @@ public class Main{
 				}else{
 					k = keys.get(i.keycode);
 				}
-				if(config.showKeys && i.visible){
+				if(config.showKeys() && i.visible){
 					content.add(k.getPanel(i));
 					k.getPanel(i).sizeChanged();
 					panels++;
@@ -1176,14 +1005,14 @@ public class Main{
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.graph_w * config.cellSize, config.graph_h * config.cellSize);
+					graphFrame.setSize(config.getGraphWidth() * config.cellSize, config.getGraphHeight() * config.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{
 				graphFrame.setVisible(false);
 			}
-			frame.setAlwaysOnTop(config.overlay);
-			graphFrame.setAlwaysOnTop(config.overlay);
+			frame.setAlwaysOnTop(config.isOverlayMode());
+			graphFrame.setAlwaysOnTop(config.isOverlayMode());
 			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(config.getBackgroundOpacity() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
@@ -1212,11 +1041,6 @@ public class Main{
 	 * Shuts down the program
 	 */
 	protected static final void exit(){
-		try{
-			GlobalScreen.unregisterNativeHook();
-		}catch(NativeHookException e1){
-			e1.printStackTrace();
-		}
 		Statistics.saveStatsOnExit();
 		System.exit(0);
 	}
@@ -1305,15 +1129,16 @@ public class Main{
 			}
 		};
 		
-		//Request best text anti-aliasing settings
+		//Request the best text anti-aliasing settings
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		desktopHints = (Map<?, ?>)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+		Map<Object, Object> defaultHints = new HashMap<Object, Object>();
+		defaultHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		if(desktopHints == null){
-			Map<Object, Object> map = new HashMap<Object, Object>();
-			map.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			desktopHints = map;
-		}else{
-			toolkit.addPropertyChangeListener("awt.font.desktophints", event->desktopHints = (Map<?, ?>)event.getNewValue());
+			desktopHints = defaultHints;
 		}
+		toolkit.addPropertyChangeListener("awt.font.desktophints", event->{
+			desktopHints = event.getNewValue() == null ? defaultHints : (Map<?, ?>)event.getNewValue();
+		});
 	}
 }

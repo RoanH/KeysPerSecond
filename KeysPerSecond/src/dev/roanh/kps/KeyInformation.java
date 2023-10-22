@@ -67,6 +67,18 @@ public final class KeyInformation extends Positionable{
 		this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
 		this.name = mouse ? name : getKeyName(name, keycode);
 	}
+	
+	/**
+	 * Constructs a new KeyInformation object with the given key name and extended code key.
+	 * @param name The key name.
+	 * @param extCode The extended key code.
+	 * @see CommandKeys#getExtendedKeyCode(int)
+	 */
+	public KeyInformation(String name, int extCode){
+		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
+		this.keycode = extCode;
+		this.name = getKeyName(name, keycode);
+	}
 
 	/**
 	 * Constructs a new KeyInformation
@@ -82,7 +94,7 @@ public final class KeyInformation extends Positionable{
 	 * @see #name
 	 * @see #keycode
 	 */
-	protected KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
+	public KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
 		super(x, y, width, height, mode);
 		this.name = name;
 		this.keycode = code;
@@ -110,16 +122,7 @@ public final class KeyInformation extends Positionable{
 	 */
 	public void setName(String name){
 		this.name = name;
-		Main.keys.getOrDefault(keycode, Main.DUMMY_KEY).name = name;
-	}
-
-	/**
-	 * Gets a string containing all
-	 * the modifiers for this key
-	 * @return The modifier string
-	 */
-	public String getModifierString(){
-		return (CommandKeys.hasCtrl(keycode) ? "Ctrl + " : "") + (CommandKeys.hasAlt(keycode) ? "Alt + " : "") + (CommandKeys.hasShift(keycode) ? "Shift + " : "");
+		Main.keys.getOrDefault(keycode, Main.DUMMY_KEY).name = name;//TODO name stored in multiple places...
 	}
 
 	@Override
@@ -209,9 +212,9 @@ public final class KeyInformation extends Positionable{
 		case NativeKeyEvent.VC_CAPS_LOCK:
 			return "Cap";
 		case NativeKeyEvent.VC_OPEN_BRACKET:
-			return "(";
+			return "[";
 		case NativeKeyEvent.VC_CLOSE_BRACKET:
-			return ")";
+			return "]";
 		case NativeKeyEvent.VC_BACK_SLASH:
 			return "\\";
 		case NativeKeyEvent.VC_SEMICOLON:
