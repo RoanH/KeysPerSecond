@@ -694,7 +694,7 @@ public class Configuration{
 					break;
 				case "trackAllKeys":
 					trackAllKeys = Boolean.parseBoolean(args[1]);
-					trackAllButtons = trackAllKeys;//for backwards compatibility
+					trackAllButtons = trackAllKeys;//for backwards compatibility -- this kinda only works because buttons are parsed after keys so it always overrides if present
 					break;
 				case "trackAllButtons":
 					trackAllButtons = Boolean.parseBoolean(args[1]);

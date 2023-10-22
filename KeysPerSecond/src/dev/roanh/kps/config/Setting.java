@@ -18,59 +18,32 @@
  */
 package dev.roanh.kps.config;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.PrintWriter;
 
-public class ConfigParser{
-	private String version;
+public abstract class Setting<T>{
+	protected final String key;
+	protected T value;
+	private T defaultValue;
 	
-	private boolean defaultUsed;
-	
-	
-	
-	
-	
-	public ConfigParser(BufferedReader in) throws IOException{
-		//read version
-		String line = in.readLine();
-		if(!line.startsWith("version:")){
-			//the last version to not declare a version
-			version = "v8.4";
-		}else{
-			version = line.substring(8).trim();
-		}
-		
-		
-		
+	protected Setting(String key, T defaultValue){
+		this.key = key;
+		this.defaultValue = defaultValue;
+		value = defaultValue;
 	}
 	
+	protected abstract boolean parse(String data);
 	
+	protected abstract void write(PrintWriter out);
 	
-	private Map<String, Setting<?>> settings;
-	
-	
-	private boolean parseSetting(String key, String data){
-		Setting<?> setting = settings.get(key);
-		if(setting == null){
-			//TODO unknown key silently ignore or report
-		}
-		
-		return setting.parse(data);
+	public String getKey(){
+		return key;
 	}
 	
+	public void update(T newValue){
+		value = newValue;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	protected void reset(){
+		value = defaultValue;
+	}
 }

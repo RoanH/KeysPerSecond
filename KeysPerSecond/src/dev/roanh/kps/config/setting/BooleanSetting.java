@@ -16,61 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config;
+package dev.roanh.kps.config.setting;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.PrintWriter;
 
-public class ConfigParser{
-	private String version;
-	
-	private boolean defaultUsed;
-	
-	
-	
-	
-	
-	public ConfigParser(BufferedReader in) throws IOException{
-		//read version
-		String line = in.readLine();
-		if(!line.startsWith("version:")){
-			//the last version to not declare a version
-			version = "v8.4";
+import dev.roanh.kps.config.Setting;
+
+public class BooleanSetting extends Setting<Boolean>{
+
+	protected BooleanSetting(String key, boolean defaultValue){
+		super(key, defaultValue);
+	}
+
+	@Override
+	protected boolean parse(String data){
+		if(data.equalsIgnoreCase("true")){
+			update(true);
+			return false;
+		}else if(data.equalsIgnoreCase("false")){
+			update(false);
+			return false;
 		}else{
-			version = line.substring(8).trim();
+			reset();
+			return true;
 		}
-		
-		
-		
 	}
-	
-	
-	
-	private Map<String, Setting<?>> settings;
-	
-	
-	private boolean parseSetting(String key, String data){
-		Setting<?> setting = settings.get(key);
-		if(setting == null){
-			//TODO unknown key silently ignore or report
-		}
-		
-		return setting.parse(data);
+
+	@Override
+	protected void write(PrintWriter out){
+		out.println(key + ": " + value);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
