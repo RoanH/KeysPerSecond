@@ -5,25 +5,34 @@ import java.io.PrintWriter;
 import dev.roanh.kps.config.Setting;
 
 public class IntSetting extends Setting<Integer>{
-	private int min;
-	private int max;
-	
+	private final int min;
+	private final int max;
 	
 	protected IntSetting(String key, int min, int max, int defaultValue){
 		super(key, defaultValue);
-		// TODO Auto-generated constructor stub
+		this.min = min;
+		this.max = max;
 	}
 
 	@Override
 	protected boolean parse(String data){
-		// TODO Auto-generated method stub
-		return false;
+		try{
+			int val = Integer.parseInt(data);
+			if(min <= val && val <= max){
+				update(val);
+				return false;
+			}else{
+				reset();
+				return true;
+			}
+		}catch(NumberFormatException e){
+			reset();
+			return true;
+		}
 	}
 
 	@Override
 	protected void write(PrintWriter out){
-		// TODO Auto-generated method stub
-		
+		out.println(key + ": " + value);
 	}
-
 }

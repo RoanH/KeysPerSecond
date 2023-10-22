@@ -974,8 +974,8 @@ public class Main{
 				panels++;
 			}
 			if(config.showAvg){
-				content.add(AvgPanel.INSTANCE);
-				AvgPanel.INSTANCE.sizeChanged();
+				content.add(new AvgPanel(config.getAveragePanelSettings()));
+				//TODO should be event handler based AvgPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showCur){

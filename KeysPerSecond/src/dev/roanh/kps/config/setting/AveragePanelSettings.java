@@ -21,7 +21,7 @@ package dev.roanh.kps.config.setting;
 import java.util.Map;
 
 public class AveragePanelSettings extends PanelSettings{
-	private PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
+	private final PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
 	
 	@Override
 	public boolean parse(Map<String, String> data){

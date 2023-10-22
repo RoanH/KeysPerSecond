@@ -33,7 +33,7 @@ public abstract class Setting<T>{
 	
 	protected abstract boolean parse(String data);
 	
-	protected abstract void write(PrintWriter out);
+	protected abstract void write(PrintWriter out);//TODO indent writer
 	
 	public String getKey(){
 		return key;

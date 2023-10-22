@@ -314,7 +314,7 @@ public class Menu{
 			p1.setSelected(false);
 			p2.setSelected(false);
 			p3.setSelected(false);
-			AvgPanel.INSTANCE.sizeChanged();
+			//AvgPanel.INSTANCE.sizeChanged();
 		});
 		p1.addActionListener((e)->{
 			Main.config.precision = 1;
@@ -322,7 +322,7 @@ public class Menu{
 			p1.setSelected(true);
 			p2.setSelected(false);
 			p3.setSelected(false);
-			AvgPanel.INSTANCE.sizeChanged();
+			//AvgPanel.INSTANCE.sizeChanged();
 		});
 		p2.addActionListener((e)->{
 			Main.config.precision = 2;
@@ -330,7 +330,7 @@ public class Menu{
 			p1.setSelected(false);
 			p2.setSelected(true);
 			p3.setSelected(false);
-			AvgPanel.INSTANCE.sizeChanged();
+			//AvgPanel.INSTANCE.sizeChanged();
 		});
 		p3.addActionListener((e)->{
 			Main.config.precision = 3;
@@ -338,7 +338,7 @@ public class Menu{
 			p1.setSelected(false);
 			p2.setSelected(false);
 			p3.setSelected(true);
-			AvgPanel.INSTANCE.sizeChanged();
+			//AvgPanel.INSTANCE.sizeChanged();
 		});
 		switch(Main.config.precision){
 		case 0:

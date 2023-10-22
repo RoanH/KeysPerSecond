@@ -19,6 +19,7 @@
 package dev.roanh.kps.config;
 
 import java.awt.Color;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,6 +41,7 @@ import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.Statistics;
+import dev.roanh.kps.config.setting.AveragePanelSettings;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
@@ -601,6 +603,11 @@ public class Configuration{
 	 */
 	public void setUpdateRate(UpdateRate rate){
 		updateRate = rate;
+	}
+	
+	public AveragePanelSettings getAveragePanelSettings(){
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	/**

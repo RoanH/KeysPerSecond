@@ -32,17 +32,15 @@ public final class AvgPanel extends BasePanel{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 5628759695450014071L;
-	/**
-	 * Static instance of this panel that is reused all the time
-	 */
-	public static final AvgPanel INSTANCE = new AvgPanel();
 	
 	private AveragePanelSettings settings;
 
 	/**
 	 * Constructs a new average panel
 	 */
-	private AvgPanel(){
+	public AvgPanel(AveragePanelSettings settings){
+		this.settings = settings;
+		//TODO add listener for rendering mode changes
 		sizeChanged();
 	}
 
@@ -58,22 +56,22 @@ public final class AvgPanel extends BasePanel{
 
 	@Override
 	public int getLayoutX(){
-		return Main.config.avgPanel.getX();
+		return settings.getX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return Main.config.avgPanel.getY();
+		return settings.getY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return Main.config.avgPanel.getWidth();
+		return settings.getWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return Main.config.avgPanel.getHeight();
+		return settings.getHeight();
 	}
 
 	@Override
