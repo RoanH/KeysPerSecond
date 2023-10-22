@@ -21,7 +21,7 @@ package dev.roanh.kps.config.setting;
 public class PrecisionSetting extends IntSetting{
 	private String format;
 
-	protected PrecisionSetting(String key, int min, int max, int defaultValue){
+	public PrecisionSetting(String key, int min, int max, int defaultValue){
 		super(key, min, max, defaultValue);
 	}
 	

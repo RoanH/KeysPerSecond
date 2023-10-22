@@ -20,7 +20,7 @@ package dev.roanh.kps.panels;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.config.setting.AveragePanelSettings;
+import dev.roanh.kps.config.group.AveragePanelSettings;
 
 /**
  * Panel used to display the
@@ -51,7 +51,7 @@ public final class AvgPanel extends BasePanel{
 
 	@Override
 	protected String getValue(){
-		return String.format("%1$." + Main.config.precision + "f", Main.avg);
+		return settings.formatAvg(Main.avg);
 	}
 
 	@Override

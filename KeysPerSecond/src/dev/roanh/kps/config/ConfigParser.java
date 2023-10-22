@@ -35,6 +35,13 @@ public class ConfigParser{
 	
 	
 	public ConfigParser(BufferedReader in) throws IOException{
+		
+		
+		
+	}
+	
+	
+	private void parse(BufferedReader in) throws IOException{
 		//read version
 		String line = in.readLine();
 		if(!line.startsWith("version:")){
@@ -43,11 +50,12 @@ public class ConfigParser{
 		}else{
 			version = line.substring(8).trim();
 		}
+
+		
 		
 		
 		
 	}
-	
 	
 	
 	private Map<String, Setting<?>> settings;

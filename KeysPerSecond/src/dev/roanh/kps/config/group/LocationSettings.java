@@ -16,11 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config.setting;
+package dev.roanh.kps.config.group;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
+import dev.roanh.kps.config.setting.IntSetting;
 
 public class LocationSettings implements SettingGroup{
 	/**
@@ -75,5 +79,15 @@ public class LocationSettings implements SettingGroup{
 	@Override
 	public boolean parse(Map<String, String> data){
 		return findAndParse(data, x) | findAndParse(data, y) | findAndParse(data, width) | findAndParse(data, height);
+	}
+
+	@Override
+	public List<Setting<?>> collectSettings(){
+		List<Setting<?>> data = new ArrayList<Setting<?>>();
+		data.add(x);
+		data.add(y);
+		data.add(width);
+		data.add(height);
+		return data;
 	}
 }

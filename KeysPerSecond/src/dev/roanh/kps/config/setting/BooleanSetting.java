@@ -18,13 +18,12 @@
  */
 package dev.roanh.kps.config.setting;
 
-import java.io.PrintWriter;
-
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
 public class BooleanSetting extends Setting<Boolean>{
 
-	protected BooleanSetting(String key, boolean defaultValue){
+	public BooleanSetting(String key, boolean defaultValue){
 		super(key, defaultValue);
 	}
 
@@ -43,7 +42,7 @@ public class BooleanSetting extends Setting<Boolean>{
 	}
 
 	@Override
-	protected void write(PrintWriter out){
+	protected void write(IndentWriter out){
 		out.println(key + ": " + value);
 	}
 }

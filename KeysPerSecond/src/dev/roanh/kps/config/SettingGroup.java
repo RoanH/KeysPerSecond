@@ -18,11 +18,15 @@
  */
 package dev.roanh.kps.config;
 
+import java.util.List;
 import java.util.Map;
 
 public abstract interface SettingGroup{
 
 	public abstract boolean parse(Map<String, String> data);
+	
+	//has to support adding note
+	public abstract List<Setting<?>> collectSettings();
 	
 	public default boolean findAndParse(Map<String, String> data, Setting<?> setting){
 		String val = data.get(setting.getKey());

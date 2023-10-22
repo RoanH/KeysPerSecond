@@ -1,12 +1,11 @@
 package dev.roanh.kps.config.setting;
 
-import java.io.PrintWriter;
-
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
 public class StringSetting extends Setting<String>{
 
-	protected StringSetting(String key, String defaultValue){
+	public StringSetting(String key, String defaultValue){
 		super(key, defaultValue);
 	}
 
@@ -17,7 +16,7 @@ public class StringSetting extends Setting<String>{
 	}
 
 	@Override
-	protected void write(PrintWriter out){
+	protected void write(IndentWriter out){
 		// TODO Auto-generated method stub
 		
 	}

@@ -16,17 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config.setting;
+package dev.roanh.kps.config.group;
 
+import java.util.List;
 import java.util.Map;
+
+import dev.roanh.kps.config.Setting;
+import dev.roanh.kps.config.setting.PrecisionSetting;
 
 public class AveragePanelSettings extends PanelSettings{
 	private final PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
-	
-	@Override
-	public boolean parse(Map<String, String> data){
-		return super.parse(data) | findAndParse(data, precision);
-	}
 	
 	public void setPrecision(int value){
 		precision.update(value);
@@ -38,5 +37,17 @@ public class AveragePanelSettings extends PanelSettings{
 	
 	public String formatAvg(double value){
 		return precision.format(value);
+	}
+	
+	@Override
+	public boolean parse(Map<String, String> data){
+		return super.parse(data) | findAndParse(data, precision);
+	}
+	
+	@Override
+	public List<Setting<?>> collectSettings(){
+		List<Setting<?>> data = super.collectSettings();
+		data.add(precision);
+		return data;
 	}
 }
