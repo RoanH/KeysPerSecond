@@ -68,6 +68,31 @@ public class Configuration{
 	 */
 	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
 
+	
+	//NEW LOGIC ------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//OLD LOGIC ------------------------
+	
+	
+	
 	//general
 	/**
 	 * Whether or not to show the max value
@@ -300,6 +325,23 @@ public class Configuration{
 	public Configuration(Path data){
 		this.data = data;
 	}
+	
+	
+	
+	protected List<Setting<?>> getSettings(){
+		List<Setting<?>> settings = new ArrayList<Setting<?>>();
+		
+		
+		
+		
+		return settings;
+	}
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * Gets the x position of the graph.

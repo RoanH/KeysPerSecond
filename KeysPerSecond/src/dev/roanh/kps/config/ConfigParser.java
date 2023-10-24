@@ -31,10 +31,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import dev.roanh.kps.config.group.KeyPanelSettings;
+
 public class ConfigParser{
 	private String version;
 	
-	private boolean defaultUsed;
+	private boolean defaultUsed;//overriden, default used when not specified doesn't count, this is when given values are replaced with safe values deliberately
 	
 	
 	
@@ -45,6 +47,13 @@ public class ConfigParser{
 		
 		
 	}
+	
+	private List<KeyPanelSettings> keys;//TODO move to config
+	
+	
+	private Map<String, Setting<?>> settings;//TODO config#getSettings
+	private Map<String, SettingGroup> groups;
+	private Map<String, List<SettingGroup>> lists;
 	
 	
 	private void parse(BufferedReader in) throws IOException{
@@ -58,31 +67,83 @@ public class ConfigParser{
 			//the last version to not declare a version
 			version = "v8.4";
 		}else{
-			version = line.substring(8).trim();
+			version = line.substring(8).trim();//TODO validate versions and order them
 		}
 
 		//read data
 		
-		
+		while((line = in.readLine()) != null){
+			line = line.trim();
+			if(line.startsWith("#")){
+				continue;
+			}
+			
+			//direct settings
+			int mark = line.indexOf(':');
+			if(mark != -1){
+				Setting<?> setting = settings.get(line.substring(0, mark).trim());
+				if(setting == null){
+					//TODO unknown setting
+				}else{
+					defaultUsed |= setting.parse(line.substring(mark + 1, line.length()));
+				}
+			}
+			
+			//setting groups
+			
+			
+			
+			
+			//setting lists
+			
+			
+			
+			
+			
+			if(line.equals("keys:")){
+				keys = parseList(in, map->{
+					KeyPanelSettings setting = new KeyPanelSettings();
+					defaultUsed |= setting.parse(map);
+					return setting;
+				});
+			}
+			
+			
+			
+			
+		}
 		
 		
 	}
 	
 	
-	private Map<String, Setting<?>> settings;
+	
 	
 	
 	
 	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};
 	private static final char[] LIST_ITEM_BODY = new char[]{' ', ' ', ' ', ' '};
 	
-	public static void main(String[] args) throws IOException{
-		parseList(Files.newBufferedReader(Paths.get("C:\\Users\\RoanH\\Downloads\\ymltest.txt")), map->{
-			
-			System.out.println("item: " + map);
-			
-			return null;
-		});
+//	public static void main(String[] args) throws IOException{
+//		parseList(Files.newBufferedReader(Paths.get("C:\\Users\\RoanH\\Downloads\\ymltest.txt")), map->{
+//			
+//			System.out.println("item: " + map);
+//			
+//			return null;
+//		});
+//	}
+	
+	
+//	private void parseListItem(){
+//		
+//	}
+	
+	private static <T extends SettingGroup> T parseGroup(BufferedReader in, SettingGroup target) throws IOException{
+		in.mark(1000);
+		
+		
+		
+		return null;//TODO
 	}
 	
 	private static <T extends SettingGroup> List<T> parseList(BufferedReader in, Function<Map<String, String>, T> ctor) throws IOException{
@@ -139,14 +200,14 @@ public class ConfigParser{
 	
 //	private boolean parseSettings()
 	
-	private boolean parseSetting(String key, String data){
-		Setting<?> setting = settings.get(key);
-		if(setting == null){
-			//TODO unknown key silently ignore or report -- probably legacy actually
-		}
-		
-		return setting.parse(data);
-	}
+//	private boolean parseSetting(String key, String data){
+//		Setting<?> setting = settings.get(key);
+//		if(setting == null){
+//			//TODO unknown key silently ignore or report -- probably legacy actually
+//		}
+//		
+//		return setting.parse(data);
+//	}
 	
 	
 	

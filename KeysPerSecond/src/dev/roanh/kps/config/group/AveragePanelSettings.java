@@ -27,6 +27,10 @@ import dev.roanh.kps.config.setting.PrecisionSetting;
 public class AveragePanelSettings extends PanelSettings{
 	private final PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
 	
+	public AveragePanelSettings(){
+		super("AVG");
+	}
+	
 	public void setPrecision(int value){
 		precision.update(value);
 	}

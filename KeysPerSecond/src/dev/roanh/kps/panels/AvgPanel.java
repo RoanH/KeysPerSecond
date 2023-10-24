@@ -76,6 +76,6 @@ public final class AvgPanel extends BasePanel{
 
 	@Override
 	protected RenderingMode getRenderingMode(){
-		return Main.config.avgPanel.getRenderingMode();
+		return settings.getRenderingMode();
 	}
 }
