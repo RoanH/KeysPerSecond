@@ -43,6 +43,7 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
+import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
@@ -70,24 +71,32 @@ public class Configuration{
 
 	
 	//NEW LOGIC ------------------------
+	/**
+	 * Whether or not the frame forces itself to be the top window
+	 */
+	protected BooleanSetting overlay = new BooleanSetting("overlay", false);
 	
 	
 	
+	/**
+	 * Whether or not to track all key presses
+	 */
+	protected boolean trackAllKeys = false;
+	/**
+	 * Whether or not to track all mouse button presses
+	 */
+	protected boolean trackAllButtons = false;
+	
+	/**
+	 * Whether or not the enable tracking key-modifier combinations
+	 */
+	public boolean enableModifiers = false;
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * The amount of milliseconds a single time frame takes
+	 */
+	protected UpdateRate updateRate = UpdateRate.MS_1000;
 	
 	//OLD LOGIC ------------------------
 	
@@ -115,29 +124,9 @@ public class Configuration{
 	 */
 	public boolean showGraph = false;
 	/**
-	 * Whether or not the frame forces itself to be the top window
-	 */
-	protected boolean overlay = false;
-	/**
-	 * Whether or not to use custom colors
-	 */
-	protected boolean customColors = false;
-	/**
-	 * Whether or not to track all key presses
-	 */
-	protected boolean trackAllKeys = false;
-	/**
-	 * Whether or not to track all mouse button presses
-	 */
-	protected boolean trackAllButtons = false;
-	/**
 	 * Whether or not to show the total number of hits
 	 */
 	public boolean showTotal = false;
-	/**
-	 * Whether or not the enable tracking key-modifier combinations
-	 */
-	public boolean enableModifiers = false;
 
 	//keys
 	/**
@@ -145,13 +134,11 @@ public class Configuration{
 	 */
 	public List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
 
-	//update rate
-	/**
-	 * The amount of milliseconds a single time frame takes
-	 */
-	protected UpdateRate updateRate = UpdateRate.MS_1000;
-
 	//colors
+	/**
+	 * Whether or not to use custom colors
+	 */
+	protected boolean customColors = false;
 	/**
 	 * Foreground color
 	 */
@@ -596,7 +583,7 @@ public class Configuration{
 	 * @param overlay True to enable overlay mode.
 	 */
 	public void setOverlayMode(boolean overlay){
-		this.overlay = overlay;
+		this.overlay.update(overlay);
 	}
 	
 	/**
@@ -628,7 +615,7 @@ public class Configuration{
 	 * @return True if overlay mode is enabled.
 	 */
 	public boolean isOverlayMode(){
-		return overlay;
+		return overlay.getValue();
 	}
 	
 	/**
@@ -739,7 +726,7 @@ public class Configuration{
 					showKeys = Boolean.parseBoolean(args[1]);
 					break;
 				case "overlay":
-					overlay = Boolean.parseBoolean(args[1]);
+					overlay = Boolean.parseBoolean(args[1]);//TODO
 					break;
 				case "trackAllKeys":
 					trackAllKeys = Boolean.parseBoolean(args[1]);
