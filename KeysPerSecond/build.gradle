@@ -1,7 +1,7 @@
 plugins{
+	id 'eclipse'
 	id 'java'
 	id 'application'
-	id 'eclipse'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
 	id 'edu.sc.seis.launch4j' version '2.5.1'
 }
@@ -29,13 +29,17 @@ repositories{
 	mavenCentral();
 }
 
-version = 'v8.7'//Don't forget Main.java
-shadowJar.archiveName = 'KeysPerSecond-' + version + '.jar'
+version = findProperty("refName") ?: 'SNAPSHOT'
+if(version.matches("v\\d+\\.\\d+")){
+	version = version.substring(1)
+}
+
 eclipse.classpath.downloadSources = true
 eclipse.classpath.downloadJavadoc = true
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
+shadowJar.archiveName = 'KeysPerSecond-v' + version + '.jar'
 application.mainClassName = 'dev.roanh.kps.Main'
 
 launch4j{
@@ -44,9 +48,10 @@ launch4j{
 	icon = "${projectDir}/kps.ico"
 	jreMinVersion = project.sourceCompatibility
 	bundledJrePath = "%JAVA_HOME%"
-	outfile = project.name + '-' + project.version + '.exe'
-	fileDescription = project.name
-	version = project.version.substring(1)
-	textVersion = project.version.substring(1)
+	outfile = rootProject.name + '-v' + project.version + '.exe'
+	fileDescription = "KeysPerSecond"
+	productName = rootProject.name
+	version = project.version
+	textVersion = project.version
 	copyright = "Roan Hofland"
 }
