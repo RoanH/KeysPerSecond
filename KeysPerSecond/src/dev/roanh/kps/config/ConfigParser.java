@@ -23,6 +23,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,15 +49,22 @@ public class ConfigParser{
 		
 	}
 	
+	
+	
 	private List<KeyPanelSettings> keys;//TODO move to config
 	
 	
-	private Map<String, Setting<?>> settings;//TODO config#getSettings
+	private Map<String, Setting<?>> settings = new HashMap<String, Setting<?>>();//TODO config#getSettings -- linked hash map would address the trackAll issue
 	private Map<String, SettingGroup> groups;
 	private Map<String, List<SettingGroup>> lists;
 	
-	
-	private void parse(BufferedReader in) throws IOException{
+	//TODO make private again
+	public void parse(BufferedReader in, Configuration config) throws IOException{
+		//map settings to parse
+		for(Setting<?> setting : config.getSettings()){
+			settings.put(setting.getKey(), setting);
+		}
+		
 		//read version
 		String line = in.readLine();
 		if(line == null){
@@ -70,8 +78,10 @@ public class ConfigParser{
 			version = line.substring(8).trim();//TODO validate versions and order them
 		}
 
-		//read data
+		//TODO debug
+		System.out.println("Reading config in format: " + version);
 		
+		//read data
 		while((line = in.readLine()) != null){
 			line = line.trim();
 			if(line.startsWith("#")){
@@ -85,7 +95,9 @@ public class ConfigParser{
 				if(setting == null){
 					//TODO unknown setting
 				}else{
-					defaultUsed |= setting.parse(line.substring(mark + 1, line.length()));
+					//TODO debug
+					defaultUsed |= setting.parse(line.substring(mark + 1, line.length()).trim());
+					System.out.println("parsed: " + setting.getKey() + " / " + defaultUsed);
 				}
 			}
 			

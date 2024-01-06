@@ -23,6 +23,7 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -328,18 +329,42 @@ public class Configuration{
 	 */
 	public Configuration(Path data){
 		this.data = data;
+		//TODO keep this way of loading data or restore the old two step method that requires a load? -- not having
+		//partially initialised objects are makes more sense to me but would require more codebase changes
 	}
 	
-	
+	//TODO refactor into real logic or remove
+	public static Configuration newLoadTemporary(Path config) throws IOException{
+		Configuration c = new Configuration(config);
+		new ConfigParser(null).parse(Files.newBufferedReader(config), c);
+		return c;
+	}
 	
 	protected List<Setting<?>> getSettings(){
 		List<Setting<?>> settings = new ArrayList<Setting<?>>();
 		
+		settings.add(overlay);
+		settings.add(updateRate);
+		settings.add(enableModifiers);
+
 		
+		
+		//TODO lots more
 		
 		
 		return settings;
 	}
+	
+	protected List<SettingGroup> getSettingGroups(){
+		return null;//TODO
+	}
+	
+	protected List<List<SettingGroup>> getSettingLists(){
+		return null;//TODO
+	}
+	
+	
+	
 	
 	
 	

@@ -18,9 +18,11 @@
  */
 package dev.roanh.kps.config;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
@@ -28,8 +30,12 @@ import org.junit.jupiter.api.Test;
 public class ConfigParserTest{
 	
 	@Test
-	public void fullTest(){
-		Configuration config = new Configuration(Paths.get("test/main.kps"));
+	public void fullTest() throws IOException{
+//		Configuration config = new Configuration(Paths.get("test/main.kps"));
+		//TODO currently without calling load this never parses anything using the old logic
+		
+		
+		Configuration config = Configuration.newLoadTemporary(Paths.get("test/main.kps"));
 		
 		//TODO assert config version
 		
@@ -41,9 +47,9 @@ public class ConfigParserTest{
 		assertFalse(config.isOverlayMode());
 //		allkeys
 //		allbuttons
-//		rate
+		assertEquals(100, config.getUpdateRateMs());
 //		percision
-//		mod combos
+		assertFalse(config.isKeyModifierTrackingEnabled());
 		
 //		graph enable
 //		graph backlog
