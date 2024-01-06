@@ -39,7 +39,7 @@ repositories{
 			url "$nexusPublic"
 		}
 	}
-	mavenCentral();
+	mavenCentral()
 }
 
 version = findProperty("refName") ?: 'SNAPSHOT'
