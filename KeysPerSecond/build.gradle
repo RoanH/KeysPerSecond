@@ -4,6 +4,7 @@ plugins{
 	id 'application'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
 	id 'edu.sc.seis.launch4j' version '2.5.1'
+	id 'jacoco'
 }
 
 sourceSets{
@@ -11,11 +12,21 @@ sourceSets{
 		java.srcDirs = ['src']
 		resources.srcDirs = ['resources']
 	}
+
+	test{
+		java.srcDirs = ['test']
+		resources.srcDirs = ['test']
+	}
 }
 
 dependencies{
 	implementation 'dev.roanh.util:util:2.5'
 	implementation 'com.github.kwhat:jnativehook:2.2.2'
+	//Testing
+	dependencies{
+		testImplementation(platform('org.junit:junit-bom:5.10.0'))
+		testImplementation('org.junit.jupiter:junit-jupiter')
+	}
 }
 
 repositories{
@@ -41,6 +52,15 @@ sourceCompatibility = 1.8
 javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
 shadowJar.archiveName = 'KeysPerSecond-v' + version + '.jar'
 application.mainClassName = 'dev.roanh.kps.Main'
+
+test{
+	useJUnitPlatform()
+	dependsOn 'cleanTest'
+
+	testLogging{
+		events "passed", "skipped", "failed"
+	}
+}
 
 launch4j{
 	jarTask = project.tasks.shadowJar
