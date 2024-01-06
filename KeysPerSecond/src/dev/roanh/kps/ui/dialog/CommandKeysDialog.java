@@ -124,7 +124,7 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 		form.add(txt);
 		form.add(preview);
 		
-		switch(Dialog.showDialog(form, false, new String[]{"Save", "Unbind", "Cancel"})){
+		switch(Dialog.showDialog(form, new String[]{"Save", "Unbind", "Cancel"})){
 		case 0:
 			return lastKey == -1 ? null : new CMD(CommandKeys.getBaseKeyCode(lastKey), CommandKeys.hasAlt(lastKey), CommandKeys.hasCtrl(lastKey));
 		case 1:

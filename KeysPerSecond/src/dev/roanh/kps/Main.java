@@ -893,7 +893,7 @@ public class Main{
 		cform.add(lbg);
 		cform.add(cbg);
 		cform.add(spanelbg);
-		if(Dialog.showSaveDialog(cform, false)){
+		if(Dialog.showSaveDialog(cform)){
 			config.foreground = cfg.getBackground();
 			config.background = cbg.getBackground();
 			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
