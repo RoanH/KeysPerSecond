@@ -45,6 +45,7 @@ import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
+import dev.roanh.kps.config.setting.UpdateRateSetting;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
@@ -76,7 +77,10 @@ public class Configuration{
 	 * Whether or not the frame forces itself to be the top window
 	 */
 	private BooleanSetting overlay = new BooleanSetting("overlay", false);
-	
+	/**
+	 * The amount of milliseconds a single time frame takes
+	 */
+	private UpdateRateSetting updateRate = new UpdateRateSetting("updateRate", UpdateRate.MS_1000);
 	
 	
 	
@@ -109,10 +113,7 @@ public class Configuration{
 	public boolean enableModifiers = false;
 	
 	
-	/**
-	 * The amount of milliseconds a single time frame takes
-	 */
-	protected UpdateRate updateRate = UpdateRate.MS_1000;
+	
 	
 	//OLD LOGIC ------------------------
 	
@@ -551,7 +552,7 @@ public class Configuration{
 	 * @return The current update rate.
 	 */
 	public UpdateRate getUpdateRate(){
-		return updateRate;
+		return updateRate.getValue();
 	}
 	
 	/**
@@ -559,7 +560,7 @@ public class Configuration{
 	 * @return The current update rate in milliseconds.
 	 */
 	public int getUpdateRateMs(){
-		return updateRate.getRate();
+		return updateRate.getValue().getRate();
 	}
 	
 	/**
@@ -647,7 +648,7 @@ public class Configuration{
 	 * @param rate The new update rate.
 	 */
 	public void setUpdateRate(UpdateRate rate){
-		updateRate = rate;
+		updateRate.update(rate);
 	}
 	
 	public AveragePanelSettings getAveragePanelSettings(){
@@ -753,12 +754,7 @@ public class Configuration{
 					//trackAllButtons = Boolean.parseBoolean(args[1]);
 					break;
 				case "updateRate":
-					try{
-						updateRate = UpdateRate.fromMs(Integer.parseInt(args[1]));
-					}catch(IllegalArgumentException e){
-						updateRate = UpdateRate.MS_1000;
-						modified = true;
-					}
+					modified |= updateRate.parse(args[1]);
 					break;
 				case "precision":
 					try{
