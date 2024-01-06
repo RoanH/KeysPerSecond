@@ -726,7 +726,7 @@ public class Configuration{
 					showKeys = Boolean.parseBoolean(args[1]);
 					break;
 				case "overlay":
-					overlay = Boolean.parseBoolean(args[1]);//TODO
+					//overlay = Boolean.parseBoolean(args[1]);//TODO
 					break;
 				case "trackAllKeys":
 					trackAllKeys = Boolean.parseBoolean(args[1]);
