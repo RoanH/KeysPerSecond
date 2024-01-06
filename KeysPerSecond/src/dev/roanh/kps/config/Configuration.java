@@ -44,6 +44,7 @@ import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
+import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
@@ -74,18 +75,33 @@ public class Configuration{
 	/**
 	 * Whether or not the frame forces itself to be the top window
 	 */
-	protected BooleanSetting overlay = new BooleanSetting("overlay", false);
+	private BooleanSetting overlay = new BooleanSetting("overlay", false);
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//not fully done, these two have a weird shared dependency in the legacy trackAll option
 	/**
 	 * Whether or not to track all key presses
 	 */
-	protected boolean trackAllKeys = false;
+	private BooleanSetting trackAllKeys = new BooleanSetting("trackAllKeys", false);
 	/**
 	 * Whether or not to track all mouse button presses
 	 */
-	protected boolean trackAllButtons = false;
+	private BooleanSetting trackAllButtons = new BooleanSetting("trackAllButtons", false);
+	
+	
+	
+	
+	
 	
 	/**
 	 * Whether or not the enable tracking key-modifier combinations
@@ -551,7 +567,7 @@ public class Configuration{
 	 * @return True if all mouse buttons are tracked.
 	 */
 	public boolean isTrackAllButtons(){
-		return trackAllButtons;
+		return trackAllButtons.getValue();
 	}
 	
 	/**
@@ -559,7 +575,7 @@ public class Configuration{
 	 * @return True if all keys are tracked.
 	 */
 	public boolean isTrackAllKeys(){
-		return trackAllKeys;
+		return trackAllKeys.getValue();
 	}
 	
 	/**
@@ -567,7 +583,7 @@ public class Configuration{
 	 * @param track True to track all keys.
 	 */
 	public void setTrackAllKeys(boolean track){
-		trackAllKeys = track;
+		trackAllKeys.update(track);
 	}
 	
 	/**
@@ -575,7 +591,7 @@ public class Configuration{
 	 * @param track True to track all mouse buttons.
 	 */
 	public void setTrackAllButtons(boolean track){
-		trackAllButtons = track;
+		trackAllButtons.update(track);
 	}
 	
 	/**
@@ -695,7 +711,7 @@ public class Configuration{
 	private final boolean load(Path saveloc){
 		boolean modified = false;
 		try(BufferedReader in = Files.newBufferedReader(saveloc)){
-			RenderingMode defaultMode = RenderingMode.VERTICAL;
+			RenderingModeSetting defaultMode = new RenderingModeSetting("textMode", RenderingMode.VERTICAL);
 			String line;
 			while((line = in.readLine()) != null){
 				if(line.startsWith("#") || line.isEmpty()){
@@ -705,7 +721,7 @@ public class Configuration{
 				if(args[0].startsWith("keys")){
 					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
 						try{
-							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode));
+							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode.getValue()));
 						}catch(Exception e){
 							modified = true;
 						}
@@ -729,11 +745,12 @@ public class Configuration{
 					//overlay = Boolean.parseBoolean(args[1]);//TODO
 					break;
 				case "trackAllKeys":
-					trackAllKeys = Boolean.parseBoolean(args[1]);
-					trackAllButtons = trackAllKeys;//for backwards compatibility -- this kinda only works because buttons are parsed after keys so it always overrides if present
+					//trackAllKeys = Boolean.parseBoolean(args[1]);
+					trackAllButtons = trackAllKeys;//for backwards compatibility -- this kinda only works because buttons are parsed after keys so it always overrides if present -- do I need to support this or is it a relic from an ancient config format I no longer support?
+					//possibly parse the legacy option instead: https://git.roanh.dev/roan/KeysPerSecond/-/commit/e6abd388da3c521f209adb560dd2f7da2df806e5
 					break;
 				case "trackAllButtons":
-					trackAllButtons = Boolean.parseBoolean(args[1]);
+					//trackAllButtons = Boolean.parseBoolean(args[1]);
 					break;
 				case "updateRate":
 					try{
@@ -867,36 +884,8 @@ public class Configuration{
 				case "graphPosition":
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
-				case "textMode":
-					try{
-						String mode = args[1].toUpperCase(Locale.ROOT);
-						switch(mode){
-						case "HORIZONTAL":
-							defaultMode = RenderingMode.HORIZONTAL_TN;
-							break;
-						case "VERTICALS":
-						case "HORIZONTAL_TAN":
-							defaultMode = RenderingMode.VERTICAL;
-							break;
-						case "HORIZONTAL_TDAN":
-							defaultMode = RenderingMode.DIAGONAL1;
-							break;
-						case "HORIZONTAL_TDAN2":
-							defaultMode = RenderingMode.DIAGONAL3;
-							break;
-						case "HORIZONTAL_TDANS":
-							defaultMode = RenderingMode.DIAGONAL1;
-							break;
-						case "HORIZONTAL_TDAN2S":
-							defaultMode = RenderingMode.DIAGONAL3;
-							break;
-						default:
-							defaultMode = RenderingMode.valueOf(mode);
-							break;
-						}
-					}catch(IllegalArgumentException e){
-						modified = true;
-					}
+				case "textMode"://oof this entire setting is legacy compatibility...
+					modified |= ((Setting<?>)defaultMode).parse(args[1]);
 					break;
 				case "graphMode":
 					try{

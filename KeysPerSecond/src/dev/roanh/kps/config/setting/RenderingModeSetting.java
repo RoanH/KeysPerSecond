@@ -1,5 +1,7 @@
 package dev.roanh.kps.config.setting;
 
+import java.util.Locale;
+
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
@@ -12,8 +14,36 @@ public class RenderingModeSetting extends Setting<RenderingMode>{
 
 	@Override
 	protected boolean parse(String data){
-		//TODO valueOf or also port the legacy reading?
-		return false;
+		try{
+			data = data.toUpperCase(Locale.ROOT);
+			switch(data){
+			case "HORIZONTAL":
+				update(RenderingMode.HORIZONTAL_TN);
+				return false;
+			case "VERTICALS":
+			case "HORIZONTAL_TAN":
+				update(RenderingMode.VERTICAL);
+				return false;
+			case "HORIZONTAL_TDAN":
+				update(RenderingMode.DIAGONAL1);
+				return false;
+			case "HORIZONTAL_TDAN2":
+				update(RenderingMode.DIAGONAL3);
+				return false;
+			case "HORIZONTAL_TDANS":
+				update(RenderingMode.DIAGONAL1);
+				return false;
+			case "HORIZONTAL_TDAN2S":
+				update(RenderingMode.DIAGONAL3);
+				return false;
+			default:
+				update(RenderingMode.valueOf(data));
+				return false;
+			}
+		}catch(IllegalArgumentException e){
+			reset();
+			return true;
+		}
 	}
 
 	@Override

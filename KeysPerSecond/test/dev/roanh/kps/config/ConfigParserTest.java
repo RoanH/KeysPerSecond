@@ -18,37 +18,56 @@
  */
 package dev.roanh.kps.config;
 
-import java.io.PrintWriter;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class Setting<T>{
-	protected final String key;
-	protected T value;
-	private T defaultValue;
+import java.nio.file.Paths;
+
+import org.junit.jupiter.api.Test;
+
+public class ConfigParserTest{
 	
-	protected Setting(String key, T defaultValue){
-		this.key = key;
-		this.defaultValue = defaultValue;
-		value = defaultValue;
+	@Test
+	public void fullTest(){
+		Configuration config = new Configuration(Paths.get("test/main.kps"));
+		
+		//TODO assert config version
+		
+//		max
+//		avg
+//		cur
+//		total
+//		keys
+		assertFalse(config.isOverlayMode());
+//		allkeys
+//		allbuttons
+//		rate
+//		percision
+//		mod combos
+		
+//		graph enable
+//		graph backlog
+//		graph avg
+		
+//		custom colour
+//		foreground col
+//		background col
+//		foreground op
+//		background op
+		
+//		cmd reset stats
+//		cmd exit
+//		cmd reset totals
+//		cmd hide
+//		cmd pause
+//		cmd reload
+		
+		//TODO layout
+		
+		//TODO auto save
+		
+		//TODO keys
+		
 	}
 	
-	//call update with the parsed value OR call rest to use a default -- return true if default value was used (reset called)
-	protected abstract boolean parse(String data);
-	
-	protected abstract void write(IndentWriter out);
-	
-	public String getKey(){
-		return key;
-	}
-	
-	public void update(T newValue){
-		value = newValue;
-	}
-	
-	public void reset(){
-		value = defaultValue;
-	}
-	
-	public T getValue(){
-		return value;
-	}
 }
