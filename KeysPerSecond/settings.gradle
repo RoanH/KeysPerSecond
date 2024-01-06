@@ -1,12 +1,12 @@
 pluginManagement{
 	repositories{
 		//Local cache
-		if(rootProject.hasProperty("nexusPublic")){
+		//if(rootProject.hasProperty("nexusPublic")){
 			maven{
 				allowInsecureProtocol = true
 				url "$nexusPublic"
 			}
-		}
+		//}
 		mavenCentral();
 	}
 }
