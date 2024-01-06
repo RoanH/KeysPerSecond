@@ -19,6 +19,7 @@
 package dev.roanh.kps.ui.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.function.IntConsumer;
@@ -183,7 +184,7 @@ public class LayoutDialog{
 
 		form.add(graphLayout, BorderLayout.PAGE_END);
 
-		Dialog.showMessageDialog(form, true);
+		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);
 		Main.content.hideGrid();
 	}
 
