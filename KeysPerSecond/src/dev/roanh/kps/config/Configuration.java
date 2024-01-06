@@ -742,7 +742,7 @@ public class Configuration{
 					showKeys = Boolean.parseBoolean(args[1]);
 					break;
 				case "overlay":
-					//overlay = Boolean.parseBoolean(args[1]);//TODO
+					modified |= overlay.parse(args[1]);
 					break;
 				case "trackAllKeys":
 					//trackAllKeys = Boolean.parseBoolean(args[1]);
@@ -885,7 +885,7 @@ public class Configuration{
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
 				case "textMode"://oof this entire setting is legacy compatibility...
-					modified |= ((Setting<?>)defaultMode).parse(args[1]);
+					modified |= defaultMode.parse(args[1]);
 					break;
 				case "graphMode":
 					try{

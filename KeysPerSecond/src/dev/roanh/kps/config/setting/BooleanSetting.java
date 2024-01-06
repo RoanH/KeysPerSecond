@@ -28,7 +28,7 @@ public class BooleanSetting extends Setting<Boolean>{
 	}
 
 	@Override
-	protected boolean parse(String data){
+	public boolean parse(String data){
 		if("true".equalsIgnoreCase(data)){
 			update(true);
 			return false;

@@ -14,7 +14,7 @@ public class IntSetting extends Setting<Integer>{
 	}
 
 	@Override
-	protected boolean parse(String data){
+	public boolean parse(String data){
 		try{
 			int val = Integer.parseInt(data);
 			if(min <= val && val <= max){

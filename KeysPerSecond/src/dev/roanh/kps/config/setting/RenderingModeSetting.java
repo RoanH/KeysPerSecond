@@ -13,7 +13,7 @@ public class RenderingModeSetting extends Setting<RenderingMode>{
 	}
 
 	@Override
-	protected boolean parse(String data){
+	public boolean parse(String data){
 		try{
 			data = data.toUpperCase(Locale.ROOT);
 			switch(data){

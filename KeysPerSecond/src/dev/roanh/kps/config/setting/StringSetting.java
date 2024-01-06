@@ -10,7 +10,7 @@ public class StringSetting extends Setting<String>{
 	}
 
 	@Override
-	protected boolean parse(String data){
+	public boolean parse(String data){
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -18,8 +18,6 @@
  */
 package dev.roanh.kps.config;
 
-import java.io.PrintWriter;
-
 public abstract class Setting<T>{
 	protected final String key;
 	protected T value;
@@ -32,7 +30,7 @@ public abstract class Setting<T>{
 	}
 	
 	//call update with the parsed value OR call rest to use a default -- return true if default value was used (reset called)
-	protected abstract boolean parse(String data);
+	public abstract boolean parse(String data);
 	
 	protected abstract void write(IndentWriter out);
 	
