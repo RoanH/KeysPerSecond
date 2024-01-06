@@ -62,7 +62,6 @@ import javax.swing.plaf.basic.BasicMenuUI;
 
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
-import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
@@ -401,9 +400,9 @@ public class Menu{
 				Main.reconfigure();
 			});
 		});
-		modifiers.setSelected(Main.config.enableModifiers);
+		modifiers.setSelected(Main.config.isKeyModifierTrackingEnabled());
 		modifiers.addActionListener((e)->{
-			Main.config.enableModifiers = modifiers.isSelected();
+			Main.config.setKeyModifierTrackingEnabled(modifiers.isSelected());
 		});
 		configcolors.add(colorenable);
 		configcolors.add(colorcustom);

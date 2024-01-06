@@ -81,7 +81,10 @@ public class Configuration{
 	 * The amount of milliseconds a single time frame takes
 	 */
 	private UpdateRateSetting updateRate = new UpdateRateSetting("updateRate", UpdateRate.MS_1000);
-	
+	/**
+	 * Whether or not the enable tracking key-modifier combinations
+	 */
+	private BooleanSetting enableModifiers = new BooleanSetting("enableKeyModifierCombinations", false);
 	
 	
 	
@@ -107,10 +110,7 @@ public class Configuration{
 	
 	
 	
-	/**
-	 * Whether or not the enable tracking key-modifier combinations
-	 */
-	public boolean enableModifiers = false;
+	
 	
 	
 	
@@ -345,7 +345,13 @@ public class Configuration{
 	
 	
 	
+	public final boolean isKeyModifierTrackingEnabled(){
+		return enableModifiers.getValue();
+	}
 	
+	public void setKeyModifierTrackingEnabled(boolean enabled){
+		enableModifiers.update(enabled);
+	}
 	
 	/**
 	 * Gets the x position of the graph.
@@ -891,7 +897,7 @@ public class Configuration{
 					}
 					break;
 				case "enableKeyModifierCombinations":
-					enableModifiers = Boolean.parseBoolean(args[1]);
+					modified |= enableModifiers.parse(args[1]);
 					break;
 				case "maxX":
 					try{

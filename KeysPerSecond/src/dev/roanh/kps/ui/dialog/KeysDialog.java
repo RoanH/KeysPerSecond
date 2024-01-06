@@ -171,7 +171,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	
 	@Override
 	public void onKeyPress(int code){
-		lastKey = Main.config.enableModifiers ? CommandKeys.getExtendedKeyCode(code) : CommandKeys.getExtendedKeyCode(code, false, false, false);
+		lastKey = Main.config.isKeyModifierTrackingEnabled() ? CommandKeys.getExtendedKeyCode(code) : CommandKeys.getExtendedKeyCode(code, false, false, false);
 		pressed.setText("<" + CommandKeys.formatExtendedCode(lastKey) + ">");
 		pressed.repaint();
 	}

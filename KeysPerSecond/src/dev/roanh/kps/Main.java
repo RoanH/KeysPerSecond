@@ -411,7 +411,7 @@ public class Main{
 	private static final void releaseEventKey(int rawCode){
 		int code = getExtendedKeyCode(rawCode);
 		
-		if(config.enableModifiers){
+		if(config.isKeyModifierTrackingEnabled()){
 			if(code == CommandKeys.ALT){
 				for(Key k : keys.values()){
 					if(k.alt){
@@ -474,7 +474,7 @@ public class Main{
 		
 		if(!suspended && key != null){
 			key.keyPressed();
-			if(config.enableModifiers){
+			if(config.isKeyModifierTrackingEnabled()){
 				if(key.alt){
 					keys.getOrDefault(CommandKeys.ALT, DUMMY_KEY).keyReleased();
 				}
@@ -520,7 +520,7 @@ public class Main{
 	 * @return The extended key code for this event
 	 */
 	private static final int getExtendedKeyCode(int rawCode){
-		if(!config.enableModifiers){
+		if(!config.isKeyModifierTrackingEnabled()){
 			return CommandKeys.getExtendedKeyCode(rawCode, false, false, false);
 		}else{
 			return CommandKeys.getExtendedKeyCode(rawCode);
@@ -627,7 +627,7 @@ public class Main{
 			config.showTotal = ctot.isSelected();
 		});
 		cmod.addActionListener((e)->{
-			config.enableModifiers = cmod.isSelected();
+			config.setKeyModifierTrackingEnabled(cmod.isSelected());
 		});
 		JPanel options = new JPanel();
 		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
@@ -713,7 +713,7 @@ public class Main{
 			ckey.setSelected(config.showKeys());
 			ctop.setSelected(config.isOverlayMode());
 			ctot.setSelected(config.showTotal);
-			cmod.setSelected(config.enableModifiers);
+			cmod.setSelected(config.isKeyModifierTrackingEnabled());
 		});
 		updaterate.addActionListener((e)->{
 			UpdateRateDialog.configureUpdateRate();
