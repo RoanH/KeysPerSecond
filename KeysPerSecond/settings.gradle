@@ -1,1 +1,14 @@
+pluginManagement{
+	repositories{
+		//Local cache
+		if(project.hasProperty("nexusPublic")){
+			maven{
+				allowInsecureProtocol = true
+				url "$nexusPublic"
+			}
+		}
+		mavenCentral();
+	}
+}
+
 rootProject.name = 'KeysPerSecond'
