@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Dialog.ModalityType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -190,7 +191,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		
 		KeysDialog dialog = new KeysDialog();
 		Main.eventManager.registerKeyPressListener(dialog);
-		if(!Dialog.showSaveDialog(dialog, true)){
+		if(!Dialog.showSaveDialog(dialog, true, ModalityType.APPLICATION_MODAL)){
 			for(int i = 0; i < copy.size(); i++){
 				copy.get(i).visible = visibleState[i];
 				copy.get(i).setName(nameState[i]);

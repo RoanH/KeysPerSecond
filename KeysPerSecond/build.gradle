@@ -14,7 +14,7 @@ sourceSets{
 }
 
 dependencies{
-	implementation 'dev.roanh.util:util:2.4'
+	implementation 'dev.roanh.util:util:2.5'
 	implementation 'com.github.kwhat:jnativehook:2.2.1'
 }
 
