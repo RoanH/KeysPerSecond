@@ -50,6 +50,7 @@ import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
+import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
 import dev.roanh.kps.layout.Positionable;
@@ -364,8 +365,10 @@ public class Configuration{
 		return settings;
 	}
 	
-	protected List<Setting<?>> getLegacySettings(){
-		return null;//TODO determine if we needs this and implement it
+	protected List<ProxySetting<?>> getLegacySettings(){
+		List<ProxySetting<?>> settings = new ArrayList<ProxySetting<?>>();
+		statsSaving.collectLegacyProxies(settings);
+		return settings;//TODO determine if we needs this and implement it
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){

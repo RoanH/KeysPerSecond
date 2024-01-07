@@ -75,7 +75,15 @@ public class ConfigParserTest{
 		
 		//TODO layout
 		
-		//TODO auto save
+		//stats
+		StatsSavingSettings stats = config.getStatsSavingSettings();
+		assertFalse(stats.isAutoSaveEnabled());
+		assertEquals("C:\\Users\\RoanH", stats.getAutoSaveDestination());
+		assertEquals("'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'", stats.getAutoSaveFormat());
+		assertEquals(600000, stats.getAutoSaveInterval());
+		assertFalse(stats.isSaveOnExitEnabled());
+		assertFalse(stats.isLoadOnLaunchEnabled());
+		assertEquals("C:\\Users\\RoanH\\stats.kpsstats", stats.getSaveFile());
 		
 		//TODO keys
 		

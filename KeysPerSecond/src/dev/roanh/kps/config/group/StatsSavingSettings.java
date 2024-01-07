@@ -10,6 +10,7 @@ import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.LongSetting;
+import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
 public class StatsSavingSettings extends SettingGroup{
@@ -64,5 +65,15 @@ public class StatsSavingSettings extends SettingGroup{
 	public List<Setting<?>> collectSettings(){
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
+		proxyList.add(ProxySetting.of("autoSaveStats", autoSave));
+		proxyList.add(ProxySetting.of("statsDest", autoDestination));
+		proxyList.add(ProxySetting.of("statsFormat", autoFormat));
+		proxyList.add(ProxySetting.of("statsSaveInterval", autoInterval));
+		proxyList.add(ProxySetting.of("saveStatsOnExit", saveOnExit));
+		proxyList.add(ProxySetting.of("loadStatsOnLaunch", loadOnLaunch));
+		proxyList.add(ProxySetting.of("statsSaveFile", saveFile));
 	}
 }

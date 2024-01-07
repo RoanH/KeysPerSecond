@@ -49,4 +49,8 @@ public abstract class Setting<T>{
 	public T getValue(){
 		return value;
 	}
+	
+	public T getDefaultValue(){
+		return defaultValue;
+	}
 }

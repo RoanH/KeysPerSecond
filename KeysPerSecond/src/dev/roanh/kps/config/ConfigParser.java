@@ -34,6 +34,7 @@ import java.util.function.Function;
 
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
+import dev.roanh.kps.config.setting.ProxySetting;
 
 public class ConfigParser{
 	private String version;
@@ -72,6 +73,11 @@ public class ConfigParser{
 		
 		for(SettingList<? extends SettingGroup> list : config.getSettingLists()){
 			lists.put(list.getKey(), list);
+		}
+		
+		//TODO possibly do not read these after some version
+		for(ProxySetting<?> setting : config.getLegacySettings()){
+			settings.put(setting.getKey(), setting);
 		}
 		
 		//read version
