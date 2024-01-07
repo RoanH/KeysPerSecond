@@ -719,7 +719,7 @@ public class Main{
 			UpdateRateDialog.configureUpdateRate();
 		});
 		autoSave.addActionListener((e)->{
-			Statistics.configureAutoSave(false);
+			Statistics.configureAutoSave(Main.config.getStatsSavingSettings(), false);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
 		info.add(Util.getVersionLabel("KeysPerSecond", VERSION));
@@ -1031,7 +1031,7 @@ public class Main{
 			
 			//Start stats saving
 			Statistics.cancelScheduledTask();
-			if(Main.config.autoSaveStats){
+			if(config.getStatsSavingSettings().isAutoSaveEnabled()){
 				Statistics.saveStatsTask();
 			}
 		});

@@ -14,14 +14,34 @@ import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
 public class StatsSavingSettings extends SettingGroup{
-	//TODO move javadoc from Configuration
 	//TODO do we want to introduce a file path setting?
+	/**
+	 * Whether or not to periodically save the stats to a file
+	 */
 	private final BooleanSetting autoSave = new BooleanSetting("autoSave", false);
+	/**
+	 * The folder to auto save stats to
+	 */
 	private final StringSetting autoDestination = new StringSetting("autoDestination", Objects.toString(System.getProperty("user.home"), ""));
+	/**
+	 * The date time formatter pattern to use for the statistics auto saving file name
+	 */
 	private final StringSetting autoFormat = new StringSetting("autoFormat", "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'");
+	/**
+	 * The statistics auto saving save interval in milliseconds
+	 */
 	private final LongSetting autoInterval = new LongSetting("autoInterval", 1, Long.MAX_VALUE, TimeUnit.MINUTES.toMillis(10));
+	/**
+	 * Whether statistics are saved on exit.
+	 */
 	private final BooleanSetting saveOnExit = new BooleanSetting("saveOnExit", false);
+	/**
+	 * Whether statistics are loaded on launch.
+	 */
 	private final BooleanSetting loadOnLaunch = new BooleanSetting("loadOnLaunch", false);
+	/**
+	 * The file to save/load statistics to/from on exit/launch.
+	 */
 	private final StringSetting saveFile = new StringSetting("saveFile", Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats");
 
 	public StatsSavingSettings(){

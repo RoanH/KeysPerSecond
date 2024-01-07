@@ -298,36 +298,20 @@ public class Configuration{
 	
 	//automatic statistics saving
 	private StatsSavingSettings statsSaving = new StatsSavingSettings();
-	/**
-	 * Whether or not to periodically save the stats to a file
-	 */
+	
+	//TODO remove -- already moved ^
 	public boolean autoSaveStats = false;
-	/**
-	 * The folder to auto save stats to
-	 */
 	public String statsDest = Objects.toString(System.getProperty("user.home"), "");
-	/**
-	 * The date time formatter pattern to use for the
-	 * statistics auto saving file name
-	 */
 	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
-	/**
-	 * The statistics auto saving save interval in milliseconds
-	 */
 	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
-	/**
-	 * Whether statistics are saved on exit.
-	 */
 	public boolean saveStatsOnExit = false;
-	/**
-	 * Whether statistics are loaded on launch.
-	 */
 	public boolean loadStatsOnLaunch = false;
-	/**
-	 * The file to save/load statistics to/from on exit/launch.
-	 */
 	public String statsSaveFile = Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats";
 
+	
+	
+	
+	
 	/**
 	 * The original configuration file
 	 */

@@ -57,7 +57,9 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
+import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.model.FilePathFormatterFactory;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
@@ -90,15 +92,15 @@ public class Statistics{
 	 * Show the auto save statistics configuration dialog
 	 * @param live Whether or not the program is already running
 	 */
-	protected static final void configureAutoSave(boolean live){
+	protected static final void configureAutoSave(StatsSavingSettings config, boolean live){
 		JPanel endPanel = new JPanel(new BorderLayout());
 		endPanel.setBorder(BorderFactory.createTitledBorder("Save on exit"));
-		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", Main.config.saveStatsOnExit);
-		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", Main.config.loadStatsOnLaunch);
+		JCheckBox saveOnExit = new JCheckBox("Save statistics to a file on exit", config.isSaveOnExitEnabled());
+		JCheckBox loadOnStart = new JCheckBox("Load saved statistics from a file on launch", config.isLoadOnLaunchEnabled());
 
 		JPanel selectFile = new JPanel(new BorderLayout(2, 0));
 		selectFile.add(new JLabel("Save location: "), BorderLayout.LINE_START);
-		JTextField selectedFile = new JTextField(Main.config.statsSaveFile);
+		JTextField selectedFile = new JTextField(config.getSaveFile());
 		selectFile.add(selectedFile, BorderLayout.CENTER);
 		JButton select = new JButton("Select");
 		selectFile.add(select, BorderLayout.LINE_END);
@@ -125,7 +127,7 @@ public class Statistics{
 		
 		JPanel periodicPanel = new JPanel(new BorderLayout());
 		periodicPanel.setBorder(BorderFactory.createTitledBorder("Periodic saving"));
-		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", Main.config.autoSaveStats);
+		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", config.isAutoSaveEnabled());
 		
 		BorderLayout layout = new BorderLayout();
 		layout.setHgap(2);
@@ -135,7 +137,7 @@ public class Statistics{
 		JPanel extras = new JPanel(new GridLayout(3, 1, 0, 2));
 		
 		JButton seldest = new JButton("Select");
-		JTextField ldest = new JTextField(Main.config.statsDest);
+		JTextField ldest = new JTextField(config.getAutoSaveDestination());
 		fields.add(ldest);
 		extras.add(seldest);
 		labels.add(new JLabel("Save location: "));
@@ -147,9 +149,9 @@ public class Statistics{
 		});
 		
 		JComboBox<Unit> timeUnit = new JComboBox<Unit>(Unit.values());
-		Unit bestUnit = Unit.fromMillis(Main.config.statsSaveInterval);
+		Unit bestUnit = Unit.fromMillis(config.getAutoSaveInterval());
 		timeUnit.setSelectedItem(bestUnit);
-		JSpinner time = new JSpinner(new SpinnerNumberModel(Long.valueOf(Main.config.statsSaveInterval / bestUnit.unit.toMillis(1)), Long.valueOf(1L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));
+		JSpinner time = new JSpinner(new SpinnerNumberModel(Long.valueOf(config.getAutoSaveInterval() / bestUnit.unit.toMillis(1)), Long.valueOf(1L), Long.valueOf(Long.MAX_VALUE), Long.valueOf(1L)));
 		labels.add(new JLabel("Save interval: "));
 		fields.add(time);
 		JPanel unitPanel = new JPanel(new BorderLayout());
@@ -157,33 +159,7 @@ public class Statistics{
 		unitPanel.add(timeUnit, BorderLayout.CENTER);
 		extras.add(unitPanel);
 		
-		JFormattedTextField format = new JFormattedTextField(new AbstractFormatterFactory(){
-			@Override
-			public AbstractFormatter getFormatter(JFormattedTextField tf){
-				return new AbstractFormatter(){
-					/**
-					 * Serial ID
-					 */
-					private static final long serialVersionUID = 5956641218097576666L;
-
-					@Override
-					public Object stringToValue(String text) throws ParseException{
-						for(char ch : new char[]{'/', '\\', '?', '%', '*', ':', '|', '"', '<', '>'}){
-							int index = text.indexOf(ch);
-							if(index != -1){
-								throw new ParseException("Invalid character found", index);
-							}
-						}
-						return text;
-					}
-
-					@Override
-					public String valueToString(Object value) throws ParseException{
-						return value instanceof String ? (String)value : null;
-					}
-				};
-			}
-		}, Main.config.statsFormat);
+		JFormattedTextField format = new JFormattedTextField(new FilePathFormatterFactory(), config.getAutoSaveFormat());
 		format.setColumns(30);
 		format.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
 		JButton help = new JButton("Help");
