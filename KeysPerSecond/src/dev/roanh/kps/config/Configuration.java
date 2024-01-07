@@ -44,6 +44,7 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
+import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
@@ -258,6 +259,7 @@ public class Configuration{
 	public int cellSize = 22;
 
 	//graph
+	private GraphSettings graph = new GraphSettings();
 	/**
 	 * Number of points the graph consists of
 	 */
@@ -355,6 +357,10 @@ public class Configuration{
 		return settings;
 	}
 	
+	protected List<Setting<?>> getLegacySettings(){
+		return null;//TODO determine if we needs this and implement it
+	}
+	
 	protected List<SettingGroup> getSettingGroups(){
 		return null;//TODO
 	}
@@ -377,6 +383,8 @@ public class Configuration{
 	public void setKeyModifierTrackingEnabled(boolean enabled){
 		enableModifiers.update(enabled);
 	}
+	
+	
 	
 	/**
 	 * Gets the x position of the graph.

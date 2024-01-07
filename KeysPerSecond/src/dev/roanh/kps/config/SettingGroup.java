@@ -28,13 +28,17 @@ public abstract interface SettingGroup{
 	//has to support adding note
 	public abstract List<Setting<?>> collectSettings();
 	
-	public default boolean findAndParse(Map<String, String> data, Setting<?> setting){
-		String val = data.get(setting.getKey());
-		if(val == null){
-			setting.reset();
-			return true;
-		}else{
-			return setting.parse(val);
+	public default boolean findAndParse(Map<String, String> data, Setting<?>... settings){
+		boolean modified = false;
+		for(Setting<?> setting : settings){
+			String val = data.get(setting.getKey());
+			if(val == null){
+				setting.reset();
+				modified = true;
+			}else{
+				modified |= setting.parse(val);
+			}
 		}
+		return modified;
 	}
 }

@@ -13,6 +13,7 @@ public class PanelSettings extends LocationSettings{
 	private final RenderingModeSetting mode = new RenderingModeSetting("mode", RenderingMode.VERTICAL);
 	
 	public PanelSettings(String defaultName){
+		super(-1, 0, 2, 3);
 		name = new StringSetting("name", defaultName);
 	}
 
@@ -26,7 +27,7 @@ public class PanelSettings extends LocationSettings{
 
 	@Override
 	public boolean parse(Map<String, String> data){
-		return super.parse(data) | findAndParse(data, name) | findAndParse(data, mode);
+		return super.parse(data) | findAndParse(data, name, mode);
 	}
 
 	@Override

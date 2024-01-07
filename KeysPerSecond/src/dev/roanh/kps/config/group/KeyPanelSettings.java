@@ -17,7 +17,7 @@ public class KeyPanelSettings extends PanelSettings{
 	
 	@Override
 	public boolean parse(Map<String, String> data){
-		return super.parse(data) | findAndParse(data, visible) | findAndParse(data, keycode);
+		return super.parse(data) | findAndParse(data, visible, keycode);
 	}
 	
 	@Override

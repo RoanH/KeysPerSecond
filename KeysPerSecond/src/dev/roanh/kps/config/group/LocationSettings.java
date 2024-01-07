@@ -30,19 +30,26 @@ public class LocationSettings implements SettingGroup{
 	/**
 	 * The x position of the panel.
 	 */
-	private IntSetting x = new IntSetting("x", -1, Integer.MAX_VALUE, -1);
+	private final IntSetting x;
 	/**
 	 * The y position of the panel.
 	 */
-	private IntSetting y = new IntSetting("y", -1, Integer.MAX_VALUE, 0);
+	private final IntSetting y;
 	/**
 	 * The width of the panel.
 	 */
-	private IntSetting width = new IntSetting("width", 0, Integer.MAX_VALUE, 2);
+	private final IntSetting width;
 	/**
 	 * The height of the panel.
 	 */
-	private IntSetting height = new IntSetting("height", 0, Integer.MAX_VALUE, 3);
+	private final IntSetting height;
+	
+	protected LocationSettings(int x, int y, int width, int height){
+		this.x = new IntSetting("x", -1, Integer.MAX_VALUE, x);
+		this.y = new IntSetting("y", -1, Integer.MAX_VALUE, y);
+		this.width = new IntSetting("width", -1, Integer.MAX_VALUE, width);
+		this.height = new IntSetting("height", -1, Integer.MAX_VALUE, height);
+	}
 	
 	/**
 	 * Gets the x position for this panel
@@ -78,7 +85,7 @@ public class LocationSettings implements SettingGroup{
 	
 	@Override
 	public boolean parse(Map<String, String> data){
-		return findAndParse(data, x) | findAndParse(data, y) | findAndParse(data, width) | findAndParse(data, height);
+		return findAndParse(data, x, y, width, height);
 	}
 
 	@Override
