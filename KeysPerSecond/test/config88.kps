@@ -47,11 +47,11 @@ keys:
     mode: VALUE_ONLY
     visible: true
     name: A
-  - keycode: 1048606
-    x: 13
-    y: 0
+  - keycode: 1048607
+    x: 12
+    y: 9
     width: 6
     height: 7
     mode: VALUE_ONLY
     visible: false
-    name: A
+    name: B

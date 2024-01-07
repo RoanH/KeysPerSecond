@@ -48,6 +48,7 @@ import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
@@ -295,6 +296,7 @@ public class Configuration{
 	public GraphMode graphMode = GraphMode.INLINE;
 	
 	//automatic statistics saving
+	private StatsSavingSettings statsSaving = new StatsSavingSettings();
 	/**
 	 * Whether or not to periodically save the stats to a file
 	 */
@@ -367,7 +369,7 @@ public class Configuration{
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){
-		return Collections.emptyList();//TODO
+		return Arrays.asList(statsSaving);//TODO
 	}
 	
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
@@ -381,7 +383,9 @@ public class Configuration{
 	
 	
 	
-	
+	public StatsSavingSettings getStatsSavingSettings(){
+		return statsSaving;
+	}
 	
 	public SettingList<KeyPanelSettings> getKeySettings(){
 		return keys;

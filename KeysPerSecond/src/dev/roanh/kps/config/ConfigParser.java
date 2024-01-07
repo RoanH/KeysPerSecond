@@ -149,6 +149,7 @@ public class ConfigParser{
 	
 	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};
 	private static final char[] LIST_ITEM_BODY = new char[]{' ', ' ', ' ', ' '};
+	private static final char[] GROUP_BODY = new char[]{' ', ' '};
 	
 //	public static void main(String[] args) throws IOException{
 //		parseList(Files.newBufferedReader(Paths.get("C:\\Users\\RoanH\\Downloads\\ymltest.txt")), map->{
@@ -164,21 +165,50 @@ public class ConfigParser{
 //		
 //	}
 	
+	//TODO group parsing and list parsing share way too much logic
 	private static boolean parseGroup(BufferedReader in, SettingGroup target) throws IOException{
-		in.mark(1000);
+		char[] lead = new char[2];
 		
-		
+		Map<String, String> item = new HashMap<String, String>();
+		while(in.ready()){
+			in.mark(1000);
+			if(in.read(lead, 0, 2) != 2){
+				//end of file hit or not enough group data
+				in.reset();
+				break;
+			}
+			
+			if(!Arrays.equals(lead, GROUP_BODY)){
+				return target.parse(item);
+			}
+			
+			String line = in.readLine();
+			if(line == null){
+				//end of file
+				in.reset();
+				break;
+			}
+			
+			int mark = line.indexOf(':');
+			if(mark == -1){
+				//assume leading whitespace on the next line
+				in.reset();
+				break;
+			}
+			
+			item.put(line.substring(0, mark).trim(), line.substring(mark + 1, line.length()).trim());
+		}
 		
 		return false;//TODO -- default used
 	}
 	
 	private static <T extends SettingGroup> boolean parseList(BufferedReader in, SettingList<T> list) throws IOException{
-		in.mark(1000);
 		char[] lead = new char[4];
 		
 		boolean defaultUsed = false;
 		Map<String, String> item = null;
 		while(in.ready()){
+			in.mark(1000);
 			if(in.read(lead, 0, 4) != 4){
 				//end of file hit or not enough list data
 				in.reset();

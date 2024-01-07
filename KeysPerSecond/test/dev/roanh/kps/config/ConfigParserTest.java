@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps.config;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.StatsSavingSettings;
 
 public class ConfigParserTest{
 	
@@ -100,6 +102,24 @@ public class ConfigParserTest{
 		assertTrue(key1.isVisible());
 		assertEquals("A", key1.getName());
 		
+		KeyPanelSettings key2 = keys.get(1);
+		assertEquals(1048607, key2.getKeyCode());
+		assertEquals(12, key2.getX());
+		assertEquals(9, key2.getY());
+		assertEquals(6, key2.getWidth());
+		assertEquals(7, key2.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, key2.getRenderingMode());
+		assertFalse(key2.isVisible());
+		assertEquals("B", key2.getName());
 		
+		//stats
+		StatsSavingSettings stats = config.getStatsSavingSettings();
+		assertFalse(stats.isAutoSaveEnabled());
+		assertEquals("C:\\Users\\RoanH", stats.getAutoSaveDestination());
+		assertEquals("'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'", stats.getAutoSaveFormat());
+		assertEquals(600000, stats.getAutoSaveInterval());
+		assertFalse(stats.isSaveOnExitEnabled());
+		assertFalse(stats.isLoadOnLaunchEnabled());
+		assertEquals("C:\\Users\\RoanH\\stats.kpsstats", stats.getSaveFile());
 	}
 }
