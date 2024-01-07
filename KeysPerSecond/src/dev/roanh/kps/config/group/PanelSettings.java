@@ -24,7 +24,7 @@ public class PanelSettings extends LocationSettings{
 	public String getName(){
 		return name.getValue();
 	}
-
+	
 	@Override
 	public boolean parse(Map<String, String> data){
 		return super.parse(data) | findAndParse(data, name, mode);

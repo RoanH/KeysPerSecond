@@ -23,12 +23,13 @@ import java.util.Map;
 
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.PrecisionSetting;
+import dev.roanh.kps.panels.AvgPanel;
 
-public class AveragePanelSettings extends PanelSettings{
+public class AveragePanelSettings extends SpecialPanelSettings{
 	private final PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
 	
 	public AveragePanelSettings(){
-		super("panels", "AVG");
+		super("AVG");
 	}
 	
 	public void setPrecision(int value){
@@ -41,6 +42,11 @@ public class AveragePanelSettings extends PanelSettings{
 	
 	public String formatAvg(double value){
 		return precision.format(value);
+	}
+	
+	@Override
+	public AvgPanel createPanel(){
+		return new AvgPanel(this);
 	}
 	
 	@Override

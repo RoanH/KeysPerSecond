@@ -71,6 +71,8 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.config.group.PanelSettings;
+import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
@@ -968,19 +970,27 @@ public class Main{
 					panels++;
 				}
 			}
+			
+			//TODO new logic
+			for(SpecialPanelSettings panel : config.getPanels()){
+				content.add(panel.createPanel());
+				panels++;
+			}
+			
+			//TODO old legacy logic
 			if(config.showMax){
-				content.add(MaxPanel.INSTANCE);
-				MaxPanel.INSTANCE.sizeChanged();
+//				content.add(MaxPanel.INSTANCE);
+//				MaxPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showAvg){
-				content.add(new AvgPanel(config.getAveragePanelSettings()));
+//				content.add(new AvgPanel(config.getAveragePanelSettings()));
 				//TODO should be event handler based AvgPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showCur){
-				content.add(NowPanel.INSTANCE);
-				NowPanel.INSTANCE.sizeChanged();
+//				content.add(NowPanel.INSTANCE);
+//				NowPanel.INSTANCE.sizeChanged();
 				panels++;
 			}
 			if(config.showTotal){
@@ -1011,6 +1021,7 @@ public class Main{
 			}else{
 				graphFrame.setVisible(false);
 			}
+			
 			frame.setAlwaysOnTop(config.isOverlayMode());
 			graphFrame.setAlwaysOnTop(config.isOverlayMode());
 			frame.setSize(layout.getWidth(), layout.getHeight());
@@ -1023,11 +1034,7 @@ public class Main{
 				content.setBackground(config.background);
 			}
 			frame.add(all);
-			if(panels > 0){
-				frame.setVisible(true);
-			}else{
-				frame.setVisible(false);
-			}
+			frame.setVisible(panels > 0);
 			
 			//Start stats saving
 			Statistics.cancelScheduledTask();

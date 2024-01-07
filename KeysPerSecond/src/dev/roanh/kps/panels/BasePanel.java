@@ -27,6 +27,7 @@ import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.RenderingMode.RenderCache;
+import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 
 /**
@@ -49,6 +50,13 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * RenderCache for this panel
 	 */
 	private RenderCache cache = new RenderCache();
+	private PanelSettings config;
+	
+	public BasePanel(PanelSettings config){
+		this.config = config;
+		//TODO add listener for rendering mode changes
+		sizeChanged();
+	}
 
 	/**
 	 * Signals this panel that its size
@@ -114,12 +122,6 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	}
 
 	/**
-	 * Gets the title for this panel
-	 * @return The title for this panel
-	 */
-	protected abstract String getTitle();
-
-	/**
 	 * Gets the value for this panel
 	 * @return The value for this panel
 	 */
@@ -129,5 +131,35 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * Gets the rendering mode for this panel
 	 * @return The rendering mode for this panel
 	 */
-	protected abstract RenderingMode getRenderingMode();
+	public RenderingMode getRenderingMode(){
+		return config.getRenderingMode();
+	}
+	
+	/**
+	 * Gets the title for this panel
+	 * @return The title for this panel
+	 */
+	public String getTitle(){
+		return config.getName();
+	}
+	
+	@Override
+	public int getLayoutX(){
+		return config.getX();
+	}
+
+	@Override
+	public int getLayoutY(){
+		return config.getY();
+	}
+
+	@Override
+	public int getLayoutWidth(){
+		return config.getWidth();
+	}
+
+	@Override
+	public int getLayoutHeight(){
+		return config.getHeight();
+	}
 }

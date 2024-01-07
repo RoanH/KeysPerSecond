@@ -48,7 +48,7 @@ public final class TotPanel extends BasePanel{
 	}
 
 	@Override
-	protected String getTitle(){
+	public String getTitle(){
 		return "TOT";
 	}
 
@@ -78,7 +78,7 @@ public final class TotPanel extends BasePanel{
 	}
 
 	@Override
-	protected RenderingMode getRenderingMode(){
+	public RenderingMode getRenderingMode(){
 		return Main.config.totPanel.getRenderingMode();
 	}
 }

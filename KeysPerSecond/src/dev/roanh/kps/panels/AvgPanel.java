@@ -19,7 +19,6 @@
 package dev.roanh.kps.panels;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 
 /**
@@ -39,43 +38,12 @@ public final class AvgPanel extends BasePanel{
 	 * Constructs a new average panel
 	 */
 	public AvgPanel(AveragePanelSettings settings){
+		super(settings);
 		this.settings = settings;
-		//TODO add listener for rendering mode changes
-		sizeChanged();
-	}
-
-	@Override
-	protected String getTitle(){
-		return settings.getName();
 	}
 
 	@Override
 	protected String getValue(){
 		return settings.formatAvg(Main.avg);
-	}
-
-	@Override
-	public int getLayoutX(){
-		return settings.getX();
-	}
-
-	@Override
-	public int getLayoutY(){
-		return settings.getY();
-	}
-
-	@Override
-	public int getLayoutWidth(){
-		return settings.getWidth();
-	}
-
-	@Override
-	public int getLayoutHeight(){
-		return settings.getHeight();
-	}
-
-	@Override
-	protected RenderingMode getRenderingMode(){
-		return settings.getRenderingMode();
 	}
 }

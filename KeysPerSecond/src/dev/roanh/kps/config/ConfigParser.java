@@ -185,7 +185,8 @@ public class ConfigParser{
 			}
 			
 			if(!Arrays.equals(lead, GROUP_BODY)){
-				return target.parse(item);
+				in.reset();
+				break;
 			}
 			
 			String line = in.readLine();
@@ -205,7 +206,7 @@ public class ConfigParser{
 			item.put(line.substring(0, mark).trim(), line.substring(mark + 1, line.length()).trim());
 		}
 		
-		return false;//TODO -- default used
+		return target.parse(item);
 	}
 	
 	private static <T extends SettingGroup> boolean parseList(BufferedReader in, SettingList<T> list) throws IOException{

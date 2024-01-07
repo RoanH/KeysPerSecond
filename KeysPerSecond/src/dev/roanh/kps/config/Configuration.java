@@ -48,6 +48,8 @@ import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.PanelSettings;
+import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
@@ -215,6 +217,8 @@ public class Configuration{
 	private CMD commandReload = new CMD(NativeKeyEvent.VC_R, false, true);
 
 	//special panels / layout
+	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
+	
 	/**
 	 * Configuration for the average panel.
 	 */
@@ -369,6 +373,11 @@ public class Configuration{
 	
 	
 	
+	
+	
+	public SettingList<SpecialPanelSettings> getPanels(){
+		return panels;
+	}
 	
 	public StatsSavingSettings getStatsSavingSettings(){
 		return statsSaving;
@@ -690,11 +699,6 @@ public class Configuration{
 	 */
 	public void setUpdateRate(UpdateRate rate){
 		updateRate.update(rate);
-	}
-	
-	public AveragePanelSettings getAveragePanelSettings(){
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	/**

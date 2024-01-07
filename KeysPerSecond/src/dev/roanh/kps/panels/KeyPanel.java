@@ -66,7 +66,7 @@ public final class KeyPanel extends BasePanel{
 	}
 
 	@Override
-	protected String getTitle(){
+	public String getTitle(){
 		return key.name;
 	}
 
@@ -96,7 +96,7 @@ public final class KeyPanel extends BasePanel{
 	}
 
 	@Override
-	protected RenderingMode getRenderingMode(){
+	public RenderingMode getRenderingMode(){
 		return info.getRenderingMode();
 	}
 }

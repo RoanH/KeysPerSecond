@@ -23,6 +23,10 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 	
 	public boolean add(Map<String, String> itemData){
 		ParsedItem<T> result = itemConstructor.construct(itemData);
+		if(result == null){
+			return true;
+		}
+		
 		add(result.item());
 		return result.defaultUsed();
 	}

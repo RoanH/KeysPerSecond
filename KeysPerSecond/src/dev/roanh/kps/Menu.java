@@ -460,7 +460,7 @@ public class Menu{
 			Statistics.loadStats();
 		});
 		statsSaving.addActionListener((e)->{
-			Statistics.configureAutoSave(true);
+			Statistics.configureAutoSave(Main.config.getStatsSavingSettings(), true);
 		});
 
 		reset.add(treset);

@@ -30,7 +30,7 @@ public class Key{
 	/**
 	 * Whether or not this key is currently pressed
 	 */
-	public transient boolean down = false;
+	public boolean down = false;
 	/**
 	 * The total number of times this key has been pressed
 	 */
@@ -43,7 +43,7 @@ public class Key{
 	/**
 	 * The graphical display for this key
 	 */
-	private transient KeyPanel panel = null;
+	private KeyPanel panel = null;
 	/**
 	 * Whether or not alt has to be down
 	 */
