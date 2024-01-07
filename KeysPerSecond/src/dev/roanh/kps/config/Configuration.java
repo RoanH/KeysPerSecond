@@ -30,6 +30,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -45,6 +47,7 @@ import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
@@ -152,7 +155,9 @@ public class Configuration{
 	 * Key configuration data, can be serialised
 	 */
 	public List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
-
+	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", ListItemConstructor.constructThenParse(KeyPanelSettings::new));
+		
+	
 	//colors
 	/**
 	 * Whether or not to use custom colors
@@ -362,11 +367,15 @@ public class Configuration{
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){
-		return null;//TODO
+		return Collections.emptyList();//TODO
 	}
 	
-	protected List<List<SettingGroup>> getSettingLists(){
-		return null;//TODO
+	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
+		return Arrays.asList(keys);
+		
+		
+		
+		//TODO
 	}
 	
 	
@@ -374,7 +383,9 @@ public class Configuration{
 	
 	
 	
-	
+	public SettingList<KeyPanelSettings> getKeySettings(){
+		return keys;
+	}
 	
 	public final boolean isKeyModifierTrackingEnabled(){
 		return enableModifiers.getValue();

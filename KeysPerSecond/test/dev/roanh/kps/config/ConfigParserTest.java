@@ -27,10 +27,13 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
+import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.group.KeyPanelSettings;
+
 public class ConfigParserTest{
 	
 	@Test
-	public void fullTest() throws IOException{
+	public void fullTest1() throws IOException{
 //		Configuration config = new Configuration(Paths.get("test/main.kps"));
 		//TODO currently without calling load this never parses anything using the old logic
 		
@@ -76,4 +79,27 @@ public class ConfigParserTest{
 		
 	}
 	
+	@Test
+	public void fullTest2() throws IOException{
+		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
+
+		
+		
+		
+		//note: we assume the order is consistent with the config but this isn't strictly required and may change in the future
+		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		assertEquals(2, keys.size());
+		
+		KeyPanelSettings key1 = keys.get(0);
+		assertEquals(1048606, key1.getKeyCode());
+		assertEquals(13, key1.getX());
+		assertEquals(0, key1.getY());
+		assertEquals(2, key1.getWidth());
+		assertEquals(3, key1.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, key1.getRenderingMode());
+		assertTrue(key1.isVisible());
+		assertEquals("A", key1.getName());
+		
+		
+	}
 }

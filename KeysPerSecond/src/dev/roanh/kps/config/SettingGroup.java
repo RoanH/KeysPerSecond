@@ -21,14 +21,25 @@ package dev.roanh.kps.config;
 import java.util.List;
 import java.util.Map;
 
-public abstract interface SettingGroup{
+public abstract class SettingGroup{
+	private final String key;
+	
+	public SettingGroup(String key){
+		this.key = key;
+	}
+	
+	public String getKey(){
+		return key;
+	}
 
 	public abstract boolean parse(Map<String, String> data);
 	
-	//has to support adding note
-	public abstract List<Setting<?>> collectSettings();
 	
-	public default boolean findAndParse(Map<String, String> data, Setting<?>... settings){
+	
+	//has to support adding note
+	public abstract List<Setting<?>> collectSettings();//TODO why does this function exist? if we care about writing could just do that with a write function ehhh actually that would require keeping indent correct which is a pain or not actually
+	
+	protected boolean findAndParse(Map<String, String> data, Setting<?>... settings){
 		boolean modified = false;
 		for(Setting<?> setting : settings){
 			String val = data.get(setting.getKey());

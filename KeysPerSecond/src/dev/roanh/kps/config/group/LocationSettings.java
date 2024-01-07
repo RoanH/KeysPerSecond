@@ -26,7 +26,7 @@ import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.IntSetting;
 
-public class LocationSettings implements SettingGroup{
+public class LocationSettings extends SettingGroup{
 	/**
 	 * The x position of the panel.
 	 */
@@ -44,7 +44,8 @@ public class LocationSettings implements SettingGroup{
 	 */
 	private final IntSetting height;
 	
-	protected LocationSettings(int x, int y, int width, int height){
+	protected LocationSettings(String key, int x, int y, int width, int height){
+		super(key);
 		this.x = new IntSetting("x", -1, Integer.MAX_VALUE, x);
 		this.y = new IntSetting("y", -1, Integer.MAX_VALUE, y);
 		this.width = new IntSetting("width", -1, Integer.MAX_VALUE, width);
@@ -85,6 +86,7 @@ public class LocationSettings implements SettingGroup{
 	
 	@Override
 	public boolean parse(Map<String, String> data){
+		//TODO validate layout conflicts with special -1 values max/emd
 		return findAndParse(data, x, y, width, height);
 	}
 

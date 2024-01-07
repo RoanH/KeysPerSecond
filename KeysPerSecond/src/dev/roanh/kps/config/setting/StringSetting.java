@@ -11,7 +11,7 @@ public class StringSetting extends Setting<String>{
 
 	@Override
 	public boolean parse(String data){
-		// TODO Auto-generated method stub
+		update(data);
 		return false;
 	}
 

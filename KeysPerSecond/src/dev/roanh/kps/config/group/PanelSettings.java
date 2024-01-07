@@ -12,8 +12,8 @@ public class PanelSettings extends LocationSettings{
 	private final StringSetting name;
 	private final RenderingModeSetting mode = new RenderingModeSetting("mode", RenderingMode.VERTICAL);
 	
-	public PanelSettings(String defaultName){
-		super(-1, 0, 2, 3);
+	public PanelSettings(String key, String defaultName){
+		super(key, -1, 0, 2, 3);
 		name = new StringSetting("name", defaultName);
 	}
 

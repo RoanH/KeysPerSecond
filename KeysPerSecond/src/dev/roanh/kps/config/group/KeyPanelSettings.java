@@ -12,7 +12,15 @@ public class KeyPanelSettings extends PanelSettings{
 	private final IntSetting keycode = new IntSetting("keycode", Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
 	
 	public KeyPanelSettings(){
-		super("");
+		super("keys", "");
+	}
+	
+	public int getKeyCode(){
+		return keycode.getValue();
+	}
+	
+	public boolean isVisible(){
+		return visible.getValue();
 	}
 	
 	@Override

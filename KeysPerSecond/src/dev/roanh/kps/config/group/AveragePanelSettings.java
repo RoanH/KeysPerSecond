@@ -28,7 +28,7 @@ public class AveragePanelSettings extends PanelSettings{
 	private final PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
 	
 	public AveragePanelSettings(){
-		super("AVG");
+		super("panels", "AVG");
 	}
 	
 	public void setPrecision(int value){

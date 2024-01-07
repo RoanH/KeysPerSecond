@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.StatsSavingSettings;
 
 public class ConfigParser{
 	private String version;
@@ -51,18 +52,26 @@ public class ConfigParser{
 	
 	
 	
-	private List<KeyPanelSettings> keys;//TODO move to config
+//	private SettingList<KeyPanelSettings> keys;//TODO move to config
 	
 	
 	private Map<String, Setting<?>> settings = new HashMap<String, Setting<?>>();//TODO config#getSettings -- linked hash map would address the trackAll issue
-	private Map<String, SettingGroup> groups;
-	private Map<String, List<SettingGroup>> lists;
+	private Map<String, SettingGroup> groups = new HashMap<String, SettingGroup>();
+	private Map<String, SettingList<? extends SettingGroup>> lists = new HashMap<String, SettingList<? extends SettingGroup>>();
 	
 	//TODO make private again
 	public void parse(BufferedReader in, Configuration config) throws IOException{
 		//map settings to parse
 		for(Setting<?> setting : config.getSettings()){
 			settings.put(setting.getKey(), setting);
+		}
+		
+		for(SettingGroup group : config.getSettingGroups()){
+			groups.put(group.getKey(), group);
+		}
+		
+		for(SettingList<? extends SettingGroup> list : config.getSettingLists()){
+			lists.put(list.getKey(), list);
 		}
 		
 		//read version
@@ -88,41 +97,46 @@ public class ConfigParser{
 				continue;
 			}
 			
-			//direct settings
+			
 			int mark = line.indexOf(':');
 			if(mark != -1){
-				Setting<?> setting = settings.get(line.substring(0, mark).trim());
-				if(setting == null){
-					//TODO unknown setting
-				}else{
-					//TODO debug
+				String key = line.substring(0, mark).trim();
+				
+				//direct settings
+				Setting<?> setting = settings.get(key);
+				if(setting != null){
 					defaultUsed |= setting.parse(line.substring(mark + 1, line.length()).trim());
-					System.out.println("parsed: " + setting.getKey() + " / " + defaultUsed);
+					continue;
+				}
+				
+				//setting groups
+				SettingGroup group = groups.get(key);
+				if(group != null){
+					defaultUsed |= parseGroup(in, group);
+					continue;
+				}
+				
+				//setting lists
+				SettingList<? extends SettingGroup> list = lists.get(key);
+				if(list != null){
+					defaultUsed |= parseList(in, list);
+					continue;
 				}
 			}
 			
-			//setting groups
+			
+//			if(line.equals("keys:")){//TODO refactor
+//				keys = parseList("keys", in, map->{
+//					KeyPanelSettings setting = new KeyPanelSettings();
+//					defaultUsed |= setting.parse(map);
+//					return setting;
+//				});
+//			}
 			
 			
 			
-			
-			//setting lists
-			
-			
-			
-			
-			
-			if(line.equals("keys:")){
-				keys = parseList(in, map->{
-					KeyPanelSettings setting = new KeyPanelSettings();
-					defaultUsed |= setting.parse(map);
-					return setting;
-				});
-			}
-			
-			
-			
-			
+			//unknown / invalid setting //TODO
+			System.out.println("invalid setting: " + line);
 		}
 		
 		
@@ -150,19 +164,19 @@ public class ConfigParser{
 //		
 //	}
 	
-	private static <T extends SettingGroup> T parseGroup(BufferedReader in, SettingGroup target) throws IOException{
+	private static boolean parseGroup(BufferedReader in, SettingGroup target) throws IOException{
 		in.mark(1000);
 		
 		
 		
-		return null;//TODO
+		return false;//TODO -- default used
 	}
 	
-	private static <T extends SettingGroup> List<T> parseList(BufferedReader in, Function<Map<String, String>, T> ctor) throws IOException{
+	private static <T extends SettingGroup> boolean parseList(BufferedReader in, SettingList<T> list) throws IOException{
 		in.mark(1000);
 		char[] lead = new char[4];
-		List<T> data = new ArrayList<T>();
 		
+		boolean defaultUsed = false;
 		Map<String, String> item = null;
 		while(in.ready()){
 			if(in.read(lead, 0, 4) != 4){
@@ -173,7 +187,7 @@ public class ConfigParser{
 			
 			if(Arrays.equals(lead, LIST_ITEM_START)){
 				if(item != null){
-					data.add(ctor.apply(item));
+					defaultUsed |= list.add(item);
 				}
 				
 				item = new HashMap<String, String>();
@@ -202,10 +216,10 @@ public class ConfigParser{
 		
 		//end last item
 		if(item != null){
-			data.add(ctor.apply(item));
+			defaultUsed |= list.add(item);
 		}
 		
-		return data;
+		return defaultUsed;
 	}
 	
 	

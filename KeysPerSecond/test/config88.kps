@@ -1,0 +1,57 @@
+version: v8.8
+
+# General
+overlay: false
+trackAllKeys: false
+trackAllButtons: false
+updateRate: 100
+enableKeyModifierCombinations: false
+
+# Stats auto saving
+statsSaving:
+  autoSave: false
+  autoDestination: C:\Users\RoanH
+  autoFormat: 'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'
+  autoInterval: 600000
+  saveOnExit: false
+  loadOnLaunch: false
+  saveFile: C:\Users\RoanH\stats.kpsstats
+
+# Graphs
+graphs:
+  - x: 1
+    y: 2
+    width: 5
+    height: 8
+    mode: DETACHED
+    showAvg: false
+    backlog: 45
+
+# Panels
+panels:
+  - type: max
+    x: 6
+    y: 3
+    width: 5
+    height: 1
+    mode: VALUE_ONLY
+    name: NMAX
+
+# Keys
+keys:
+  - keycode: 1048606
+    x: 13
+    y: 0
+    width: 2
+    height: 3
+    mode: VALUE_ONLY
+    visible: true
+    name: A
+  - keycode: 1048606
+    x: 13
+    y: 0
+    width: 6
+    height: 7
+    mode: VALUE_ONLY
+    visible: false
+    name: A
