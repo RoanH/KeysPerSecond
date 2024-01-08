@@ -32,7 +32,7 @@ public abstract class Setting<T>{
 	//call update with the parsed value OR call rest to use a default -- return true if default value was used (reset called)
 	public abstract boolean parse(String data);
 	
-	protected abstract void write(IndentWriter out);
+	public abstract void write(IndentWriter out);
 	
 	public String getKey(){
 		return key;

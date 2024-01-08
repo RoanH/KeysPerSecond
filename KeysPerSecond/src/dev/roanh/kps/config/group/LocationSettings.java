@@ -18,11 +18,9 @@
  */
 package dev.roanh.kps.config.group;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import dev.roanh.kps.config.Setting;
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.IntSetting;
 
@@ -89,14 +87,12 @@ public class LocationSettings extends SettingGroup{
 		//TODO validate layout conflicts with special -1 values max/emd
 		return findAndParse(data, x, y, width, height);
 	}
-
+	
 	@Override
-	public List<Setting<?>> collectSettings(){
-		List<Setting<?>> data = new ArrayList<Setting<?>>();
-		data.add(x);
-		data.add(y);
-		data.add(width);
-		data.add(height);
-		return data;
+	public void write(IndentWriter out){
+		x.write(out);
+		y.write(out);
+		width.write(out);
+		height.write(out);
 	}
 }

@@ -3,6 +3,7 @@ package dev.roanh.kps.config.group;
 import java.util.List;
 import java.util.Map;
 
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
@@ -29,10 +30,9 @@ public class KeyPanelSettings extends PanelSettings{
 	}
 	
 	@Override
-	public List<Setting<?>> collectSettings(){
-		List<Setting<?>> data = super.collectSettings();
-		data.add(visible);
-		data.add(keycode);
-		return data;
+	public void write(IndentWriter out){
+		super.write(out);
+		visible.write(out);
+		keycode.write(out);
 	}
 }

@@ -1,10 +1,9 @@
 package dev.roanh.kps.config.group;
 
-import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.GraphMode;
-import dev.roanh.kps.config.Setting;
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.GraphModeSetting;
 import dev.roanh.kps.config.setting.IntSetting;
@@ -24,11 +23,10 @@ public class GraphSettings extends LocationSettings{
 	}
 	
 	@Override
-	public List<Setting<?>> collectSettings(){
-		List<Setting<?>> data = super.collectSettings();
-		data.add(mode);
-		data.add(showAvg);
-		data.add(backlog);
-		return data;
+	public void write(IndentWriter out){
+		super.write(out);
+		mode.write(out);
+		showAvg.write(out);
+		backlog.write(out);
 	}
 }

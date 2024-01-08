@@ -1310,6 +1310,26 @@ public class Configuration{
 		}
 		return loc;
 	}
+	
+	private void write(IndentWriter out){
+		out.println("version: " + Main.VERSION);
+		out.println();
+		
+		out.println("# General");
+		for(Setting<?> setting : getSettings()){
+			setting.write(out);
+		}
+		
+		for(SettingGroup group : getSettingGroups()){
+			out.println();
+			group.write(out);
+		}
+		
+		for(SettingList<?> list : getSettingLists()){
+			out.println();
+			list.write(out);
+		}
+	}
 
 	/**
 	 * Saves this configuration file

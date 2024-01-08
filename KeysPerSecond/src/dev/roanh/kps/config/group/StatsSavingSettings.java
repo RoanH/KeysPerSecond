@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.BooleanSetting;
@@ -80,13 +81,22 @@ public class StatsSavingSettings extends SettingGroup{
 	public boolean parse(Map<String, String> data){
 		return findAndParse(data, autoSave, autoDestination, autoFormat, autoInterval, saveOnExit, loadOnLaunch, saveFile);
 	}
-
-	@Override
-	public List<Setting<?>> collectSettings(){
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
+	@Override
+	public void write(IndentWriter out){
+		out.println("# Statistics auto saving");
+		out.println("statsSaving:");
+		out.increaseIndent();
+		autoSave.write(out);
+		autoDestination.write(out);
+		autoFormat.write(out);
+		autoInterval.write(out);
+		saveOnExit.write(out);
+		loadOnLaunch.write(out);
+		saveFile.write(out);
+		out.decreaseIndent();
+	}
+
 	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
 		proxyList.add(ProxySetting.of("autoSaveStats", autoSave));
 		proxyList.add(ProxySetting.of("statsDest", autoDestination));

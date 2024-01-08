@@ -17,7 +17,7 @@ public class ProxySetting<T> extends Setting<T>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		throw new IllegalStateException("Legacy proxy settings should never be written.");
 	}
 	

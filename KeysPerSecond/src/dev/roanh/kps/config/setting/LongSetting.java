@@ -31,7 +31,7 @@ public class LongSetting extends Setting<Long>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		out.println(key + ": " + value);
 	}
 }

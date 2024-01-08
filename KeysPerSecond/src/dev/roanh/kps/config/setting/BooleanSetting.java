@@ -42,7 +42,7 @@ public class BooleanSetting extends Setting<Boolean>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		out.println(key + ": " + value);
 	}
 }

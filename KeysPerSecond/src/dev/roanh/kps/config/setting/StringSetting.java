@@ -16,7 +16,7 @@ public class StringSetting extends Setting<String>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		// TODO Auto-generated method stub
 		
 	}

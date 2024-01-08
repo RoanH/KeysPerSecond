@@ -22,7 +22,7 @@ public class UpdateRateSetting extends Setting<UpdateRate>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		out.println(key + ": " + value.getRate());
 	}
 }

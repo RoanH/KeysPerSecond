@@ -37,7 +37,9 @@ public abstract class SettingGroup{
 	
 	
 	//has to support adding note
-	public abstract List<Setting<?>> collectSettings();//TODO why does this function exist? if we care about writing could just do that with a write function ehhh actually that would require keeping indent correct which is a pain or not actually
+//	public abstract List<Setting<?>> collectSettings();//TODO why does this function exist? if we care about writing could just do that with a write function ehhh actually that would require keeping indent correct which is a pain or not actually
+	
+	public abstract void write(IndentWriter out);
 	
 	protected boolean findAndParse(Map<String, String> data, Setting<?>... settings){
 		boolean modified = false;

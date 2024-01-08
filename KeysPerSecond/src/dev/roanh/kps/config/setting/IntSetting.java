@@ -31,7 +31,7 @@ public class IntSetting extends Setting<Integer>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		out.println(key + ": " + value);
 	}
 }

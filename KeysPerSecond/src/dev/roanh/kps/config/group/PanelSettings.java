@@ -1,10 +1,9 @@
 package dev.roanh.kps.config.group;
 
-import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.config.Setting;
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
@@ -29,12 +28,11 @@ public class PanelSettings extends LocationSettings{
 	public boolean parse(Map<String, String> data){
 		return super.parse(data) | findAndParse(data, name, mode);
 	}
-
+	
 	@Override
-	public List<Setting<?>> collectSettings(){
-		List<Setting<?>> data = super.collectSettings();
-		data.add(name);
-		data.add(mode);
-		return data;
+	public void write(IndentWriter out){
+		super.write(out);
+		name.write(out);
+		mode.write(out);
 	}
 }

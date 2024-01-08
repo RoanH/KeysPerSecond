@@ -17,7 +17,7 @@ public class GraphModeSetting extends Setting<GraphMode>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		// TODO Auto-generated method stub
 		
 	}

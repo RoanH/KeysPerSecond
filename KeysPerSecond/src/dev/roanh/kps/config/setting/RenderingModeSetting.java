@@ -47,7 +47,7 @@ public class RenderingModeSetting extends Setting<RenderingMode>{
 	}
 
 	@Override
-	protected void write(IndentWriter out){
+	public void write(IndentWriter out){
 		out.println(key + ": " + value.name());
 	}
 }

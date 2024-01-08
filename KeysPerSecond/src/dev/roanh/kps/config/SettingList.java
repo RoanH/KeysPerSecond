@@ -42,6 +42,15 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 	public T get(int index){
 		return data.get(index);
 	}
+	
+	public void write(IndentWriter out){
+		out.println(key + ":");
+		for(T item : data){
+			out.startListItem();
+			item.write(out);
+			out.endListItem();
+		}
+	}
 
 	@Override
 	public Iterator<T> iterator(){
