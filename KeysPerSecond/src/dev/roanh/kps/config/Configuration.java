@@ -304,13 +304,13 @@ public class Configuration{
 	private StatsSavingSettings statsSaving = new StatsSavingSettings();
 	
 	//TODO remove -- already moved ^
-	public boolean autoSaveStats = false;
-	public String statsDest = Objects.toString(System.getProperty("user.home"), "");
-	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
-	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
-	public boolean saveStatsOnExit = false;
-	public boolean loadStatsOnLaunch = false;
-	public String statsSaveFile = Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats";
+//	public boolean autoSaveStats = false;
+//	public String statsDest = Objects.toString(System.getProperty("user.home"), "");
+//	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
+//	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
+//	public boolean saveStatsOnExit = false;
+//	public boolean loadStatsOnLaunch = false;
+//	public String statsSaveFile = Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats";
 
 	
 	
@@ -1124,53 +1124,60 @@ public class Configuration{
 						modified = true;
 					}
 					break;
-				case "autoSaveStats":
-					autoSaveStats = Boolean.parseBoolean(args[1]);
-					break;
-				case "statsSaveInterval":
-					try{
-						statsSaveInterval = Long.parseLong(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "statsDest":
-					if(args.length > 1){
-						statsDest = args[1];
-					}else{
-						modified = true;
-					}
-					break;
-				case "statsFormat":
-					if(args.length > 1){
-						statsFormat = args[1];
-					}else{
-						modified = true;
-					}
-					break;
-				case "saveStatsOnExit":
-					saveStatsOnExit = Boolean.parseBoolean(args[1]);
-					break;
-				case "loadStatsOnLaunch":
-					loadStatsOnLaunch = Boolean.parseBoolean(args[1]);
-					break;
-				case "statsSaveFile":
-					statsSaveFile = args[1];
-					break;
+//				case "autoSaveStats":
+//					autoSaveStats = Boolean.parseBoolean(args[1]);
+//					break;
+//				case "statsSaveInterval":
+//					try{
+//						statsSaveInterval = Long.parseLong(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "statsDest":
+//					if(args.length > 1){
+//						statsDest = args[1];
+//					}else{
+//						modified = true;
+//					}
+//					break;
+//				case "statsFormat":
+//					if(args.length > 1){
+//						statsFormat = args[1];
+//					}else{
+//						modified = true;
+//					}
+//					break;
+//				case "saveStatsOnExit":
+//					saveStatsOnExit = Boolean.parseBoolean(args[1]);
+//					break;
+//				case "loadStatsOnLaunch":
+//					loadStatsOnLaunch = Boolean.parseBoolean(args[1]);
+//					break;
+//				case "statsSaveFile":
+//					statsSaveFile = args[1];
+//					break;
 				}
 			}
 			if(borderOffset > cellSize - BasePanel.imageSize){
 				borderOffset = cellSize - BasePanel.imageSize;
 				modified = true;
 			}
-			if(loadStatsOnLaunch){
+			
+			
+			
+			//TODO this bit of logic needs to be moved -- probably to the statistics class
+			if(statsSaving.isLoadOnLaunchEnabled()){
 				try{
-					Statistics.loadStats(Paths.get(statsSaveFile));
+					Statistics.loadStats(Paths.get(statsSaving.getSaveFile()));
 				}catch(Exception e){
 					e.printStackTrace();
 					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
 				}
 			}
+			
+			
+			
 			in.close();
 			return modified;
 		}catch(Throwable t){
@@ -1419,14 +1426,14 @@ public class Configuration{
 				out.println("cellSize: " + cellSize);
 				out.println("borderOffset: " + borderOffset);
 				out.println();
-				out.println("# Stats auto saving");
-				out.println("autoSaveStats: " + autoSaveStats);
-				out.println("statsDest: " + statsDest);
-				out.println("statsFormat: " + statsFormat);
-				out.println("statsSaveInterval: " + statsSaveInterval);
-				out.println("saveStatsOnExit: " + saveStatsOnExit);
-				out.println("loadStatsOnLaunch: " + loadStatsOnLaunch);
-				out.println("statsSaveFile: " + statsSaveFile);
+//				out.println("# Stats auto saving");
+//				out.println("autoSaveStats: " + autoSaveStats);
+//				out.println("statsDest: " + statsDest);
+//				out.println("statsFormat: " + statsFormat);
+//				out.println("statsSaveInterval: " + statsSaveInterval);
+//				out.println("saveStatsOnExit: " + saveStatsOnExit);
+//				out.println("loadStatsOnLaunch: " + loadStatsOnLaunch);
+//				out.println("statsSaveFile: " + statsSaveFile);
 				out.println();
 				out.println("# Keys");
 				out.println("keys: ");

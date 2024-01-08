@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.LongSetting;
@@ -15,7 +14,7 @@ import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
 public class StatsSavingSettings extends SettingGroup{
-	//TODO do we want to introduce a file path setting?
+	//TODO do we want to introduce a file path setting? -- also more validation see the formatter for paths in the model package
 	/**
 	 * Whether or not to periodically save the stats to a file
 	 */
@@ -75,6 +74,34 @@ public class StatsSavingSettings extends SettingGroup{
 	
 	public String getSaveFile(){
 		return saveFile.getValue();
+	}
+	
+	public void setAutoSaveEnabled(boolean enabled){
+		autoSave.update(enabled);
+	}
+	
+	public void setAutoSaveDestination(String dest){
+		autoDestination.update(dest);
+	}
+	
+	public void setAutoSaveFormat(String format){
+		autoFormat.update(format);
+	}
+	
+	public void setAutoSaveInterval(long millis){
+		autoInterval.update(millis);
+	}
+	
+	public void setSaveOnExitEnabled(boolean enabled){
+		saveOnExit.update(enabled);
+	}
+	
+	public void setLoadOnLaunchEnabled(boolean enabled){
+		loadOnLaunch.update(enabled);
+	}
+	
+	public void setSaveFile(String file){
+		saveFile.update(file);
 	}
 
 	@Override

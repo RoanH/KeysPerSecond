@@ -30,7 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.text.ParseException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -49,8 +48,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFormattedTextField.AbstractFormatter;
-import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -190,24 +187,26 @@ public class Statistics{
 		panel.add(endPanel, BorderLayout.PAGE_START);
 		panel.add(periodicPanel, BorderLayout.PAGE_END);
 		if(Dialog.showSaveDialog(panel)){
-			Main.config.autoSaveStats = enabled.isSelected();
-			Main.config.statsDest = ldest.getText();
-			Main.config.statsFormat = format.getText();
+			config.setAutoSaveEnabled(enabled.isSelected());
+			config.setAutoSaveDestination(ldest.getText());
+			config.setAutoSaveFormat(format.getText());
+			
 			long interval = ((Unit)timeUnit.getSelectedItem()).unit.toMillis((long)time.getValue());
-			if(Main.config.autoSaveStats){
-				if(interval != Main.config.statsSaveInterval){
-					Main.config.statsSaveInterval = interval;
+			if(config.isAutoSaveEnabled()){
+				if(interval != config.getAutoSaveInterval()){
+					config.setAutoSaveInterval(interval);
 					if(live){
 						saveStatsTask();
 					}
 				}
 			}else{
 				cancelScheduledTask();
-				Main.config.statsSaveInterval = interval;
+				config.setAutoSaveInterval(interval);
 			}
-			Main.config.saveStatsOnExit = saveOnExit.isSelected();
-			Main.config.loadStatsOnLaunch = loadOnStart.isSelected();
-			Main.config.statsSaveFile = selectedFile.getText();
+			
+			config.setSaveOnExitEnabled(saveOnExit.isSelected());
+			config.setLoadOnLaunchEnabled(loadOnStart.isSelected());
+			config.setSaveFile(selectedFile.getText());
 		}
 	}
 	
@@ -216,9 +215,9 @@ public class Statistics{
 	 * save file if stats saving on exit is enabled.
 	 */
 	public static void saveStatsOnExit(){
-		if(Main.config.saveStatsOnExit){
+		if(Main.config.getStatsSavingSettings().isSaveOnExitEnabled()){
 			try{
-				saveStats(Paths.get(Main.config.statsSaveFile));
+				saveStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
 			}catch(IOException e){
 				e.printStackTrace();
 				if(Dialog.showConfirmDialog("Failed to save statistics on exit.\nCause: " + e.getMessage() + "\nAttempt to save again?")){
@@ -268,17 +267,19 @@ public class Statistics{
 	 */
 	public static void saveStatsTask(){
 		cancelScheduledTask();
+		
+		StatsSavingSettings config = Main.config.getStatsSavingSettings();
 		statsFuture = statsScheduler.scheduleAtFixedRate(()->{
 			try{
-				Path target = Paths.get(Main.config.statsDest);
+				Path target = Paths.get(config.getAutoSaveDestination());
 				Files.createDirectories(target);
-				target.resolve(DateTimeFormatter.ofPattern(Main.config.statsFormat).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
+				target.resolve(DateTimeFormatter.ofPattern(config.getAutoSaveFormat()).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
 				saveStats(target);
 			}catch(Exception e){
 				//Main priority here is to not interrupt whatever the user is doing
 				e.printStackTrace();
 			}
-		}, Main.config.statsSaveInterval, Main.config.statsSaveInterval, TimeUnit.MILLISECONDS);
+		}, config.getAutoSaveInterval(), config.getAutoSaveInterval(), TimeUnit.MILLISECONDS);
 	}
 	
 	/**
