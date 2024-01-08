@@ -41,6 +41,7 @@ import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.layout.LayoutValidator;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
@@ -133,29 +134,30 @@ public class LayoutDialog{
 
 		form.add(pane, BorderLayout.CENTER);
 
+		GraphSettings graphConfig = Main.config.getGraphSettings();
 		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));
 		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
 		graphLayout.add(new JLabel("Graph mode: "));
 		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
-		graphMode.setSelectedItem(Main.config.graphMode);
+		graphMode.setSelectedItem(graphConfig.getGraphMode());
 		graphLayout.add(graphMode);
 
 		LayoutValidator validator = new LayoutValidator();
-		validator.getXField().setModel(new EndNumberModel(Main.config.getGraphX(), validator.getXField(), update(Main.config::setGraphX, live)));
-		validator.getYField().setModel(new EndNumberModel(Main.config.getGraphY(), validator.getYField(), update(Main.config::setGraphY, live)));
-		validator.getWidthField().setModel(new MaxNumberModel(Main.config.getGraphWidth(), validator.getWidthField(), update(Main.config::setGraphWidth, live)));
-		validator.getHeightField().setModel(new MaxNumberModel(Main.config.getGraphHeight(), validator.getHeightField(), update(Main.config::setGraphHeight, live)));
+		validator.getXField().setModel(new EndNumberModel(graphConfig.getX(), validator.getXField(), update(graphConfig::setX, live)));
+		validator.getYField().setModel(new EndNumberModel(graphConfig.getY(), validator.getYField(), update(graphConfig::setY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(graphConfig.getWidth(), validator.getWidthField(), update(graphConfig::setWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(graphConfig.getHeight(), validator.getHeightField(), update(graphConfig::setHeight, live)));
 
 		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(validator.getXField().getModel());
 		x.setEditor(new SpecialNumberModelEditor(x));
-		x.setEnabled(Main.config.graphMode == GraphMode.INLINE);
+		x.setEnabled(graphConfig.getGraphMode() == GraphMode.INLINE);
 		graphLayout.add(x);
 
 		graphLayout.add(new JLabel("Graph y position: "));
 		JSpinner y = new JSpinner(validator.getYField().getModel());
 		y.setEditor(new SpecialNumberModelEditor(y));
-		y.setEnabled(Main.config.graphMode == GraphMode.INLINE);
+		y.setEnabled(graphConfig.getGraphMode() == GraphMode.INLINE);
 		graphLayout.add(y);
 
 		graphLayout.add(new JLabel("Graph width: "));
@@ -169,7 +171,8 @@ public class LayoutDialog{
 		graphLayout.add(h);
 
 		graphMode.addActionListener((e)->{
-			Main.config.graphMode = (GraphMode)graphMode.getSelectedItem();
+			graphConfig.setGraphMode((GraphMode)graphMode.getSelectedItem());
+			
 			if(graphMode.getSelectedItem() == GraphMode.INLINE){
 				x.setEnabled(true);
 				y.setEnabled(true);
@@ -177,6 +180,7 @@ public class LayoutDialog{
 				x.setEnabled(false);
 				y.setEnabled(false);
 			}
+			
 			if(live){
 				Main.reconfigure();
 			}

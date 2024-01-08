@@ -1,5 +1,6 @@
 package dev.roanh.kps.config.group;
 
+import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.GraphMode;
@@ -7,6 +8,7 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.GraphModeSetting;
 import dev.roanh.kps.config.setting.IntSetting;
+import dev.roanh.kps.config.setting.ProxySetting;
 
 public class GraphSettings extends LocationSettings{
 	private final GraphModeSetting mode = new GraphModeSetting("mode", GraphMode.INLINE);
@@ -15,6 +17,30 @@ public class GraphSettings extends LocationSettings{
 
 	public GraphSettings(){
 		super("graphs", 0, -1, -1, 3);
+	}
+	
+	public GraphMode getGraphMode(){
+		return mode.getValue();
+	}
+	
+	public boolean isAverageVisible(){
+		return showAvg.getValue();
+	}
+	
+	public int getBacklog(){
+		return backlog.getValue();
+	}
+	
+	public void setGraphMode(GraphMode mode){
+		this.mode.update(mode);
+	}
+	
+	public void setAverageVisible(boolean visible){
+		showAvg.update(visible);
+	}
+	
+	public void setBacklog(int backlog){
+		this.backlog.update(backlog);
 	}
 
 	@Override
@@ -28,5 +54,15 @@ public class GraphSettings extends LocationSettings{
 		mode.write(out);
 		showAvg.write(out);
 		backlog.write(out);
+	}
+	
+	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
+		proxyList.add(ProxySetting.of("graphX", x));
+		proxyList.add(ProxySetting.of("graphY", y));
+		proxyList.add(ProxySetting.of("graphWidth", width));
+		proxyList.add(ProxySetting.of("graphHeight", height));
+		proxyList.add(ProxySetting.of("graphMode", mode));
+		proxyList.add(ProxySetting.of("graphBacklog", backlog));
+		proxyList.add(ProxySetting.of("graphAverage", showAvg));
 	}
 }

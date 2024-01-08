@@ -407,24 +407,24 @@ public class Menu{
 		});
 		configcolors.add(colorenable);
 		configcolors.add(colorcustom);
-		graphavg.setSelected(Main.config.graphAvg);
-		graphavg.addActionListener((e)->{
-			Main.config.graphAvg = graphavg.isSelected();
-		});
-		backlog.addActionListener((e)->{
-			JPanel pconfig = new JPanel();
-			JSpinner sbacklog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
-			JLabel lbacklog;
-			if(Main.config.getUpdateRate() != UpdateRate.MS_1000){
-				lbacklog = new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): ");
-			}else{
-				lbacklog = new JLabel("Backlog (seconds): ");
-			}
-			pconfig.add(lbacklog);
-			pconfig.add(sbacklog);
-			Dialog.showMessageDialog(pconfig);
-			Main.config.backlog = (int)sbacklog.getValue();
-		});
+//		graphavg.setSelected(Main.config.graphAvg);
+//		graphavg.addActionListener((e)->{
+//			Main.config.graphAvg = graphavg.isSelected();
+//		});
+//		backlog.addActionListener((e)->{
+//			JPanel pconfig = new JPanel();
+//			JSpinner sbacklog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
+//			JLabel lbacklog;
+//			if(Main.config.getUpdateRate() != UpdateRate.MS_1000){
+//				lbacklog = new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): ");
+//			}else{
+//				lbacklog = new JLabel("Backlog (seconds): ");
+//			}
+//			pconfig.add(lbacklog);
+//			pconfig.add(sbacklog);
+//			Dialog.showMessageDialog(pconfig);
+//			Main.config.backlog = (int)sbacklog.getValue();
+//		});
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(true);
 			Main.reconfigure();

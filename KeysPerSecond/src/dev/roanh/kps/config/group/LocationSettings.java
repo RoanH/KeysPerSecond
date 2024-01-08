@@ -28,19 +28,19 @@ public class LocationSettings extends SettingGroup{
 	/**
 	 * The x position of the panel.
 	 */
-	private final IntSetting x;
+	protected final IntSetting x;
 	/**
 	 * The y position of the panel.
 	 */
-	private final IntSetting y;
+	protected final IntSetting y;
 	/**
 	 * The width of the panel.
 	 */
-	private final IntSetting width;
+	protected final IntSetting width;
 	/**
 	 * The height of the panel.
 	 */
-	private final IntSetting height;
+	protected final IntSetting height;
 	
 	protected LocationSettings(String key, int x, int y, int width, int height){
 		super(key);
@@ -82,9 +82,25 @@ public class LocationSettings extends SettingGroup{
 		return height.getValue();
 	}
 	
+	public void setX(int x){
+		this.x.update(x);
+	}
+	
+	public void setY(int y){
+		this.y.update(y);
+	}
+	
+	public void setWidth(int width){
+		this.width.update(width);
+	}
+	
+	public void setHeight(int height){
+		this.height.update(height);
+	}
+	
 	@Override
 	public boolean parse(Map<String, String> data){
-		//TODO validate layout conflicts with special -1 values max/emd
+		//TODO validate layout conflicts with special -1 values max/emd -- layout validator class I guess?
 		return findAndParse(data, x, y, width, height);
 	}
 	

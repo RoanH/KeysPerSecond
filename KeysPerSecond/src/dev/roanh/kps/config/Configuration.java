@@ -356,6 +356,7 @@ public class Configuration{
 	protected List<ProxySetting<?>> getLegacySettings(){
 		List<ProxySetting<?>> settings = new ArrayList<ProxySetting<?>>();
 		statsSaving.collectLegacyProxies(settings);
+		getGraphSettings().collectLegacyProxies(settings);
 		return settings;//TODO determine if we needs this and implement it
 	}
 	
@@ -373,7 +374,10 @@ public class Configuration{
 	
 	
 	
-	
+	public GraphSettings getGraphSettings(){
+		//TODO consider empty
+		return graphs.get(0);
+	}
 	
 	public SettingList<SpecialPanelSettings> getPanels(){
 		return panels;
@@ -816,21 +820,21 @@ public class Configuration{
 				case "graphEnabled":
 					showGraph = Boolean.parseBoolean(args[1]);
 					break;
-				case "graphBacklog":
-					try{
-						backlog = Integer.parseInt(args[1]);
-						if(backlog <= 0){
-							backlog = 30;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						backlog = 30;
-						modified = true;
-					}
-					break;
-				case "graphAverage":
-					graphAvg = Boolean.parseBoolean(args[1]);
-					break;
+//				case "graphBacklog":
+//					try{
+//						backlog = Integer.parseInt(args[1]);
+//						if(backlog <= 0){
+//							backlog = 30;
+//							modified = true;
+//						}
+//					}catch(NumberFormatException e){
+//						backlog = 30;
+//						modified = true;
+//					}
+//					break;
+//				case "graphAverage":
+//					graphAvg = Boolean.parseBoolean(args[1]);
+//					break;
 				case "customColors":
 					customColors = Boolean.parseBoolean(args[1]);
 					break;
@@ -928,13 +932,13 @@ public class Configuration{
 				case "textMode"://oof this entire setting is legacy compatibility...
 					modified |= defaultMode.parse(args[1]);
 					break;
-				case "graphMode":
-					try{
-						graphMode = GraphMode.valueOf(args[1]);
-					}catch(IllegalArgumentException e){
-						modified = true;
-					}
-					break;
+//				case "graphMode":
+//					try{
+//						graphMode = GraphMode.valueOf(args[1]);
+//					}catch(IllegalArgumentException e){
+//						modified = true;
+//					}
+//					break;
 				case "enableKeyModifierCombinations":
 					modified |= enableModifiers.parse(args[1]);
 					break;
@@ -1078,34 +1082,34 @@ public class Configuration{
 						modified = true;
 					}
 					break;
-				case "graphX":
-					try{
-						graphX = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "graphY":
-					try{
-						graphY = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "graphWidth":
-					try{
-						graphWidth = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "graphHeight":
-					try{
-						graphHeight = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
+//				case "graphX":
+//					try{
+//						graphX = Integer.parseInt(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "graphY":
+//					try{
+//						graphY = Integer.parseInt(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "graphWidth":
+//					try{
+//						graphWidth = Integer.parseInt(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "graphHeight":
+//					try{
+//						graphHeight = Integer.parseInt(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
 				case "borderOffset":
 					try{
 						borderOffset = Integer.parseInt(args[1]);
@@ -1369,8 +1373,8 @@ public class Configuration{
 				//advanced
 				out.println("# Graph");
 				out.println("graphEnabled: " + showGraph);
-				out.println("graphBacklog: " + backlog);
-				out.println("graphAverage: " + graphAvg);
+//				out.println("graphBacklog: " + backlog);
+//				out.println("graphAverage: " + graphAvg);
 				out.println();
 				out.println("# Colors");
 				out.println("customColors: " + customColors);
@@ -1418,11 +1422,11 @@ public class Configuration{
 				out.println("totWidth: " + totPanel.getWidth());
 				out.println("totHeight: " + totPanel.getHeight());
 				out.println("totMode: " + totPanel.getRenderingMode().name());
-				out.println("graphX: " + graphX);
-				out.println("graphY: " + graphY);
-				out.println("graphWidth: " + graphWidth);
-				out.println("graphHeight: " + graphHeight);
-				out.println("graphMode: " + graphMode.name());
+//				out.println("graphX: " + graphX);
+//				out.println("graphY: " + graphY);
+//				out.println("graphWidth: " + graphWidth);
+//				out.println("graphHeight: " + graphHeight);
+//				out.println("graphMode: " + graphMode.name());
 				out.println("cellSize: " + cellSize);
 				out.println("borderOffset: " + borderOffset);
 				out.println();

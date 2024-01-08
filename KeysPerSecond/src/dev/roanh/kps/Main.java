@@ -158,7 +158,7 @@ public class Main{
 	/**
 	 * Graph panel
 	 */
-	protected static GraphPanel graph = new GraphPanel();
+	protected static GraphPanel graph = new GraphPanel(null);//TODO
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
@@ -777,31 +777,31 @@ public class Main{
 	 * Shows a dialog to configure the graph.
 	 */
 	private static final void configureGraph(){
-		JPanel pconfig = new JPanel();
-		JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
-		JCheckBox showavg = new JCheckBox();
-		showavg.setSelected(Main.config.graphAvg);
-		JLabel lbacklog;
-		if(config.getUpdateRate() != UpdateRate.MS_1000){
-			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.getUpdateRateMs()) + "): ");
-		}else{
-			lbacklog = new JLabel("Backlog (seconds): ");
-		}
-		JLabel lshowavg = new JLabel("Show average: ");
-		JPanel glabels = new JPanel(new GridLayout(2, 1));
-		JPanel gcomponents = new JPanel(new GridLayout(2, 1));
-		glabels.add(lbacklog);
-		glabels.add(lshowavg);
-		gcomponents.add(backlog);
-		gcomponents.add(showavg);
-		glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
-		gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
-		pconfig.add(glabels);
-		pconfig.add(gcomponents);
-		if(Dialog.showSaveDialog(pconfig)){
-			Main.config.graphAvg = showavg.isSelected();
-			Main.config.backlog = (int)backlog.getValue();
-		}
+//		JPanel pconfig = new JPanel();
+//		JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
+//		JCheckBox showavg = new JCheckBox();
+//		showavg.setSelected(Main.config.graphAvg);
+//		JLabel lbacklog;
+//		if(config.getUpdateRate() != UpdateRate.MS_1000){
+//			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.getUpdateRateMs()) + "): ");
+//		}else{
+//			lbacklog = new JLabel("Backlog (seconds): ");
+//		}
+//		JLabel lshowavg = new JLabel("Show average: ");
+//		JPanel glabels = new JPanel(new GridLayout(2, 1));
+//		JPanel gcomponents = new JPanel(new GridLayout(2, 1));
+//		glabels.add(lbacklog);
+//		glabels.add(lshowavg);
+//		gcomponents.add(backlog);
+//		gcomponents.add(showavg);
+//		glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
+//		gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
+//		pconfig.add(glabels);
+//		pconfig.add(gcomponents);
+//		if(Dialog.showSaveDialog(pconfig)){
+//			Main.config.graphAvg = showavg.isSelected();
+//			Main.config.backlog = (int)backlog.getValue();
+//		}
 	}
 	
 	/**
@@ -1010,13 +1010,13 @@ public class Main{
 			all.add(content, BorderLayout.CENTER);
 			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 			if(config.showGraph){
-				if(config.graphMode == GraphMode.INLINE){
+				if(config.getGraphSettings().getGraphMode() == GraphMode.INLINE){
 					content.add(graph);
 					graphFrame.setVisible(false);
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.getGraphWidth() * config.cellSize, config.getGraphHeight() * config.cellSize);
+					graphFrame.setSize(config.getGraphSettings().getWidth() * config.cellSize, config.getGraphSettings().getHeight() * config.cellSize);
 					graphFrame.setVisible(true);
 				}
 			}else{
