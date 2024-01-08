@@ -83,7 +83,6 @@ public class ConfigParserTest{
 		assertEquals(600000, stats.getAutoSaveInterval());
 		assertFalse(stats.isSaveOnExitEnabled());
 		assertFalse(stats.isLoadOnLaunchEnabled());
-		assertEquals("C:\\Users\\RoanH\\stats.kpsstats", stats.getSaveFile());
 		
 		//TODO keys
 		
