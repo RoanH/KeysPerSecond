@@ -66,6 +66,7 @@ import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
+import dev.roanh.kps.ui.dialog.StatsSavingDialog;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -460,7 +461,7 @@ public class Menu{
 			Statistics.loadStats();
 		});
 		statsSaving.addActionListener((e)->{
-			Statistics.configureAutoSave(Main.config.getStatsSavingSettings(), true);
+			StatsSavingDialog.configureStatsSaving(Main.config.getStatsSavingSettings(), true);
 		});
 
 		reset.add(treset);

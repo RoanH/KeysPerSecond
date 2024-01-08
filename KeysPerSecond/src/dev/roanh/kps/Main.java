@@ -85,6 +85,7 @@ import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
+import dev.roanh.kps.ui.dialog.StatsSavingDialog;
 import dev.roanh.kps.ui.dialog.UpdateRateDialog;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
@@ -721,7 +722,7 @@ public class Main{
 			UpdateRateDialog.configureUpdateRate();
 		});
 		autoSave.addActionListener((e)->{
-			Statistics.configureAutoSave(Main.config.getStatsSavingSettings(), false);
+			StatsSavingDialog.configureStatsSaving(Main.config.getStatsSavingSettings(), false);
 		});
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
 		info.add(Util.getVersionLabel("KeysPerSecond", VERSION));
