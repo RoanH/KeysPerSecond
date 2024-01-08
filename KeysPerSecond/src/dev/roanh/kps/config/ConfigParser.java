@@ -111,6 +111,7 @@ public class ConfigParser{
 				//direct settings
 				Setting<?> setting = settings.get(key);
 				if(setting != null){
+					System.out.println("Parsing setting: " + setting.getKey());
 					defaultUsed |= setting.parse(line.substring(mark + 1, line.length()).trim());
 					continue;
 				}
@@ -118,6 +119,7 @@ public class ConfigParser{
 				//setting groups
 				SettingGroup group = groups.get(key);
 				if(group != null){
+					System.out.println("Parsing group: " + group.getKey());
 					defaultUsed |= parseGroup(in, group);
 					continue;
 				}
@@ -125,6 +127,7 @@ public class ConfigParser{
 				//setting lists
 				SettingList<? extends SettingGroup> list = lists.get(key);
 				if(list != null){
+					System.out.println("Parsing list: " + list.getKey());
 					defaultUsed |= parseList(in, list);
 					continue;
 				}

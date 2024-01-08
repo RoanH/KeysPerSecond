@@ -28,7 +28,9 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
+import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 
@@ -128,5 +130,15 @@ public class ConfigParserTest{
 		assertFalse(stats.isSaveOnExitEnabled());
 		assertFalse(stats.isLoadOnLaunchEnabled());
 		assertEquals("C:\\Users\\RoanH\\stats.kpsstats", stats.getSaveFile());
+		
+		//graphs
+		GraphSettings graph = config.getGraphSettings();
+		assertEquals(1, graph.getX());
+		assertEquals(2, graph.getY());
+		assertEquals(5, graph.getWidth());
+		assertEquals(8, graph.getHeight());
+		assertEquals(GraphMode.DETACHED, graph.getGraphMode());
+		assertFalse(graph.isAverageVisible());
+		assertEquals(45, graph.getBacklog());
 	}
 }

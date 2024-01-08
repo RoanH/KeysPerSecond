@@ -356,7 +356,7 @@ public class Configuration{
 	protected List<ProxySetting<?>> getLegacySettings(){
 		List<ProxySetting<?>> settings = new ArrayList<ProxySetting<?>>();
 		statsSaving.collectLegacyProxies(settings);
-		getGraphSettings().collectLegacyProxies(settings);
+//		getGraphSettings().collectLegacyProxies(settings);//TODO this is always initially empty, might need more sophisticated parsing
 		return settings;//TODO determine if we needs this and implement it
 	}
 	
@@ -365,7 +365,7 @@ public class Configuration{
 	}
 	
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
-		return Arrays.asList(keys);
+		return Arrays.asList(graphs, keys);
 		
 		
 		
