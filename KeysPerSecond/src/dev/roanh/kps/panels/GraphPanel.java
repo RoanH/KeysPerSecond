@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 
 /**
@@ -60,6 +61,11 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	 * Stroke used to draw average line
 	 */
 	private static final Stroke avgstroke = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0F, null, 0);
+	private GraphSettings config;
+	
+	public GraphPanel(GraphSettings config){
+		this.config = config;
+	}
 
 	/**
 	 * Resets the graph
@@ -71,7 +77,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 
 	@Override
 	public void paintComponent(Graphics g1){
-		if(Main.config.showGraph){
+		if(Main.config.showGraph){//TODO this statement should not be a thing
 			try{
 				Graphics2D g = (Graphics2D)g1;
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -131,7 +137,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	 * @param value The new point to add
 	 */
 	public void addPoint(int value){
-		if(Main.config.showGraph){
+		if(Main.config.showGraph){//TODO this statement should not be a thing
 			if(value > maxval){
 				maxval = value;
 			}
@@ -144,21 +150,21 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 
 	@Override
 	public int getLayoutX(){
-		return Main.config.getGraphX();
+		return config.getX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return Main.config.getGraphY();
+		return config.getY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return Main.config.getGraphWidth();
+		return config.getWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return Main.config.getGraphHeight();
+		return config.getHeight();
 	}
 }

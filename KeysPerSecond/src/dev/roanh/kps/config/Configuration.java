@@ -270,35 +270,35 @@ public class Configuration{
 	public int cellSize = 22;
 
 	//graph
-	private GraphSettings graph = new GraphSettings();
-	/**
-	 * Number of points the graph consists of
-	 */
-	public int backlog = 30;
-	/**
-	 * Draw the horizontal average line
-	 */
-	public boolean graphAvg = true;
-	/**
-	 * The x position of the graph (-1 is end)
-	 */
-	private int graphX = 0;
-	/**
-	 * The y position of the graph (-1 is end)
-	 */
-	private int graphY = -1;
-	/**
-	 * The width of the graph (-1 is max)
-	 */
-	private int graphWidth = -1;
-	/**
-	 * The height of the graph (-1 is max)
-	 */
-	private int graphHeight = 3;
-	/**
-	 * Position the graph is rendered in
-	 */
-	public GraphMode graphMode = GraphMode.INLINE;
+	private SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
+//	/**
+//	 * Number of points the graph consists of
+//	 */
+//	public int backlog = 30;
+//	/**
+//	 * Draw the horizontal average line
+//	 */
+//	public boolean graphAvg = true;
+//	/**
+//	 * The x position of the graph (-1 is end)
+//	 */
+//	private int graphX = 0;
+//	/**
+//	 * The y position of the graph (-1 is end)
+//	 */
+//	private int graphY = -1;
+//	/**
+//	 * The width of the graph (-1 is max)
+//	 */
+//	private int graphWidth = -1;
+//	/**
+//	 * The height of the graph (-1 is max)
+//	 */
+//	private int graphHeight = 3;
+//	/**
+//	 * Position the graph is rendered in
+//	 */
+//	public GraphMode graphMode = GraphMode.INLINE;
 	
 	//automatic statistics saving
 	private StatsSavingSettings statsSaving = new StatsSavingSettings();
@@ -397,69 +397,69 @@ public class Configuration{
 	
 	
 	
-	/**
-	 * Gets the x position of the graph.
-	 * @return The x position of the graph.
-	 */
-	public final int getGraphX(){
-		return graphX;
-	}
-	
-	/**
-	 * Gets the y position of the graph.
-	 * @return The y position of the graph.
-	 */
-	public final int getGraphY(){
-		return graphY;
-	}
-	
-	/**
-	 * Gets the width of the graph.
-	 * @return The width of the graph.
-	 */
-	public final int getGraphWidth(){
-		return graphWidth;
-	}	
-	
-	/**
-	 * Gets the height of the graph.
-	 * @return The height of the graph.
-	 */
-	public final int getGraphHeight(){
-		return graphHeight;
-	}
-	
-	/**
-	 * Sets the x position of the graph.
-	 * @param x The new x position.
-	 */
-	public final void setGraphX(int x){
-		graphX = x;
-	}
-	
-	/**
-	 * Sets the y position of the graph.
-	 * @param y The new y position.
-	 */
-	public final void setGraphY(int y){
-		graphY = y;
-	}
-	
-	/**
-	 * Sets the width of the graph in cells.
-	 * @param width The new width of the graph.
-	 */
-	public final void setGraphWidth(int width){
-		graphWidth = width;
-	}
-	
-	/**
-	 * Sets the height of the graph in cells.
-	 * @param height The new height of the graph.
-	 */
-	public final void setGraphHeight(int height){
-		graphHeight = height;
-	}
+//	/**
+//	 * Gets the x position of the graph.
+//	 * @return The x position of the graph.
+//	 */
+//	public final int getGraphX(){
+//		return graphX;
+//	}
+//	
+//	/**
+//	 * Gets the y position of the graph.
+//	 * @return The y position of the graph.
+//	 */
+//	public final int getGraphY(){
+//		return graphY;
+//	}
+//	
+//	/**
+//	 * Gets the width of the graph.
+//	 * @return The width of the graph.
+//	 */
+//	public final int getGraphWidth(){
+//		return graphWidth;
+//	}	
+//	
+//	/**
+//	 * Gets the height of the graph.
+//	 * @return The height of the graph.
+//	 */
+//	public final int getGraphHeight(){
+//		return graphHeight;
+//	}
+//	
+//	/**
+//	 * Sets the x position of the graph.
+//	 * @param x The new x position.
+//	 */
+//	public final void setGraphX(int x){
+//		graphX = x;
+//	}
+//	
+//	/**
+//	 * Sets the y position of the graph.
+//	 * @param y The new y position.
+//	 */
+//	public final void setGraphY(int y){
+//		graphY = y;
+//	}
+//	
+//	/**
+//	 * Sets the width of the graph in cells.
+//	 * @param width The new width of the graph.
+//	 */
+//	public final void setGraphWidth(int width){
+//		graphWidth = width;
+//	}
+//	
+//	/**
+//	 * Sets the height of the graph in cells.
+//	 * @param height The new height of the graph.
+//	 */
+//	public final void setGraphHeight(int height){
+//		graphHeight = height;
+//	}
 	
 	/**
 	 * Gets the location on disk for this configuration file.
