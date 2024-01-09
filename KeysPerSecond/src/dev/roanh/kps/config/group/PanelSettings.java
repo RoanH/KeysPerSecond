@@ -8,8 +8,8 @@ import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
 public class PanelSettings extends LocationSettings{
-	private final StringSetting name;
-	private final RenderingModeSetting mode = new RenderingModeSetting("mode", RenderingMode.VERTICAL);
+	protected final StringSetting name;
+	protected final RenderingModeSetting mode = new RenderingModeSetting("mode", RenderingMode.VERTICAL);
 	
 	public PanelSettings(String key, int x, int y, int width, int height, String defaultName){
 		super(key, x, y, width, height);

@@ -1,6 +1,8 @@
 package dev.roanh.kps.config.group;
 
-import dev.roanh.kps.panels.BasePanel;
+import java.util.List;
+
+import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.TotPanel;
 
 public class TotalPanelSettings extends SpecialPanelSettings{
@@ -12,5 +14,13 @@ public class TotalPanelSettings extends SpecialPanelSettings{
 	@Override
 	public TotPanel createPanel(){
 		return new TotPanel(this);
+	}
+	
+	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
+		proxyList.add(ProxySetting.of("totX", x));
+		proxyList.add(ProxySetting.of("totY", y));
+		proxyList.add(ProxySetting.of("totWidth", width));
+		proxyList.add(ProxySetting.of("totHeight", height));
+		proxyList.add(ProxySetting.of("totMode", mode));
 	}
 }

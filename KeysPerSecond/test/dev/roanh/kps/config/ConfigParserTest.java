@@ -97,7 +97,47 @@ public class ConfigParserTest{
 		assertFalse(stats.isSaveOnExitEnabled());
 		assertFalse(stats.isLoadOnLaunchEnabled());
 		
+		//TODO graph
+		
 		//TODO keys
+		
+		//special panels
+		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
+		
+		MaxPanelSettings maxSettings = assertInstanceOf(MaxPanelSettings.class, panels.next());
+		assertEquals(23, maxSettings.getX());
+		assertEquals(0, maxSettings.getY());
+		assertEquals(2, maxSettings.getWidth());
+		assertEquals(3, maxSettings.getHeight());
+		assertEquals(RenderingMode.VERTICAL, maxSettings.getRenderingMode());
+		assertEquals("MAX", maxSettings.getName());
+		
+		AveragePanelSettings avgSettings = assertInstanceOf(AveragePanelSettings.class, panels.next());
+		assertEquals(21, avgSettings.getX());
+		assertEquals(0, avgSettings.getY());
+		assertEquals(2, avgSettings.getWidth());
+		assertEquals(3, avgSettings.getHeight());
+		assertEquals(RenderingMode.VERTICAL, avgSettings.getRenderingMode());
+		assertEquals("AVG", avgSettings.getName());
+		assertEquals(0, avgSettings.getPrecision());
+		
+		CurrentPanelSettings curSettings = assertInstanceOf(CurrentPanelSettings.class, panels.next());
+		assertEquals(25, curSettings.getX());
+		assertEquals(0, curSettings.getY());
+		assertEquals(2, curSettings.getWidth());
+		assertEquals(3, curSettings.getHeight());
+		assertEquals(RenderingMode.VERTICAL, curSettings.getRenderingMode());
+		assertEquals("KPS", curSettings.getName());//technically 'CUR' historically
+		
+		TotalPanelSettings totSettings = assertInstanceOf(TotalPanelSettings.class, panels.next());
+		assertEquals(25, totSettings.getX());
+		assertEquals(0, totSettings.getY());
+		assertEquals(2, totSettings.getWidth());
+		assertEquals(3, totSettings.getHeight());
+		assertEquals(RenderingMode.VERTICAL, totSettings.getRenderingMode());
+		assertEquals("TOT", totSettings.getName());
+		
+		assertFalse(panels.hasNext());
 		
 	}
 	

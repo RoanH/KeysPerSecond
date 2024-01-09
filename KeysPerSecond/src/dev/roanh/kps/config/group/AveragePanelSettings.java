@@ -18,10 +18,12 @@
  */
 package dev.roanh.kps.config.group;
 
+import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.PrecisionSetting;
+import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.AvgPanel;
 
 /**
@@ -61,5 +63,14 @@ public class AveragePanelSettings extends SpecialPanelSettings{
 	@Override
 	public void write(IndentWriter out){
 		//TODO ??? precision
+	}
+	
+	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
+		proxyList.add(ProxySetting.of("avgX", x));
+		proxyList.add(ProxySetting.of("avgY", y));
+		proxyList.add(ProxySetting.of("avgWidth", width));
+		proxyList.add(ProxySetting.of("avgHeight", height));
+		proxyList.add(ProxySetting.of("avgMode", mode));
+		proxyList.add(ProxySetting.of("precision", precision));
 	}
 }

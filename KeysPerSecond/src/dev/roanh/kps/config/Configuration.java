@@ -38,10 +38,14 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
+import dev.roanh.kps.config.group.AveragePanelSettings;
+import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
+import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
@@ -266,11 +270,34 @@ public class Configuration{
 		return settings;
 	}
 	
-	protected List<ProxySetting<?>> getLegacySettings(){
+	protected List<ProxySetting<?>> getLegacySettings(Version version){
 		List<ProxySetting<?>> settings = new ArrayList<ProxySetting<?>>();
-		statsSaving.collectLegacyProxies(settings);
-//		getGraphSettings().collectLegacyProxies(settings);//TODO this is always initially empty, might need more sophisticated parsing
-		return settings;//TODO determine if we needs this and implement it
+		
+		if(version.isBefore(8, 8)){
+			statsSaving.collectLegacyProxies(settings);
+			
+			GraphSettings graph = new GraphSettings();
+			graph.collectLegacyProxies(settings);
+			graphs.add(graph);
+			
+			MaxPanelSettings max = new MaxPanelSettings();
+			max.collectLegacyProxies(settings);
+			panels.add(max);
+			
+			AveragePanelSettings avg = new AveragePanelSettings();
+			avg.collectLegacyProxies(settings);
+			panels.add(avg);
+			
+			CurrentPanelSettings current = new CurrentPanelSettings();
+			current.collectLegacyProxies(settings);
+			panels.add(current);
+			
+			TotalPanelSettings total = new TotalPanelSettings();
+			total.collectLegacyProxies(settings);
+			panels.add(total);
+		}
+		
+		return settings;
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){

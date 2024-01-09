@@ -37,7 +37,7 @@ import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.setting.ProxySetting;
 
 public class ConfigParser{
-	private String version;
+	private Version version;
 	
 	private boolean defaultUsed;//overriden, default used when not specified doesn't count, this is when given values are replaced with safe values deliberately
 	
@@ -70,11 +70,6 @@ public class ConfigParser{
 			lists.put(list.getKey(), list);
 		}
 		
-		//TODO possibly do not read these after some version
-		for(ProxySetting<?> setting : config.getLegacySettings()){
-			settings.put(setting.getKey(), setting);
-		}
-		
 		//read version
 		String line = in.readLine();
 		if(line == null){
@@ -83,9 +78,18 @@ public class ConfigParser{
 		
 		if(!line.startsWith("version:")){
 			//the last version to not declare a version
-			version = "v8.4";
+			version = new Version(8, 4);
 		}else{
-			version = line.substring(8).trim();//TODO validate versions and order them
+			try{
+				version = Version.parse(line.substring(8));
+			}catch(IllegalArgumentException e){
+				version = new Version(8, 4);
+			}
+		}
+		
+		//legacy compatibility
+		for(ProxySetting<?> setting : config.getLegacySettings(version)){
+			settings.put(setting.getKey(), setting);
 		}
 
 		//TODO debug

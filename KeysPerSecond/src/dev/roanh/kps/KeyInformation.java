@@ -34,7 +34,6 @@ import dev.roanh.kps.layout.Positionable;
 public final class KeyInformation extends Positionable{
 	/**
 	 * The name of this key
-	 * @see Key#name
 	 */
 	public String name;
 	/**
@@ -60,7 +59,6 @@ public final class KeyInformation extends Positionable{
 	 * @param ctrl Whether or not ctrl is down
 	 * @param shift Whether or not shift is down
 	 * @param mouse Whether or not this is a mouse button
-	 * @see #name
 	 * @see #keycode 
 	 */
 	public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
@@ -92,7 +90,6 @@ public final class KeyInformation extends Positionable{
 	 * @param width The width of the key panel.
 	 * @param height The height of the key panel.
 	 * @param mode The text rendering mode of the key panel.
-	 * @see #name
 	 * @see #keycode
 	 */
 	public KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
