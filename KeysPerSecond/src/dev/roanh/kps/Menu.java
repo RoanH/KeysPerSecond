@@ -386,8 +386,8 @@ public class Menu{
 			Main.reconfigure();
 		});
 		configkeys.addActionListener((e)->{
-			KeysDialog.configureKeys();
-			Main.reconfigure();
+			KeysDialog.configureKeys(Main.config.getKeySettings(), true);
+//			Main.reconfigure();
 		});
 		colorcustom.addActionListener((e)->{
 			SwingUtilities.invokeLater(()->{
@@ -428,7 +428,7 @@ public class Menu{
 //		});
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(true);
-			Main.reconfigure();
+//			Main.reconfigure();//TODO do I never need the reconfigure?
 		});
 		
 		List<JCheckBoxMenuItem> rates = new ArrayList<JCheckBoxMenuItem>();

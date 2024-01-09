@@ -51,11 +51,6 @@ public class ConfigParser{
 		
 	}
 	
-	
-	
-//	private SettingList<KeyPanelSettings> keys;//TODO move to config
-	
-	
 	private Map<String, Setting<?>> settings = new HashMap<String, Setting<?>>();//TODO config#getSettings -- linked hash map would address the trackAll issue
 	private Map<String, SettingGroup> groups = new HashMap<String, SettingGroup>();
 	private Map<String, SettingList<? extends SettingGroup>> lists = new HashMap<String, SettingList<? extends SettingGroup>>();

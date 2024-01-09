@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps;
 
+import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.panels.KeyPanel;
 
 /**
@@ -35,15 +36,17 @@ public class Key{
 	 * The total number of times this key has been pressed
 	 */
 	public int count = 0;
-	/**
-	 * The key in string form<br>
-	 * For example: X
-	 */
-	public String name;
-	/**
-	 * The graphical display for this key
-	 */
-	private KeyPanel panel = null;
+//	/**
+//	 * The key in string form<br>
+//	 * For example: X
+//	 */
+//	@Deprecated
+//	public String name;
+//	/**
+//	 * The graphical display for this key
+//	 */
+//	@Deprecated
+	private KeyPanel panel = null;//TODO Note: EXCLUSIVELY FOR REPAINTS
 	/**
 	 * Whether or not alt has to be down
 	 */
@@ -58,41 +61,50 @@ public class Key{
 	protected boolean shift;
 	
 	/**
-	 * Constructs a new Key object with the given name,
-	 * hit count and modifier keys.
-	 * @param name The name of this key.
+	 * Constructs a new key object with the given hit count and modifier keys.
 	 * @param count The number of times this key was hit so far.
 	 * @param alt Whether alt has to be down for this key.
 	 * @param ctrl Whether ctrl has to be down for this key.
 	 * @param shift Whether shift has to be down for this key.
 	 */
-	protected Key(String name, int count, boolean alt, boolean ctrl, boolean shift){
-		this(name);
+	public Key(int count, boolean alt, boolean ctrl, boolean shift){
 		this.count = count;
 		this.alt = alt;
 		this.ctrl = ctrl;
 		this.shift = shift;
 	}
 
-	/**
-	 * Constructs a new Key object
-	 * for the key with the given
-	 * name
-	 * @param name The name of the key
-	 * @see #name
-	 */
-	protected Key(String name){
-		this.name = name;
+//	/**
+//	 * Constructs a new Key object
+//	 * for the key with the given
+//	 * name
+//	 * @param name The name of the key
+//	 * @see #name
+//	 */
+//	protected Key(String name){
+//		this.name = name;
+//	}
+
+//	/**
+//	 * Creates a new KeyPanel with this
+//	 * objects as its data source
+//	 * @param i The information object for this key
+//	 * @return A new KeyPanel
+//	 */
+//	protected KeyPanel getPanel(KeyInformation i){
+//		return panel != null ? panel : (panel = new KeyPanel(this, i));
+//	}
+	
+	public Key(){
+		this(0, false, false, false);
 	}
 
-	/**
-	 * Creates a new KeyPanel with this
-	 * objects as its data source
-	 * @param i The information object for this key
-	 * @return A new KeyPanel
-	 */
-	protected KeyPanel getPanel(KeyInformation i){
-		return panel != null ? panel : (panel = new KeyPanel(this, i));
+	public Key(KeyPanelSettings info){
+		this(0, CommandKeys.hasAlt(info.getKeyCode()), CommandKeys.hasCtrl(info.getKeyCode()), CommandKeys.hasShift(info.getKeyCode()));
+	}
+	
+	public void setPanel(KeyPanel panel){
+		this.panel = panel;
 	}
 
 	/**
@@ -103,7 +115,7 @@ public class Key{
 			count++;
 			down = true;
 			Main.tmp.incrementAndGet();
-			if(panel != null){
+			if(panel != null){//TODO kinda want to keep these, might want to keep the panels in in a sort of hacky way for now
 				panel.repaint();
 			}
 		}

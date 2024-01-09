@@ -30,6 +30,7 @@ import dev.roanh.kps.layout.Positionable;
  * about a key.
  * @author Roan
  */
+@Deprecated
 public final class KeyInformation extends Positionable{
 	/**
 	 * The name of this key
@@ -100,6 +101,30 @@ public final class KeyInformation extends Positionable{
 		this.keycode = code;
 		this.visible = visible;
 	}
+	
+	//TODO probably move
+	public static final String getPanelName(int extendedCode){
+		if(CommandKeys.isMouseButton(extendedCode)){
+			return "M" + (-extendedCode);
+		}else{
+			String name = "";
+			
+			if(CommandKeys.hasAlt(extendedCode)){
+				name += "a";
+			}
+
+			if(CommandKeys.hasAlt(extendedCode)){
+				name += "c";
+			}
+
+			if(CommandKeys.hasAlt(extendedCode)){
+				name += "s";
+			}
+			
+			String text = getKeyText(extendedCode & CommandKeys.KEYCODE_MASK);
+			return name + (text.length() == 1 ? text.toUpperCase(Locale.ROOT) : text);
+		}
+	}
 
 	/**
 	 * Constructs the key name from the key
@@ -108,6 +133,7 @@ public final class KeyInformation extends Positionable{
 	 * @param code The virtual key code of the key
 	 * @return The full name of this given key
 	 */
+	@Deprecated
 	protected static final String getKeyName(String name, int code){
 		return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
 	}
@@ -122,7 +148,7 @@ public final class KeyInformation extends Positionable{
 	 */
 	public void setName(String name){
 		this.name = name;
-		Main.keys.getOrDefault(keycode, Main.DUMMY_KEY).name = name;//TODO name stored in multiple places...
+//		Main.keys.getOrDefault(keycode, Main.DUMMY_KEY).name = name;//TODO name stored in multiple places...
 	}
 
 	@Override

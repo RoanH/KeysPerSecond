@@ -171,8 +171,8 @@ public class Statistics{
 				out.print(key.ctrl);
 				out.print(",shift=");
 				out.print(key.shift);
-				out.print(",name=\"");
-				out.print(key.name);
+//				out.print(",name=\""); -- TODO no longer required going forward
+//				out.print(key.name);
 				out.println("\"]");
 			}
 			out.flush();
@@ -249,7 +249,7 @@ public class Statistics{
 							Key key = Main.keys.get(code);
 							if(key == null){
 								key = new Key(
-									m.group(6),
+//									m.group(6), -- legacy no longer a thing
 									Integer.parseInt(m.group(2)),
 									Boolean.parseBoolean(m.group(3)),
 									Boolean.parseBoolean(m.group(4)),

@@ -41,6 +41,8 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
+import dev.roanh.kps.config.SettingList;
+import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.event.listener.KeyPressListener;
 import dev.roanh.util.Dialog;
 
@@ -66,13 +68,17 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * Table model showing all added keys and buttons.
 	 */
 	private KeysModel model = new KeysModel();
+	private SettingList<KeyPanelSettings> config;
+	private boolean live;
 	
 	/**
 	 * Constructs a new KeysDialog.
 	 * @see #configureKeys()
 	 */
-	private KeysDialog(){
+	private KeysDialog(SettingList<KeyPanelSettings> config, boolean live){
 		super(new BorderLayout());
+		this.config = config;
+		this.live = live;
 		
 		//left panel showing added keys
 		JPanel left = new JPanel(new BorderLayout());
@@ -135,13 +141,17 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	private JButton newButton(int code, String text){
 		JButton button = new JButton(text);
 		button.addActionListener(e->{
-			KeyInformation key = new KeyInformation("M" + code, Main.getExtendedButtonCode(code), false, false, false, true);
-			if(Main.config.keyinfo.contains(key)){
-				KeyInformation.autoIndex -= 2;
+			KeyPanelSettings info = new KeyPanelSettings(Main.layout, Main.getExtendedButtonCode(code));
+//			KeyInformation key = new KeyInformation("M" + code, Main.getExtendedButtonCode(code), false, false, false, true);
+			if(config.contains(info)){
+//				KeyInformation.autoIndex -= 2;
 				Dialog.showMessageDialog("The M" + code + " button was already added before.\nIt was not added again.");
 			}else{
-				Main.config.keyinfo.add(key);
+				config.add(info);
 				model.fireTableDataChanged();
+				if(live){
+					Main.reconfigure();
+				}
 			}
 		});
 		
@@ -159,19 +169,22 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 			return;
 		}
 		
-		KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastKey), lastKey);
-		if(Main.config.keyinfo.contains(info)){
-			KeyInformation.autoIndex -= 2;
+		KeyPanelSettings info = new KeyPanelSettings(Main.layout, lastKey);
+		if(config.contains(info)){
+//			KeyInformation.autoIndex -= 2;
 			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
 		}else{
-			Main.config.keyinfo.add(info);
+			config.add(info);
 			model.fireTableDataChanged();
+			if(live){
+				Main.reconfigure();
+			}
 		}
 	}
 	
 	@Override
 	public void onKeyPress(int code){
-		lastKey = Main.config.isKeyModifierTrackingEnabled() ? CommandKeys.getExtendedKeyCode(code) : CommandKeys.getExtendedKeyCode(code, false, false, false);
+		lastKey = Main.getExtendedKeyCode(code);
 		pressed.setText("<" + CommandKeys.formatExtendedCode(lastKey) + ">");
 		pressed.repaint();
 	}
@@ -179,27 +192,31 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	/**
 	 * Shows the key configuration dialog
 	 */
-	public static final void configureKeys(){
-		List<KeyInformation> copy = new ArrayList<KeyInformation>(Main.config.keyinfo);
-		boolean[] visibleState = new boolean[copy.size()];
-		String[] nameState = new String[copy.size()];
-		int autoIndex = KeyInformation.autoIndex;
-		for(int i = 0; i < copy.size(); i++){
-			visibleState[i] = copy.get(i).visible;
-			nameState[i] = copy.get(i).name;
-		}
+	public static final void configureKeys(SettingList<KeyPanelSettings> config, boolean live){
+		//TODO keep the undo save logic? Not as required imo with the new config dialog and other planned changes
+//		List<KeyInformation> copy = new ArrayList<KeyInformation>(Main.config.keyinfo);
+//		boolean[] visibleState = new boolean[copy.size()];
+//		String[] nameState = new String[copy.size()];
+//		int autoIndex = KeyInformation.autoIndex;
+//		for(int i = 0; i < copy.size(); i++){
+//			visibleState[i] = copy.get(i).visible;
+//			nameState[i] = copy.get(i).name;
+//		}
+//		
+//		KeysDialog dialog = new KeysDialog(Main.config.getKeySettings());//TODO
+//		Main.eventManager.registerKeyPressListener(dialog);
+//		if(!Dialog.showConfirmDialog(dialog, true, ModalityType.APPLICATION_MODAL)){
+//			for(int i = 0; i < copy.size(); i++){
+//				copy.get(i).visible = visibleState[i];
+//				copy.get(i).setName(nameState[i]);
+//			}
+//			KeyInformation.autoIndex = autoIndex;
+//			Main.config.keyinfo = copy;
+//		}
 		
-		KeysDialog dialog = new KeysDialog();
+		KeysDialog dialog = new KeysDialog(config, live);
 		Main.eventManager.registerKeyPressListener(dialog);
-		if(!Dialog.showSaveDialog(dialog, true, ModalityType.APPLICATION_MODAL)){
-			for(int i = 0; i < copy.size(); i++){
-				copy.get(i).visible = visibleState[i];
-				copy.get(i).setName(nameState[i]);
-			}
-			KeyInformation.autoIndex = autoIndex;
-			Main.config.keyinfo = copy;
-		}
-		
+		Dialog.showMessageDialog(dialog, true, ModalityType.APPLICATION_MODAL);
 		Main.eventManager.unregisterKeyPressListener(dialog);
 	}
 	
@@ -207,7 +224,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * Table model that displays all configured keys.
 	 * @author Roan
 	 */
-	private static class KeysModel extends DefaultTableModel{
+	private class KeysModel extends DefaultTableModel{
 		/**
 		 * Serial ID
 		 */
@@ -215,7 +232,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 
 		@Override
 		public int getRowCount(){
-			return Main.config.keyinfo.size();
+			return config == null ? 0 : config.size();
 		}
 
 		@Override
@@ -227,9 +244,9 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		public Object getValueAt(int rowIndex, int columnIndex){
 			switch(columnIndex){
 			case 0:
-				return Main.config.keyinfo.get(rowIndex).name;
+				return config.get(rowIndex).getName();
 			case 1:
-				return Main.config.keyinfo.get(rowIndex).visible;
+				return config.get(rowIndex).isVisible();
 			case 2:
 				return false;
 			default:
@@ -268,15 +285,14 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		public void setValueAt(Object value, int row, int col){
 			switch(col){
 			case 0:
-				Main.config.keyinfo.get(row).setName((String)value);
+				config.get(row).setName((String)value);
 				break;
 			case 1:
-				Main.config.keyinfo.get(row).visible = (boolean)value;
+				config.get(row).setVisible((boolean)value);
 				break;
 			case 2:
 				if((boolean)value == true){
-					Main.keys.remove(Main.config.keyinfo.get(row).keycode);
-					Main.config.keyinfo.remove(row);
+					Main.removeKey(config.remove(row).getKeyCode());
 					this.fireTableDataChanged();
 				}
 				break;

@@ -43,6 +43,14 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 		return data.get(index);
 	}
 	
+	public T remove(int index){
+		return data.remove(index);
+	}
+	
+	public boolean contains(T obj){
+		return data.contains(obj);
+	}
+	
 	public void write(IndentWriter out){
 		out.println(key + ":");
 		for(T item : data){

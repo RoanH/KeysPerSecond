@@ -102,16 +102,19 @@ public class Layout implements LayoutManager2{
 	 */
 	public void add(Component comp){
 		LayoutPosition lp = (LayoutPosition)comp;
+		
 		if(lp.getLayoutX() != -1){
 			maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
 		}else{
 			extraWidth += lp.getLayoutWidth();
 		}
+		
 		if(lp.getLayoutY() != -1){
 			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		}else{
 			extraHeight += lp.getLayoutHeight();
 		}
+		
 		if(comp.getParent() == null){
 			parent.add(comp);
 		}
@@ -129,6 +132,35 @@ public class Layout implements LayoutManager2{
 			maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
 			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		}
+	}
+	
+	//TODO completely untested
+	public int placePanelX(int width, int height){
+		boolean[] conflict = new boolean[maxw];
+		for(Component component : parent.getComponents()){
+			LayoutPosition lp = (LayoutPosition)component;
+			if(lp.getLayoutY() < height && lp.getLayoutX() != -1 && lp.getLayoutY() != -1){
+				for(int i = 0; i < lp.getLayoutWidth(); i++){
+					conflict[lp.getLayoutX() + i] = true;
+				}
+			}
+		}
+		
+		int free = 0;
+		for(int i = 0; i < conflict.length; i++){
+			if(conflict[i]){
+				free = 0;
+			}else{
+				free++;
+				if(free >= width){
+					System.out.println("l: " + (i - width) + " / " + parent.getComponentCount());
+					return i - width + 1;
+				}
+			}
+		}
+		
+		System.out.println("l: " + maxw + " / " + parent.getComponentCount());
+		return maxw;
 	}
 
 	@Override
@@ -185,11 +217,10 @@ public class Layout implements LayoutManager2{
 		if(!(maxw == 0 && extraWidth == 0) && !(maxh == 0 && extraHeight == 0)){
 			double dx = parent.getWidth() / (maxw + extraWidth);
 			double dy = parent.getHeight() / (maxh + extraHeight);
-			LayoutPosition lp;
 			int width = maxw;
 			int height = maxh;
 			for(Component component : parent.getComponents()){
-				lp = (LayoutPosition)component;
+				LayoutPosition lp = (LayoutPosition)component;
 				if(lp.getLayoutX() == -1){
 					if(lp.getLayoutY() == -1){
 						component.setBounds(

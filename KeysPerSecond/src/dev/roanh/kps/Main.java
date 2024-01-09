@@ -71,6 +71,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.event.EventManager;
@@ -190,7 +191,7 @@ public class Main{
 	/**
 	 * The layout for the main panel of the program
 	 */
-	protected static final Layout layout = new Layout(content);
+	public static final Layout layout = new Layout(content);
 	/**
 	 * Small icon for the program
 	 */
@@ -457,7 +458,8 @@ public class Main{
 		Key key = keys.get(code);
 		
 		if(config.isTrackAllButtons() && key == null){
-			key = new Key("M" + button);
+//			key = new Key("M" + button);
+			key = new Key();
 			keys.put(code, key);
 		}
 		
@@ -475,7 +477,8 @@ public class Main{
 		Key key = keys.get(code);
 		
 		if(config.isTrackAllKeys() && key == null){
-			key = new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code));
+//			key = new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code));
+			key = new Key();
 			keys.put(code, key);
 		}
 		
@@ -521,23 +524,24 @@ public class Main{
 	}
 
 	/**
-	 * Gets the extended key code for this event, this key code
-	 * includes modifiers
+	 * Gets the extended key code for this event, this key code includes modifiers.
 	 * @param rawCode The received key code for the key that was pressed.
-	 * @return The extended key code for this event
+	 * @return The extended key code for this event.
+	 * @see #getExtendedButtonCode(int)
 	 */
-	private static final int getExtendedKeyCode(int rawCode){
-		if(!config.isKeyModifierTrackingEnabled()){
-			return CommandKeys.getExtendedKeyCode(rawCode, false, false, false);
-		}else{
+	public static final int getExtendedKeyCode(int rawCode){
+		if(config.isKeyModifierTrackingEnabled()){
 			return CommandKeys.getExtendedKeyCode(rawCode);
+		}else{
+			return CommandKeys.getExtendedKeyCode(rawCode, false, false, false);
 		}
 	}
 	
 	/**
 	 * Gets the extended button code for this event.
 	 * @param button The button that was pressed.
-	 * @return The extended key code for this event
+	 * @return The extended key code for this event.
+	 * @see #getExtendedKeyCode(int)
 	 */
 	public static final int getExtendedButtonCode(int button){
 		return -button;
@@ -691,7 +695,7 @@ public class Main{
 			configureGraph();
 		});
 		addkey.addActionListener((e)->{
-			KeysDialog.configureKeys();
+			KeysDialog.configureKeys(config.getKeySettings(), false);
 		});
 		color.addActionListener((e)->{
 			configureColors();
@@ -951,36 +955,48 @@ public class Main{
 	 * Reconfigures the layout of the program
 	 */
 	public static final void reconfigure(){
+		System.out.println("reconf");//TODO remove
+		
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
+			
 			try{
 				ColorManager.prepareImages(config.hasCustomColors());
 			}catch(IOException e){
 				e.printStackTrace();
 			}
-			Key k;
-			int panels = 0;
-			for(KeyInformation i : config.keyinfo){
-				if(!keys.containsKey(i.keycode)){
-					keys.put(i.keycode, k = new Key(i.name));
-					k.alt = CommandKeys.hasAlt(i.keycode);
-					k.ctrl = CommandKeys.hasCtrl(i.keycode);
-					k.shift = CommandKeys.hasShift(i.keycode);
-				}else{
-					k = keys.get(i.keycode);
-				}
-				if(config.showKeys() && i.visible){
-					content.add(k.getPanel(i));
-					k.getPanel(i).sizeChanged();
-					panels++;
+			
+			//TODO legacy logic
+//			Key k;
+//			int panels = 0;
+//			for(KeyInformation i : config.keyinfo){
+//				if(!keys.containsKey(i.keycode)){
+//					keys.put(i.keycode, k = new Key(i.name));
+//					k.alt = CommandKeys.hasAlt(i.keycode);
+//					k.ctrl = CommandKeys.hasCtrl(i.keycode);
+//					k.shift = CommandKeys.hasShift(i.keycode);
+//				}else{
+//					k = keys.get(i.keycode);
+//				}
+//				if(config.showKeys() && i.visible){
+//					content.add(k.getPanel(i));
+//					k.getPanel(i).sizeChanged();
+//					panels++;
+//				}
+//			}
+			
+			//TODO new logic
+			for(KeyPanelSettings info : config.getKeySettings()){
+				System.out.println("key: " + info.getName());
+				Key key = keys.computeIfAbsent(info.getKeyCode(), code->new Key(info));//TODO pass something
+				if(config.showKeys() && info.isVisible()){
+					content.add(info.createPanel(key));
 				}
 			}
 			
-			//TODO new logic
 			for(SpecialPanelSettings panel : config.getPanels()){
 				content.add(panel.createPanel());
-				panels++;
 			}
 			
 			//TODO old legacy logic
@@ -1007,7 +1023,8 @@ public class Main{
 			
 			
 			
-			if(panels == 0 && !config.showGraph){
+			if(content.getComponentCount() == 0 && !config.showGraph){
+				System.out.println("no GUI");//TODO
 				frame.setVisible(false);
 				return;//don't create a GUI if there's nothing to display
 			}
@@ -1044,7 +1061,7 @@ public class Main{
 				content.setBackground(config.background);
 			}
 			frame.add(all);
-			frame.setVisible(panels > 0);
+			frame.setVisible(content.getComponentCount() > 0);
 			
 			//Start stats saving
 			Statistics.cancelScheduledTask();
@@ -1083,11 +1100,16 @@ public class Main{
 	protected static final void resetTotals(){
 		System.out.print("Reset key counts | ");
 		for(Key k : keys.values()){
-			System.out.print(k.name + ":" + k.count + " ");
+//			System.out.print(k.name + ":" + k.count + " ");
+			//TODO either stop printing this or loop the entry set and call getkeyname
 			k.count = 0;
 		}
 		System.out.println();
 		frame.repaint();
+	}
+	
+	public static void removeKey(int keycode){
+		keys.remove(keycode);
 	}
 	
 	static{
@@ -1135,7 +1157,7 @@ public class Main{
 			public void windowDeactivated(WindowEvent e){
 			}
 		};
-		DUMMY_KEY = new Key(null){
+		DUMMY_KEY = new Key(){
 
 			@Override
 			public void keyPressed(){
