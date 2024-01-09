@@ -36,6 +36,28 @@ panels:
     height: 1
     mode: VALUE_ONLY
     name: NMAX
+  - type: avg
+    x: 9
+    y: 8
+    width: 7
+    height: 6
+    mode: VALUE_ONLY
+    name: average
+    precision: 2
+  - type: current
+    x: 0
+    y: 9
+    width: 4
+    height: 5
+    mode: VALUE_ONLY
+    name: kps
+  - type: total
+    x: 1
+    y: 1
+    width: 2
+    height: 2
+    mode: VALUE_ONLY
+    name: Total Panel
 
 # Keys
 keys:

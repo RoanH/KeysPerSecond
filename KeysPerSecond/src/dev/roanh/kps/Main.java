@@ -156,9 +156,9 @@ public class Main{
 	 */
 	public static final GridPanel content = new GridPanel();
 	/**
-	 * Graph panel
+	 * Graph panel.
 	 */
-	protected static GraphPanel graph = new GraphPanel(null);//TODO
+	protected static GraphPanel graph = null;
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
@@ -387,8 +387,12 @@ public class Main{
 					TotPanel.hits += currentTmp;
 					System.out.println("Current keys per second: " + totaltmp);
 				}
-				graph.addPoint(totaltmp);
-				graph.repaint();
+				
+				if(graph != null){
+					graph.addPoint(totaltmp);
+					graph.repaint();
+				}
+				
 				content.repaint();
 				prev = totaltmp;
 				timepoints.addFirst(currentTmp);
@@ -979,26 +983,29 @@ public class Main{
 			}
 			
 			//TODO old legacy logic
-			if(config.showMax){
-//				content.add(MaxPanel.INSTANCE);
-//				MaxPanel.INSTANCE.sizeChanged();
-				panels++;
-			}
-			if(config.showAvg){
-//				content.add(new AvgPanel(config.getAveragePanelSettings()));
-				//TODO should be event handler based AvgPanel.INSTANCE.sizeChanged();
-				panels++;
-			}
-			if(config.showCur){
-//				content.add(NowPanel.INSTANCE);
-//				NowPanel.INSTANCE.sizeChanged();
-				panels++;
-			}
-			if(config.showTotal){
-				content.add(TotPanel.INSTANCE);
-				TotPanel.INSTANCE.sizeChanged();
-				panels++;
-			}
+//			if(config.showMax){
+////				content.add(MaxPanel.INSTANCE);
+////				MaxPanel.INSTANCE.sizeChanged();
+//				panels++;
+//			}
+//			if(config.showAvg){
+////				content.add(new AvgPanel(config.getAveragePanelSettings()));
+//				//TODO should be event handler based AvgPanel.INSTANCE.sizeChanged();
+//				panels++;
+//			}
+//			if(config.showCur){
+////				content.add(NowPanel.INSTANCE);
+////				NowPanel.INSTANCE.sizeChanged();
+//				panels++;
+//			}
+//			if(config.showTotal){
+//				content.add(TotPanel.INSTANCE);
+//				TotPanel.INSTANCE.sizeChanged();
+//				panels++;
+//			}
+			
+			
+			
 			if(panels == 0 && !config.showGraph){
 				frame.setVisible(false);
 				return;//don't create a GUI if there's nothing to display
@@ -1010,6 +1017,7 @@ public class Main{
 			all.add(content, BorderLayout.CENTER);
 			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 			if(config.showGraph){
+				graph = config.getGraphSettings().createPanel();
 				if(config.getGraphSettings().getGraphMode() == GraphMode.INLINE){
 					content.add(graph);
 					graphFrame.setVisible(false);

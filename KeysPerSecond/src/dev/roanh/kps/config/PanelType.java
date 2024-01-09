@@ -1,7 +1,6 @@
 package dev.roanh.kps.config;
 
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
@@ -10,24 +9,19 @@ import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
-import dev.roanh.kps.panels.AvgPanel;
-import dev.roanh.kps.panels.BasePanel;
+import dev.roanh.kps.config.group.TotalPanelSettings;
 
 public enum PanelType{
 	MAX("max", MaxPanelSettings::new),
 	AVG("avg", AveragePanelSettings::new),
 	CURRENT("current", CurrentPanelSettings::new),//TODO current/cur/kps/now ???
-	TOTAL;
+	TOTAL("total", TotalPanelSettings::new);
 	
-	//TODO final
-	private String key;
-	private ListItemConstructor<SpecialPanelSettings> ctor;
-	
-	private PanelType(){
-		
-	}
+	private final String key;
+	private final ListItemConstructor<SpecialPanelSettings> ctor;
 	
 	private <T extends PanelSettings> PanelType(String key, Supplier<SpecialPanelSettings> ctor){
+		this.key = key;
 		this.ctor = ListItemConstructor.constructThenParse(ctor);
 	}
 	

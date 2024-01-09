@@ -9,6 +9,7 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.GraphModeSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
+import dev.roanh.kps.panels.GraphPanel;
 
 public class GraphSettings extends LocationSettings{
 	private final GraphModeSetting mode = new GraphModeSetting("mode", GraphMode.INLINE);
@@ -41,6 +42,10 @@ public class GraphSettings extends LocationSettings{
 	
 	public void setBacklog(int backlog){
 		this.backlog.update(backlog);
+	}
+	
+	public GraphPanel createPanel(){
+		return new GraphPanel(this);
 	}
 
 	@Override

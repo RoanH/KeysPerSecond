@@ -19,10 +19,8 @@
 package dev.roanh.kps.config;
 
 import java.awt.Color;
-import java.awt.LayoutManager;
 import java.awt.Point;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -31,24 +29,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
-import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.Statistics;
 import dev.roanh.kps.CommandKeys.CMD;
-import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
-import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
@@ -365,7 +356,7 @@ public class Configuration{
 	}
 	
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
-		return Arrays.asList(graphs, keys);
+		return Arrays.asList(graphs, keys, panels);
 		
 		
 		
@@ -398,72 +389,6 @@ public class Configuration{
 	public void setKeyModifierTrackingEnabled(boolean enabled){
 		enableModifiers.update(enabled);
 	}
-	
-	
-	
-//	/**
-//	 * Gets the x position of the graph.
-//	 * @return The x position of the graph.
-//	 */
-//	public final int getGraphX(){
-//		return graphX;
-//	}
-//	
-//	/**
-//	 * Gets the y position of the graph.
-//	 * @return The y position of the graph.
-//	 */
-//	public final int getGraphY(){
-//		return graphY;
-//	}
-//	
-//	/**
-//	 * Gets the width of the graph.
-//	 * @return The width of the graph.
-//	 */
-//	public final int getGraphWidth(){
-//		return graphWidth;
-//	}	
-//	
-//	/**
-//	 * Gets the height of the graph.
-//	 * @return The height of the graph.
-//	 */
-//	public final int getGraphHeight(){
-//		return graphHeight;
-//	}
-//	
-//	/**
-//	 * Sets the x position of the graph.
-//	 * @param x The new x position.
-//	 */
-//	public final void setGraphX(int x){
-//		graphX = x;
-//	}
-//	
-//	/**
-//	 * Sets the y position of the graph.
-//	 * @param y The new y position.
-//	 */
-//	public final void setGraphY(int y){
-//		graphY = y;
-//	}
-//	
-//	/**
-//	 * Sets the width of the graph in cells.
-//	 * @param width The new width of the graph.
-//	 */
-//	public final void setGraphWidth(int width){
-//		graphWidth = width;
-//	}
-//	
-//	/**
-//	 * Sets the height of the graph in cells.
-//	 * @param height The new height of the graph.
-//	 */
-//	public final void setGraphHeight(int height){
-//		graphHeight = height;
-//	}
 	
 	/**
 	 * Gets the location on disk for this configuration file.

@@ -21,18 +21,29 @@ package dev.roanh.kps.config;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
 import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.group.AveragePanelSettings;
+import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.MaxPanelSettings;
+import dev.roanh.kps.config.group.PanelSettings;
+import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
+import dev.roanh.kps.config.group.TotalPanelSettings;
 
 public class ConfigParserTest{
 	
@@ -140,5 +151,43 @@ public class ConfigParserTest{
 		assertEquals(GraphMode.DETACHED, graph.getGraphMode());
 		assertFalse(graph.isAverageVisible());
 		assertEquals(45, graph.getBacklog());
+		
+		//special panels
+		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
+		
+		MaxPanelSettings maxSettings = assertInstanceOf(MaxPanelSettings.class, panels.next());
+		assertEquals(6, maxSettings.getX());
+		assertEquals(3, maxSettings.getY());
+		assertEquals(5, maxSettings.getWidth());
+		assertEquals(1, maxSettings.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, maxSettings.getRenderingMode());
+		assertEquals("NMAX", maxSettings.getName());
+		
+		AveragePanelSettings avgSettings = assertInstanceOf(AveragePanelSettings.class, panels.next());
+		assertEquals(9, avgSettings.getX());
+		assertEquals(8, avgSettings.getY());
+		assertEquals(7, avgSettings.getWidth());
+		assertEquals(6, avgSettings.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, avgSettings.getRenderingMode());
+		assertEquals("average", avgSettings.getName());
+		assertEquals(2, avgSettings.getPrecision());
+		
+		CurrentPanelSettings curSettings = assertInstanceOf(CurrentPanelSettings.class, panels.next());
+		assertEquals(0, curSettings.getX());
+		assertEquals(9, curSettings.getY());
+		assertEquals(4, curSettings.getWidth());
+		assertEquals(5, curSettings.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, curSettings.getRenderingMode());
+		assertEquals("kps", curSettings.getName());
+		
+		TotalPanelSettings totSettings = assertInstanceOf(TotalPanelSettings.class, panels.next());
+		assertEquals(1, totSettings.getX());
+		assertEquals(1, totSettings.getY());
+		assertEquals(2, totSettings.getWidth());
+		assertEquals(2, totSettings.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, totSettings.getRenderingMode());
+		assertEquals("Total Panel", totSettings.getName());
+		
+		assertFalse(panels.hasNext());
 	}
 }
