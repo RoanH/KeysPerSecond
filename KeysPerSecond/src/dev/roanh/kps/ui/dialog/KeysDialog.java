@@ -73,7 +73,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	
 	/**
 	 * Constructs a new KeysDialog.
-	 * @see #configureKeys()
+	 * @see #configureKeys(SettingList, boolean)
 	 */
 	private KeysDialog(SettingList<KeyPanelSettings> config, boolean live){
 		super(new BorderLayout());
