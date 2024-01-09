@@ -26,19 +26,19 @@ import dev.roanh.kps.config.setting.IntSetting;
 
 public class LocationSettings extends SettingGroup{
 	/**
-	 * The x position of the panel.
+	 * The x position of the panel (-1 is end).
 	 */
 	protected final IntSetting x;
 	/**
-	 * The y position of the panel.
+	 * The y position of the panel (-1 is end).
 	 */
 	protected final IntSetting y;
 	/**
-	 * The width of the panel.
+	 * The width of the panel (-1 is max).
 	 */
 	protected final IntSetting width;
 	/**
-	 * The height of the panel.
+	 * The height of the panel (-1 is max).
 	 */
 	protected final IntSetting height;
 	

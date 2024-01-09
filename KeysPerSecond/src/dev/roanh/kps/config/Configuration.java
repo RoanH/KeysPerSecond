@@ -46,7 +46,6 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
-import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
@@ -176,10 +175,10 @@ public class Configuration{
 	public float opacitybg = 1.0F;
 
 	//precision
-	/**
-	 * How many digits to display for avg
-	 */
-	public int precision = 0;
+//	/**
+//	 * How many digits to display for avg
+//	 */
+//	public int precision = 0;
 
 	//command keys
 	/**
@@ -211,46 +210,6 @@ public class Configuration{
 	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
 	
 	/**
-	 * Configuration for the average panel.
-	 */
-	public Positionable avgPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
-		
-		@Override
-		public String getName(){
-			return "AVG";
-		}
-	};
-	/**
-	 * Configuration for the max panel.
-	 */
-	public Positionable maxPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
-		
-		@Override
-		public String getName(){
-			return "MAX";
-		}
-	};
-	/**
-	 * Configuration for the current panel.
-	 */
-	public Positionable curPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
-		
-		@Override
-		public String getName(){
-			return "CUR";
-		}
-	};
-	/**
-	 * Configuration for the total panel.
-	 */
-	public Positionable totPanel = new Positionable(-1, 0, 2, 3, RenderingMode.VERTICAL){
-		
-		@Override
-		public String getName(){
-			return "TOT";
-		}
-	};
-	/**
 	 * The offset from the border of a panel
 	 * to the actual panel content
 	 */
@@ -262,47 +221,10 @@ public class Configuration{
 
 	//graph
 	private SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
-//	/**
-//	 * Number of points the graph consists of
-//	 */
-//	public int backlog = 30;
-//	/**
-//	 * Draw the horizontal average line
-//	 */
-//	public boolean graphAvg = true;
-//	/**
-//	 * The x position of the graph (-1 is end)
-//	 */
-//	private int graphX = 0;
-//	/**
-//	 * The y position of the graph (-1 is end)
-//	 */
-//	private int graphY = -1;
-//	/**
-//	 * The width of the graph (-1 is max)
-//	 */
-//	private int graphWidth = -1;
-//	/**
-//	 * The height of the graph (-1 is max)
-//	 */
-//	private int graphHeight = 3;
-//	/**
-//	 * Position the graph is rendered in
-//	 */
-//	public GraphMode graphMode = GraphMode.INLINE;
 	
 	//automatic statistics saving
 	private StatsSavingSettings statsSaving = new StatsSavingSettings();
 	
-	//TODO remove -- already moved ^
-//	public boolean autoSaveStats = false;
-//	public String statsDest = Objects.toString(System.getProperty("user.home"), "");
-//	public String statsFormat = "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'";
-//	public long statsSaveInterval = TimeUnit.MINUTES.toMillis(10);
-//	public boolean saveStatsOnExit = false;
-//	public boolean loadStatsOnLaunch = false;
-//	public String statsSaveFile = Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats";
-
 	
 	
 	
@@ -730,18 +652,18 @@ public class Configuration{
 				case "updateRate":
 					modified |= updateRate.parse(args[1]);
 					break;
-				case "precision":
-					try{
-						precision = Integer.parseInt(args[1]);
-						if(precision < 0 || precision > 3){
-							precision = 0;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						precision = 0;
-						modified = true;
-					}
-					break;
+//				case "precision":
+//					try{
+//						precision = Integer.parseInt(args[1]);
+//						if(precision < 0 || precision > 3){
+//							precision = 0;
+//							modified = true;
+//						}
+//					}catch(NumberFormatException e){
+//						precision = 0;
+//						modified = true;
+//					}
+//					break;
 				case "graphEnabled":
 					showGraph = Boolean.parseBoolean(args[1]);
 					break;
@@ -867,146 +789,146 @@ public class Configuration{
 				case "enableKeyModifierCombinations":
 					modified |= enableModifiers.parse(args[1]);
 					break;
-				case "maxX":
-					try{
-						maxPanel.setX(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "maxY":
-					try{
-						maxPanel.setY(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "maxWidth":
-					try{
-						maxPanel.setWidth(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "maxHeight":
-					try{
-						maxPanel.setHeight(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "maxMode":
-					try{
-						maxPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
-					}catch(IllegalArgumentException e){
-						modified = true;
-					}
-					break;
-				case "avgX":
-					try{
-						avgPanel.setX(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "avgY":
-					try{
-						avgPanel.setY(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "avgWidth":
-					try{
-						avgPanel.setWidth(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "avgHeight":
-					try{
-						avgPanel.setHeight(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "avgMode":
-					try{
-						avgPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
-					}catch(IllegalArgumentException e){
-						modified = true;
-					}
-					break;
-				case "curX":
-					try{
-						curPanel.setX(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "curY":
-					try{
-						curPanel.setY(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "curWidth":
-					try{
-						curPanel.setWidth(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "curHeight":
-					try{
-						curPanel.setHeight(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "curMode":
-					try{
-						curPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
-					}catch(IllegalArgumentException e){
-						modified = true;
-					}
-					break;
-				case "totX":
-					try{
-						totPanel.setX(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "totY":
-					try{
-						totPanel.setY(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "totWidth":
-					try{
-						totPanel.setWidth(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "totHeight":
-					try{
-						totPanel.setHeight(Integer.parseInt(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "totMode":
-					try{
-						totPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
-					}catch(IllegalArgumentException e){
-						modified = true;
-					}
-					break;
+//				case "maxX":
+//					try{
+//						maxPanel.setX(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "maxY":
+//					try{
+//						maxPanel.setY(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "maxWidth":
+//					try{
+//						maxPanel.setWidth(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "maxHeight":
+//					try{
+//						maxPanel.setHeight(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "maxMode":
+//					try{
+//						maxPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
+//					}catch(IllegalArgumentException e){
+//						modified = true;
+//					}
+//					break;
+//				case "avgX":
+//					try{
+//						avgPanel.setX(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "avgY":
+//					try{
+//						avgPanel.setY(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "avgWidth":
+//					try{
+//						avgPanel.setWidth(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "avgHeight":
+//					try{
+//						avgPanel.setHeight(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "avgMode":
+//					try{
+//						avgPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
+//					}catch(IllegalArgumentException e){
+//						modified = true;
+//					}
+//					break;
+//				case "curX":
+//					try{
+//						curPanel.setX(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "curY":
+//					try{
+//						curPanel.setY(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "curWidth":
+//					try{
+//						curPanel.setWidth(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "curHeight":
+//					try{
+//						curPanel.setHeight(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "curMode":
+//					try{
+//						curPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
+//					}catch(IllegalArgumentException e){
+//						modified = true;
+//					}
+//					break;
+//				case "totX":
+//					try{
+//						totPanel.setX(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "totY":
+//					try{
+//						totPanel.setY(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "totWidth":
+//					try{
+//						totPanel.setWidth(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "totHeight":
+//					try{
+//						totPanel.setHeight(Integer.parseInt(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "totMode":
+//					try{
+//						totPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
+//					}catch(IllegalArgumentException e){
+//						modified = true;
+//					}
+//					break;
 //				case "graphX":
 //					try{
 //						graphX = Integer.parseInt(args[1]);
@@ -1292,7 +1214,7 @@ public class Configuration{
 				out.println("trackAllKeys: " + trackAllKeys);
 				out.println("trackAllButtons: " + trackAllButtons);
 				out.println("updateRate: " + updateRate);
-				out.println("precision: " + precision);
+//				out.println("precision: " + precision);
 				out.println("enableKeyModifierCombinations: " + enableModifiers);
 				out.println();
 				//advanced
@@ -1327,26 +1249,26 @@ public class Configuration{
 				out.println("keyReload: " + commandReload.toSaveString());
 				out.println();
 				out.println("# Layout");
-				out.println("maxX: " + maxPanel.getX());
-				out.println("maxY: " + maxPanel.getY());
-				out.println("maxWidth: " + maxPanel.getWidth());
-				out.println("maxHeight: " + maxPanel.getHeight());
-				out.println("maxMode: " + maxPanel.getRenderingMode().name());
-				out.println("avgX: " + avgPanel.getX());
-				out.println("avgY: " + avgPanel.getY());
-				out.println("avgWidth: " + avgPanel.getWidth());
-				out.println("avgHeight: " + avgPanel.getHeight());
-				out.println("avgMode: " + avgPanel.getRenderingMode().name());
-				out.println("curX: " + curPanel.getX());
-				out.println("curY: " + curPanel.getY());
-				out.println("curWidth: " + curPanel.getWidth());
-				out.println("curHeight: " + curPanel.getHeight());
-				out.println("curMode: " + curPanel.getRenderingMode().name());
-				out.println("totX: " + totPanel.getX());
-				out.println("totY: " + totPanel.getY());
-				out.println("totWidth: " + totPanel.getWidth());
-				out.println("totHeight: " + totPanel.getHeight());
-				out.println("totMode: " + totPanel.getRenderingMode().name());
+//				out.println("maxX: " + maxPanel.getX());
+//				out.println("maxY: " + maxPanel.getY());
+//				out.println("maxWidth: " + maxPanel.getWidth());
+//				out.println("maxHeight: " + maxPanel.getHeight());
+//				out.println("maxMode: " + maxPanel.getRenderingMode().name());
+//				out.println("avgX: " + avgPanel.getX());
+//				out.println("avgY: " + avgPanel.getY());
+//				out.println("avgWidth: " + avgPanel.getWidth());
+//				out.println("avgHeight: " + avgPanel.getHeight());
+//				out.println("avgMode: " + avgPanel.getRenderingMode().name());
+//				out.println("curX: " + curPanel.getX());
+//				out.println("curY: " + curPanel.getY());
+//				out.println("curWidth: " + curPanel.getWidth());
+//				out.println("curHeight: " + curPanel.getHeight());
+//				out.println("curMode: " + curPanel.getRenderingMode().name());
+//				out.println("totX: " + totPanel.getX());
+//				out.println("totY: " + totPanel.getY());
+//				out.println("totWidth: " + totPanel.getWidth());
+//				out.println("totHeight: " + totPanel.getHeight());
+//				out.println("totMode: " + totPanel.getRenderingMode().name());
 //				out.println("graphX: " + graphX);
 //				out.println("graphY: " + graphY);
 //				out.println("graphWidth: " + graphWidth);

@@ -8,7 +8,7 @@ import dev.roanh.kps.config.SettingGroup;
 public class ColorSettings extends SettingGroup{
 
 	public ColorSettings(){
-		super("TODO");
+		super("theme");
 		// TODO Auto-generated constructor stub
 	}
 

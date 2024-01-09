@@ -309,7 +309,7 @@ public class Menu{
 		precision.add(p2);
 		precision.add(p3);
 		p0.addActionListener((e)->{
-			Main.config.precision = 0;
+//			Main.config.precision = 0;
 			p0.setSelected(true);
 			p1.setSelected(false);
 			p2.setSelected(false);
@@ -317,7 +317,7 @@ public class Menu{
 			//AvgPanel.INSTANCE.sizeChanged();
 		});
 		p1.addActionListener((e)->{
-			Main.config.precision = 1;
+//			Main.config.precision = 1;
 			p0.setSelected(false);
 			p1.setSelected(true);
 			p2.setSelected(false);
@@ -325,7 +325,7 @@ public class Menu{
 			//AvgPanel.INSTANCE.sizeChanged();
 		});
 		p2.addActionListener((e)->{
-			Main.config.precision = 2;
+//			Main.config.precision = 2;
 			p0.setSelected(false);
 			p1.setSelected(false);
 			p2.setSelected(true);
@@ -333,27 +333,28 @@ public class Menu{
 			//AvgPanel.INSTANCE.sizeChanged();
 		});
 		p3.addActionListener((e)->{
-			Main.config.precision = 3;
+//			Main.config.precision = 3;
 			p0.setSelected(false);
 			p1.setSelected(false);
 			p2.setSelected(false);
 			p3.setSelected(true);
 			//AvgPanel.INSTANCE.sizeChanged();
 		});
-		switch(Main.config.precision){
-		case 0:
-			p0.setSelected(true);
-			break;
-		case 1:
-			p1.setSelected(true);
-			break;
-		case 2:
-			p2.setSelected(true);
-			break;
-		case 3:
-			p3.setSelected(true);
-			break;
-		}
+		//TODO
+//		switch(Main.config.precision){
+//		case 0:
+//			p0.setSelected(true);
+//			break;
+//		case 1:
+//			p1.setSelected(true);
+//			break;
+//		case 2:
+//			p2.setSelected(true);
+//			break;
+//		case 3:
+//			p3.setSelected(true);
+//			break;
+//		}
 		max.setSelected(Main.config.showMax);
 		max.addActionListener((e)->{
 			Main.config.showMax = max.isSelected();

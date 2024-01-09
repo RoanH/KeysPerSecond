@@ -812,23 +812,24 @@ public class Main{
 	 * Shows a dialog to configure the precision.
 	 */
 	private static final void configurePrecision(){
-		JPanel pconfig = new JPanel(new BorderLayout());
-		JLabel info1 = new JLabel("Specify how many digits should be displayed");
-		JLabel info2 = new JLabel("beyond the decimal point for the average.");
-		JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
-		plabels.add(info1);
-		plabels.add(info2);
-		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
-		values.setSelectedIndex(config.precision);
-		JLabel vlabel = new JLabel("Precision: ");
-		JPanel pvalue = new JPanel(new BorderLayout());
-		pvalue.add(vlabel, BorderLayout.LINE_START);
-		pvalue.add(values, BorderLayout.CENTER);
-		pconfig.add(plabels, BorderLayout.CENTER);
-		pconfig.add(pvalue, BorderLayout.PAGE_END);
-		if(Dialog.showSaveDialog(pconfig)){
-			config.precision = values.getSelectedIndex();
-		}
+		//TODO need to move this to be more panel specific
+//		JPanel pconfig = new JPanel(new BorderLayout());
+//		JLabel info1 = new JLabel("Specify how many digits should be displayed");
+//		JLabel info2 = new JLabel("beyond the decimal point for the average.");
+//		JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
+//		plabels.add(info1);
+//		plabels.add(info2);
+//		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
+//		values.setSelectedIndex(config.precision);
+//		JLabel vlabel = new JLabel("Precision: ");
+//		JPanel pvalue = new JPanel(new BorderLayout());
+//		pvalue.add(vlabel, BorderLayout.LINE_START);
+//		pvalue.add(values, BorderLayout.CENTER);
+//		pconfig.add(plabels, BorderLayout.CENTER);
+//		pconfig.add(pvalue, BorderLayout.PAGE_END);
+//		if(Dialog.showSaveDialog(pconfig)){
+//			config.precision = values.getSelectedIndex();
+//		}
 	}
 	
 	/**

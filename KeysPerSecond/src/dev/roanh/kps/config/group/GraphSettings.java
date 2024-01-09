@@ -12,8 +12,17 @@ import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.GraphPanel;
 
 public class GraphSettings extends LocationSettings{
+	/**
+	 * Position the graph is rendered in.
+	 */
 	private final GraphModeSetting mode = new GraphModeSetting("mode", GraphMode.INLINE);
+	/**
+	 * Whether to draw the horizontal average line or not.
+	 */
 	private final BooleanSetting showAvg = new BooleanSetting("showAvg", true);
+	/**
+	 * Number of points the graph consists of.
+	 */
 	private final IntSetting backlog = new IntSetting("backlog", 1, Short.MAX_VALUE, 30);//TODO note that I put a lower limit here compared with the editor
 
 	public GraphSettings(){

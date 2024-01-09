@@ -24,6 +24,14 @@ public class PanelSettings extends LocationSettings{
 		return name.getValue();
 	}
 	
+	public void setRenderingMode(RenderingMode mode){
+		this.mode.update(mode);
+	}
+	
+	public void setName(String name){
+		this.name.update(name);
+	}
+	
 	@Override
 	public boolean parse(Map<String, String> data){
 		return super.parse(data) | findAndParse(data, name, mode);

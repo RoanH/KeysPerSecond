@@ -42,6 +42,8 @@ import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutValidator;
 import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
@@ -77,20 +79,31 @@ public class LayoutDialog{
 		modes.add(new JLabel("Mode", SwingConstants.CENTER));
 
 		for(KeyInformation i : Main.config.keyinfo){
-			createListItem(i, fields, modes, live);
+			//TODO old logic
+//			createListItem(i, fields, modes, live);
 		}
-		if(Main.config.showAvg){
-			createListItem(Main.config.avgPanel, fields, modes, live);
+		
+		//TODO new logic?
+		for(KeyPanelSettings key : Main.config.getKeySettings()){
+			createListItem(key, fields, modes, live);
 		}
-		if(Main.config.showMax){
-			createListItem(Main.config.maxPanel, fields, modes, live);
+		
+		for(PanelSettings panel : Main.config.getPanels()){
+			createListItem(panel, fields, modes, live);
 		}
-		if(Main.config.showCur){
-			createListItem(Main.config.curPanel, fields, modes, live);
-		}
-		if(Main.config.showTotal){
-			createListItem(Main.config.totPanel, fields, modes, live);
-		}
+		
+//		if(Main.config.showAvg){
+//			createListItem(Main.config.avgPanel, fields, modes, live);
+//		}
+//		if(Main.config.showMax){
+//			createListItem(Main.config.maxPanel, fields, modes, live);
+//		}
+//		if(Main.config.showCur){
+//			createListItem(Main.config.curPanel, fields, modes, live);
+//		}
+//		if(Main.config.showTotal){
+//			createListItem(Main.config.totPanel, fields, modes, live);
+//		}
 
 		JPanel keys = new JPanel(new BorderLayout());
 		keys.add(fields, BorderLayout.CENTER);
@@ -201,7 +214,7 @@ public class LayoutDialog{
 	 * @param modes The GUI panel that holds all the modes
 	 * @param live Whether or not edits should be displayed in real time
 	 */
-	private static final void createListItem(Positionable info, JPanel fields, JPanel modes, boolean live){
+	private static final void createListItem(PanelSettings info, JPanel fields, JPanel modes, boolean live){
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
 
 		LayoutValidator validator = new LayoutValidator();
