@@ -18,20 +18,7 @@
  */
 package dev.roanh.kps;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -118,6 +105,11 @@ public class Menu{
 	 */
 	protected static final JCheckBoxMenuItem pause = new JCheckBoxMenuItem("Pause");
 
+    /*
+    * The icon for system tray
+    * */
+    private static TrayIcon trayIcon = null;
+
 	/**
 	 * Repaints the component border
 	 */
@@ -154,6 +146,7 @@ public class Menu{
 		JMenuItem commandkeys = new JMenuItem("Commands");
 		JMenuItem layout = new JMenuItem("Layout");
 		JMenuItem about = new JMenuItem("About");
+		JMenuItem minimizeButton = new JMenuItem("Minimize");
 		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
 		JCheckBoxMenuItem tAllKeys = new JCheckBoxMenuItem("Track all keys");
 		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
@@ -180,6 +173,7 @@ public class Menu{
 		components.add(statsSaving);
 		components.add(layout);
 		components.add(about);
+		components.add(minimizeButton);
 		components.add(save);
 		components.add(snap);
 		components.add(exit);
@@ -225,7 +219,7 @@ public class Menu{
 			JFrame frame = (JFrame)KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 			Point loc = frame.getLocationOnScreen();
 			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();
-			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
+			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x,
 			                  Math.abs(loc.y - bounds.y) < 100 ? bounds.y : Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
 		});
 		exit.addActionListener((e)->{
@@ -234,6 +228,9 @@ public class Menu{
 		about.addActionListener((e)->{
 			showAbout();
 		});
+		minimizeButton.addActionListener((e -> {
+            minimizeToSystemTray();
+        }));
 		pause.setSelected(Main.suspended);
 		pause.addActionListener((e)->{
 			Main.suspended = pause.isSelected();
@@ -429,7 +426,7 @@ public class Menu{
 			LayoutDialog.configureLayout(true);
 			Main.reconfigure();
 		});
-		
+
 		List<JCheckBoxMenuItem> rates = new ArrayList<JCheckBoxMenuItem>();
 		for(UpdateRate val : UpdateRate.values()){
 			JCheckBoxMenuItem item = new JCheckBoxMenuItem(val.toString(), Main.config.getUpdateRate() == val);
@@ -445,7 +442,7 @@ public class Menu{
 			components.add(item);
 			item.setUI(new MenuItemUI());
 		}
-		
+
 		save.addActionListener((e)->{
 			Main.config.saveConfig(true);
 		});
@@ -506,9 +503,72 @@ public class Menu{
 		menu.add(pause);
 		menu.add(saveLoad);
 		menu.add(about);
+        menu.add(minimizeButton);
 		menu.add(exit);
 	}
-	
+
+    /*
+    * Minimize window to system tray
+    * */
+    private static void minimizeToSystemTray() {
+        if (SystemTray.isSupported()) {
+            SystemTray systemTray = SystemTray.getSystemTray();
+
+            if (trayIcon == null) {
+                PopupMenu popupMenu = new PopupMenu();
+                MenuItem exit = new MenuItem("Exit");
+                popupMenu.add(exit);
+
+                exit.addActionListener((e -> {
+                    Main.exit();
+                }));
+
+                trayIcon = new TrayIcon(Main.iconSmall, "KeysPerSecond", popupMenu);
+            }
+
+            try {
+                systemTray.add(trayIcon);
+            } catch (AWTException e) {
+                Dialog.showErrorDialog(e.getMessage());
+            }
+
+            Main.frame.setVisible(false);
+
+            trayIcon.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    /*
+                    * Button 1 -> Left
+                    *        2 -> Middle
+                    *        3 -> Right
+                    * */
+                    if (e.getButton() == 1) {
+                        Main.frame.setVisible(true);
+                        systemTray.remove(trayIcon);
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                }
+            });
+        } else {
+            Dialog.showErrorDialog("Your system doest support system tray");
+        }
+    }
+
 	/**
 	 * Shows an about dialog with useful information.
 	 */
@@ -517,60 +577,60 @@ public class Menu{
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.weightx = 1.0D;
 		gc.gridx = 0;
-		
+
 		JLabel header = new JLabel("KeysPerSecond " + Main.VERSION, SwingConstants.CENTER);
 		header.setFont(new Font("Dialog", Font.BOLD, 18));
 		content.add(header, gc);
-		
+
 		content.add(new JLabel(
 			"<html>KeysPerSecond is an open source input statistics displayer"
 			+ "<br>released for free under the GPLv3. Any bugs and feature"
 			+ "<br>requests can be reported on GitHub.</html>"
 		), gc);
-		
+
 		content.add(Box.createVerticalStrut(10), gc);
-		
+
 		//github
 		gc.anchor = GridBagConstraints.LINE_START;
-		JPanel line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+		JPanel line = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		line.add(new JLabel("<html><b>GitHub:</b></html>", SwingConstants.LEFT), gc);
 		content.add(line, gc);
-		
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		line.add(new JLabel("  - "));
 		JLabel label = new JLabel("<html><font color=blue><u>Main Page</u></font></html>");
 		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
 		line.add(label);
 		content.add(line, gc);
-		
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		line.add(new JLabel("  - "));
 		label = new JLabel("<html><font color=blue><u>Issues</u></font></html>");
 		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond/issues"));
 		line.add(label);
 		line.add(new JLabel("(bugs & feature requests)"));
 		content.add(line, gc);
-		
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+
+		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		line.add(new JLabel("  - "));
 		label = new JLabel("<html><font color=blue><u>Releases</u></font></html>");
 		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond/releases"));
 		line.add(label);
 		line.add(new JLabel("(release notes & downloads)"));
 		content.add(line, gc);
-		
+
 		//version
 		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		line.add(new JLabel("<html><b>Latest version</b>: "));
 		JLabel versionLabel = new JLabel("checking...");
 		line.add(versionLabel);
 		content.add(line, gc);
-		
+
 		new Thread(()->{
 			String version = Util.checkVersion("RoanH", "KeysPerSecond");
 			versionLabel.setText(version.equals(Main.VERSION) ? version : (version + "  (update available)"));
 		}, "Version Checker").start();
-		
+
 		//contact
 		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		line.add(new JLabel("<html><b>Contact</b>:&nbsp;&nbsp;Roan Hofland</html>"));
@@ -578,7 +638,7 @@ public class Menu{
 		email.addMouseListener(new ClickableLink("mailto:roan@roanh.dev"));
 		line.add(email);
 		content.add(line, gc);
-		
+
 		Dialog.showMessageDialog(content);
 	}
 

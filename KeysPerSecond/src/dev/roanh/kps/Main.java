@@ -191,11 +191,11 @@ public class Main{
 	/**
 	 * Small icon for the program
 	 */
-	private static final Image iconSmall;
+	public static final Image iconSmall;
 	/**
 	 * Icon for the program
 	 */
-	private static final Image icon;
+	public static final Image icon;
 	/**
 	 * Called when a frame is closed
 	 */
