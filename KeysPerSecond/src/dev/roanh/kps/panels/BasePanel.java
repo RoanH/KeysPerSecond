@@ -85,22 +85,23 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 		g.addRenderingHints(Main.desktopHints);
 
-		g.drawImage(ColorManager.graph_upper_left,   Main.config.borderOffset, Main.config.borderOffset, Main.config.borderOffset + imageSize, Main.config.borderOffset + imageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_left,   Main.config.borderOffset, this.getHeight() - Main.config.borderOffset - imageSize, Main.config.borderOffset + imageSize, this.getHeight() - Main.config.borderOffset, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - Main.config.borderOffset - imageSize, Main.config.borderOffset, this.getWidth() - Main.config.borderOffset, Main.config.borderOffset + imageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - Main.config.borderOffset - imageSize, this.getHeight() - Main.config.borderOffset - imageSize, this.getWidth() - Main.config.borderOffset, this.getHeight() - Main.config.borderOffset, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_side_left,    Main.config.borderOffset, Main.config.borderOffset + imageSize, Main.config.borderOffset + imageSize, this.getHeight() - Main.config.borderOffset - imageSize, 0, 0, 4, 56, this);
-		g.drawImage(ColorManager.graph_upper_middle, Main.config.borderOffset + imageSize, Main.config.borderOffset, this.getWidth() - Main.config.borderOffset - imageSize, Main.config.borderOffset + imageSize, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_lower_middle, Main.config.borderOffset + imageSize, this.getHeight() - Main.config.borderOffset - imageSize, this.getWidth() - Main.config.borderOffset - imageSize, this.getHeight() - Main.config.borderOffset, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - Main.config.borderOffset - imageSize, Main.config.borderOffset + imageSize, this.getWidth() - Main.config.borderOffset, this.getHeight() - Main.config.borderOffset - imageSize, 0, 0, 4, 56, this);
+		int borderOffset = Main.config.getBorderOffset();
+		g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + imageSize, borderOffset + imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - imageSize, borderOffset + imageSize, this.getHeight() - borderOffset, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - borderOffset - imageSize, borderOffset, this.getWidth() - borderOffset, borderOffset + imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - borderOffset - imageSize, this.getHeight() - borderOffset - imageSize, this.getWidth() - borderOffset, this.getHeight() - borderOffset, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_side_left,    borderOffset, borderOffset + imageSize, borderOffset + imageSize, this.getHeight() - borderOffset - imageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_upper_middle, borderOffset + imageSize, borderOffset, this.getWidth() - borderOffset - imageSize, borderOffset + imageSize, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_lower_middle, borderOffset + imageSize, this.getHeight() - borderOffset - imageSize, this.getWidth() - borderOffset - imageSize, this.getHeight() - borderOffset, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - borderOffset - imageSize, borderOffset + imageSize, this.getWidth() - borderOffset, this.getHeight() - borderOffset - imageSize, 0, 0, 4, 56, this);
 		
 		if(isActive()){
 			g.setColor(ColorManager.activeColor);
 			g.fillRect(
-				Main.config.borderOffset + (imageSize / 4) * 3,
-				Main.config.borderOffset + (imageSize / 4) * 2,
-				this.getWidth() - 2 * Main.config.borderOffset - (imageSize / 4) * 6,
-				this.getHeight() - 2 * Main.config.borderOffset - (imageSize / 4) * 4
+				borderOffset + (imageSize / 4) * 3,
+				borderOffset + (imageSize / 4) * 2,
+				this.getWidth() - 2 * borderOffset - (imageSize / 4) * 6,
+				this.getHeight() - 2 * borderOffset - (imageSize / 4) * 4
 			);
 			g.setColor(Main.config.getBackgroundColor());
 		}else{

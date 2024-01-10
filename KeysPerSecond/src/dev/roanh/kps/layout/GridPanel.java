@@ -52,11 +52,13 @@ public class GridPanel extends JPanel{
 		g.setComposite(comp);
 		if(showGrid){
 			g.setColor(ColorManager.alphaAqua);
-			for(int i = Main.config.cellSize; i < this.getWidth(); i += Main.config.cellSize){
+			int cellSize = Main.config.getCellSize();
+			
+			for(int i = cellSize; i < this.getWidth(); i += cellSize){
 				g.drawLine(i, 0, i, this.getHeight());
 				g.drawLine(i - 1, 0, i - 1, this.getHeight());
 			}
-			for(int i = Main.config.cellSize; i < this.getHeight(); i += Main.config.cellSize){
+			for(int i = cellSize; i < this.getHeight(); i += cellSize){
 				g.drawLine(0, i, this.getWidth(), i);
 				g.drawLine(0, i - 1, this.getWidth(), i - 1);
 			}

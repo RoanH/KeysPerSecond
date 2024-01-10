@@ -20,6 +20,10 @@ commands:
   pause: 1114132
   reload: 1114131
 
+layout:
+  cellSize: 22
+  borderOffset: 2
+
 statsSaving:
   autoSave: false
   autoDestination: C:\Users\RoanH

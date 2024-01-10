@@ -37,6 +37,7 @@ import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
@@ -79,8 +80,6 @@ public class ConfigParserTest{
 		//TODO probably test new format first
 		
 		
-		//TODO layout (just borderoffset and cell size I guess now?)
-
 		//commands
 		CommandKeys.isCtrlDown = true;
 		CommandSettings commands = config.getCommands();
@@ -114,6 +113,10 @@ public class ConfigParserTest{
 		assertEquals(1114131, cmd.getValue());
 		assertTrue(cmd.matches(19));
 		assertEquals("Ctrl + R", cmd.toDisplayString());
+		
+		//layout
+		assertEquals(22, config.getCellSize());
+		assertEquals(2, config.getBorderOffset());
 		
 		//stats
 		StatsSavingSettings stats = config.getStatsSavingSettings();
@@ -280,6 +283,10 @@ public class ConfigParserTest{
 		assertTrue(cmd.matches(19));
 		assertEquals("Ctrl + R", cmd.toDisplayString());
 		
+		//layout
+		assertEquals(22, config.getCellSize());
+		assertEquals(2, config.getBorderOffset());
+
 		//stats
 		StatsSavingSettings stats = config.getStatsSavingSettings();
 		assertFalse(stats.isAutoSaveEnabled());

@@ -82,6 +82,8 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				Graphics2D g = (Graphics2D)g1;
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+				int borderOffset = Main.config.getBorderOffset();
+				
 				if(ColorManager.transparency){
 					g.setColor(ColorManager.transparent);
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -95,35 +97,35 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 				}
 				Polygon poly = new Polygon();
-				poly.addPoint(this.getWidth() - Main.config.borderOffset - RenderingMode.insideOffset - 2, this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - 1);
+				poly.addPoint(this.getWidth() - borderOffset - RenderingMode.insideOffset - 2, this.getHeight() - borderOffset - RenderingMode.insideOffset - 1);
 				for(int i = 1; i <= values.size(); i++){
-					int px = (int)(Main.config.borderOffset + RenderingMode.insideOffset + ((double)(this.getWidth() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2 - 2) / (double)(config.getBacklog() - 1)) * (config.getBacklog() - i));
-					int py = (int)(this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - 1 - ((float)((this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * values.get(i - 1)) / (float)maxval));
+					int px = (int)(borderOffset + RenderingMode.insideOffset + ((double)(this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 2) / (double)(config.getBacklog() - 1)) * (config.getBacklog() - i));
+					int py = (int)(this.getHeight() - borderOffset - RenderingMode.insideOffset - 1 - ((float)((this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2) * values.get(i - 1)) / (float)maxval));
 					poly.addPoint(px, py);
 					if(i == values.size()){
-						poly.addPoint(px, this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - 1);
+						poly.addPoint(px, this.getHeight() - borderOffset - RenderingMode.insideOffset - 1);
 					}
 				}
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
 				if(config.isAverageVisible()){
-					int y = (int)(this.getHeight() - Main.config.borderOffset - RenderingMode.insideOffset - (((this.getHeight() - (Main.config.borderOffset + RenderingMode.insideOffset) * 2) * Main.avg) / maxval));
+					int y = (int)(this.getHeight() - borderOffset - RenderingMode.insideOffset - (((this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2) * Main.avg) / maxval));
 					g.setColor(Main.config.getForegroundColor().darker());
 					g.setStroke(avgstroke);
-					g.drawLine(Main.config.borderOffset + RenderingMode.insideOffset, y, this.getWidth() - Main.config.borderOffset - RenderingMode.insideOffset - 2, y);
+					g.drawLine(borderOffset + RenderingMode.insideOffset, y, this.getWidth() - borderOffset - RenderingMode.insideOffset - 2, y);
 				}
 				g.setStroke(line);
 				g.setColor(ColorManager.alphaAqua);
 				g.fillPolygon(poly);
 				g.setColor(Main.config.getForegroundColor());
 				g.drawPolygon(poly);
-				g.drawImage(ColorManager.graph_upper_left,   Main.config.borderOffset, Main.config.borderOffset, Main.config.borderOffset + BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_lower_left,   Main.config.borderOffset, this.getHeight() - Main.config.borderOffset - 1 - BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, Main.config.borderOffset, this.getWidth() - Main.config.borderOffset - 1, Main.config.borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getWidth() - 1 - Main.config.borderOffset, this.getHeight() - 1 - Main.config.borderOffset, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_side_left,    Main.config.borderOffset, Main.config.borderOffset + BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
-				g.drawImage(ColorManager.graph_upper_middle, Main.config.borderOffset + BasePanel.imageSize, Main.config.borderOffset, this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, 0, 0, 46, 4, this);
-				g.drawImage(ColorManager.graph_lower_middle, Main.config.borderOffset + BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, this.getHeight() - 1 - Main.config.borderOffset, 0, 0, 46, 4, this);
-				g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 1 - Main.config.borderOffset - BasePanel.imageSize, Main.config.borderOffset + BasePanel.imageSize, this.getWidth() - 1 - Main.config.borderOffset, this.getHeight() - 1 - Main.config.borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
+				g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - 1 - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset, this.getWidth() - borderOffset - 1, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
+				g.drawImage(ColorManager.graph_side_left,    borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
+				g.drawImage(ColorManager.graph_upper_middle, borderOffset + BasePanel.imageSize, borderOffset, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 46, 4, this);
+				g.drawImage(ColorManager.graph_lower_middle, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 46, 4, this);
+				g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
 			}catch(NullPointerException e){
 				//catch but do not solve, this is caused by a race
 				//condition. However adding synchronisation would impact

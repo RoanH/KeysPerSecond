@@ -85,7 +85,7 @@ public class Layout implements LayoutManager2{
 	 * @return The width in pixels of this layout
 	 */
 	public int getWidth(){
-		return Main.config.cellSize * (maxw + extraWidth);
+		return Main.config.getCellSize() * (maxw + extraWidth);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class Layout implements LayoutManager2{
 	 * @return The height in pixels of this layout
 	 */
 	public int getHeight(){
-		return Main.config.cellSize * (maxh + extraHeight);
+		return Main.config.getCellSize() * (maxh + extraHeight);
 	}
 
 	/**

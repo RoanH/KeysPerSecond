@@ -39,6 +39,7 @@ import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
@@ -153,6 +154,7 @@ public class Configuration{
 		
 	
 	//colors
+	//TODO themesettings is a thing
 	/**
 	 * Whether or not to use custom colors
 	 */
@@ -180,15 +182,16 @@ public class Configuration{
 	//special panels / layout
 	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
 	
-	/**
-	 * The offset from the border of a panel
-	 * to the actual panel content
-	 */
-	public int borderOffset = 2;
-	/**
-	 * The pixel size of one cell in this program
-	 */
-	public int cellSize = 22;
+	private LayoutSettings layout = new LayoutSettings();
+//	/**
+//	 * The offset from the border of a panel
+//	 * to the actual panel content
+//	 */
+//	public int borderOffset = 2;
+//	/**
+//	 * The pixel size of one cell in this program
+//	 */
+//	public int cellSize = 22;
 
 	//graph
 	private SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
@@ -243,6 +246,7 @@ public class Configuration{
 		if(version.isBefore(8, 8)){
 			statsSaving.collectLegacyProxies(settings);
 			commands.collectLegacyProxies(settings);
+			layout.collectLegacyProxies(settings);
 			
 			GraphSettings graph = new GraphSettings();
 			graph.collectLegacyProxies(settings);
@@ -269,18 +273,28 @@ public class Configuration{
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){
-		return Arrays.asList(statsSaving, commands);//TODO
+		return Arrays.asList(statsSaving, commands, layout);//TODO
 	}
 	
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
-		return Arrays.asList(graphs, keys, panels);
-		
-		
-		
-		//TODO
+		return Arrays.asList(graphs, keys, panels);//TODO
 	}
 	
 	
+	
+	
+	
+	public LayoutSettings getLayout(){
+		return layout;
+	}
+	
+	public int getCellSize(){
+		return layout.getCellSize();
+	}
+	
+	public int getBorderOffset(){
+		return layout.getBorderOffset();
+	}
 	
 	public CommandSettings getCommands(){
 		return commands;
@@ -603,33 +617,10 @@ public class Configuration{
 				case "graphPosition":
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
-				case "borderOffset":
-					try{
-						borderOffset = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "cellSize":
-					try{
-						cellSize = Integer.parseInt(args[1]);
-						if(cellSize < BasePanel.imageSize){
-							cellSize = BasePanel.imageSize;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
 				}
 			}
 			
 			
-			//TODO post validation I guess -- need to move
-			if(borderOffset > cellSize - BasePanel.imageSize){
-				borderOffset = cellSize - BasePanel.imageSize;
-				modified = true;
-			}
 			
 			
 			
@@ -812,8 +803,8 @@ public class Configuration{
 //				out.println("graphWidth: " + graphWidth);
 //				out.println("graphHeight: " + graphHeight);
 //				out.println("graphMode: " + graphMode.name());
-				out.println("cellSize: " + cellSize);
-				out.println("borderOffset: " + borderOffset);
+//				out.println("cellSize: " + cellSize);
+//				out.println("borderOffset: " + borderOffset);
 				out.println();
 //				out.println("# Stats auto saving");
 //				out.println("autoSaveStats: " + autoSaveStats);
@@ -824,11 +815,11 @@ public class Configuration{
 //				out.println("loadStatsOnLaunch: " + loadStatsOnLaunch);
 //				out.println("statsSaveFile: " + statsSaveFile);
 				out.println();
-				out.println("# Keys");
-				out.println("keys: ");
-				for(KeyInformation i : keyinfo){
-					out.println("  - " + i.toString());
-				}
+//				out.println("# Keys");
+//				out.println("keys: ");
+//				for(KeyInformation i : keyinfo){
+//					out.println("  - " + i.toString());
+//				}
 				out.close();
 				out.flush();
 				Dialog.showMessageDialog("Configuration succesfully saved");

@@ -38,14 +38,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import dev.roanh.kps.GraphMode;
-import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutValidator;
-import dev.roanh.kps.layout.Positionable;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.ui.model.DynamicInteger;
 import dev.roanh.kps.ui.model.EndNumberModel;
@@ -78,12 +77,6 @@ public class LayoutDialog{
 		fields.add(new JLabel("Height", SwingConstants.CENTER));
 		modes.add(new JLabel("Mode", SwingConstants.CENTER));
 
-		for(KeyInformation i : Main.config.keyinfo){
-			//TODO old logic
-//			createListItem(i, fields, modes, live);
-		}
-		
-		//TODO new logic?
 		for(KeyPanelSettings key : Main.config.getKeySettings()){
 			createListItem(key, fields, modes, live);
 		}
@@ -92,19 +85,6 @@ public class LayoutDialog{
 			createListItem(panel, fields, modes, live);
 		}
 		
-//		if(Main.config.showAvg){
-//			createListItem(Main.config.avgPanel, fields, modes, live);
-//		}
-//		if(Main.config.showMax){
-//			createListItem(Main.config.maxPanel, fields, modes, live);
-//		}
-//		if(Main.config.showCur){
-//			createListItem(Main.config.curPanel, fields, modes, live);
-//		}
-//		if(Main.config.showTotal){
-//			createListItem(Main.config.totPanel, fields, modes, live);
-//		}
-
 		JPanel keys = new JPanel(new BorderLayout());
 		keys.add(fields, BorderLayout.CENTER);
 		keys.add(modes, BorderLayout.LINE_END);
@@ -113,26 +93,24 @@ public class LayoutDialog{
 		view.add(keys, BorderLayout.PAGE_START);
 		view.add(new JPanel(), BorderLayout.CENTER);
 		
+		LayoutSettings layout = Main.config.getLayout();
 		JPanel gridSize = new JPanel(new GridLayout(2, 2, 0, 5));
 		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
 		gridSize.add(new JLabel("Cell size: "));
-		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(Main.config.cellSize, BasePanel.imageSize, Integer.MAX_VALUE, 1));
+		JSpinner gridSpinner = new JSpinner(new SpinnerNumberModel(layout.getCellSize(), BasePanel.imageSize, Integer.MAX_VALUE, 1));
 		gridSize.add(gridSpinner);
 		gridSize.add(new JLabel("Panel border offset: "));
-		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(Main.config.borderOffset, 0, new DynamicInteger(()->(Main.config.cellSize - BasePanel.imageSize)), 1));
+		JSpinner gapSpinner = new JSpinner(new SpinnerNumberModel(layout.getBorderOffset(), 0, new DynamicInteger(()->(layout.getCellSize() - BasePanel.imageSize)), 1));
 		gapSpinner.addChangeListener((e)->{
-			Main.config.borderOffset = (int)gapSpinner.getValue();
+			layout.setBorderOffset((int)gapSpinner.getValue());
 			if(live){
 				Main.reconfigure();
 			}
 		});
 		gridSize.add(gapSpinner);
 		gridSpinner.addChangeListener((e)->{
-			Main.config.cellSize = (int)gridSpinner.getValue();
-			if(Main.config.borderOffset > Main.config.cellSize - BasePanel.imageSize){
-				Main.config.borderOffset = Main.config.cellSize - BasePanel.imageSize;
-				gapSpinner.setValue(Main.config.borderOffset);
-			}
+			layout.setCellSize((int)gridSpinner.getValue());
+			gapSpinner.setValue(layout.getBorderOffset());
 			if(live){
 				Main.reconfigure();
 			}

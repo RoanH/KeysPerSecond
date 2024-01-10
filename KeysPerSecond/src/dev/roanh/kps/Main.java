@@ -1044,7 +1044,7 @@ public class Main{
 				}else{
 					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
 					graphFrame.add(graph);
-					graphFrame.setSize(config.getGraphSettings().getWidth() * config.cellSize, config.getGraphSettings().getHeight() * config.cellSize);
+					graphFrame.setSize(config.getGraphSettings().getWidth() * config.getCellSize(), config.getGraphSettings().getHeight() * config.getCellSize());
 					graphFrame.setVisible(true);
 				}
 			}else{
