@@ -66,12 +66,9 @@ public class ConfigParserTest{
 //		allkeys
 //		allbuttons
 		assertEquals(100, config.getUpdateRateMs());
-//		percision
 		assertFalse(config.isKeyModifierTrackingEnabled());
 		
-//		graph enable
-//		graph backlog
-//		graph avg
+//		graph enable -- this one is not handled yet
 		
 //		custom colour
 //		foreground col
@@ -86,7 +83,7 @@ public class ConfigParserTest{
 //		cmd pause
 //		cmd reload
 		
-		//TODO layout
+		//TODO layout (just borderoffset and cell size I guess now?)
 		
 		//stats
 		StatsSavingSettings stats = config.getStatsSavingSettings();
@@ -97,9 +94,15 @@ public class ConfigParserTest{
 		assertFalse(stats.isSaveOnExitEnabled());
 		assertFalse(stats.isLoadOnLaunchEnabled());
 		
-		//TODO graph
-		
-		//TODO keys
+		//graph
+		GraphSettings graph = config.getGraphSettings();
+		assertEquals(0, graph.getX());
+		assertEquals(-1, graph.getY());
+		assertEquals(40, graph.getWidth());
+		assertEquals(7, graph.getHeight());
+		assertEquals(GraphMode.INLINE, graph.getGraphMode());
+		assertTrue(graph.isAverageVisible());
+		assertEquals(1800, graph.getBacklog());
 		
 		//special panels
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
@@ -139,6 +142,7 @@ public class ConfigParserTest{
 		
 		assertFalse(panels.hasNext());
 		
+		//TODO keys
 	}
 	
 	@Test

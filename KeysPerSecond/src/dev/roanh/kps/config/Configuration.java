@@ -30,6 +30,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
@@ -665,9 +666,6 @@ public class Configuration{
 				case "showKeys":
 					showKeys = Boolean.parseBoolean(args[1]);
 					break;
-				case "overlay":
-					modified |= overlay.parse(args[1]);
-					break;
 				case "trackAllKeys":
 					//trackAllKeys = Boolean.parseBoolean(args[1]);
 					trackAllButtons = trackAllKeys;//for backwards compatibility -- this kinda only works because buttons are parsed after keys so it always overrides if present -- do I need to support this or is it a relic from an ancient config format I no longer support?
@@ -676,21 +674,6 @@ public class Configuration{
 				case "trackAllButtons":
 					//trackAllButtons = Boolean.parseBoolean(args[1]);
 					break;
-				case "updateRate":
-					modified |= updateRate.parse(args[1]);
-					break;
-//				case "precision":
-//					try{
-//						precision = Integer.parseInt(args[1]);
-//						if(precision < 0 || precision > 3){
-//							precision = 0;
-//							modified = true;
-//						}
-//					}catch(NumberFormatException e){
-//						precision = 0;
-//						modified = true;
-//					}
-//					break;
 				case "graphEnabled":
 					showGraph = Boolean.parseBoolean(args[1]);
 					break;
@@ -803,155 +786,12 @@ public class Configuration{
 				case "graphPosition":
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
-				case "textMode"://oof this entire setting is legacy compatibility...
+				case "textMode"://oof this entire setting is legacy compatibility... -- see note later, probably fine to remove now
 					modified |= defaultMode.parse(args[1]);
 					break;
 //				case "graphMode":
 //					try{
 //						graphMode = GraphMode.valueOf(args[1]);
-//					}catch(IllegalArgumentException e){
-//						modified = true;
-//					}
-//					break;
-				case "enableKeyModifierCombinations":
-					modified |= enableModifiers.parse(args[1]);
-					break;
-//				case "maxX":
-//					try{
-//						maxPanel.setX(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "maxY":
-//					try{
-//						maxPanel.setY(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "maxWidth":
-//					try{
-//						maxPanel.setWidth(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "maxHeight":
-//					try{
-//						maxPanel.setHeight(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "maxMode":
-//					try{
-//						maxPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
-//					}catch(IllegalArgumentException e){
-//						modified = true;
-//					}
-//					break;
-//				case "avgX":
-//					try{
-//						avgPanel.setX(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "avgY":
-//					try{
-//						avgPanel.setY(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "avgWidth":
-//					try{
-//						avgPanel.setWidth(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "avgHeight":
-//					try{
-//						avgPanel.setHeight(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "avgMode":
-//					try{
-//						avgPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
-//					}catch(IllegalArgumentException e){
-//						modified = true;
-//					}
-//					break;
-//				case "curX":
-//					try{
-//						curPanel.setX(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "curY":
-//					try{
-//						curPanel.setY(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "curWidth":
-//					try{
-//						curPanel.setWidth(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "curHeight":
-//					try{
-//						curPanel.setHeight(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "curMode":
-//					try{
-//						curPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
-//					}catch(IllegalArgumentException e){
-//						modified = true;
-//					}
-//					break;
-//				case "totX":
-//					try{
-//						totPanel.setX(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "totY":
-//					try{
-//						totPanel.setY(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "totWidth":
-//					try{
-//						totPanel.setWidth(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "totHeight":
-//					try{
-//						totPanel.setHeight(Integer.parseInt(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "totMode":
-//					try{
-//						totPanel.setRenderingMode(RenderingMode.valueOf(args[1]));
 //					}catch(IllegalArgumentException e){
 //						modified = true;
 //					}
@@ -1002,30 +842,6 @@ public class Configuration{
 						modified = true;
 					}
 					break;
-//				case "autoSaveStats":
-//					autoSaveStats = Boolean.parseBoolean(args[1]);
-//					break;
-//				case "statsSaveInterval":
-//					try{
-//						statsSaveInterval = Long.parseLong(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "statsDest":
-//					if(args.length > 1){
-//						statsDest = args[1];
-//					}else{
-//						modified = true;
-//					}
-//					break;
-//				case "statsFormat":
-//					if(args.length > 1){
-//						statsFormat = args[1];
-//					}else{
-//						modified = true;
-//					}
-//					break;
 //				case "saveStatsOnExit":
 //					saveStatsOnExit = Boolean.parseBoolean(args[1]);
 //					break;
@@ -1037,6 +853,9 @@ public class Configuration{
 //					break;
 				}
 			}
+			
+			
+			//TODO post validation I guess -- need to move
 			if(borderOffset > cellSize - BasePanel.imageSize){
 				borderOffset = cellSize - BasePanel.imageSize;
 				modified = true;
@@ -1096,6 +915,20 @@ public class Configuration{
 		
 		return new CMD(code, alt, ctrl);
 	}
+	
+	//TODO probably want to do some layout validation due to the special -1 values
+	/**
+	 * Regex used to parse the legacy key format used from v8.0 to v8.7.<br>
+	 * Group 1: key keycode.<br>
+	 * Group 2: panel x location.<br>
+	 * Group 3: panel y location.<br>
+	 * Group 4: panel width.<br>
+	 * Group 5: panel height.<br>
+	 * Group 6: panel rendering mode.<br>
+	 * Group 7: true/false if the panel is visible or not.<br>
+	 * Group 8: display name of the panel.
+	 */
+	private static final Pattern LEGEACY_KEY_REGEX = Pattern.compile("^\\[keycode=(\\d+),x=(-?\\d+),y=(-?\\d+),width=(-?\\d+),height=(-?\\d+),mode=(HORIZONTAL_TN|HORIZONTAL_NT|DIAGONAL1|DIAGONAL2|DIAGONAL3|DIAGONAL4|VERTICAL|TEXT_ONLY|VALUE_ONLY),visible=(true|false),name=\\\"(.*)\\\"]$");
 
 	/**
 	 * Parses the text representation of a key
@@ -1104,7 +937,8 @@ public class Configuration{
 	 * @param mode The default rendering mode to use
 	 * @return The key data
 	 */
-	private final KeyInformation parseKey(String arg, RenderingMode mode){
+	//TODO default rendering mode was added as a bridge from v7.4 to v8.0 and v7.4 format is discontinued, probably fine to remove textMode as a legacy setting
+	private final KeyInformation parseKey(String arg, RenderingMode mode){//TODO when was the default mode introduced?
 		String[] args = arg.substring(1, arg.length() - 1).split(",", 8);
 		String name = null;
 		int code = -1;
