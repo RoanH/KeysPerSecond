@@ -112,16 +112,13 @@ public class CommandSettings extends SettingGroup{
 	}
 
 	@Override
-	public void write(IndentWriter out){
-		out.println("commands");
-		out.increaseIndent();
+	public void writeItems(IndentWriter out){
 		resetStats.write(out);
 		exit.write(out);
 		resetTotals.write(out);
 		hide.write(out);
 		pause.write(out);
 		reload.write(out);
-		out.decreaseIndent();
 	}
 
 	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){

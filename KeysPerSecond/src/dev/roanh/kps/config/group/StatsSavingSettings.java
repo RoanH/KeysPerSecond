@@ -110,9 +110,7 @@ public class StatsSavingSettings extends SettingGroup{
 	}
 	
 	@Override
-	public void write(IndentWriter out){
-		out.println("statsSaving:");
-		out.increaseIndent();
+	public void writeItems(IndentWriter out){
 		autoSave.write(out);
 		autoDestination.write(out);
 		autoFormat.write(out);
@@ -120,7 +118,6 @@ public class StatsSavingSettings extends SettingGroup{
 		saveOnExit.write(out);
 		loadOnLaunch.write(out);
 		saveFile.write(out);
-		out.decreaseIndent();
 	}
 
 	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){

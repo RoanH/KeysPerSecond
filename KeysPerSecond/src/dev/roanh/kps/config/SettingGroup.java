@@ -18,7 +18,6 @@
  */
 package dev.roanh.kps.config;
 
-import java.util.List;
 import java.util.Map;
 
 public abstract class SettingGroup{
@@ -34,12 +33,14 @@ public abstract class SettingGroup{
 
 	public abstract boolean parse(Map<String, String> data);
 	
+	public abstract void writeItems(IndentWriter out);
 	
-	
-	//has to support adding note
-//	public abstract List<Setting<?>> collectSettings();//TODO why does this function exist? if we care about writing could just do that with a write function ehhh actually that would require keeping indent correct which is a pain or not actually
-	
-	public abstract void write(IndentWriter out);
+	public void write(IndentWriter out){
+		out.println(key + ":");
+		out.increaseIndent();
+		writeItems(out);
+		out.decreaseIndent();
+	}
 	
 	protected boolean findAndParse(Map<String, String> data, Setting<?>... settings){
 		boolean modified = false;

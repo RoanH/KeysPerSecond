@@ -105,7 +105,7 @@ public class LocationSettings extends SettingGroup{
 	}
 	
 	@Override
-	public void write(IndentWriter out){
+	public void writeItems(IndentWriter out){
 		x.write(out);
 		y.write(out);
 		width.write(out);

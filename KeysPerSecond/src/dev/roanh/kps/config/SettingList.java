@@ -54,7 +54,7 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 		out.println(key + ":");
 		for(T item : data){
 			out.startListItem();
-			item.write(out);
+			item.writeItems(out);
 			out.endListItem();
 		}
 	}

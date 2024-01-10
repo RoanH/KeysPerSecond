@@ -7,6 +7,11 @@ trackAllButtons: false
 updateRate: 100
 enableKeyModifierCombinations: false
 
+theme:
+  customColors: false
+  foreground: #00FFFF
+  background: #000000
+
 commands:
   resetStats: 1114137
   exit: 1114134
