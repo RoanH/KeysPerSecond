@@ -1,13 +1,11 @@
 package dev.roanh.kps.config.group;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import dev.roanh.kps.Key;
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.layout.Layout;

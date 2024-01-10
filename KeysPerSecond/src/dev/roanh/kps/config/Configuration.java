@@ -30,13 +30,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
-
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
-import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.Statistics;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
@@ -49,7 +45,6 @@ import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
-import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
@@ -247,6 +242,7 @@ public class Configuration{
 		
 		if(version.isBefore(8, 8)){
 			statsSaving.collectLegacyProxies(settings);
+			commands.collectLegacyProxies(settings);
 			
 			GraphSettings graph = new GraphSettings();
 			graph.collectLegacyProxies(settings);
@@ -273,7 +269,7 @@ public class Configuration{
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){
-		return Arrays.asList(statsSaving);//TODO
+		return Arrays.asList(statsSaving, commands);//TODO
 	}
 	
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
@@ -564,7 +560,6 @@ public class Configuration{
 	private final boolean load(Path saveloc){
 		boolean modified = false;
 		try(BufferedReader in = Files.newBufferedReader(saveloc)){
-			RenderingModeSetting defaultMode = new RenderingModeSetting("textMode", RenderingMode.VERTICAL);
 			String line;
 			while((line = in.readLine()) != null){
 				if(line.startsWith("#") || line.isEmpty()){
@@ -605,21 +600,6 @@ public class Configuration{
 				case "graphEnabled":
 					showGraph = Boolean.parseBoolean(args[1]);
 					break;
-//				case "graphBacklog":
-//					try{
-//						backlog = Integer.parseInt(args[1]);
-//						if(backlog <= 0){
-//							backlog = 30;
-//							modified = true;
-//						}
-//					}catch(NumberFormatException e){
-//						backlog = 30;
-//						modified = true;
-//					}
-//					break;
-//				case "graphAverage":
-//					graphAvg = Boolean.parseBoolean(args[1]);
-//					break;
 				case "customColors":
 					customColors = Boolean.parseBoolean(args[1]);
 					break;
@@ -669,89 +649,9 @@ public class Configuration{
 				case "showTotal":
 					showTotal = Boolean.parseBoolean(args[1]);
 					break;
-//				case "keyResetStats":
-//					try{
-//						setCommandResetStats(parseCommand(args[1]));
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "keyExit":
-//					try{
-//						commandExit = parseCommand(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "keyResetTotals":
-//					try{
-//						commandResetTotals = parseCommand(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "keyHide":
-//					try{
-//						commandHide = parseCommand(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "keyPause":
-//					try{
-//						commandPause = parseCommand(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "keyReload":
-//					try{
-//						commandReload = parseCommand(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
 				case "graphPosition":
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
-				case "textMode"://oof this entire setting is legacy compatibility... -- see note later, probably fine to remove now
-					modified |= defaultMode.parse(args[1]);
-					break;
-//				case "graphMode":
-//					try{
-//						graphMode = GraphMode.valueOf(args[1]);
-//					}catch(IllegalArgumentException e){
-//						modified = true;
-//					}
-//					break;
-//				case "graphX":
-//					try{
-//						graphX = Integer.parseInt(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "graphY":
-//					try{
-//						graphY = Integer.parseInt(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "graphWidth":
-//					try{
-//						graphWidth = Integer.parseInt(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
-//				case "graphHeight":
-//					try{
-//						graphHeight = Integer.parseInt(args[1]);
-//					}catch(NumberFormatException e){
-//						modified = true;
-//					}
-//					break;
 				case "borderOffset":
 					try{
 						borderOffset = Integer.parseInt(args[1]);
@@ -770,15 +670,6 @@ public class Configuration{
 						modified = true;
 					}
 					break;
-//				case "saveStatsOnExit":
-//					saveStatsOnExit = Boolean.parseBoolean(args[1]);
-//					break;
-//				case "loadStatsOnLaunch":
-//					loadStatsOnLaunch = Boolean.parseBoolean(args[1]);
-//					break;
-//				case "statsSaveFile":
-//					statsSaveFile = args[1];
-//					break;
 				}
 			}
 			

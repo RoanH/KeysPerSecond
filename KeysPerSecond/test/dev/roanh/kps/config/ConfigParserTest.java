@@ -75,23 +75,8 @@ public class ConfigParserTest{
 //		foreground op
 //		background op
 		
-//		//commands
-//		CommandKeys.isCtrlDown = true;
-//		CommandSettings commands = config.getCommands();
-//		
-//		CommandKeySetting cmd = commands.getCommandResetStats();
-//		assertEquals(1114137, cmd.getValue());
-//		assertTrue(cmd.matches(25));
-//		assertEquals("Ctrl + P", cmd.toDisplayString());
 		
 		//TODO probably test new format first
-		
-//		cmd reset stats
-//		cmd exit
-//		cmd reset totals
-//		cmd hide
-//		cmd pause
-//		cmd reload
 		
 		
 		//TODO layout (just borderoffset and cell size I guess now?)
@@ -259,29 +244,41 @@ public class ConfigParserTest{
 		
 		
 		
-		//note: we assume the order is consistent with the config but this isn't strictly required and may change in the future
-		SettingList<KeyPanelSettings> keys = config.getKeySettings();
-		assertEquals(2, keys.size());
 		
-		KeyPanelSettings key1 = keys.get(0);
-		assertEquals(1048606, key1.getKeyCode());
-		assertEquals(13, key1.getX());
-		assertEquals(0, key1.getY());
-		assertEquals(2, key1.getWidth());
-		assertEquals(3, key1.getHeight());
-		assertEquals(RenderingMode.VALUE_ONLY, key1.getRenderingMode());
-		assertTrue(key1.isVisible());
-		assertEquals("A", key1.getName());
 		
-		KeyPanelSettings key2 = keys.get(1);
-		assertEquals(1048607, key2.getKeyCode());
-		assertEquals(12, key2.getX());
-		assertEquals(9, key2.getY());
-		assertEquals(6, key2.getWidth());
-		assertEquals(7, key2.getHeight());
-		assertEquals(RenderingMode.VALUE_ONLY, key2.getRenderingMode());
-		assertFalse(key2.isVisible());
-		assertEquals("B", key2.getName());
+		//commands
+		CommandKeys.isCtrlDown = true;
+		CommandSettings commands = config.getCommands();
+
+		CommandKeySetting cmd = commands.getCommandResetStats();
+		assertEquals(1114137, cmd.getValue());
+		assertTrue(cmd.matches(25));
+		assertEquals("Ctrl + P", cmd.toDisplayString());
+
+		cmd = commands.getCommandExit();
+		assertEquals(1114134, cmd.getValue());
+		assertTrue(cmd.matches(22));
+		assertEquals("Ctrl + U", cmd.toDisplayString());
+
+		cmd = commands.getCommandResetTotals();
+		assertEquals(1114135, cmd.getValue());
+		assertTrue(cmd.matches(23));
+		assertEquals("Ctrl + I", cmd.toDisplayString());
+
+		cmd = commands.getCommandHide();
+		assertEquals(1114133, cmd.getValue());
+		assertTrue(cmd.matches(21));
+		assertEquals("Ctrl + Y", cmd.toDisplayString());
+
+		cmd = commands.getCommandPause();
+		assertEquals(1114132, cmd.getValue());
+		assertTrue(cmd.matches(20));
+		assertEquals("Ctrl + T", cmd.toDisplayString());
+
+		cmd = commands.getCommandReload();
+		assertEquals(1114131, cmd.getValue());
+		assertTrue(cmd.matches(19));
+		assertEquals("Ctrl + R", cmd.toDisplayString());
 		
 		//stats
 		StatsSavingSettings stats = config.getStatsSavingSettings();
@@ -340,5 +337,29 @@ public class ConfigParserTest{
 		assertEquals("Total Panel", totSettings.getName());
 		
 		assertFalse(panels.hasNext());
+		
+		//keys
+		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		assertEquals(2, keys.size());
+		
+		KeyPanelSettings key1 = keys.get(0);
+		assertEquals(1048606, key1.getKeyCode());
+		assertEquals(13, key1.getX());
+		assertEquals(0, key1.getY());
+		assertEquals(2, key1.getWidth());
+		assertEquals(3, key1.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, key1.getRenderingMode());
+		assertTrue(key1.isVisible());
+		assertEquals("A", key1.getName());
+		
+		KeyPanelSettings key2 = keys.get(1);
+		assertEquals(1048607, key2.getKeyCode());
+		assertEquals(12, key2.getX());
+		assertEquals(9, key2.getY());
+		assertEquals(6, key2.getWidth());
+		assertEquals(7, key2.getHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, key2.getRenderingMode());
+		assertFalse(key2.isVisible());
+		assertEquals("B", key2.getName());
 	}
 }
