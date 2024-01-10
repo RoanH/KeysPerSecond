@@ -1,5 +1,6 @@
 package dev.roanh.kps.config;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -18,22 +19,26 @@ public enum PanelType{
 	TOTAL("total", TotalPanelSettings::new);
 	
 	private final String key;
-	private final ListItemConstructor<SpecialPanelSettings> ctor;
+	private final Supplier<SpecialPanelSettings> ctor;
 	
 	private <T extends PanelSettings> PanelType(String key, Supplier<SpecialPanelSettings> ctor){
 		this.key = key;
-		this.ctor = ListItemConstructor.constructThenParse(ctor);
+		this.ctor = ctor;
 	}
 	
-	public static ParsedItem<SpecialPanelSettings> construct(Map<String, String> data){
-		String key = data.get("type");
+	public static ParsedItem<SpecialPanelSettings> construct(List<String> data){
+		Map<String, String> info = ListItemConstructor.buildMap(data);
+		if(info == null){
+			return null;
+		}
+		
+		String key = info.get("type");
 		for(PanelType type : values()){
 			if(type.key.equals(key)){
-				return type.ctor.construct(data);
+				return ListItemConstructor.constructThenParse(type.ctor, info);
 			}
 		}
 		
-		//TODO invalid key so nothing at all?
 		return null;
 	}
 }

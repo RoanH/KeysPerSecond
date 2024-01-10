@@ -21,9 +21,11 @@ public class KeyPanelSettings extends PanelSettings{
 		super("keys", "");
 	}
 	
+	//TODO move layout logic to the keysdialog and compute there
 	public KeyPanelSettings(Layout layout, int extendedCode){
 		super("keys", layout.placePanelX(2, 3), 0, 2, 3, KeyInformation.getPanelName(extendedCode));
 		keycode.update(extendedCode);
+		//TODO probably want to do some layout validation due to the special -1 values
 	}
 	
 	public int getKeyCode(){
@@ -45,6 +47,7 @@ public class KeyPanelSettings extends PanelSettings{
 	@Override
 	public boolean parse(Map<String, String> data){
 		return super.parse(data) | findAndParse(data, visible, keycode);
+		//TODO probably want to do some layout validation due to the special -1 values
 	}
 	
 	@Override

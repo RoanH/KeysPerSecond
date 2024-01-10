@@ -18,18 +18,14 @@
  */
 package dev.roanh.kps.config;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,12 +36,12 @@ import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
-import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 
 public class ConfigParserTest{
+	//note: in various places we assume the iterator order is consistent with the config but this isn't strictly required and may change in the future
 	
 	@Test
 	public void fullTest1() throws IOException{
@@ -142,7 +138,69 @@ public class ConfigParserTest{
 		
 		assertFalse(panels.hasNext());
 		
-		//TODO keys
+		//keys
+		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		assertEquals(6, keys.size());
+		
+		KeyPanelSettings key1 = keys.get(0);
+		assertEquals(1048606, key1.getKeyCode());
+		assertEquals(13, key1.getX());
+		assertEquals(0, key1.getY());
+		assertEquals(2, key1.getWidth());
+		assertEquals(3, key1.getHeight());
+		assertEquals(RenderingMode.VERTICAL, key1.getRenderingMode());
+		assertTrue(key1.isVisible());
+		assertEquals("A", key1.getName());
+		
+		KeyPanelSettings key2 = keys.get(1);
+		assertEquals(1048607, key2.getKeyCode());
+		assertEquals(15, key2.getX());
+		assertEquals(0, key2.getY());
+		assertEquals(2, key2.getWidth());
+		assertEquals(3, key2.getHeight());
+		assertEquals(RenderingMode.VERTICAL, key2.getRenderingMode());
+		assertTrue(key2.isVisible());
+		assertEquals("S", key2.getName());
+		
+		KeyPanelSettings key3 = keys.get(2);
+		assertEquals(1048615, key3.getKeyCode());
+		assertEquals(17, key3.getX());
+		assertEquals(0, key3.getY());
+		assertEquals(2, key3.getWidth());
+		assertEquals(3, key3.getHeight());
+		assertEquals(RenderingMode.VERTICAL, key3.getRenderingMode());
+		assertTrue(key3.isVisible());
+		assertEquals(";", key3.getName());
+		
+		KeyPanelSettings key4 = keys.get(3);
+		assertEquals(1048616, key4.getKeyCode());
+		assertEquals(19, key4.getX());
+		assertEquals(0, key4.getY());
+		assertEquals(2, key4.getWidth());
+		assertEquals(3, key4.getHeight());
+		assertEquals(RenderingMode.VERTICAL, key4.getRenderingMode());
+		assertTrue(key4.isVisible());
+		assertEquals("\"", key4.getName());
+		
+		KeyPanelSettings key5 = keys.get(4);
+		assertEquals(1048593, key5.getKeyCode());
+		assertEquals(11, key5.getX());
+		assertEquals(0, key5.getY());
+		assertEquals(2, key5.getWidth());
+		assertEquals(3, key5.getHeight());
+		assertEquals(RenderingMode.VERTICAL, key5.getRenderingMode());
+		assertTrue(key5.isVisible());
+		assertEquals("W", key5.getName());
+		
+		KeyPanelSettings key6 = keys.get(5);
+		assertEquals(1048594, key6.getKeyCode());
+		assertEquals(9, key6.getX());
+		assertEquals(0, key6.getY());
+		assertEquals(2, key6.getWidth());
+		assertEquals(3, key6.getHeight());
+		assertEquals(RenderingMode.VERTICAL, key6.getRenderingMode());
+		assertTrue(key6.isVisible());
+		assertEquals("E", key6.getName());
 	}
 	
 	@Test

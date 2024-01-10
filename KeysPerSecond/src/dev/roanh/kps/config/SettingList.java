@@ -3,7 +3,6 @@ package dev.roanh.kps.config;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
 
@@ -21,7 +20,7 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 		return key;
 	}
 	
-	public boolean add(Map<String, String> itemData){
+	public boolean add(List<String> itemData){
 		ParsedItem<T> result = itemConstructor.construct(itemData);
 		if(result == null){
 			return true;

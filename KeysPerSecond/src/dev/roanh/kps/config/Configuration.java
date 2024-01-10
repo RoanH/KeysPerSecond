@@ -154,7 +154,7 @@ public class Configuration{
 	 * Key configuration data, can be serialised
 	 */
 	public List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
-	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", ListItemConstructor.constructThenParse(KeyPanelSettings::new));
+	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
 		
 	
 	//colors
@@ -916,20 +916,7 @@ public class Configuration{
 		return new CMD(code, alt, ctrl);
 	}
 	
-	//TODO probably want to do some layout validation due to the special -1 values
-	/**
-	 * Regex used to parse the legacy key format used from v8.0 to v8.7.<br>
-	 * Group 1: key keycode.<br>
-	 * Group 2: panel x location.<br>
-	 * Group 3: panel y location.<br>
-	 * Group 4: panel width.<br>
-	 * Group 5: panel height.<br>
-	 * Group 6: panel rendering mode.<br>
-	 * Group 7: true/false if the panel is visible or not.<br>
-	 * Group 8: display name of the panel.
-	 */
-	private static final Pattern LEGEACY_KEY_REGEX = Pattern.compile("^\\[keycode=(\\d+),x=(-?\\d+),y=(-?\\d+),width=(-?\\d+),height=(-?\\d+),mode=(HORIZONTAL_TN|HORIZONTAL_NT|DIAGONAL1|DIAGONAL2|DIAGONAL3|DIAGONAL4|VERTICAL|TEXT_ONLY|VALUE_ONLY),visible=(true|false),name=\\\"(.*)\\\"]$");
-
+	
 	/**
 	 * Parses the text representation of a key
 	 * to it's actual data

@@ -215,7 +215,7 @@ public class ConfigParser{
 		char[] lead = new char[4];
 		
 		boolean defaultUsed = false;
-		Map<String, String> item = null;
+		List<String> item = null;
 		while(in.ready()){
 			in.mark(1000);
 			if(in.read(lead, 0, 4) != 4){
@@ -229,7 +229,7 @@ public class ConfigParser{
 					defaultUsed |= list.add(item);
 				}
 				
-				item = new HashMap<String, String>();
+				item = new ArrayList<String>();
 			}else if(!Arrays.equals(lead, LIST_ITEM_BODY)){
 				//end of list
 				in.reset();
@@ -243,14 +243,7 @@ public class ConfigParser{
 				break;
 			}
 			
-			int mark = line.indexOf(':');
-			if(mark == -1){
-				//assume leading whitespace on the next line
-				in.reset();
-				break;
-			}
-			
-			item.put(line.substring(0, mark).trim(), line.substring(mark + 1, line.length()).trim());
+			item.add(line.trim());
 		}
 		
 		//end last item
@@ -260,29 +253,4 @@ public class ConfigParser{
 		
 		return defaultUsed;
 	}
-	
-	
-	
-//	private boolean parseSettings()
-	
-//	private boolean parseSetting(String key, String data){
-//		Setting<?> setting = settings.get(key);
-//		if(setting == null){
-//			//TODO unknown key silently ignore or report -- probably legacy actually
-//		}
-//		
-//		return setting.parse(data);
-//	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
