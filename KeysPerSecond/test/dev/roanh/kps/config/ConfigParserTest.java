@@ -75,14 +75,14 @@ public class ConfigParserTest{
 //		foreground op
 //		background op
 		
-		//commands
-		CommandKeys.isCtrlDown = true;
-		CommandSettings commands = config.getCommands();
-		
-		CommandKeySetting cmd = commands.getCommandResetStats();
-		assertEquals(1114137, cmd.getValue());
-		assertTrue(cmd.matches(25));
-		assertEquals("Ctrl + P", cmd.toDisplayString());
+//		//commands
+//		CommandKeys.isCtrlDown = true;
+//		CommandSettings commands = config.getCommands();
+//		
+//		CommandKeySetting cmd = commands.getCommandResetStats();
+//		assertEquals(1114137, cmd.getValue());
+//		assertTrue(cmd.matches(25));
+//		assertEquals("Ctrl + P", cmd.toDisplayString());
 		
 		//TODO probably test new format first
 		
@@ -95,6 +95,40 @@ public class ConfigParserTest{
 		
 		
 		//TODO layout (just borderoffset and cell size I guess now?)
+
+		//commands
+		CommandKeys.isCtrlDown = true;
+		CommandSettings commands = config.getCommands();
+
+		CommandKeySetting cmd = commands.getCommandResetStats();
+		assertEquals(1114137, cmd.getValue());
+		assertTrue(cmd.matches(25));
+		assertEquals("Ctrl + P", cmd.toDisplayString());
+
+		cmd = commands.getCommandExit();
+		assertEquals(1114134, cmd.getValue());
+		assertTrue(cmd.matches(22));
+		assertEquals("Ctrl + U", cmd.toDisplayString());
+
+		cmd = commands.getCommandResetTotals();
+		assertEquals(1114135, cmd.getValue());
+		assertTrue(cmd.matches(23));
+		assertEquals("Ctrl + I", cmd.toDisplayString());
+		
+		cmd = commands.getCommandHide();
+		assertEquals(1114133, cmd.getValue());
+		assertTrue(cmd.matches(21));
+		assertEquals("Ctrl + Y", cmd.toDisplayString());
+		
+		cmd = commands.getCommandPause();
+		assertEquals(1114132, cmd.getValue());
+		assertTrue(cmd.matches(20));
+		assertEquals("Ctrl + T", cmd.toDisplayString());
+		
+		cmd = commands.getCommandReload();
+		assertEquals(1114131, cmd.getValue());
+		assertTrue(cmd.matches(19));
+		assertEquals("Ctrl + R", cmd.toDisplayString());
 		
 		//stats
 		StatsSavingSettings stats = config.getStatsSavingSettings();
