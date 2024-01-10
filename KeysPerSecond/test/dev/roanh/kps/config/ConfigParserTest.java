@@ -29,9 +29,11 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
+import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.AveragePanelSettings;
+import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
@@ -39,6 +41,7 @@ import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
+import dev.roanh.kps.config.setting.CommandKeySetting;
 
 public class ConfigParserTest{
 	//note: in various places we assume the iterator order is consistent with the config but this isn't strictly required and may change in the future
@@ -72,12 +75,24 @@ public class ConfigParserTest{
 //		foreground op
 //		background op
 		
+		//commands
+		CommandKeys.isCtrlDown = true;
+		CommandSettings commands = config.getCommands();
+		
+		CommandKeySetting cmd = commands.getCommandResetStats();
+		assertEquals(1114137, cmd.getValue());
+		assertTrue(cmd.matches(25));
+		assertEquals("Ctrl + P", cmd.toDisplayString());
+		
+		//TODO probably test new format first
+		
 //		cmd reset stats
 //		cmd exit
 //		cmd reset totals
 //		cmd hide
 //		cmd pause
 //		cmd reload
+		
 		
 		//TODO layout (just borderoffset and cell size I guess now?)
 		

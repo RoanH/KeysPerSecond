@@ -7,7 +7,14 @@ trackAllButtons: false
 updateRate: 100
 enableKeyModifierCombinations: false
 
-# Stats auto saving
+commands:
+  resetStats: 1114137
+  exit: 1114134
+  resetTotals: 1114135
+  hide: 1114133
+  pause: 1114132
+  reload: 1114131
+
 statsSaving:
   autoSave: false
   autoDestination: C:\Users\RoanH
@@ -17,7 +24,6 @@ statsSaving:
   loadOnLaunch: false
   saveFile: C:\Users\RoanH\stats.kpsstats
 
-# Graphs
 graphs:
   - x: 1
     y: 2
@@ -27,7 +33,6 @@ graphs:
     showAvg: false
     backlog: 45
 
-# Panels
 panels:
   - type: max
     x: 6
@@ -59,7 +64,6 @@ panels:
     mode: VALUE_ONLY
     name: Total Panel
 
-# Keys
 keys:
   - keycode: 1048606
     x: 13
