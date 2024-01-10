@@ -7,6 +7,10 @@ public class IndentWriter{
 	private int indent;
 	private boolean nextIsListItem = false;
 	
+	public IndentWriter(PrintWriter writer){
+		this.writer = writer;
+	}
+	
 	public void startListItem(){
 		indent += 4;
 		nextIsListItem = true;
@@ -26,7 +30,7 @@ public class IndentWriter{
 	}
 	
 	public void println(){
-		writer.println();
+		writer.print('\n');
 	}
 	
 	public void println(String val){
@@ -39,6 +43,7 @@ public class IndentWriter{
 			nextIsListItem = false;
 		}
 		
-		writer.println(val);
+		writer.print(val);
+		println();
 	}
 }

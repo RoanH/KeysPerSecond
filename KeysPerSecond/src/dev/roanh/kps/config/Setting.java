@@ -18,6 +18,9 @@
  */
 package dev.roanh.kps.config;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public abstract class Setting<T>{
 	protected final String key;
 	protected T value;
@@ -52,5 +55,12 @@ public abstract class Setting<T>{
 	
 	public T getDefaultValue(){
 		return defaultValue;
+	}
+	
+	@Override
+	public String toString(){
+		StringWriter writer = new StringWriter();
+		write(new IndentWriter(new PrintWriter(writer)));
+		return "Setting[" + writer.toString().replace('\n', ']');
 	}
 }

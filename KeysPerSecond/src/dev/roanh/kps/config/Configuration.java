@@ -350,55 +350,6 @@ public class Configuration{
 	public final Color getForegroundColor(){
 		return customColors ? foreground : Color.CYAN;
 	}
-
-//	/**
-//	 * Sets the command for resetting stats.
-//	 * @param command The new command for resetting stats.
-//	 */
-//	public void setCommandResetStats(CMD command){
-//		commandResetStats = command;
-//	}
-//	
-//	/**
-//	 * Sets the command for resetting totals.
-//	 * @param command The new command for resetting totals.
-//	 */
-//	public void setCommandResetTotals(CMD command){
-//		commandResetTotals = command;
-//	}
-//	
-//
-//	/**
-//	 * Sets the command for hiding the window.
-//	 * @param command The new command for hiding the window.
-//	 */
-//	public void setCommandHide(CMD command){
-//		commandHide = command;
-//	}
-//	
-//	/**
-//	 * Sets the command for pausing updates.
-//	 * @param command The new command for pausing updates.
-//	 */
-//	public void setCommandPause(CMD command){
-//		commandPause = command;
-//	}
-//	
-//	/**
-//	 * Sets the command for reloading the configuration.
-//	 * @param command The new command for reloading the configuration.
-//	 */
-//	public void setCommandReload(CMD command){
-//		commandReload = command;
-//	}
-//
-//	/**
-//	 * Sets the command for exiting the application.
-//	 * @param command The new command for exiting the application.
-//	 */
-//	public void setCommandExit(CMD command){
-//		commandExit = command;
-//	}
 	
 	/**
 	 * Gets the update rate for statistic panels.
