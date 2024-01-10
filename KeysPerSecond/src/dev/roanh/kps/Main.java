@@ -71,6 +71,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
@@ -504,20 +505,21 @@ public class Main{
 	 * @param code The received key press key code.
 	 */
 	private static void triggerCommandKeys(int code){
-		if(config.getCommandResetStats().matches(code)){
+		CommandSettings commands = Main.config.getCommands();
+		if(commands.getCommandResetStats().matches(code)){
 			resetStats();
-		}else if(config.getCommandExit().matches(code)){
+		}else if(commands.getCommandExit().matches(code)){
 			exit();
-		}else if(config.getCommandResetTotals().matches(code)){
+		}else if(commands.getCommandResetTotals().matches(code)){
 			resetTotals();
-		}else if(config.getCommandHide().matches(code)){
+		}else if(commands.getCommandHide().matches(code)){
 			if(frame.getContentPane().getComponentCount() != 0){
 				frame.setVisible(!frame.isVisible());
 			}
-		}else if(config.getCommandPause().matches(code)){
+		}else if(commands.getCommandPause().matches(code)){
 			suspended = !suspended;
 			Menu.pause.setSelected(suspended);
-		}else if(config.getCommandReload().matches(code)){
+		}else if(commands.getCommandReload().matches(code)){
 			config.reloadConfig();
 			Menu.resetData();
 		}
@@ -686,7 +688,7 @@ public class Main{
 			LayoutDialog.configureLayout(false);
 		});
 		cmdkeys.addActionListener((e)->{
-			CommandKeysDialog.configureCommandKeys();
+			CommandKeysDialog.configureCommandKeys(config.getCommands());
 		});
 		precision.addActionListener((e)->{
 			configurePrecision();

@@ -256,7 +256,7 @@ public class Menu{
 			Main.graph.reset();
 		});
 		commandkeys.addActionListener((e)->{
-			CommandKeysDialog.configureCommandKeys();
+			CommandKeysDialog.configureCommandKeys(Main.config.getCommands());
 		});
 		treset.addActionListener((e)->{
 			Main.resetTotals();

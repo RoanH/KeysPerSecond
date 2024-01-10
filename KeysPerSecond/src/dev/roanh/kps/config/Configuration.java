@@ -38,8 +38,8 @@ import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.Statistics;
-import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.group.AveragePanelSettings;
+import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
@@ -179,37 +179,8 @@ public class Configuration{
 	 */
 	public float opacitybg = 1.0F;
 
-	//precision
-//	/**
-//	 * How many digits to display for avg
-//	 */
-//	public int precision = 0;
-
 	//command keys
-	/**
-	 * Reset stats command key
-	 */
-	private CMD commandResetStats = new CMD(NativeKeyEvent.VC_P, false, true);
-	/**
-	 * Reset totals command key
-	 */
-	private CMD commandResetTotals = new CMD(NativeKeyEvent.VC_I, false, true);
-	/**
-	 * Exit command key
-	 */
-	private CMD commandExit = new CMD(NativeKeyEvent.VC_U, false, true);
-	/**
-	 * Hide/show command key
-	 */
-	private CMD commandHide = new CMD(NativeKeyEvent.VC_Y, false, true);
-	/**
-	 * Pause command key
-	 */
-	private CMD commandPause = new CMD(NativeKeyEvent.VC_T, false, true);
-	/**
-	 * Reload command key
-	 */
-	private CMD commandReload = new CMD(NativeKeyEvent.VC_R, false, true);
+	private CommandSettings commands = new CommandSettings();
 
 	//special panels / layout
 	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
@@ -315,6 +286,10 @@ public class Configuration{
 	
 	
 	
+	public CommandSettings getCommands(){
+		return commands;
+	}
+	
 	public GraphSettings getGraphSettings(){
 		//TODO consider empty
 		return graphs.get(0);
@@ -380,101 +355,54 @@ public class Configuration{
 		return customColors ? foreground : Color.CYAN;
 	}
 
-	/**
-	 * Gets the command for resetting stats.
-	 * @return The command for resetting stats.
-	 */
-	public CMD getCommandResetStats(){
-		return commandResetStats;
-	}
-
-	/**
-	 * Sets the command for resetting stats.
-	 * @param command The new command for resetting stats.
-	 */
-	public void setCommandResetStats(CMD command){
-		commandResetStats = command;
-	}
-
-	/**
-	 * Gets the command for resetting totals.
-	 * @return The command for resetting totals.
-	 */
-	public CMD getCommandResetTotals(){
-		return commandResetTotals;
-	}
-
-	/**
-	 * Sets the command for resetting totals.
-	 * @param command The new command for resetting totals.
-	 */
-	public void setCommandResetTotals(CMD command){
-		commandResetTotals = command;
-	}
-	
-	/**
-	 * Gets the command for hiding the window.
-	 * @return The command for hiding the window.
-	 */
-	public CMD getCommandHide(){
-		return commandHide;
-	}
-
-	/**
-	 * Sets the command for hiding the window.
-	 * @param command The new command for hiding the window.
-	 */
-	public void setCommandHide(CMD command){
-		commandHide = command;
-	}
-	
-	/**
-	 * Gets the command for pausing updates.
-	 * @return The command for pausing updates.
-	 */
-	public CMD getCommandPause(){
-		return commandPause;
-	}
-
-	/**
-	 * Sets the command for pausing updates.
-	 * @param command The new command for pausing updates.
-	 */
-	public void setCommandPause(CMD command){
-		commandPause = command;
-	}
-	
-	/**
-	 * Gets the command for reloading the configuration.
-	 * @return The command for reloading the configuration.
-	 */
-	public CMD getCommandReload(){
-		return commandReload;
-	}
-
-	/**
-	 * Sets the command for reloading the configuration.
-	 * @param command The new command for reloading the configuration.
-	 */
-	public void setCommandReload(CMD command){
-		commandReload = command;
-	}
-	
-	/**
-	 * Gets the command for exiting the application.
-	 * @return The command for exiting the application.
-	 */
-	public CMD getCommandExit(){
-		return commandExit;
-	}
-
-	/**
-	 * Sets the command for exiting the application.
-	 * @param command The new command for exiting the application.
-	 */
-	public void setCommandExit(CMD command){
-		commandExit = command;
-	}
+//	/**
+//	 * Sets the command for resetting stats.
+//	 * @param command The new command for resetting stats.
+//	 */
+//	public void setCommandResetStats(CMD command){
+//		commandResetStats = command;
+//	}
+//	
+//	/**
+//	 * Sets the command for resetting totals.
+//	 * @param command The new command for resetting totals.
+//	 */
+//	public void setCommandResetTotals(CMD command){
+//		commandResetTotals = command;
+//	}
+//	
+//
+//	/**
+//	 * Sets the command for hiding the window.
+//	 * @param command The new command for hiding the window.
+//	 */
+//	public void setCommandHide(CMD command){
+//		commandHide = command;
+//	}
+//	
+//	/**
+//	 * Sets the command for pausing updates.
+//	 * @param command The new command for pausing updates.
+//	 */
+//	public void setCommandPause(CMD command){
+//		commandPause = command;
+//	}
+//	
+//	/**
+//	 * Sets the command for reloading the configuration.
+//	 * @param command The new command for reloading the configuration.
+//	 */
+//	public void setCommandReload(CMD command){
+//		commandReload = command;
+//	}
+//
+//	/**
+//	 * Sets the command for exiting the application.
+//	 * @param command The new command for exiting the application.
+//	 */
+//	public void setCommandExit(CMD command){
+//		commandExit = command;
+//	}
 	
 	/**
 	 * Gets the update rate for statistic panels.
@@ -643,15 +571,15 @@ public class Configuration{
 					continue;
 				}
 				String[] args = line.split(":", 2);
-				if(args[0].startsWith("keys")){
-					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
-						try{
-							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode.getValue()));
-						}catch(Exception e){
-							modified = true;
-						}
-					}
-				}
+//				if(args[0].startsWith("keys")){
+//					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
+//						try{
+//							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode.getValue()));
+//						}catch(Exception e){
+//							modified = true;
+//						}
+//					}
+//				}
 				args[1] = args[1].trim();
 				switch(args[0].trim()){
 				case "showMax":
@@ -741,48 +669,48 @@ public class Configuration{
 				case "showTotal":
 					showTotal = Boolean.parseBoolean(args[1]);
 					break;
-				case "keyResetStats":
-					try{
-						setCommandResetStats(parseCommand(args[1]));
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "keyExit":
-					try{
-						commandExit = parseCommand(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "keyResetTotals":
-					try{
-						commandResetTotals = parseCommand(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "keyHide":
-					try{
-						commandHide = parseCommand(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "keyPause":
-					try{
-						commandPause = parseCommand(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
-				case "keyReload":
-					try{
-						commandReload = parseCommand(args[1]);
-					}catch(NumberFormatException e){
-						modified = true;
-					}
-					break;
+//				case "keyResetStats":
+//					try{
+//						setCommandResetStats(parseCommand(args[1]));
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "keyExit":
+//					try{
+//						commandExit = parseCommand(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "keyResetTotals":
+//					try{
+//						commandResetTotals = parseCommand(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "keyHide":
+//					try{
+//						commandHide = parseCommand(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "keyPause":
+//					try{
+//						commandPause = parseCommand(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
+//				case "keyReload":
+//					try{
+//						commandReload = parseCommand(args[1]);
+//					}catch(NumberFormatException e){
+//						modified = true;
+//					}
+//					break;
 				case "graphPosition":
 					Main.graphFrame.setLocation(parsePosition(args[1]));
 					break;
@@ -883,89 +811,9 @@ public class Configuration{
 		}
 	}
 
-	/**
-	 * Parses the text representation of
-	 * a command key to it's actual data
-	 * @param arg The text data
-	 * @return The command key data
-	 */
-	private final CMD parseCommand(String arg){
-		if(arg.equals(CMD.NONE.toSaveString())){
-			return CMD.NONE;
-		}
-		
-		String[] args = arg.substring(1, arg.length() - 1).split(",");
-		int code = -10;
-		boolean alt = false;
-		boolean ctrl = false;
-		for(String str : args){
-			String[] data = str.split("=");
-			switch(data[0]){
-			case "keycode":
-				code = Integer.parseInt(data[1]);
-				break;
-			case "ctrl":
-				ctrl = Boolean.parseBoolean(data[1]);
-				break;
-			case "alt":
-				alt = Boolean.parseBoolean(data[1]);
-				break;
-			}
-		}
-		
-		return new CMD(code, alt, ctrl);
-	}
 	
 	
-	/**
-	 * Parses the text representation of a key
-	 * to it's actual data
-	 * @param arg The text data
-	 * @param mode The default rendering mode to use
-	 * @return The key data
-	 */
-	//TODO default rendering mode was added as a bridge from v7.4 to v8.0 and v7.4 format is discontinued, probably fine to remove textMode as a legacy setting
-	private final KeyInformation parseKey(String arg, RenderingMode mode){//TODO when was the default mode introduced?
-		String[] args = arg.substring(1, arg.length() - 1).split(",", 8);
-		String name = null;
-		int code = -1;
-		int x = -1;
-		int y = 0;
-		int width = 2;
-		int height = 3;
-		boolean visible = false;
-		for(String str : args){
-			String[] comp = str.split("=", 2);
-			comp[1] = comp[1].trim();
-			switch(comp[0].trim()){
-			case "keycode":
-				code = Integer.parseInt(comp[1]);
-				break;
-			case "visible":
-				visible = Boolean.parseBoolean(comp[1]);
-				break;
-			case "name":
-				name = comp[1].substring(1, comp[1].length() - 1);
-				break;
-			case "x":
-				x = Integer.parseInt(comp[1]);
-				break;
-			case "y":
-				y = Integer.parseInt(comp[1]);
-				break;
-			case "width":
-				width = Integer.parseInt(comp[1]);
-				break;
-			case "height":
-				height = Integer.parseInt(comp[1]);
-				break;
-			case "mode":
-				mode = RenderingMode.valueOf(comp[1]);
-				break;
-			}
-		}
-		return new KeyInformation(name, code, visible, x, y, width, height, mode);
-	}
+
 
 	/**
 	 * Parses the text representation of a color
@@ -1088,13 +936,13 @@ public class Configuration{
 					}
 					out.println();
 				}
-				out.println("# Command keys");
-				out.println("keyResetStats: " + getCommandResetStats().toSaveString());
-				out.println("keyExit: " + commandExit.toSaveString());
-				out.println("keyResetTotals: " + commandResetTotals.toSaveString());
-				out.println("keyHide: " + commandHide.toSaveString());
-				out.println("keyPause: " + commandPause.toSaveString());
-				out.println("keyReload: " + commandReload.toSaveString());
+//				out.println("# Command keys");
+//				out.println("keyResetStats: " + getCommandResetStats().toSaveString());
+//				out.println("keyExit: " + commandExit.toSaveString());
+//				out.println("keyResetTotals: " + commandResetTotals.toSaveString());
+//				out.println("keyHide: " + commandHide.toSaveString());
+//				out.println("keyPause: " + commandPause.toSaveString());
+//				out.println("keyReload: " + commandReload.toSaveString());
 				out.println();
 				out.println("# Layout");
 //				out.println("maxX: " + maxPanel.getX());

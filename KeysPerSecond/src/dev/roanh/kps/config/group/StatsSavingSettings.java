@@ -111,7 +111,6 @@ public class StatsSavingSettings extends SettingGroup{
 	
 	@Override
 	public void write(IndentWriter out){
-		out.println("# Statistics auto saving");
 		out.println("statsSaving:");
 		out.increaseIndent();
 		autoSave.write(out);

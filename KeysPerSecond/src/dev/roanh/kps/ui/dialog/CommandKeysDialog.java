@@ -28,8 +28,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import dev.roanh.kps.CommandKeys;
-import dev.roanh.kps.CommandKeys.CMD;
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.config.group.CommandSettings;
+import dev.roanh.kps.config.setting.CommandKeySetting;
 import dev.roanh.kps.event.listener.KeyPressListener;
 import dev.roanh.kps.Main;
 import dev.roanh.util.Dialog;
@@ -57,43 +58,40 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 	 * Constructs a new command keys dialog.
 	 * @param config The configuration to update.
 	 */
-	private CommandKeysDialog(Configuration config){
+	private CommandKeysDialog(CommandSettings config){
 		super(new GridLayout(6, 2, 10, 2));
 
 		add(new JLabel("Reset stats:"));
-		add(newButton(config::getCommandResetStats, config::setCommandResetStats));
+		add(newButton(config.getCommandResetStats()));
 
 		add(new JLabel("Exit the program:"));
-		add(newButton(config::getCommandExit, config::setCommandExit));
+		add(newButton(config.getCommandExit()));
 
 		add(new JLabel("Reset totals:"));
-		add(newButton(config::getCommandResetTotals, config::setCommandResetTotals));
+		add(newButton(config.getCommandResetTotals()));
 
 		add(new JLabel("Show/hide GUI:"));
-		add(newButton(config::getCommandHide, config::setCommandHide));
+		add(newButton(config.getCommandHide()));
 
 		add(new JLabel("Pause/Resume:"));
-		add(newButton(config::getCommandPause, config::setCommandPause));
+		add(newButton(config.getCommandPause()));
 
 		add(new JLabel("Reload config:"));
-		add(newButton(config::getCommandReload, config::setCommandReload));
+		add(newButton(config.getCommandReload()));
 	}
 	
-	/**
-	 * Constructs a new button that asks for a new command
-	 * key and uses the given consumer to save the new command.
-	 * @param readFun A supplier that provides the current command.
-	 * @param saveFun A consumer that write the new command.
-	 * @return The constructed button.
-	 */
-	private JButton newButton(Supplier<CMD> readFun, Consumer<CMD> saveFun){
-		JButton button = new JButton(readFun.get().toString());
+//	/**
+//	 * Constructs a new button that asks for a new command
+//	 * key and uses the given consumer to save the new command.
+//	 * @param readFun A supplier that provides the current command.
+//	 * @param saveFun A consumer that write the new command.
+//	 * @return The constructed button.
+//	 */
+	private JButton newButton(CommandKeySetting key){
+		JButton button = new JButton(key.toDisplayString());
 		button.addActionListener((e)->{
-			CMD command = askForNewKey(readFun.get());
-			if(command != null){
-				saveFun.accept(command);
-				button.setText(command.toString());
-			}
+			askForNewKey(key);
+			button.setText(key.toDisplayString());
 		});
 
 		return button;
@@ -102,23 +100,23 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 	/**
 	 * Show the command key configuration dialog
 	 */
-	public static final void configureCommandKeys(){
-		CommandKeysDialog dialog = new CommandKeysDialog(Main.config);
+	public static final void configureCommandKeys(CommandSettings config){
+		CommandKeysDialog dialog = new CommandKeysDialog(config);
 		Main.eventManager.registerKeyPressListener(dialog);
 		Dialog.showMessageDialog(dialog);
 		Main.eventManager.unregisterKeyPressListener(dialog);
 	}
 	
-	/**
-	 * Prompts the user for a new command key.
-	 * @param current The current command key.
-	 * @return The new command key or null.
-	 */
-	private CMD askForNewKey(CMD current){
+//	/**
+//	 * Prompts the user for a new command key.
+//	 * @param current The current command key.
+//	 * @return The new command key or null.
+//	 */
+	private void askForNewKey(CommandKeySetting key){
 		JPanel form = new JPanel(new GridLayout(2, 1));
 		JLabel txt = new JLabel("Press a key and click 'Save' or press 'Unbind'");
 		lastKey = -1;
-		preview.setText(current.toString());
+		preview.setText(key.toDisplayString());
 		preview.setEditable(false);
 		preview.setHorizontalAlignment(JTextField.CENTER);
 		form.add(txt);
@@ -126,11 +124,14 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 		
 		switch(Dialog.showDialog(form, new String[]{"Save", "Unbind", "Cancel"})){
 		case 0:
-			return lastKey == -1 ? null : new CMD(CommandKeys.getBaseKeyCode(lastKey), CommandKeys.hasAlt(lastKey), CommandKeys.hasCtrl(lastKey));
+			final int code = lastKey;
+			if(code != -1){
+				key.update(code);
+			}
+			break;
 		case 1:
-			return CMD.NONE;
-		default:
-			return null;
+			key.unbind();
+			break;
 		}
 	}
 
