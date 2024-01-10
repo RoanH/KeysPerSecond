@@ -70,9 +70,6 @@ public class Configuration{
 	 * Extension filter for legacy KeysPerSecond configuration file formats.
 	 */
 	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
-
-	
-	//NEW LOGIC ------------------------
 	/**
 	 * Whether or not the frame forces itself to be the top window
 	 */
@@ -85,17 +82,6 @@ public class Configuration{
 	 * Whether or not the enable tracking key-modifier combinations
 	 */
 	private BooleanSetting enableModifiers = new BooleanSetting("enableKeyModifierCombinations", false);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//not fully done, these two have a weird shared dependency in the legacy trackAll option
 	/**
 	 * Whether or not to track all key presses
 	 */
@@ -183,15 +169,6 @@ public class Configuration{
 	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
 	
 	private LayoutSettings layout = new LayoutSettings();
-//	/**
-//	 * The offset from the border of a panel
-//	 * to the actual panel content
-//	 */
-//	public int borderOffset = 2;
-//	/**
-//	 * The pixel size of one cell in this program
-//	 */
-//	public int cellSize = 22;
 
 	//graph
 	private SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
@@ -242,6 +219,10 @@ public class Configuration{
 	
 	protected List<ProxySetting<?>> getLegacySettings(Version version){
 		List<ProxySetting<?>> settings = new ArrayList<ProxySetting<?>>();
+		
+		if(version.isBefore(8, 2)){
+			settings.add(ProxySetting.of("trackAllKeys", false, trackAllKeys, trackAllButtons));
+		}
 		
 		if(version.isBefore(8, 8)){
 			statsSaving.collectLegacyProxies(settings);
@@ -553,14 +534,6 @@ public class Configuration{
 					break;
 				case "showKeys":
 					showKeys = Boolean.parseBoolean(args[1]);
-					break;
-				case "trackAllKeys":
-					//trackAllKeys = Boolean.parseBoolean(args[1]);
-					trackAllButtons = trackAllKeys;//for backwards compatibility -- this kinda only works because buttons are parsed after keys so it always overrides if present -- do I need to support this or is it a relic from an ancient config format I no longer support?
-					//possibly parse the legacy option instead: https://git.roanh.dev/roan/KeysPerSecond/-/commit/e6abd388da3c521f209adb560dd2f7da2df806e5
-					break;
-				case "trackAllButtons":
-					//trackAllButtons = Boolean.parseBoolean(args[1]);
 					break;
 				case "graphEnabled":
 					showGraph = Boolean.parseBoolean(args[1]);

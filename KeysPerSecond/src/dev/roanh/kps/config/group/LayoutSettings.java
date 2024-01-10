@@ -10,7 +10,13 @@ import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.BasePanel;
 
 public class LayoutSettings extends SettingGroup{
+	/**
+	 * The offset from the border of a panel to the actual panel content.
+	 */
 	private final IntSetting borderOffset = new IntSetting("borderOffset", 0, Integer.MAX_VALUE, 2);
+	/**
+	 * The pixel size of one grid cell in the program.
+	 */
 	private final IntSetting cellSize = new IntSetting("clellSize", BasePanel.imageSize, Integer.MAX_VALUE, 22);
 	
 	public LayoutSettings(){
