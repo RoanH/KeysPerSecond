@@ -45,6 +45,7 @@ import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
+import dev.roanh.kps.config.group.ThemeSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
@@ -143,6 +144,7 @@ public class Configuration{
 	
 	//colors
 	//TODO themesettings is a thing
+	private ThemeSettings theme = new ThemeSettings();
 	/**
 	 * Whether or not to use custom colors
 	 */
@@ -264,6 +266,11 @@ public class Configuration{
 	}
 	
 	
+	
+	
+	public ThemeSettings getTheme(){
+		return theme;
+	}
 	
 	public List<LayoutPosition> getLayoutComponents(){
 		return Stream.concat(panels.stream(), Stream.concat(keys.stream(), graphs.stream())).collect(Collectors.toList());
@@ -411,27 +418,11 @@ public class Configuration{
 	}
 	
 	/**
-	 * Enables or disables custom colours.
-	 * @param custom True to enable custom colours.
-	 */
-	public void setCustomColors(boolean custom){
-		customColors = custom;
-	}
-	
-	/**
 	 * Sets if tracked keys are shown.
 	 * @param show True if tracked key panels should be visible.
 	 */
 	public void setShowKeys(boolean show){
 		showKeys = show;
-	}
-	
-	/**
-	 * Checks if custom colours are configured for the application.
-	 * @return True if custom colours are configured.
-	 */
-	public boolean hasCustomColors(){
-		return customColors;
 	}
 	
 	/**

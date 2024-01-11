@@ -48,6 +48,7 @@ public final class KeyPanel extends BasePanel{
 	public KeyPanel(Key key, KeyPanelSettings settings){
 		super(settings);
 		this.key = key;
+		key.setPanel(this);
 	}
 
 	@Override

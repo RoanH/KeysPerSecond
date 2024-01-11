@@ -639,7 +639,7 @@ public class Main{
 			config.showGraph = cgra.isSelected();
 		});
 		ccol.addActionListener((e)->{
-			config.setCustomColors(ccol.isSelected());
+			config.getTheme().setCustomColorsEnabled(ccol.isSelected());
 		});
 		ckey.addActionListener((e)->{
 			config.setShowKeys(ckey.isSelected());
@@ -769,10 +769,10 @@ public class Main{
 			if(config.showGraph){
 				graph.setEnabled(true);
 			}
-			ccol.setSelected(config.hasCustomColors());
-			if(config.hasCustomColors()){
+//			ccol.setSelected(config.hasCustomColors());
+//			if(config.hasCustomColors()){
 				color.setEnabled(true);
-			}
+//			}
 			callKeys.setSelected(config.isTrackAllKeys());
 			callButtons.setSelected(config.isTrackAllButtons());
 			ckey.setSelected(config.showKeys());
@@ -1028,7 +1028,7 @@ public class Main{
 			layout.removeAll();
 			
 			try{
-				ColorManager.prepareImages(config.hasCustomColors());
+				ColorManager.prepareImages(config.getTheme().hasCustomColors());
 			}catch(IOException e){
 				e.printStackTrace();
 			}

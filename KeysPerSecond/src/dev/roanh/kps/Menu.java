@@ -368,10 +368,10 @@ public class Menu{
 				Main.reconfigure();
 			});
 		});
-		colorenable.setSelected(Main.config.hasCustomColors());
+		colorenable.setSelected(Main.config.getTheme().hasCustomColors());
 		colorenable.addActionListener((e)->{
 			SwingUtilities.invokeLater(()->{
-				Main.config.setCustomColors(colorenable.isSelected());
+				Main.config.getTheme().setCustomColorsEnabled(colorenable.isSelected());
 				Main.reconfigure();
 			});
 		});

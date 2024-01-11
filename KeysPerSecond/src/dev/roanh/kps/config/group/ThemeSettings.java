@@ -16,6 +16,33 @@ public class ThemeSettings extends SettingGroup{
 	public ThemeSettings(){
 		super("theme");
 	}
+	
+	/**
+	 * Enables or disables custom colours.
+	 * @param enabled True to enable custom colours.
+	 */
+	public void setCustomColorsEnabled(boolean enabled){
+		customColors.update(enabled);
+	}
+	
+	/**
+	 * Checks if custom colours are configured for the application.
+	 * @return True if custom colours are configured.
+	 */
+	public boolean hasCustomColors(){
+		return customColors.getValue();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public boolean parse(Map<String, String> data){
