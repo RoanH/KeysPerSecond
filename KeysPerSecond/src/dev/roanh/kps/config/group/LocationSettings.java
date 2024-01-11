@@ -49,22 +49,45 @@ public class LocationSettings extends SettingGroup implements LayoutPosition{
 		this.y = new IntSetting("y", -1, Integer.MAX_VALUE, y);
 		this.width = new IntSetting("width", -1, Integer.MAX_VALUE, width);
 		this.height = new IntSetting("height", -1, Integer.MAX_VALUE, height);
+		validate();
 	}
 	
 	public void setX(int x){
 		this.x.update(x);
+		validate();
 	}
 	
 	public void setY(int y){
 		this.y.update(y);
+		validate();
 	}
 	
 	public void setWidth(int width){
 		this.width.update(width);
+		validate();
 	}
 	
 	public void setHeight(int height){
 		this.height.update(height);
+		validate();
+	}
+	
+	private boolean validate(){
+		boolean defaultUsed = false;
+		
+		if(x.getValue() == -1 && width.getValue() == -1){
+			x.reset();
+			width.reset();
+			defaultUsed = true;
+		}
+		
+		if(y.getValue() == -1 && height.getValue() == -1){
+			y.reset();
+			height.reset();
+			defaultUsed = true;
+		}
+		
+		return defaultUsed;
 	}
 	
 	@Override
@@ -89,8 +112,8 @@ public class LocationSettings extends SettingGroup implements LayoutPosition{
 	
 	@Override
 	public boolean parse(Map<String, String> data){
-		//TODO validate layout conflicts with special -1 values max/emd -- layout validator class I guess?
-		return findAndParse(data, x, y, width, height);
+		boolean defaultUsed = findAndParse(data, x, y, width, height);
+		return validate() || defaultUsed;
 	}
 	
 	@Override
