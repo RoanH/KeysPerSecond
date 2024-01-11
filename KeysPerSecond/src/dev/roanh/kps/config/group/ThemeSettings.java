@@ -11,8 +11,17 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ColorSetting;
 
 public class ThemeSettings extends SettingGroup{
+	/**
+	 * Whether or not to use custom colors.
+	 */
 	private final BooleanSetting customColors = new BooleanSetting("customColors", false);
+	/**
+	 * Default foreground color and opacity.
+	 */
 	private final ColorSetting foreground = new ColorSetting("foreground", new ThemeColor(0, 255, 255, 1.0F));
+	/**
+	 * Default background color and opacity.
+	 */
 	private final ColorSetting background = new ColorSetting("background", new ThemeColor(0, 0, 0, 1.0F));
 
 	public ThemeSettings(){

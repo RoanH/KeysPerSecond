@@ -40,6 +40,7 @@ import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
+import dev.roanh.kps.config.group.ThemeSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.config.setting.CommandKeySetting;
 
@@ -55,6 +56,7 @@ public class ConfigParserTest{
 		Configuration config = Configuration.newLoadTemporary(Paths.get("test/main.kps"));
 		
 		//TODO assert config version
+
 		
 //		max
 //		avg
@@ -69,15 +71,12 @@ public class ConfigParserTest{
 		
 //		graph enable -- this one is not handled yet
 		
-//		custom colour
-//		foreground col
-//		background col
-//		foreground op
-//		background op
-		
-		
-		//TODO probably test new format first
-		
+		//theme
+		ThemeSettings theme = config.getTheme();
+		assertFalse(theme.hasCustomColors());
+		theme.setCustomColorsEnabled(true);
+		assertEquals(new ThemeColor(0, 255, 255, 255), theme.getForeground());
+		assertEquals(new ThemeColor(0, 0, 0, 255), theme.getBackground());
 		
 		//commands
 		CommandKeys.isCtrlDown = true;
@@ -251,8 +250,13 @@ public class ConfigParserTest{
 		assertEquals(100, config.getUpdateRateMs());
 		assertFalse(config.isKeyModifierTrackingEnabled());
 		
-		
-		
+		//theme
+		ThemeSettings theme = config.getTheme();
+		assertFalse(theme.hasCustomColors());
+		theme.setCustomColorsEnabled(true);
+		assertEquals(new ThemeColor(0, 255, 255, 255), theme.getForeground());
+		assertEquals(new ThemeColor(0, 0, 0, 255), theme.getBackground());
+
 		//commands
 		CommandKeys.isCtrlDown = true;
 		CommandSettings commands = config.getCommands();

@@ -51,7 +51,6 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
 import dev.roanh.kps.layout.LayoutPosition;
-import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
 import dev.roanh.util.FileSelector.FileExtension;
@@ -75,6 +74,10 @@ public class Configuration{
 	 */
 	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
 	/**
+	 * The original configuration file
+	 */
+	private final Path data;
+	/**
 	 * Whether or not the frame forces itself to be the top window
 	 */
 	private BooleanSetting overlay = new BooleanSetting("overlay", false);
@@ -94,100 +97,71 @@ public class Configuration{
 	 * Whether or not to track all mouse button presses
 	 */
 	private BooleanSetting trackAllButtons = new BooleanSetting("trackAllButtons", false);
+	/**
+	 * Default colour scheme settings.
+	 */
+	private ThemeSettings theme = new ThemeSettings();
+	/**
+	 * Command key configuration.
+	 */
+	private CommandSettings commands = new CommandSettings();
+	/**
+	 * General layout settings.
+	 */
+	private LayoutSettings layout = new LayoutSettings();
+	/**
+	 * Automatic statistics saving settings.
+	 */
+	private StatsSavingSettings statsSaving = new StatsSavingSettings();
+	/**
+	 * Graph settings.
+	 */
+	private SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
+	/**
+	 * Special panel settings.
+	 */
+	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
+	/**
+	 * Key panel configuration.
+	 */
+	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//OLD LOGIC ------------------------
-	
-	
+	//TODO OLD LOGIC ------------------------
 	
 	//general
 	/**
 	 * Whether or not to show the max value
 	 */
+	@Deprecated
 	public boolean showMax = true;
 	/**
 	 * Whether or not to show the average value
 	 */
+	@Deprecated
 	public boolean showAvg = true;
 	/**
 	 * Whether or not to show the current value
 	 */
+	@Deprecated
 	public boolean showCur = true;
 	/**
 	 * Whether or not to show the keys
 	 */
+	@Deprecated
 	protected boolean showKeys = true;
 	/**
 	 * Whether or not to show the graph
 	 */
+	@Deprecated
 	public boolean showGraph = false;
 	/**
 	 * Whether or not to show the total number of hits
 	 */
+	@Deprecated
 	public boolean showTotal = false;
 
-	//keys
-	/**
-	 * Key configuration data.
-	 */
-	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
-		
-	
-	//colors
-	//TODO themesettings is a thing
-	private ThemeSettings theme = new ThemeSettings();
-//	/**
-//	 * Whether or not to use custom colors
-//	 */
-//	protected boolean customColors = false;
-//	/**
-//	 * Foreground color
-//	 */
-//	public Color foreground = Color.CYAN;
-//	/**
-//	 * Background color
-//	 */
-//	public Color background = Color.BLACK;
-//	/**
-//	 * Foreground opacity in case transparency is enabled
-//	 */
-//	public float opacityfg = 1.0F;
-//	/**
-//	 * Background opacity in case transparency is enabled
-//	 */
-//	public float opacitybg = 1.0F;
-
-	//command keys
-	private CommandSettings commands = new CommandSettings();
-
-	//special panels / layout
-	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
-	
-	private LayoutSettings layout = new LayoutSettings();
-
-	//graph
-	private SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
-	
-	//automatic statistics saving
-	private StatsSavingSettings statsSaving = new StatsSavingSettings();
 	
 	
-	
-	
-	
-	/**
-	 * The original configuration file
-	 */
-	private Path data;
 	
 	/**
 	 * Constructs a new configuration object
@@ -208,16 +182,11 @@ public class Configuration{
 	
 	protected List<Setting<?>> getSettings(){
 		List<Setting<?>> settings = new ArrayList<Setting<?>>();
-		
 		settings.add(overlay);
+		settings.add(trackAllKeys);
+		settings.add(trackAllButtons);
 		settings.add(updateRate);
 		settings.add(enableModifiers);
-
-		
-		
-		//TODO lots more
-		
-		
 		return settings;
 	}
 	
@@ -259,15 +228,20 @@ public class Configuration{
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){
-		return Arrays.asList(statsSaving, commands, layout);//TODO
+		return Arrays.asList(theme, commands, layout, statsSaving);
 	}
 	
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
-		return Arrays.asList(graphs, keys, panels);//TODO
+		return Arrays.asList(graphs, panels, keys);
 	}
 	
-	
-	
+	/**
+	 * Gets the location on disk for this configuration file.
+	 * @return The on disk location of the configuration file.
+	 */
+	public final Path getPath(){
+		return data;
+	}
 	
 	public ThemeSettings getTheme(){
 		return theme;
@@ -294,7 +268,7 @@ public class Configuration{
 	}
 	
 	public GraphSettings getGraphSettings(){
-		if(graphs.size() == 0){
+		if(graphs.size() == 0){//TODO this is a hack
 			return new GraphSettings();
 		}
 		
@@ -321,46 +295,6 @@ public class Configuration{
 	public void setKeyModifierTrackingEnabled(boolean enabled){
 		enableModifiers.update(enabled);
 	}
-	
-	/**
-	 * Gets the location on disk for this configuration file.
-	 * @return The on disk location of the configuration file.
-	 */
-	public final Path getPath(){
-		return data;
-	}
-
-//	/**
-//	 * Gets the background opacity
-//	 * @return The background opacity
-//	 */
-//	public final float getBackgroundOpacity(){
-//		return customColors ? opacitybg : 1.0F;
-//	}
-//
-//	/**
-//	 * Gets the foreground opacity
-//	 * @return The foreground opacity
-//	 */
-//	public final float getForegroundOpacity(){
-//		return customColors ? opacityfg : 1.0F;
-//	}
-//
-//	/**
-//	 * Gets the background opacity
-//	 * @return The background color
-//	 */
-//	public final Color getBackgroundColor(){
-//		return customColors ? background : Color.BLACK;
-//	}
-//
-//	/**
-//	 * Gets the foreground color
-//	 * @return The foreground color
-//	 */
-//	public final Color getForegroundColor(){
-//		return customColors ? foreground : Color.CYAN;
-//	}
 	
 	/**
 	 * Gets the update rate for statistic panels.
@@ -512,37 +446,10 @@ public class Configuration{
 					continue;
 				}
 				String[] args = line.split(":", 2);
-//				if(args[0].startsWith("keys")){
-//					while((line = in.readLine()) != null && (line = line.trim()).startsWith("-")){
-//						try{
-//							keyinfo.add(parseKey(line.substring(1).trim(), defaultMode.getValue()));
-//						}catch(Exception e){
-//							modified = true;
-//						}
-//					}
-//				}
 				args[1] = args[1].trim();
 				switch(args[0].trim()){
-				case "showMax":
-					showMax = Boolean.parseBoolean(args[1]);
-					break;
-				case "showAvg":
-					showAvg = Boolean.parseBoolean(args[1]);
-					break;
-				case "showCur":
-					showCur = Boolean.parseBoolean(args[1]);
-					break;
-				case "showKeys":
-					showKeys = Boolean.parseBoolean(args[1]);
-					break;
-				case "graphEnabled":
-					showGraph = Boolean.parseBoolean(args[1]);
-					break;
 				case "position":
 					Main.frame.setLocation(parsePosition(args[1]));
-					break;
-				case "showTotal":
-					showTotal = Boolean.parseBoolean(args[1]);
 					break;
 				case "graphPosition":
 					Main.graphFrame.setLocation(parsePosition(args[1]));
@@ -575,35 +482,6 @@ public class Configuration{
 	}
 
 	
-	
-
-
-	/**
-	 * Parses the text representation of a color
-	 * to it's actual data
-	 * @param arg The text data
-	 * @return The color data
-	 */
-	private final Color parseColor(String arg){
-		String[] rgb = arg.substring(1, arg.length() - 1).split(",");
-		int r, g, b;
-		r = g = b = 0;
-		for(String c : rgb){
-			String[] comp = c.split("=");
-			switch(comp[0]){
-			case "r":
-				r = Integer.parseInt(comp[1]);
-				break;
-			case "g":
-				g = Integer.parseInt(comp[1]);
-				break;
-			case "b":
-				b = Integer.parseInt(comp[1]);
-				break;
-			}
-		}
-		return new Color(r, g, b);
-	}
 
 	/**
 	 * Parses the text representation of the position
@@ -636,6 +514,8 @@ public class Configuration{
 		for(Setting<?> setting : getSettings()){
 			setting.write(out);
 		}
+		
+		//TODO onscreen position
 		
 		for(SettingGroup group : getSettingGroups()){
 			out.println();
