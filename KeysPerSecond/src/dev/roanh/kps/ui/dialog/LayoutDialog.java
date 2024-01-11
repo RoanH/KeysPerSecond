@@ -76,7 +76,7 @@ public class LayoutDialog{
 		fields.add(new JLabel("Y", SwingConstants.CENTER));
 		fields.add(new JLabel("Width", SwingConstants.CENTER));
 		fields.add(new JLabel("Height", SwingConstants.CENTER));
-		modes.add(new JLabel("Mode", SwingConstants.CENTER));
+		modes.add(new JLabel("Advanced", SwingConstants.CENTER));
 
 		for(KeyPanelSettings key : Main.config.getKeySettings()){
 			createListItem(key, fields, modes, live);
@@ -194,7 +194,8 @@ public class LayoutDialog{
 	 * @param live Whether or not edits should be displayed in real time
 	 */
 	private static final void createListItem(PanelSettings info, JPanel fields, JPanel modes, boolean live){
-		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
+		JLabel nameLabel = new JLabel(info.getName(), SwingConstants.CENTER);
+		fields.add(nameLabel);
 
 		LayoutValidator validator = new LayoutValidator();
 		validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX, live)));
@@ -231,6 +232,7 @@ public class LayoutDialog{
 		JButton edit = new JButton("Edit");
 		edit.addActionListener(e->{
 			info.showEditor(live);
+			nameLabel.setText(info.getName());
 		});
 		modes.add(edit);
 	}

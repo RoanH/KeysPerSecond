@@ -35,9 +35,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -50,8 +48,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
@@ -64,6 +60,7 @@ import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
@@ -123,7 +120,7 @@ public class Menu{
 	 * Repaints the component border
 	 */
 	protected static final void repaint(){
-		Border border = BorderFactory.createLineBorder(Main.config.getForegroundColor());
+		Border border = BorderFactory.createLineBorder(Main.config.getTheme().getForeground().getColor());
 		menu.setBorder(border);
 		configure.getPopupMenu().setBorder(border);
 		general.getPopupMenu().setBorder(border);
@@ -363,17 +360,12 @@ public class Menu{
 //			Main.reconfigure();
 		});
 		colorcustom.addActionListener((e)->{
-			SwingUtilities.invokeLater(()->{
-				Main.configureColors();
-				Main.reconfigure();
-			});
+			ColorDialog.configureColors(Main.config.getTheme(), true);
 		});
 		colorenable.setSelected(Main.config.getTheme().hasCustomColors());
 		colorenable.addActionListener((e)->{
-			SwingUtilities.invokeLater(()->{
-				Main.config.getTheme().setCustomColorsEnabled(colorenable.isSelected());
-				Main.reconfigure();
-			});
+			Main.config.getTheme().setCustomColorsEnabled(colorenable.isSelected());
+			Main.reconfigure();
 		});
 		modifiers.setSelected(Main.config.isKeyModifierTrackingEnabled());
 		modifiers.addActionListener((e)->{
@@ -614,14 +606,15 @@ public class Menu{
 		 * @param defaultTextIconGap The gap between the text and the icon
 		 */
 		private static final void paintMenuItem(Graphics2D g, JMenuItem menuItem, boolean hasCursor, int defaultTextIconGap){
-			g.setColor(Main.config.getBackgroundColor());
+			g.setColor(Main.config.getTheme().getBackground().getColor());
 			g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 			if(menuItem instanceof JCheckBoxMenuItem && menuItem.isSelected()){
 				g.drawImage(ColorManager.checkmark, 0, 0, 22, 22, 0, 0, 100, 100, menuItem);
 			}else if(menuItem instanceof JMenu){
 				g.drawImage(ColorManager.arrow, menuItem.getWidth() - 12, 5, menuItem.getWidth(), 17, 0, 0, 128, 128, menuItem);
 			}
-			g.setColor(Main.config.getForegroundColor());
+			
+			g.setColor(Main.config.getTheme().getForeground().getColor());
 			if(hasCursor){
 				g.drawLine(0, 0, menuItem.getWidth(), 0);
 				g.drawLine(0, menuItem.getHeight() - 1, menuItem.getWidth(), menuItem.getHeight() - 1);
@@ -630,6 +623,7 @@ public class Menu{
 				g.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
 				g.setComposite(prev);
 			}
+			
 			FontMetrics fm = menuItem.getFontMetrics(g.getFont());
 			g.addRenderingHints(Main.desktopHints);
 			g.drawString(menuItem.getText(), 22 + defaultTextIconGap, ((22 - fm.getHeight()) / 2) + fm.getAscent());

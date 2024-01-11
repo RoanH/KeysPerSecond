@@ -16,7 +16,7 @@ public class KeyPanelEditor extends PanelEditor{
 		super(config, live);
 		
 		labels.add(new JLabel("Visible: "));
-		JCheckBox visible = new JCheckBox("", config.isVisible());
+		JCheckBox visible = new JCheckBox("(invisible keys only track input)", config.isVisible());
 		fields.add(visible);
 		visible.addActionListener(e->{
 			config.setVisible(visible.isSelected());

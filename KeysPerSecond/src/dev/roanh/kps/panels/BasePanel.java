@@ -27,6 +27,7 @@ import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.RenderingMode.RenderCache;
+import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 
@@ -79,10 +80,12 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	public void paintComponent(Graphics g1){
 		Graphics2D g = (Graphics2D)g1;
 
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, Main.config.getBackgroundOpacity()));
-		g.setColor(Main.config.getBackgroundColor());
+		ThemeColor background = Main.config.getTheme().getBackground();
+		ThemeColor foreground = Main.config.getTheme().getForeground();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, background.getAlpha()));
+		g.setColor(background.getColor());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
 		g.addRenderingHints(Main.desktopHints);
 
 		int borderOffset = Main.config.getBorderOffset();
@@ -103,9 +106,9 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 				this.getWidth() - 2 * borderOffset - (imageSize / 4) * 6,
 				this.getHeight() - 2 * borderOffset - (imageSize / 4) * 4
 			);
-			g.setColor(Main.config.getBackgroundColor());
+			g.setColor(background.getColor());
 		}else{
-			g.setColor(Main.config.getForegroundColor());
+			g.setColor(foreground.getColor());
 		}
 
 		cache.renderTitle(getTitle(), g, this);

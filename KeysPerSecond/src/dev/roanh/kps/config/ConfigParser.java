@@ -88,7 +88,7 @@ public class ConfigParser{
 		}
 		
 		//legacy compatibility
-		for(ProxySetting<?> setting : config.getLegacySettings(version)){
+		for(Setting<?> setting : config.getLegacySettings(version)){
 			settings.put(setting.getKey(), setting);
 		}
 

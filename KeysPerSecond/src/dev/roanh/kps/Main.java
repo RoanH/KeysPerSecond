@@ -73,6 +73,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
+import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
@@ -92,6 +93,7 @@ import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.panels.NowPanel;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
@@ -743,7 +745,7 @@ public class Main{
 			CommandKeysDialog.configureCommandKeys(config.getCommands());
 		});
 		precision.addActionListener((e)->{
-			configurePrecision();
+//			configurePrecision();
 		});
 		graph.addActionListener((e)->{
 			configureGraph();
@@ -752,7 +754,7 @@ public class Main{
 			KeysDialog.configureKeys(config.getKeySettings(), false);
 		});
 		color.addActionListener((e)->{
-			configureColors();
+			ColorDialog.configureColors(config.getTheme(), false);
 		});
 		save.addActionListener((e)->{
 			config.saveConfig(false);
@@ -835,10 +837,6 @@ public class Main{
 		conf.dispose();
 	}
 	
-//	private static final JCheckBox createSpecialPanelBox(String text, SpecialPanelSettings setting){
-//		
-//	}
-	
 	/**
 	 * Shows a dialog to configure the graph.
 	 */
@@ -870,111 +868,6 @@ public class Main{
 //		}
 	}
 	
-	/**
-	 * Shows a dialog to configure the precision.
-	 */
-	private static final void configurePrecision(){
-		//TODO need to move this to be more panel specific
-//		JPanel pconfig = new JPanel(new BorderLayout());
-//		JLabel info1 = new JLabel("Specify how many digits should be displayed");
-//		JLabel info2 = new JLabel("beyond the decimal point for the average.");
-//		JPanel plabels = new JPanel(new GridLayout(2, 1, 0, 0));
-//		plabels.add(info1);
-//		plabels.add(info2);
-//		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
-//		values.setSelectedIndex(config.precision);
-//		JLabel vlabel = new JLabel("Precision: ");
-//		JPanel pvalue = new JPanel(new BorderLayout());
-//		pvalue.add(vlabel, BorderLayout.LINE_START);
-//		pvalue.add(values, BorderLayout.CENTER);
-//		pconfig.add(plabels, BorderLayout.CENTER);
-//		pconfig.add(pvalue, BorderLayout.PAGE_END);
-//		if(Dialog.showSaveDialog(pconfig)){
-//			config.precision = values.getSelectedIndex();
-//		}
-	}
-	
-	/**
-	 * Shows the color configuration dialog
-	 */
-	protected static final void configureColors(){
-		JPanel cfg = new JPanel();
-		JPanel cbg = new JPanel();
-		MouseListener clistener = new MouseListener(){
-			/**
-			 * Whether or not the color chooser is open
-			 */
-			private boolean open = false;
-			/**
-			 * Color chooser instance
-			 */
-			private final JColorChooser chooser = new JColorChooser();
-
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(!open){
-					open = true;
-					chooser.setColor(e.getComponent().getBackground());
-					if(Dialog.showSaveDialog(chooser)){
-						e.getComponent().setBackground(chooser.getColor());
-					}
-					open = false;
-				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e){
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e){
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e){
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e){
-			}
-		};
-		cbg.addMouseListener(clistener);
-		cfg.addMouseListener(clistener);
-		cfg.setBackground(Main.config.foreground);
-		cbg.setBackground(Main.config.background);
-		Color prevfg = cfg.getForeground();
-		Color prevbg = cbg.getForeground();
-		JPanel cform = new JPanel(new GridLayout(2, 3, 4, 2));
-		JLabel lfg = new JLabel("Foreground colour: ");
-		JLabel lbg = new JLabel("Background colour: ");
-		JSpinner sbg = new JSpinner(new SpinnerNumberModel((int)(config.opacitybg * 100), 0, 100, 5));
-		JSpinner sfg = new JSpinner(new SpinnerNumberModel((int)(config.opacityfg * 100), 0, 100, 5));
-		sbg.setPreferredSize(new Dimension(sbg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
-		sfg.setPreferredSize(new Dimension(sfg.getPreferredSize().width + 15, sbg.getPreferredSize().height));
-		JPanel spanelfg = new JPanel(new BorderLayout());
-		JPanel spanelbg = new JPanel(new BorderLayout());
-		spanelfg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
-		spanelbg.add(new JLabel("Opacity (%): "), BorderLayout.LINE_START);
-		spanelfg.add(sfg, BorderLayout.CENTER);
-		spanelbg.add(sbg, BorderLayout.CENTER);
-		cform.add(lfg);
-		cform.add(cfg);
-		cform.add(spanelfg);
-		cform.add(lbg);
-		cform.add(cbg);
-		cform.add(spanelbg);
-		if(Dialog.showSaveDialog(cform)){
-			config.foreground = cfg.getBackground();
-			config.background = cbg.getBackground();
-			config.opacitybg = (float)((int)sbg.getValue() / 100.0D);
-			config.opacityfg = (float)((int)sfg.getValue() / 100.0D);
-		}else{
-			cfg.setForeground(prevfg);
-			cbg.setForeground(prevbg);
-		}
-		frame.repaint();
-	}
-
 	/**
 	 * Changes the update rate
 	 * @param newRate The new update rate
@@ -1028,7 +921,7 @@ public class Main{
 			layout.removeAll();
 			
 			try{
-				ColorManager.prepareImages(config.getTheme().hasCustomColors());
+				ColorManager.prepareImages();
 			}catch(IOException e){
 				e.printStackTrace();
 			}
@@ -1097,16 +990,18 @@ public class Main{
 
 			Menu.repaint();
 
+			ThemeColor background = config.getTheme().getBackground();
+			boolean opaque = background.getAlpha() != 1.0F ? !ColorManager.transparency : true;
 			JPanel all = new JPanel(new BorderLayout());
 			all.add(content, BorderLayout.CENTER);
-			all.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+			all.setOpaque(opaque);
 			if(config.showGraph){
 				graph = config.getGraphSettings().createPanel();
 				if(config.getGraphSettings().getGraphMode() == GraphMode.INLINE){
 					content.add(graph);
 					graphFrame.setVisible(false);
 				}else{
-					graph.setOpaque(config.getBackgroundOpacity() != 1.0F ? !ColorManager.transparency : true);
+					graph.setOpaque(opaque);
 					graphFrame.add(graph);
 					graphFrame.setSize(config.getGraphSettings().getLayoutWidth() * config.getCellSize(), config.getGraphSettings().getLayoutHeight() * config.getCellSize());
 					graphFrame.setVisible(true);
@@ -1118,13 +1013,13 @@ public class Main{
 			frame.setAlwaysOnTop(config.isOverlayMode());
 			graphFrame.setAlwaysOnTop(config.isOverlayMode());
 			frame.setSize(layout.getWidth(), layout.getHeight());
-			if(config.getBackgroundOpacity() != 1.0F){
+			if(background.getAlpha() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
 				content.setOpaque(false);
 				content.setBackground(ColorManager.transparent);
 			}else{
 				content.setOpaque(true);
-				content.setBackground(config.background);
+				content.setBackground(background.getColor());
 			}
 			frame.add(all);
 			frame.setVisible(content.getComponentCount() > 0);

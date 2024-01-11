@@ -3,6 +3,7 @@ package dev.roanh.kps.config.group;
 import java.util.List;
 
 import dev.roanh.kps.config.PanelType;
+import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.ui.dialog.PanelEditor;
@@ -23,7 +24,7 @@ public class MaxPanelSettings extends SpecialPanelSettings{
 		PanelEditor.showEditor(this, live);
 	}
 	
-	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
+	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("maxX", x));
 		proxyList.add(ProxySetting.of("maxY", y));
 		proxyList.add(ProxySetting.of("maxWidth", width));

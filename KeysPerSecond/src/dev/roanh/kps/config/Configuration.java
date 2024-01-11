@@ -145,26 +145,26 @@ public class Configuration{
 	//colors
 	//TODO themesettings is a thing
 	private ThemeSettings theme = new ThemeSettings();
-	/**
-	 * Whether or not to use custom colors
-	 */
-	protected boolean customColors = false;
-	/**
-	 * Foreground color
-	 */
-	public Color foreground = Color.CYAN;
-	/**
-	 * Background color
-	 */
-	public Color background = Color.BLACK;
-	/**
-	 * Foreground opacity in case transparency is enabled
-	 */
-	public float opacityfg = 1.0F;
-	/**
-	 * Background opacity in case transparency is enabled
-	 */
-	public float opacitybg = 1.0F;
+//	/**
+//	 * Whether or not to use custom colors
+//	 */
+//	protected boolean customColors = false;
+//	/**
+//	 * Foreground color
+//	 */
+//	public Color foreground = Color.CYAN;
+//	/**
+//	 * Background color
+//	 */
+//	public Color background = Color.BLACK;
+//	/**
+//	 * Foreground opacity in case transparency is enabled
+//	 */
+//	public float opacityfg = 1.0F;
+//	/**
+//	 * Background opacity in case transparency is enabled
+//	 */
+//	public float opacitybg = 1.0F;
 
 	//command keys
 	private CommandSettings commands = new CommandSettings();
@@ -221,8 +221,8 @@ public class Configuration{
 		return settings;
 	}
 	
-	protected List<ProxySetting<?>> getLegacySettings(Version version){
-		List<ProxySetting<?>> settings = new ArrayList<ProxySetting<?>>();
+	protected List<Setting<?>> getLegacySettings(Version version){
+		List<Setting<?>> settings = new ArrayList<Setting<?>>();
 		
 		if(version.isBefore(8, 2)){
 			settings.add(ProxySetting.of("trackAllKeys", false, trackAllKeys, trackAllButtons));
@@ -232,6 +232,7 @@ public class Configuration{
 			statsSaving.collectLegacyProxies(settings);
 			commands.collectLegacyProxies(settings);
 			layout.collectLegacyProxies(settings);
+			theme.collectLegacyProxies(settings);
 			
 			GraphSettings graph = new GraphSettings();
 			graph.collectLegacyProxies(settings);
@@ -329,37 +330,37 @@ public class Configuration{
 		return data;
 	}
 
-	/**
-	 * Gets the background opacity
-	 * @return The background opacity
-	 */
-	public final float getBackgroundOpacity(){
-		return customColors ? opacitybg : 1.0F;
-	}
-
-	/**
-	 * Gets the foreground opacity
-	 * @return The foreground opacity
-	 */
-	public final float getForegroundOpacity(){
-		return customColors ? opacityfg : 1.0F;
-	}
-
-	/**
-	 * Gets the background opacity
-	 * @return The background color
-	 */
-	public final Color getBackgroundColor(){
-		return customColors ? background : Color.BLACK;
-	}
-
-	/**
-	 * Gets the foreground color
-	 * @return The foreground color
-	 */
-	public final Color getForegroundColor(){
-		return customColors ? foreground : Color.CYAN;
-	}
+//	/**
+//	 * Gets the background opacity
+//	 * @return The background opacity
+//	 */
+//	public final float getBackgroundOpacity(){
+//		return customColors ? opacitybg : 1.0F;
+//	}
+//
+//	/**
+//	 * Gets the foreground opacity
+//	 * @return The foreground opacity
+//	 */
+//	public final float getForegroundOpacity(){
+//		return customColors ? opacityfg : 1.0F;
+//	}
+//
+//	/**
+//	 * Gets the background opacity
+//	 * @return The background color
+//	 */
+//	public final Color getBackgroundColor(){
+//		return customColors ? background : Color.BLACK;
+//	}
+//
+//	/**
+//	 * Gets the foreground color
+//	 * @return The foreground color
+//	 */
+//	public final Color getForegroundColor(){
+//		return customColors ? foreground : Color.CYAN;
+//	}
 	
 	/**
 	 * Gets the update rate for statistic panels.
@@ -537,49 +538,6 @@ public class Configuration{
 				case "graphEnabled":
 					showGraph = Boolean.parseBoolean(args[1]);
 					break;
-				case "customColors":
-					customColors = Boolean.parseBoolean(args[1]);
-					break;
-				case "foregroundColor":
-					try{
-						foreground = parseColor(args[1]);
-					}catch(Exception e){
-						foreground = Color.CYAN;
-						modified = true;
-					}
-					break;
-				case "backgroundColor":
-					try{
-						background = parseColor(args[1]);
-					}catch(Exception e){
-						background = Color.BLACK;
-						modified = true;
-					}
-					break;
-				case "foregroundOpacity":
-					try{
-						opacityfg = Float.parseFloat(args[1]);
-						if(opacityfg > 1.0F || opacityfg < 0.0F){
-							opacityfg = 1.0F;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						opacityfg = 1.0F;
-						modified = true;
-					}
-					break;
-				case "backgroundOpacity":
-					try{
-						opacitybg = Float.parseFloat(args[1]);
-						if(opacitybg > 1.0F || opacitybg < 0.0F){
-							opacitybg = 1.0F;
-							modified = true;
-						}
-					}catch(NumberFormatException e){
-						opacitybg = 1.0F;
-						modified = true;
-					}
-					break;
 				case "position":
 					Main.frame.setLocation(parsePosition(args[1]));
 					break;
@@ -725,11 +683,11 @@ public class Configuration{
 //				out.println("graphAverage: " + graphAvg);
 				out.println();
 				out.println("# Colors");
-				out.println("customColors: " + customColors);
-				out.println("foregroundColor: [r=" + foreground.getRed() + ",g=" + foreground.getGreen() + ",b=" + foreground.getBlue() + "]");
-				out.println("backgroundColor: [r=" + background.getRed() + ",g=" + background.getGreen() + ",b=" + background.getBlue() + "]");
-				out.println("foregroundOpacity: " + opacityfg);
-				out.println("backgroundOpacity: " + opacitybg);
+//				out.println("customColors: " + customColors);
+//				out.println("foregroundColor: [r=" + foreground.getRed() + ",g=" + foreground.getGreen() + ",b=" + foreground.getBlue() + "]");
+//				out.println("backgroundColor: [r=" + background.getRed() + ",g=" + background.getGreen() + ",b=" + background.getBlue() + "]");
+//				out.println("foregroundOpacity: " + opacityfg);
+//				out.println("backgroundOpacity: " + opacitybg);
 				out.println();
 				if(savepos && (Main.frame.isVisible() || Main.graphFrame.isVisible())){
 					out.println("# Position");

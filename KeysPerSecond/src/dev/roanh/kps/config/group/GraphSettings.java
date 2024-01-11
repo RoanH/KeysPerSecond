@@ -5,6 +5,7 @@ import java.util.Map;
 
 import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.GraphModeSetting;
 import dev.roanh.kps.config.setting.IntSetting;
@@ -70,7 +71,7 @@ public class GraphSettings extends LocationSettings{
 		backlog.write(out);
 	}
 	
-	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
+	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("graphX", x));
 		proxyList.add(ProxySetting.of("graphY", y));
 		proxyList.add(ProxySetting.of("graphWidth", width));

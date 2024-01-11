@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 
@@ -84,18 +85,20 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
 				int borderOffset = Main.config.getBorderOffset();
 				
+				ThemeColor background = Main.config.getTheme().getBackground();
 				if(ColorManager.transparency){
 					g.setColor(ColorManager.transparent);
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getBackgroundOpacity()));
-					g.setColor(Main.config.getBackgroundColor());
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
+					g.setColor(background.getColor());
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getBackgroundOpacity()));
+					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
 				}else{
-					g.setColor(Main.config.getBackgroundColor());
+					g.setColor(background.getColor());
 					g.fillRect(0, 0, this.getWidth(), this.getHeight());
 					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 				}
+				
 				Polygon poly = new Polygon();
 				poly.addPoint(this.getWidth() - borderOffset - RenderingMode.insideOffset - 2, this.getHeight() - borderOffset - RenderingMode.insideOffset - 1);
 				for(int i = 1; i <= values.size(); i++){
@@ -106,17 +109,20 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 						poly.addPoint(px, this.getHeight() - borderOffset - RenderingMode.insideOffset - 1);
 					}
 				}
-				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
+				
+				ThemeColor foreground = Main.config.getTheme().getForeground();
+				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
 				if(config.isAverageVisible()){
 					int y = (int)(this.getHeight() - borderOffset - RenderingMode.insideOffset - (((this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2) * Main.avg) / maxval));
-					g.setColor(Main.config.getForegroundColor().darker());
+					g.setColor(foreground.getColor().darker());
 					g.setStroke(avgstroke);
 					g.drawLine(borderOffset + RenderingMode.insideOffset, y, this.getWidth() - borderOffset - RenderingMode.insideOffset - 2, y);
 				}
+				
 				g.setStroke(line);
 				g.setColor(ColorManager.alphaAqua);
 				g.fillPolygon(poly);
-				g.setColor(Main.config.getForegroundColor());
+				g.setColor(foreground.getColor());
 				g.drawPolygon(poly);
 				g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
 				g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - 1 - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);

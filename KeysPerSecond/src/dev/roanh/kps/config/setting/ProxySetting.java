@@ -7,7 +7,7 @@ public class ProxySetting<T> extends Setting<T>{
 	private final Setting<T>[] targets;
 	
 	@SafeVarargs
-	private ProxySetting(String key, T defaultValue, Setting<T>... targets){
+	protected ProxySetting(String key, T defaultValue, Setting<T>... targets){
 		super(key, defaultValue);
 		this.targets = targets;
 	}

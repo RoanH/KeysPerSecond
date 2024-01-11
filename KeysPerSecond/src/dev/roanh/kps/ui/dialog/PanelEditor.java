@@ -3,7 +3,7 @@ package dev.roanh.kps.ui.dialog;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
-import javax.swing.JCheckBox;
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +25,7 @@ public class PanelEditor extends JPanel{
 
 	public PanelEditor(PanelSettings config, boolean live){
 		super(new BorderLayout());
+		this.setBorder(BorderFactory.createTitledBorder("Panel Specific Settings"));
 		this.add(labels, BorderLayout.LINE_START);
 		this.add(fields, BorderLayout.CENTER);
 		

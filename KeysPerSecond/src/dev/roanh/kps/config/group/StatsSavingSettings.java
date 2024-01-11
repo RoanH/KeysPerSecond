@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.LongSetting;
@@ -120,7 +121,7 @@ public class StatsSavingSettings extends SettingGroup{
 		saveFile.write(out);
 	}
 
-	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){
+	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("autoSaveStats", autoSave));
 		proxyList.add(ProxySetting.of("statsDest", autoDestination));
 		proxyList.add(ProxySetting.of("statsFormat", autoFormat));
