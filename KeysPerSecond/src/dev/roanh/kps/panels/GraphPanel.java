@@ -25,7 +25,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import javax.swing.JPanel;
 
@@ -37,7 +37,7 @@ import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 
 /**
- * Panel to draw continuous graphs
+ * Panel to draw continuous graphs.
  * @author Roan
  */
 public class GraphPanel extends JPanel implements LayoutPosition{
@@ -48,7 +48,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	/**
 	 * Data points
 	 */
-	private LinkedList<Integer> values = new LinkedList<Integer>();
+	private ConcurrentLinkedDeque<Integer> values = new ConcurrentLinkedDeque<Integer>();
 	/**
 	 * Highest encountered value used as the
 	 * upper bound of the graph
@@ -78,66 +78,70 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 
 	@Override
 	public void paintComponent(Graphics g1){
-		if(Main.config.showGraph){//TODO this statement should not be a thing
-			try{
-				Graphics2D g = (Graphics2D)g1;
-				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-				int borderOffset = Main.config.getBorderOffset();
-				
-				ThemeColor background = Main.config.getTheme().getBackground();
-				if(ColorManager.transparency){
-					g.setColor(ColorManager.transparent);
-					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
-					g.setColor(background.getColor());
-					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
-				}else{
-					g.setColor(background.getColor());
-					g.fillRect(0, 0, this.getWidth(), this.getHeight());
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
-				}
-				
-				Polygon poly = new Polygon();
-				poly.addPoint(this.getWidth() - borderOffset - RenderingMode.insideOffset - 2, this.getHeight() - borderOffset - RenderingMode.insideOffset - 1);
-				for(int i = 1; i <= values.size(); i++){
-					int px = (int)(borderOffset + RenderingMode.insideOffset + ((double)(this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 2) / (double)(config.getBacklog() - 1)) * (config.getBacklog() - i));
-					int py = (int)(this.getHeight() - borderOffset - RenderingMode.insideOffset - 1 - ((float)((this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2) * values.get(i - 1)) / (float)maxval));
-					poly.addPoint(px, py);
-					if(i == values.size()){
-						poly.addPoint(px, this.getHeight() - borderOffset - RenderingMode.insideOffset - 1);
-					}
-				}
-				
-				ThemeColor foreground = Main.config.getTheme().getForeground();
-				g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
-				if(config.isAverageVisible()){
-					int y = (int)(this.getHeight() - borderOffset - RenderingMode.insideOffset - (((this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2) * Main.avg) / maxval));
-					g.setColor(foreground.getColor().darker());
-					g.setStroke(avgstroke);
-					g.drawLine(borderOffset + RenderingMode.insideOffset, y, this.getWidth() - borderOffset - RenderingMode.insideOffset - 2, y);
-				}
-				
-				g.setStroke(line);
-				g.setColor(ColorManager.alphaAqua);
-				g.fillPolygon(poly);
-				g.setColor(foreground.getColor());
-				g.drawPolygon(poly);
-				g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - 1 - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset, this.getWidth() - borderOffset - 1, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
-				g.drawImage(ColorManager.graph_side_left,    borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
-				g.drawImage(ColorManager.graph_upper_middle, borderOffset + BasePanel.imageSize, borderOffset, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 46, 4, this);
-				g.drawImage(ColorManager.graph_lower_middle, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 46, 4, this);
-				g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
-			}catch(NullPointerException e){
-				//catch but do not solve, this is caused by a race
-				//condition. However adding synchronisation would impact
-				//performance more than it is worth
-			}
+		Graphics2D g = (Graphics2D)g1;
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+		int borderOffset = Main.config.getBorderOffset();
+
+		//background
+		ThemeColor background = Main.config.getTheme().getBackground();
+		if(ColorManager.transparency){
+			g.setColor(ColorManager.transparent);
+			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
+			g.setColor(background.getColor());
+			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
+		}else{
+			g.setColor(background.getColor());
+			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
 		}
+
+		//graph computation
+		Polygon poly = new Polygon();
+		final int oy = this.getHeight() - borderOffset - RenderingMode.insideOffset - 1;
+		final int ox = this.getWidth() - borderOffset - RenderingMode.insideOffset - 2;
+		final double insideHeight = this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2;
+		final double insideWidth = (this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 2);
+		final double segment = insideWidth / (config.getBacklog() - 1);
+
+		int i = 0;
+		int px = ox;
+		poly.addPoint(ox, oy);
+		for(int val : values){
+			px = (int)(ox - segment * i);
+			poly.addPoint(px, (int)(oy - ((insideHeight * val) / maxval)));
+			i++;
+		}
+		poly.addPoint(px, oy);
+
+		//average line
+		ThemeColor foreground = Main.config.getTheme().getForeground();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
+		if(config.isAverageVisible()){
+			int y = (int)(oy + 1 - ((insideHeight * Main.avg) / maxval));
+			g.setColor(foreground.getColor().darker());
+			g.setStroke(avgstroke);
+			g.drawLine(borderOffset + RenderingMode.insideOffset, y, ox, y);
+		}
+
+		//graph drawing
+		g.setStroke(line);
+		g.setColor(ColorManager.alphaAqua);
+		g.fillPolygon(poly);
+		g.setColor(foreground.getColor());
+		g.drawPolygon(poly);
+
+		//border
+		g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - 1 - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset, this.getWidth() - borderOffset - 1, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_side_left,    borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_upper_middle, borderOffset + BasePanel.imageSize, borderOffset, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_lower_middle, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
 	}
 
 	/**
@@ -145,14 +149,13 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	 * @param value The new point to add
 	 */
 	public void addPoint(int value){
-		if(Main.config.showGraph){//TODO this statement should not be a thing
-			if(value > maxval){
-				maxval = value;
-			}
-			values.addFirst(value);
-			while(values.size() > config.getBacklog()){
-				values.removeLast();
-			}
+		if(value > maxval){
+			maxval = value;
+		}
+
+		values.addFirst(value);
+		while(values.size() > config.getBacklog()){
+			values.removeLast();
 		}
 	}
 

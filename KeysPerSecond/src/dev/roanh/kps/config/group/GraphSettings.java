@@ -37,7 +37,7 @@ public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 	/**
 	 * Number of points the graph consists of.
 	 */
-	private final IntSetting backlog = new IntSetting("backlog", 1, Short.MAX_VALUE, 30);//TODO note that I put a lower limit here compared with the editor
+	private final IntSetting backlog = new IntSetting("backlog", 2, Short.MAX_VALUE, 30);
 
 	public GraphSettings(){
 		super("graphs", 0, -1, -1, 3);

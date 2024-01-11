@@ -36,7 +36,7 @@ public class GraphEditor extends Editor{
 		super("Graph Settings");
 
 		labels.add(new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): "));
-		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 1, Short.MAX_VALUE, 1));
+		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 2, Short.MAX_VALUE, 1));
 		backlog.addChangeListener(e->config.setBacklog((int)backlog.getValue()));
 		fields.add(backlog);
 		
