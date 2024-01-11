@@ -30,7 +30,6 @@ import java.util.Iterator;
 import org.junit.jupiter.api.Test;
 
 import dev.roanh.kps.CommandKeys;
-import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
@@ -131,7 +130,6 @@ public class ConfigParserTest{
 		assertEquals(-1, graph.getLayoutY());
 		assertEquals(40, graph.getLayoutWidth());
 		assertEquals(7, graph.getLayoutHeight());
-		assertEquals(GraphMode.INLINE, graph.getGraphMode());
 		assertTrue(graph.isAverageVisible());
 		assertEquals(1800, graph.getBacklog());
 		
@@ -311,7 +309,6 @@ public class ConfigParserTest{
 		assertEquals(2, graph.getLayoutY());
 		assertEquals(5, graph.getLayoutWidth());
 		assertEquals(8, graph.getLayoutHeight());
-		assertEquals(GraphMode.DETACHED, graph.getGraphMode());
 		assertFalse(graph.isAverageVisible());
 		assertEquals(45, graph.getBacklog());
 		

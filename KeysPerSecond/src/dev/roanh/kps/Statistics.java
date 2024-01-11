@@ -277,6 +277,5 @@ public class Statistics{
 		}
 
 		Main.frame.repaint();
-		Main.graphFrame.repaint();
 	}
 }

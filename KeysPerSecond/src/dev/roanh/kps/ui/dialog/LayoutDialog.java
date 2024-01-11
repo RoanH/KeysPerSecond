@@ -38,7 +38,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
-import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.GraphSettings;
@@ -127,12 +126,8 @@ public class LayoutDialog{
 		form.add(pane, BorderLayout.CENTER);
 
 		GraphSettings graphConfig = Main.config.getGraphSettings();
-		JPanel graphLayout = new JPanel(new GridLayout(5, 2, 0, 5));
+		JPanel graphLayout = new JPanel(new GridLayout(4, 2, 0, 5));
 		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
-		graphLayout.add(new JLabel("Graph mode: "));
-		JComboBox<Object> graphMode = new JComboBox<Object>(GraphMode.values());
-		graphMode.setSelectedItem(graphConfig.getGraphMode());
-		graphLayout.add(graphMode);
 
 		LayoutValidator validator = new LayoutValidator();
 		validator.getXField().setModel(new EndNumberModel(graphConfig.getLayoutX(), validator.getXField(), update(graphConfig::setX, live)));
@@ -143,13 +138,11 @@ public class LayoutDialog{
 		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(validator.getXField().getModel());
 		x.setEditor(new SpecialNumberModelEditor(x));
-		x.setEnabled(graphConfig.getGraphMode() == GraphMode.INLINE);
 		graphLayout.add(x);
 
 		graphLayout.add(new JLabel("Graph y position: "));
 		JSpinner y = new JSpinner(validator.getYField().getModel());
 		y.setEditor(new SpecialNumberModelEditor(y));
-		y.setEnabled(graphConfig.getGraphMode() == GraphMode.INLINE);
 		graphLayout.add(y);
 
 		graphLayout.add(new JLabel("Graph width: "));
@@ -161,22 +154,6 @@ public class LayoutDialog{
 		JSpinner h = new JSpinner(validator.getHeightField().getModel());
 		h.setEditor(new SpecialNumberModelEditor(h));
 		graphLayout.add(h);
-
-		graphMode.addActionListener((e)->{
-			graphConfig.setGraphMode((GraphMode)graphMode.getSelectedItem());
-			
-			if(graphMode.getSelectedItem() == GraphMode.INLINE){
-				x.setEnabled(true);
-				y.setEnabled(true);
-			}else{
-				x.setEnabled(false);
-				y.setEnabled(false);
-			}
-			
-			if(live){
-				Main.reconfigure();
-			}
-		});
 
 		form.add(graphLayout, BorderLayout.PAGE_END);
 

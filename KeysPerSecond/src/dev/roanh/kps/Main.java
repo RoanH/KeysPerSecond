@@ -196,10 +196,6 @@ public class Main{
 	 */
 	protected static ScheduledFuture<?> future = null;
 	/**
-	 * Frame for the graph
-	 */
-	public static JFrame graphFrame = new JFrame("KeysPerSecond");
-	/**
 	 * The layout for the main panel of the program
 	 */
 	public static final Layout layout = new Layout(content);
@@ -892,13 +888,7 @@ public class Main{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		new Listener(frame);
-		graphFrame.setResizable(false);
-		graphFrame.setIconImage(icon);
-		graphFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		graphFrame.setUndecorated(true);
 		frame.addWindowListener(onClose);
-		graphFrame.addWindowListener(onClose);
-		new Listener(graphFrame);
 		reconfigure();
 	}
 	
@@ -997,21 +987,11 @@ public class Main{
 			all.setOpaque(opaque);
 			if(config.showGraph){
 				graph = config.getGraphSettings().createPanel();
-				if(config.getGraphSettings().getGraphMode() == GraphMode.INLINE){
-					content.add(graph);
-					graphFrame.setVisible(false);
-				}else{
-					graph.setOpaque(opaque);
-					graphFrame.add(graph);
-					graphFrame.setSize(config.getGraphSettings().getLayoutWidth() * config.getCellSize(), config.getGraphSettings().getLayoutHeight() * config.getCellSize());
-					graphFrame.setVisible(true);
-				}
-			}else{
-				graphFrame.setVisible(false);
+				graph.setOpaque(opaque);//TODO this was in the DETACHED only branch, make sure we need it?
+				content.add(graph);
 			}
 			
 			frame.setAlwaysOnTop(config.isOverlayMode());
-			graphFrame.setAlwaysOnTop(config.isOverlayMode());
 			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(background.getAlpha() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
@@ -1052,7 +1032,6 @@ public class Main{
 		tmp.set(0);
 		graph.reset();
 		frame.repaint();
-		graphFrame.repaint();
 	}
 
 	/**

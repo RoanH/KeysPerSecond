@@ -451,9 +451,6 @@ public class Configuration{
 				case "position":
 					Main.frame.setLocation(parsePosition(args[1]));
 					break;
-				case "graphPosition":
-					Main.graphFrame.setLocation(parsePosition(args[1]));
-					break;
 				}
 			}
 			
@@ -569,14 +566,9 @@ public class Configuration{
 //				out.println("foregroundOpacity: " + opacityfg);
 //				out.println("backgroundOpacity: " + opacitybg);
 				out.println();
-				if(savepos && (Main.frame.isVisible() || Main.graphFrame.isVisible())){
+				if(savepos && Main.frame.isVisible()){
 					out.println("# Position");
-					if(Main.frame.isVisible()){
-						out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
-					}
-					if(Main.graphFrame.isVisible()){
-						out.println("graphPosition: [x=" + Main.graphFrame.getLocationOnScreen().x + ",y=" + Main.graphFrame.getLocationOnScreen().y + "]");
-					}
+					out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
 					out.println();
 				}
 //				out.println("# Command keys");

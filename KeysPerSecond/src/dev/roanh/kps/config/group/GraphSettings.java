@@ -3,20 +3,14 @@ package dev.roanh.kps.config.group;
 import java.util.List;
 import java.util.Map;
 
-import dev.roanh.kps.GraphMode;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.BooleanSetting;
-import dev.roanh.kps.config.setting.GraphModeSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.GraphPanel;
 
 public class GraphSettings extends LocationSettings{
-	/**
-	 * Position the graph is rendered in.
-	 */
-	private final GraphModeSetting mode = new GraphModeSetting("mode", GraphMode.INLINE);
 	/**
 	 * Whether to draw the horizontal average line or not.
 	 */
@@ -30,20 +24,12 @@ public class GraphSettings extends LocationSettings{
 		super("graphs", 0, -1, -1, 3);
 	}
 	
-	public GraphMode getGraphMode(){
-		return mode.getValue();
-	}
-	
 	public boolean isAverageVisible(){
 		return showAvg.getValue();
 	}
 	
 	public int getBacklog(){
 		return backlog.getValue();
-	}
-	
-	public void setGraphMode(GraphMode mode){
-		this.mode.update(mode);
 	}
 	
 	public void setAverageVisible(boolean visible){
@@ -60,13 +46,12 @@ public class GraphSettings extends LocationSettings{
 
 	@Override
 	public boolean parse(Map<String, String> data){
-		return super.parse(data) | findAndParse(data, mode, showAvg, backlog);
+		return super.parse(data) | findAndParse(data, showAvg, backlog);
 	}
 	
 	@Override
 	public void write(IndentWriter out){
 		super.write(out);
-		mode.write(out);
 		showAvg.write(out);
 		backlog.write(out);
 	}
@@ -76,8 +61,42 @@ public class GraphSettings extends LocationSettings{
 		proxyList.add(ProxySetting.of("graphY", y));
 		proxyList.add(ProxySetting.of("graphWidth", width));
 		proxyList.add(ProxySetting.of("graphHeight", height));
-		proxyList.add(ProxySetting.of("graphMode", mode));
 		proxyList.add(ProxySetting.of("graphBacklog", backlog));
 		proxyList.add(ProxySetting.of("graphAverage", showAvg));
+		proxyList.add(new LegacyGraphSetting("graphMode", "INLINE"));
+		proxyList.add(new LegacyGraphSetting("graphPosition", null));
+	}
+	
+	/**
+	 * Small legacy setting that ensures parsing of the legacy
+	 * graphMode setting does not throw a warning that a default
+	 * was used as long as the configured value was set to the
+	 * only currently supported option of inline. In addition this
+	 * setting silently discards the legacy graphPosition setting
+	 * that accompanied the detached graph mode setting.
+	 * @author Roan
+	 */
+	private static final class LegacyGraphSetting extends Setting<String>{
+
+		/**
+		 * Constructs a new legacy graph mode setting.
+		 * @param key The setting key, either graphMode or graphPosition.
+		 * @param required The only accepted value to not trigger a
+		 *        warning that a default value was used. If null all
+		 *        values are accepted without generating a warning.
+		 */
+		private LegacyGraphSetting(String key, String required){
+			super(key, required);
+		}
+
+		@Override
+		public boolean parse(String data){
+			return getDefaultValue() != null && !data.equalsIgnoreCase(getDefaultValue());
+		}
+
+		@Override
+		public void write(IndentWriter out){
+			throw new IllegalStateException("Legacy proxy settings should never be written.");
+		}
 	}
 }
