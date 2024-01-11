@@ -37,18 +37,15 @@ import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.setting.ProxySetting;
 
 public class ConfigParser{
+	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};
+	private static final char[] LIST_ITEM_BODY = new char[]{' ', ' ', ' ', ' '};
+	private static final char[] GROUP_BODY = new char[]{' ', ' '};
 	private Version version;
 	
 	private boolean defaultUsed;//overriden, default used when not specified doesn't count, this is when given values are replaced with safe values deliberately
 	
-	
-	
-	
-	
-	public ConfigParser(BufferedReader in) throws IOException{
-		
-		
-		
+	public ConfigParser(){
+		//TODO ?
 	}
 	
 	private Map<String, Setting<?>> settings = new HashMap<String, Setting<?>>();//TODO config#getSettings -- linked hash map would address the trackAll issue
@@ -102,7 +99,6 @@ public class ConfigParser{
 				continue;
 			}
 			
-			
 			int mark = line.indexOf(':');
 			if(mark != -1){
 				String key = line.substring(0, mark).trim();
@@ -132,46 +128,11 @@ public class ConfigParser{
 				}
 			}
 			
-			
-//			if(line.equals("keys:")){//TODO refactor
-//				keys = parseList("keys", in, map->{
-//					KeyPanelSettings setting = new KeyPanelSettings();
-//					defaultUsed |= setting.parse(map);
-//					return setting;
-//				});
-//			}
-			
-			
-			
 			//unknown / invalid setting //TODO
 			System.out.println("invalid setting: " + line);
+			defaultUsed = true;
 		}
-		
-		
 	}
-	
-	
-	
-	
-	
-	
-	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};
-	private static final char[] LIST_ITEM_BODY = new char[]{' ', ' ', ' ', ' '};
-	private static final char[] GROUP_BODY = new char[]{' ', ' '};
-	
-//	public static void main(String[] args) throws IOException{
-//		parseList(Files.newBufferedReader(Paths.get("C:\\Users\\RoanH\\Downloads\\ymltest.txt")), map->{
-//			
-//			System.out.println("item: " + map);
-//			
-//			return null;
-//		});
-//	}
-	
-	
-//	private void parseListItem(){
-//		
-//	}
 	
 	//TODO group parsing and list parsing share way too much logic
 	private static boolean parseGroup(BufferedReader in, SettingGroup target) throws IOException{

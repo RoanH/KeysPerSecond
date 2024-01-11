@@ -176,7 +176,7 @@ public class Configuration{
 	//TODO refactor into real logic or remove
 	public static Configuration newLoadTemporary(Path config) throws IOException{
 		Configuration c = new Configuration(config);
-		new ConfigParser(null).parse(Files.newBufferedReader(config), c);
+		new ConfigParser().parse(Files.newBufferedReader(config), c);
 		return c;
 	}
 	
