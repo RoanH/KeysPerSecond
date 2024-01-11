@@ -20,6 +20,7 @@ package dev.roanh.kps;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -80,6 +81,7 @@ import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.AvgPanel;
+import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.panels.NowPanel;
@@ -951,6 +953,14 @@ public class Main{
 		graphFrame.addWindowListener(onClose);
 		new Listener(graphFrame);
 		reconfigure();
+	}
+	
+	public static final void resetPanels(){
+		for(Component component : content.getComponents()){
+			if(component instanceof BasePanel){
+				((BasePanel)component).sizeChanged();
+			}
+		}
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.List;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.dialog.PanelEditor;
 
 public class TotalPanelSettings extends SpecialPanelSettings{
 
@@ -15,6 +16,11 @@ public class TotalPanelSettings extends SpecialPanelSettings{
 	@Override
 	public TotPanel createPanel(){
 		return new TotPanel(this);
+	}
+	
+	@Override
+	public void showEditor(boolean live){
+		PanelEditor.showEditor(this, live);
 	}
 	
 	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){

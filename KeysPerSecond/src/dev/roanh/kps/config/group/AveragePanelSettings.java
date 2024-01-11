@@ -26,6 +26,8 @@ import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.setting.PrecisionSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.AvgPanel;
+import dev.roanh.kps.ui.dialog.AvgPanelEditor;
+import dev.roanh.kps.ui.dialog.PanelEditor;
 
 /**
  * Configuration for the average panel.
@@ -64,6 +66,11 @@ public class AveragePanelSettings extends SpecialPanelSettings{
 	@Override
 	public void write(IndentWriter out){
 		//TODO ??? precision
+	}
+	
+	@Override
+	public void showEditor(boolean live){
+		PanelEditor.showEditor(new AvgPanelEditor(this, live));
 	}
 	
 	public void collectLegacyProxies(List<ProxySetting<?>> proxyList){

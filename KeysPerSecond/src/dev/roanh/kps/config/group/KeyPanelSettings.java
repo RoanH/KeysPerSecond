@@ -10,6 +10,7 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.KeyPanel;
+import dev.roanh.kps.ui.dialog.PanelEditor;
 
 public class KeyPanelSettings extends PanelSettings{
 	private final BooleanSetting visible = new BooleanSetting("visible", true);
@@ -53,6 +54,11 @@ public class KeyPanelSettings extends PanelSettings{
 		super.write(out);
 		visible.write(out);
 		keycode.write(out);
+	}
+	
+	@Override
+	public void showEditor(boolean live){
+		PanelEditor.showEditor(this, live);
 	}
 	
 	@Override

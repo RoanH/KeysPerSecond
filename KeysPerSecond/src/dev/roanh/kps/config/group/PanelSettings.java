@@ -7,7 +7,7 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
-public class PanelSettings extends LocationSettings{
+public abstract class PanelSettings extends LocationSettings{
 	protected final StringSetting name;
 	protected final RenderingModeSetting mode = new RenderingModeSetting("mode", RenderingMode.VERTICAL);
 	
@@ -35,6 +35,8 @@ public class PanelSettings extends LocationSettings{
 	public void setName(String name){
 		this.name.update(name);
 	}
+	
+	public abstract void showEditor(boolean live);
 	
 	@Override
 	public boolean parse(Map<String, String> data){

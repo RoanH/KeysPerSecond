@@ -25,6 +25,7 @@ import java.awt.GridLayout;
 import java.util.function.IntConsumer;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -217,15 +218,21 @@ public class LayoutDialog{
 		h.setEditor(new SpecialNumberModelEditor(h));
 		fields.add(h);
 
-		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
-		mode.setSelectedItem(info.getRenderingMode());
-		mode.addActionListener((e)->{
-			info.setRenderingMode((RenderingMode)mode.getSelectedItem());
-			if(live){
-				Main.reconfigure();
-			}
+//		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
+//		mode.setSelectedItem(info.getRenderingMode());
+//		mode.addActionListener((e)->{
+//			info.setRenderingMode((RenderingMode)mode.getSelectedItem());
+//			if(live){
+//				Main.reconfigure();
+//			}
+//		});
+//		modes.add(mode);
+		
+		JButton edit = new JButton("Edit");
+		edit.addActionListener(e->{
+			info.showEditor(live);
 		});
-		modes.add(mode);
+		modes.add(edit);
 	}
 	
 	
