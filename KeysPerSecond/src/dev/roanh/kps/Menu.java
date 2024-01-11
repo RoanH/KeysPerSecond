@@ -62,6 +62,7 @@ import javax.swing.plaf.basic.BasicMenuUI;
 
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
@@ -264,40 +265,12 @@ public class Menu{
 		tAllKeys.setSelected(Main.config.isTrackAllKeys());
 		tAllKeys.addActionListener((e)->{
 			Main.config.setTrackAllKeys(tAllKeys.isSelected());
-			Iterator<Entry<Integer, Key>> iter = Main.keys.entrySet().iterator();
-			while(iter.hasNext()){
-				Entry<Integer, Key> key = iter.next();
-				if(!CommandKeys.isMouseButton(key.getKey())){
-					boolean remove = true;
-					for(KeyInformation info : Main.config.keyinfo){
-						if(info.keycode == key.getKey()){
-							remove = false;
-						}
-					}
-					if(remove){
-						iter.remove();
-					}
-				}
-			}
+			Main.keys.entrySet().removeIf(entry->!CommandKeys.isMouseButton(entry.getKey()) && !Main.config.getKeySettings().contains(entry.getKey(), KeyPanelSettings::getKeyCode));
 		});
 		tAllButtons.setSelected(Main.config.isTrackAllButtons());
 		tAllButtons.addActionListener((e)->{
 			Main.config.setTrackAllButtons(tAllButtons.isSelected());
-			Iterator<Entry<Integer, Key>> iter = Main.keys.entrySet().iterator();
-			while(iter.hasNext()){
-				Entry<Integer, Key> key = iter.next();
-				if(CommandKeys.isMouseButton(key.getKey())){
-					boolean remove = true;
-					for(KeyInformation info : Main.config.keyinfo){
-						if(info.keycode == key.getKey()){
-							remove = false;
-						}
-					}
-					if(remove){
-						iter.remove();
-					}
-				}
-			}
+			Main.keys.entrySet().removeIf(entry->CommandKeys.isMouseButton(entry.getKey()) && !Main.config.getKeySettings().contains(entry.getKey(), KeyPanelSettings::getKeyCode));
 		});
 		overlay.setSelected(Main.config.isOverlayMode());
 		overlay.addActionListener((e)->{
@@ -602,7 +575,7 @@ public class Menu{
 		TotPanel.hits = 0;
 		Main.reconfigure();
 		Main.mainLoop();
-		KeyInformation.autoIndex = Main.config.keyinfo.size() * 2 - 2;
+//		KeyInformation.autoIndex = Main.config.keyinfo.size() * 2 - 2;
 	}
 
 	/**

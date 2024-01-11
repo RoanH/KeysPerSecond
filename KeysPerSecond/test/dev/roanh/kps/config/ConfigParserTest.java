@@ -37,7 +37,6 @@ import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
-import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
@@ -63,8 +62,8 @@ public class ConfigParserTest{
 //		total
 //		keys
 		assertFalse(config.isOverlayMode());
-//		allkeys
-//		allbuttons
+		assertFalse(config.isTrackAllKeys());
+		assertFalse(config.isTrackAllButtons());
 		assertEquals(100, config.getUpdateRateMs());
 		assertFalse(config.isKeyModifierTrackingEnabled());
 		
@@ -129,10 +128,10 @@ public class ConfigParserTest{
 		
 		//graph
 		GraphSettings graph = config.getGraphSettings();
-		assertEquals(0, graph.getX());
-		assertEquals(-1, graph.getY());
-		assertEquals(40, graph.getWidth());
-		assertEquals(7, graph.getHeight());
+		assertEquals(0, graph.getLayoutX());
+		assertEquals(-1, graph.getLayoutY());
+		assertEquals(40, graph.getLayoutWidth());
+		assertEquals(7, graph.getLayoutHeight());
 		assertEquals(GraphMode.INLINE, graph.getGraphMode());
 		assertTrue(graph.isAverageVisible());
 		assertEquals(1800, graph.getBacklog());
@@ -141,35 +140,35 @@ public class ConfigParserTest{
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
 		
 		MaxPanelSettings maxSettings = assertInstanceOf(MaxPanelSettings.class, panels.next());
-		assertEquals(23, maxSettings.getX());
-		assertEquals(0, maxSettings.getY());
-		assertEquals(2, maxSettings.getWidth());
-		assertEquals(3, maxSettings.getHeight());
+		assertEquals(23, maxSettings.getLayoutX());
+		assertEquals(0, maxSettings.getLayoutY());
+		assertEquals(2, maxSettings.getLayoutWidth());
+		assertEquals(3, maxSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, maxSettings.getRenderingMode());
 		assertEquals("MAX", maxSettings.getName());
 		
 		AveragePanelSettings avgSettings = assertInstanceOf(AveragePanelSettings.class, panels.next());
-		assertEquals(21, avgSettings.getX());
-		assertEquals(0, avgSettings.getY());
-		assertEquals(2, avgSettings.getWidth());
-		assertEquals(3, avgSettings.getHeight());
+		assertEquals(21, avgSettings.getLayoutX());
+		assertEquals(0, avgSettings.getLayoutY());
+		assertEquals(2, avgSettings.getLayoutWidth());
+		assertEquals(3, avgSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, avgSettings.getRenderingMode());
 		assertEquals("AVG", avgSettings.getName());
 		assertEquals(0, avgSettings.getPrecision());
 		
 		CurrentPanelSettings curSettings = assertInstanceOf(CurrentPanelSettings.class, panels.next());
-		assertEquals(25, curSettings.getX());
-		assertEquals(0, curSettings.getY());
-		assertEquals(2, curSettings.getWidth());
-		assertEquals(3, curSettings.getHeight());
+		assertEquals(25, curSettings.getLayoutX());
+		assertEquals(0, curSettings.getLayoutY());
+		assertEquals(2, curSettings.getLayoutWidth());
+		assertEquals(3, curSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, curSettings.getRenderingMode());
 		assertEquals("KPS", curSettings.getName());//technically 'CUR' historically
 		
 		TotalPanelSettings totSettings = assertInstanceOf(TotalPanelSettings.class, panels.next());
-		assertEquals(25, totSettings.getX());
-		assertEquals(0, totSettings.getY());
-		assertEquals(2, totSettings.getWidth());
-		assertEquals(3, totSettings.getHeight());
+		assertEquals(25, totSettings.getLayoutX());
+		assertEquals(0, totSettings.getLayoutY());
+		assertEquals(2, totSettings.getLayoutWidth());
+		assertEquals(3, totSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, totSettings.getRenderingMode());
 		assertEquals("TOT", totSettings.getName());
 		
@@ -181,60 +180,60 @@ public class ConfigParserTest{
 		
 		KeyPanelSettings key1 = keys.get(0);
 		assertEquals(1048606, key1.getKeyCode());
-		assertEquals(13, key1.getX());
-		assertEquals(0, key1.getY());
-		assertEquals(2, key1.getWidth());
-		assertEquals(3, key1.getHeight());
+		assertEquals(13, key1.getLayoutX());
+		assertEquals(0, key1.getLayoutY());
+		assertEquals(2, key1.getLayoutWidth());
+		assertEquals(3, key1.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, key1.getRenderingMode());
 		assertTrue(key1.isVisible());
 		assertEquals("A", key1.getName());
 		
 		KeyPanelSettings key2 = keys.get(1);
 		assertEquals(1048607, key2.getKeyCode());
-		assertEquals(15, key2.getX());
-		assertEquals(0, key2.getY());
-		assertEquals(2, key2.getWidth());
-		assertEquals(3, key2.getHeight());
+		assertEquals(15, key2.getLayoutX());
+		assertEquals(0, key2.getLayoutY());
+		assertEquals(2, key2.getLayoutWidth());
+		assertEquals(3, key2.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, key2.getRenderingMode());
 		assertTrue(key2.isVisible());
 		assertEquals("S", key2.getName());
 		
 		KeyPanelSettings key3 = keys.get(2);
 		assertEquals(1048615, key3.getKeyCode());
-		assertEquals(17, key3.getX());
-		assertEquals(0, key3.getY());
-		assertEquals(2, key3.getWidth());
-		assertEquals(3, key3.getHeight());
+		assertEquals(17, key3.getLayoutX());
+		assertEquals(0, key3.getLayoutY());
+		assertEquals(2, key3.getLayoutWidth());
+		assertEquals(3, key3.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, key3.getRenderingMode());
 		assertTrue(key3.isVisible());
 		assertEquals(";", key3.getName());
 		
 		KeyPanelSettings key4 = keys.get(3);
 		assertEquals(1048616, key4.getKeyCode());
-		assertEquals(19, key4.getX());
-		assertEquals(0, key4.getY());
-		assertEquals(2, key4.getWidth());
-		assertEquals(3, key4.getHeight());
+		assertEquals(19, key4.getLayoutX());
+		assertEquals(0, key4.getLayoutY());
+		assertEquals(2, key4.getLayoutWidth());
+		assertEquals(3, key4.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, key4.getRenderingMode());
 		assertTrue(key4.isVisible());
 		assertEquals("\"", key4.getName());
 		
 		KeyPanelSettings key5 = keys.get(4);
 		assertEquals(1048593, key5.getKeyCode());
-		assertEquals(11, key5.getX());
-		assertEquals(0, key5.getY());
-		assertEquals(2, key5.getWidth());
-		assertEquals(3, key5.getHeight());
+		assertEquals(11, key5.getLayoutX());
+		assertEquals(0, key5.getLayoutY());
+		assertEquals(2, key5.getLayoutWidth());
+		assertEquals(3, key5.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, key5.getRenderingMode());
 		assertTrue(key5.isVisible());
 		assertEquals("W", key5.getName());
 		
 		KeyPanelSettings key6 = keys.get(5);
 		assertEquals(1048594, key6.getKeyCode());
-		assertEquals(9, key6.getX());
-		assertEquals(0, key6.getY());
-		assertEquals(2, key6.getWidth());
-		assertEquals(3, key6.getHeight());
+		assertEquals(9, key6.getLayoutX());
+		assertEquals(0, key6.getLayoutY());
+		assertEquals(2, key6.getLayoutWidth());
+		assertEquals(3, key6.getLayoutHeight());
 		assertEquals(RenderingMode.VERTICAL, key6.getRenderingMode());
 		assertTrue(key6.isVisible());
 		assertEquals("E", key6.getName());
@@ -245,7 +244,12 @@ public class ConfigParserTest{
 		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
 
 		
-		
+		//general
+		assertFalse(config.isOverlayMode());
+		assertFalse(config.isTrackAllKeys());
+		assertFalse(config.isTrackAllButtons());
+		assertEquals(100, config.getUpdateRateMs());
+		assertFalse(config.isKeyModifierTrackingEnabled());
 		
 		
 		
@@ -299,10 +303,10 @@ public class ConfigParserTest{
 		
 		//graphs
 		GraphSettings graph = config.getGraphSettings();
-		assertEquals(1, graph.getX());
-		assertEquals(2, graph.getY());
-		assertEquals(5, graph.getWidth());
-		assertEquals(8, graph.getHeight());
+		assertEquals(1, graph.getLayoutX());
+		assertEquals(2, graph.getLayoutY());
+		assertEquals(5, graph.getLayoutWidth());
+		assertEquals(8, graph.getLayoutHeight());
 		assertEquals(GraphMode.DETACHED, graph.getGraphMode());
 		assertFalse(graph.isAverageVisible());
 		assertEquals(45, graph.getBacklog());
@@ -311,35 +315,35 @@ public class ConfigParserTest{
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
 		
 		MaxPanelSettings maxSettings = assertInstanceOf(MaxPanelSettings.class, panels.next());
-		assertEquals(6, maxSettings.getX());
-		assertEquals(3, maxSettings.getY());
-		assertEquals(5, maxSettings.getWidth());
-		assertEquals(1, maxSettings.getHeight());
+		assertEquals(6, maxSettings.getLayoutX());
+		assertEquals(3, maxSettings.getLayoutY());
+		assertEquals(5, maxSettings.getLayoutWidth());
+		assertEquals(1, maxSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VALUE_ONLY, maxSettings.getRenderingMode());
 		assertEquals("NMAX", maxSettings.getName());
 		
 		AveragePanelSettings avgSettings = assertInstanceOf(AveragePanelSettings.class, panels.next());
-		assertEquals(9, avgSettings.getX());
-		assertEquals(8, avgSettings.getY());
-		assertEquals(7, avgSettings.getWidth());
-		assertEquals(6, avgSettings.getHeight());
+		assertEquals(9, avgSettings.getLayoutX());
+		assertEquals(8, avgSettings.getLayoutY());
+		assertEquals(7, avgSettings.getLayoutWidth());
+		assertEquals(6, avgSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VALUE_ONLY, avgSettings.getRenderingMode());
 		assertEquals("average", avgSettings.getName());
 		assertEquals(2, avgSettings.getPrecision());
 		
 		CurrentPanelSettings curSettings = assertInstanceOf(CurrentPanelSettings.class, panels.next());
-		assertEquals(0, curSettings.getX());
-		assertEquals(9, curSettings.getY());
-		assertEquals(4, curSettings.getWidth());
-		assertEquals(5, curSettings.getHeight());
+		assertEquals(0, curSettings.getLayoutX());
+		assertEquals(9, curSettings.getLayoutY());
+		assertEquals(4, curSettings.getLayoutWidth());
+		assertEquals(5, curSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VALUE_ONLY, curSettings.getRenderingMode());
 		assertEquals("kps", curSettings.getName());
 		
 		TotalPanelSettings totSettings = assertInstanceOf(TotalPanelSettings.class, panels.next());
-		assertEquals(1, totSettings.getX());
-		assertEquals(1, totSettings.getY());
-		assertEquals(2, totSettings.getWidth());
-		assertEquals(2, totSettings.getHeight());
+		assertEquals(1, totSettings.getLayoutX());
+		assertEquals(1, totSettings.getLayoutY());
+		assertEquals(2, totSettings.getLayoutWidth());
+		assertEquals(2, totSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VALUE_ONLY, totSettings.getRenderingMode());
 		assertEquals("Total Panel", totSettings.getName());
 		
@@ -351,20 +355,20 @@ public class ConfigParserTest{
 		
 		KeyPanelSettings key1 = keys.get(0);
 		assertEquals(1048606, key1.getKeyCode());
-		assertEquals(13, key1.getX());
-		assertEquals(0, key1.getY());
-		assertEquals(2, key1.getWidth());
-		assertEquals(3, key1.getHeight());
+		assertEquals(13, key1.getLayoutX());
+		assertEquals(0, key1.getLayoutY());
+		assertEquals(2, key1.getLayoutWidth());
+		assertEquals(3, key1.getLayoutHeight());
 		assertEquals(RenderingMode.VALUE_ONLY, key1.getRenderingMode());
 		assertTrue(key1.isVisible());
 		assertEquals("A", key1.getName());
 		
 		KeyPanelSettings key2 = keys.get(1);
 		assertEquals(1048607, key2.getKeyCode());
-		assertEquals(12, key2.getX());
-		assertEquals(9, key2.getY());
-		assertEquals(6, key2.getWidth());
-		assertEquals(7, key2.getHeight());
+		assertEquals(12, key2.getLayoutX());
+		assertEquals(9, key2.getLayoutY());
+		assertEquals(6, key2.getLayoutWidth());
+		assertEquals(7, key2.getLayoutHeight());
 		assertEquals(RenderingMode.VALUE_ONLY, key2.getRenderingMode());
 		assertFalse(key2.isVisible());
 		assertEquals("B", key2.getName());

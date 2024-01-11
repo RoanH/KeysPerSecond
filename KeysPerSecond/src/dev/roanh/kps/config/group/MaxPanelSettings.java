@@ -2,13 +2,14 @@ package dev.roanh.kps.config.group;
 
 import java.util.List;
 
+import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.MaxPanel;
 
 public class MaxPanelSettings extends SpecialPanelSettings{
 
 	public MaxPanelSettings(){
-		super("MAX");
+		super(PanelType.MAX, "MAX");
 	}
 	
 	@Override

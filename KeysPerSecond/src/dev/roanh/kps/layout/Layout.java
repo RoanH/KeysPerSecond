@@ -134,35 +134,6 @@ public class Layout implements LayoutManager2{
 		}
 	}
 	
-	//TODO completely untested
-	public int placePanelX(int width, int height){
-		boolean[] conflict = new boolean[maxw];
-		for(Component component : parent.getComponents()){
-			LayoutPosition lp = (LayoutPosition)component;
-			if(lp.getLayoutY() < height && lp.getLayoutX() != -1 && lp.getLayoutY() != -1){
-				for(int i = 0; i < lp.getLayoutWidth(); i++){
-					conflict[lp.getLayoutX() + i] = true;
-				}
-			}
-		}
-		
-		int free = 0;
-		for(int i = 0; i < conflict.length; i++){
-			if(conflict[i]){
-				free = 0;
-			}else{
-				free++;
-				if(free >= width){
-					System.out.println("l: " + (i - width) + " / " + parent.getComponentCount());
-					return i - width + 1;
-				}
-			}
-		}
-		
-		System.out.println("l: " + maxw + " / " + parent.getComponentCount());
-		return maxw;
-	}
-
 	@Override
 	public String toString(){
 		return "Layout[components=" + parent.getComponentCount() + ",maxw=" + maxw + ",maxh=" + maxh + "]";

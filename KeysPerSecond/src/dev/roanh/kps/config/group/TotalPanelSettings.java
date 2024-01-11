@@ -2,13 +2,14 @@ package dev.roanh.kps.config.group;
 
 import java.util.List;
 
+import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.TotPanel;
 
 public class TotalPanelSettings extends SpecialPanelSettings{
 
 	public TotalPanelSettings(){
-		super("TOT");
+		super(PanelType.TOTAL, "TOT");
 	}
 
 	@Override

@@ -41,9 +41,11 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
+import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.event.listener.KeyPressListener;
+import dev.roanh.kps.layout.LayoutPosition;
 import dev.roanh.util.Dialog;
 
 /**
@@ -141,7 +143,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	private JButton newButton(int code, String text){
 		JButton button = new JButton(text);
 		button.addActionListener(e->{
-			KeyPanelSettings info = new KeyPanelSettings(Main.layout, Main.getExtendedButtonCode(code));
+			KeyPanelSettings info = new KeyPanelSettings(placePanelX(), Main.getExtendedButtonCode(code));
 //			KeyInformation key = new KeyInformation("M" + code, Main.getExtendedButtonCode(code), false, false, false, true);
 			if(config.contains(info)){
 //				KeyInformation.autoIndex -= 2;
@@ -169,7 +171,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 			return;
 		}
 		
-		KeyPanelSettings info = new KeyPanelSettings(Main.layout, lastKey);
+		KeyPanelSettings info = new KeyPanelSettings(placePanelX(), lastKey);
 		if(config.contains(info)){
 //			KeyInformation.autoIndex -= 2;
 			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
@@ -193,33 +195,45 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * Shows the key configuration dialog
 	 */
 	public static final void configureKeys(SettingList<KeyPanelSettings> config, boolean live){
-		//TODO keep the undo save logic? Not as required imo with the new config dialog and other planned changes
-//		List<KeyInformation> copy = new ArrayList<KeyInformation>(Main.config.keyinfo);
-//		boolean[] visibleState = new boolean[copy.size()];
-//		String[] nameState = new String[copy.size()];
-//		int autoIndex = KeyInformation.autoIndex;
-//		for(int i = 0; i < copy.size(); i++){
-//			visibleState[i] = copy.get(i).visible;
-//			nameState[i] = copy.get(i).name;
-//		}
-//		
-//		KeysDialog dialog = new KeysDialog(Main.config.getKeySettings());//TODO
-//		Main.eventManager.registerKeyPressListener(dialog);
-//		if(!Dialog.showConfirmDialog(dialog, true, ModalityType.APPLICATION_MODAL)){
-//			for(int i = 0; i < copy.size(); i++){
-//				copy.get(i).visible = visibleState[i];
-//				copy.get(i).setName(nameState[i]);
-//			}
-//			KeyInformation.autoIndex = autoIndex;
-//			Main.config.keyinfo = copy;
-//		}
-		
 		KeysDialog dialog = new KeysDialog(config, live);
 		Main.eventManager.registerKeyPressListener(dialog);
 		Dialog.showMessageDialog(dialog, true, ModalityType.APPLICATION_MODAL);
 		Main.eventManager.unregisterKeyPressListener(dialog);
 	}
 	
+	private int placePanelX(){
+		return placePanelX(Main.config, 2, 3);
+	}
+	
+	//TODO completely untested
+	private int placePanelX(Configuration config, int width, int height){
+		List<LayoutPosition> components = config.getLayoutComponents();
+		int maxw = components.stream().mapToInt(lp->lp.getLayoutX() + lp.getLayoutWidth()).max().orElse(0);
+		boolean[] conflict = new boolean[maxw];
+		
+		for(LayoutPosition lp : components){
+			if(lp.getLayoutY() < height && lp.getLayoutX() != -1 && lp.getLayoutY() != -1){
+				for(int i = 0; i < lp.getLayoutWidth(); i++){
+					conflict[lp.getLayoutX() + i] = true;
+				}
+			}
+		}
+
+		int free = 0;
+		for(int i = 0; i < conflict.length; i++){
+			if(conflict[i]){
+				free = 0;
+			}else{
+				free++;
+				if(free >= width){
+					return i - width + 1;
+				}
+			}
+		}
+
+		return maxw;
+	}
+
 	/**
 	 * Table model that displays all configured keys.
 	 * @author Roan

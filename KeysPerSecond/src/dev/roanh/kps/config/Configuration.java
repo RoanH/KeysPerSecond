@@ -30,6 +30,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
@@ -47,6 +49,7 @@ import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
+import dev.roanh.kps.layout.LayoutPosition;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
@@ -133,9 +136,8 @@ public class Configuration{
 
 	//keys
 	/**
-	 * Key configuration data, can be serialised
+	 * Key configuration data.
 	 */
-	public List<KeyInformation> keyinfo = new ArrayList<KeyInformation>();
 	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
 		
 	
@@ -263,7 +265,9 @@ public class Configuration{
 	
 	
 	
-	
+	public List<LayoutPosition> getLayoutComponents(){
+		return Stream.concat(panels.stream(), Stream.concat(keys.stream(), graphs.stream())).collect(Collectors.toList());
+	}
 	
 	public LayoutSettings getLayout(){
 		return layout;
@@ -282,6 +286,10 @@ public class Configuration{
 	}
 	
 	public GraphSettings getGraphSettings(){
+		if(graphs.size() == 0){
+			return new GraphSettings();
+		}
+		
 		//TODO consider empty
 		return graphs.get(0);
 	}

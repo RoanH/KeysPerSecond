@@ -23,8 +23,9 @@ import java.util.Map;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.IntSetting;
+import dev.roanh.kps.layout.LayoutPosition;
 
-public class LocationSettings extends SettingGroup{
+public class LocationSettings extends SettingGroup implements LayoutPosition{
 	/**
 	 * The x position of the panel (-1 is end).
 	 */
@@ -50,38 +51,6 @@ public class LocationSettings extends SettingGroup{
 		this.height = new IntSetting("height", -1, Integer.MAX_VALUE, height);
 	}
 	
-	/**
-	 * Gets the x position for this panel
-	 * @return The x position for this panel
-	 */
-	public int getX(){
-		return x.getValue();
-	}
-
-	/**
-	 * Gets the y position for this panel
-	 * @return The y position for this panel
-	 */
-	public int getY(){
-		return y.getValue();
-	}
-
-	/**
-	 * Gets the width for this panel
-	 * @return The width for this panel
-	 */
-	public int getWidth(){
-		return width.getValue();
-	}
-
-	/**
-	 * Gets the height for this panel
-	 * @return The height for this panel
-	 */
-	public int getHeight(){
-		return height.getValue();
-	}
-	
 	public void setX(int x){
 		this.x.update(x);
 	}
@@ -96,6 +65,26 @@ public class LocationSettings extends SettingGroup{
 	
 	public void setHeight(int height){
 		this.height.update(height);
+	}
+	
+	@Override
+	public int getLayoutX(){
+		return x.getValue();
+	}
+
+	@Override
+	public int getLayoutY(){
+		return y.getValue();
+	}
+
+	@Override
+	public int getLayoutWidth(){
+		return width.getValue();
+	}
+
+	@Override
+	public int getLayoutHeight(){
+		return height.getValue();
 	}
 	
 	@Override

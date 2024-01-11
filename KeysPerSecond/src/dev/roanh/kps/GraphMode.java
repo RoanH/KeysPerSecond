@@ -23,6 +23,7 @@ package dev.roanh.kps;
  * layout positions for the graph
  * @author Roan
  */
+@Deprecated
 public enum GraphMode{
 	/**
 	 * Indicates that the graph is placed

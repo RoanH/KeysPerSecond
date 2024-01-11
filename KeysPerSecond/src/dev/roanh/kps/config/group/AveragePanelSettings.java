@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.setting.PrecisionSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.AvgPanel;
@@ -35,7 +36,7 @@ public class AveragePanelSettings extends SpecialPanelSettings{
 	private final PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
 	
 	public AveragePanelSettings(){
-		super("AVG");
+		super(PanelType.AVG, "AVG");
 	}
 	
 	public void setPrecision(int value){

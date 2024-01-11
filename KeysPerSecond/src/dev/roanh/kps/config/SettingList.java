@@ -3,6 +3,8 @@ package dev.roanh.kps.config;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
 
@@ -48,6 +50,14 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 	
 	public boolean contains(T obj){
 		return data.contains(obj);
+	}
+	
+	public <K> boolean contains(K obj, Function<T, K> keyExtractor){
+		return stream().map(keyExtractor).anyMatch(obj::equals);
+	}
+	
+	public Stream<T> stream(){
+		return data.stream();
 	}
 	
 	public void write(IndentWriter out){

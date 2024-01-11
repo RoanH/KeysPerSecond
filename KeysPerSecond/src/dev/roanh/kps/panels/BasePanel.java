@@ -146,21 +146,21 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	
 	@Override
 	public int getLayoutX(){
-		return config.getX();
+		return config.getLayoutX();
 	}
 
 	@Override
 	public int getLayoutY(){
-		return config.getY();
+		return config.getLayoutY();
 	}
 
 	@Override
 	public int getLayoutWidth(){
-		return config.getWidth();
+		return config.getLayoutWidth();
 	}
 
 	@Override
 	public int getLayoutHeight(){
-		return config.getHeight();
+		return config.getLayoutHeight();
 	}
 }

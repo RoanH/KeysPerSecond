@@ -134,10 +134,10 @@ public class LayoutDialog{
 		graphLayout.add(graphMode);
 
 		LayoutValidator validator = new LayoutValidator();
-		validator.getXField().setModel(new EndNumberModel(graphConfig.getX(), validator.getXField(), update(graphConfig::setX, live)));
-		validator.getYField().setModel(new EndNumberModel(graphConfig.getY(), validator.getYField(), update(graphConfig::setY, live)));
-		validator.getWidthField().setModel(new MaxNumberModel(graphConfig.getWidth(), validator.getWidthField(), update(graphConfig::setWidth, live)));
-		validator.getHeightField().setModel(new MaxNumberModel(graphConfig.getHeight(), validator.getHeightField(), update(graphConfig::setHeight, live)));
+		validator.getXField().setModel(new EndNumberModel(graphConfig.getLayoutX(), validator.getXField(), update(graphConfig::setX, live)));
+		validator.getYField().setModel(new EndNumberModel(graphConfig.getLayoutY(), validator.getYField(), update(graphConfig::setY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(graphConfig.getLayoutWidth(), validator.getWidthField(), update(graphConfig::setWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(graphConfig.getLayoutHeight(), validator.getHeightField(), update(graphConfig::setHeight, live)));
 
 		graphLayout.add(new JLabel("Graph x position: "));
 		JSpinner x = new JSpinner(validator.getXField().getModel());
@@ -196,10 +196,10 @@ public class LayoutDialog{
 		fields.add(new JLabel(info.getName(), SwingConstants.CENTER));
 
 		LayoutValidator validator = new LayoutValidator();
-		validator.getXField().setModel(new EndNumberModel(info.getX(), validator.getXField(), update(info::setX, live)));
-		validator.getYField().setModel(new EndNumberModel(info.getY(), validator.getYField(), update(info::setY, live)));
-		validator.getWidthField().setModel(new MaxNumberModel(info.getWidth(), validator.getWidthField(), update(info::setWidth, live)));
-		validator.getHeightField().setModel(new MaxNumberModel(info.getHeight(), validator.getHeightField(), update(info::setHeight, live)));
+		validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX, live)));
+		validator.getYField().setModel(new EndNumberModel(info.getLayoutY(), validator.getYField(), update(info::setY, live)));
+		validator.getWidthField().setModel(new MaxNumberModel(info.getLayoutWidth(), validator.getWidthField(), update(info::setWidth, live)));
+		validator.getHeightField().setModel(new MaxNumberModel(info.getLayoutHeight(), validator.getHeightField(), update(info::setHeight, live)));
 
 		JSpinner x = new JSpinner(validator.getXField().getModel());
 		x.setEditor(new SpecialNumberModelEditor(x));
@@ -227,6 +227,8 @@ public class LayoutDialog{
 		});
 		modes.add(mode);
 	}
+	
+	
 	
 	/**
 	 * Construct a value change listener that set
