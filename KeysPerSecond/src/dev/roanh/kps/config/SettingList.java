@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
@@ -58,6 +59,10 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 	
 	public Stream<T> stream(){
 		return data.stream();
+	}
+	
+	public void removeIf(Predicate<T> condition){
+		data.removeIf(condition);
 	}
 	
 	public void write(IndentWriter out){

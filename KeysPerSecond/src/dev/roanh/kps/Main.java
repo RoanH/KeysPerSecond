@@ -71,11 +71,17 @@ import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.config.PanelType;
+import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
+import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
+import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
@@ -687,6 +693,50 @@ public class Main{
 		all.add(buttons, BorderLayout.LINE_END);
 		form.add(all, BorderLayout.CENTER);
 		layout.addActionListener((e)->{
+			SettingList<SpecialPanelSettings> panels = Main.config.getPanels();
+			
+			//TODO this strategy is super bad
+			
+			if(panels.contains(PanelType.AVG, SpecialPanelSettings::getType)){
+				if(!cavg.isSelected()){
+					panels.removeIf(p->p.getType() == PanelType.AVG);
+				}
+			}else{
+				if(cavg.isSelected()){
+					panels.add(new AveragePanelSettings());
+				}
+			}
+			
+			if(panels.contains(PanelType.CURRENT, SpecialPanelSettings::getType)){
+				if(!cavg.isSelected()){
+					panels.removeIf(p->p.getType() == PanelType.CURRENT);
+				}
+			}else{
+				if(cavg.isSelected()){
+					panels.add(new CurrentPanelSettings());
+				}
+			}
+			
+			if(panels.contains(PanelType.MAX, SpecialPanelSettings::getType)){
+				if(!cavg.isSelected()){
+					panels.removeIf(p->p.getType() == PanelType.MAX);
+				}
+			}else{
+				if(cavg.isSelected()){
+					panels.add(new MaxPanelSettings());
+				}
+			}
+			
+			if(panels.contains(PanelType.TOTAL, SpecialPanelSettings::getType)){
+				if(!cavg.isSelected()){
+					panels.removeIf(p->p.getType() == PanelType.TOTAL);
+				}
+			}else{
+				if(cavg.isSelected()){
+					panels.add(new TotalPanelSettings());
+				}
+			}
+			
 			LayoutDialog.configureLayout(false);
 		});
 		cmdkeys.addActionListener((e)->{
@@ -784,6 +834,10 @@ public class Main{
 		conf.setVisible(false);
 		conf.dispose();
 	}
+	
+//	private static final JCheckBox createSpecialPanelBox(String text, SpecialPanelSettings setting){
+//		
+//	}
 	
 	/**
 	 * Shows a dialog to configure the graph.

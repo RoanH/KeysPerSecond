@@ -15,7 +15,7 @@ public class AvgPanelEditor extends PanelEditor{
 	public AvgPanelEditor(AveragePanelSettings config, boolean live){
 		super(config, live);
 		
-		labels.add(new JLabel("Precision"));
+		labels.add(new JLabel("Precision: "));
 		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
 		fields.add(values);
 		values.setSelectedIndex(config.getPrecision());
