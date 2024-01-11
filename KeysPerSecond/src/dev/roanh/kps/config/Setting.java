@@ -29,7 +29,7 @@ public abstract class Setting<T>{
 	protected Setting(String key, T defaultValue){
 		this.key = key;
 		this.defaultValue = defaultValue;
-		value = defaultValue;
+		update(defaultValue);
 	}
 	
 	//call update with the parsed value OR call rest to use a default -- return true if default value was used (reset called)

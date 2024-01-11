@@ -8,8 +8,8 @@ import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
-import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.KeyPanel;
+import dev.roanh.kps.ui.dialog.KeyPanelEditor;
 import dev.roanh.kps.ui.dialog.PanelEditor;
 
 public class KeyPanelSettings extends PanelSettings{
@@ -58,7 +58,7 @@ public class KeyPanelSettings extends PanelSettings{
 	
 	@Override
 	public void showEditor(boolean live){
-		PanelEditor.showEditor(this, live);
+		PanelEditor.showEditor(new KeyPanelEditor(this, live));
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package dev.roanh.kps.ui.dialog;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
