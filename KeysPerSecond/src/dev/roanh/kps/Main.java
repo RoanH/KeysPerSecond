@@ -152,6 +152,10 @@ public class Main{
 	 */
 	public static int max;
 	/**
+	 * Total number of hits
+	 */
+	public static int hits;
+	/**
 	 * The keys per second of the previous second
 	 * used for displaying the current keys per second value
 	 */
@@ -392,7 +396,7 @@ public class Main{
 				if(totaltmp != 0){
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
-					TotPanel.hits += currentTmp;
+					hits += currentTmp;
 					System.out.println("Current keys per second: " + totaltmp);
 				}
 				
@@ -1024,11 +1028,11 @@ public class Main{
 	 * Resets avg, max, tot &amp; cur
 	 */
 	protected static final void resetStats(){
-		System.out.println("Reset max & avg | max: " + max + " avg: " + avg + " tot: " + TotPanel.hits);
+		System.out.println("Reset max & avg | max: " + max + " avg: " + avg + " tot: " + hits);
 		n = 0;
 		avg = 0;
 		max = 0;
-		TotPanel.hits = 0;
+		hits = 0;
 		tmp.set(0);
 		graph.reset();
 		frame.repaint();

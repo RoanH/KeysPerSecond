@@ -27,8 +27,16 @@ import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.NowPanel;
 import dev.roanh.kps.ui.dialog.PanelEditor;
 
+/**
+ * Configuration for a current KPS panel.
+ * @author Roan
+ * @see NowPanel
+ */
 public class CurrentPanelSettings extends SpecialPanelSettings implements LegacyProxyStore{
 
+	/**
+	 * Constructs new current KPS panel settings.
+	 */
 	public CurrentPanelSettings(){
 		super(PanelType.CURRENT, "KPS");
 	}

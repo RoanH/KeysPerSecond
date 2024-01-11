@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps.panels;
 
+import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 
 /**
@@ -30,13 +31,10 @@ public final class TotPanel extends BasePanel{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 5628759695450014071L;
-	/**
-	 * Total number of hits
-	 */
-	public static int hits;
 
 	/**
 	 * Constructs a new total panel
+	 * @param settings The panel configuration.
 	 */
 	public TotPanel(TotalPanelSettings settings){
 		super(settings);
@@ -44,6 +42,6 @@ public final class TotPanel extends BasePanel{
 
 	@Override
 	protected String getValue(){
-		return String.valueOf(hits);
+		return String.valueOf(Main.hits);
 	}
 }

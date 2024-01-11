@@ -27,8 +27,16 @@ import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.ui.dialog.PanelEditor;
 
+/**
+ * Configuration for a maximum panel.
+ * @author Roan
+ * @see MaxPanel
+ */
 public class MaxPanelSettings extends SpecialPanelSettings implements LegacyProxyStore{
 
+	/**
+	 * Constructs new maximum panel settings.
+	 */
 	public MaxPanelSettings(){
 		super(PanelType.MAX, "MAX");
 	}

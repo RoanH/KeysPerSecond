@@ -145,7 +145,7 @@ public class Statistics{
 			out.println();
 			out.println("# General");
 			out.print("total: ");
-			out.println(TotPanel.hits);
+			out.println(Main.hits);
 			out.print("average: ");
 			out.println(Main.avg);
 			out.print("maximum: ");
@@ -218,7 +218,7 @@ public class Statistics{
 				case "version":
 					break;
 				case "total":
-					TotPanel.hits = Integer.parseInt(value);
+					Main.hits = Integer.parseInt(value);
 					break;
 				case "average":
 					Main.avg = Double.parseDouble(value);

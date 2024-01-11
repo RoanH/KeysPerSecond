@@ -33,7 +33,7 @@ public final class MaxPanel extends BasePanel{
 
 	/**
 	 * Constructs a new maximum panel
-	 * @param settings 
+	 * @param settings The panel configuration.
 	 */
 	public MaxPanel(MaxPanelSettings settings){
 		super(settings);

@@ -22,12 +22,10 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 
 /**
- * Panel used to display the
- * current keys pressed per second<br>
- * However since the actual 'current'
- * time frame is still on going this
- * actually displays the keys per second
- * from the previous second
+ * Panel used to display the current keys pressed per second.
+ * Note that since the actual 'current' time frame is still on
+ * going this actually displays the keys per second from the
+ * previous second.
  * @author Roan
  */
 public final class NowPanel extends BasePanel{
@@ -38,7 +36,7 @@ public final class NowPanel extends BasePanel{
 
 	/**
 	 * Constructs a new current panel
-	 * @param settings 
+	 * @param settings The panel configuration.
 	 */
 	public NowPanel(CurrentPanelSettings settings){
 		super(settings);

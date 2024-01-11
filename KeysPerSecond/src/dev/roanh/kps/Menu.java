@@ -248,7 +248,7 @@ public class Menu{
 			Main.tmp.set(0);
 		});
 		sresettot.addActionListener((e)->{
-			TotPanel.hits = 0;
+			Main.hits = 0;
 		});
 		sresetgraph.addActionListener((e)->{
 			Main.graph.reset();
@@ -564,7 +564,7 @@ public class Menu{
 		createMenu();
 		Main.keys.clear();
 		Main.resetStats();
-		TotPanel.hits = 0;
+		Main.hits = 0;
 		Main.reconfigure();
 		Main.mainLoop();
 //		KeyInformation.autoIndex = Main.config.keyinfo.size() * 2 - 2;

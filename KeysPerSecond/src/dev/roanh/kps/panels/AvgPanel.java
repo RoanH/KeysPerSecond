@@ -22,8 +22,7 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 
 /**
- * Panel used to display the
- * average keys pressed per second
+ * Panel used to display the average keys pressed per second.
  * @author Roan
  */
 public final class AvgPanel extends BasePanel{
@@ -31,11 +30,14 @@ public final class AvgPanel extends BasePanel{
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 5628759695450014071L;
-	
+	/**
+	 * The panel configuration.
+	 */
 	private AveragePanelSettings settings;
 
 	/**
 	 * Constructs a new average panel
+	 * @param settings The configuration for this panel.
 	 */
 	public AvgPanel(AveragePanelSettings settings){
 		super(settings);
