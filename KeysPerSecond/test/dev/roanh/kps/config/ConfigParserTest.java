@@ -125,7 +125,8 @@ public class ConfigParserTest{
 		assertFalse(stats.isLoadOnLaunchEnabled());
 		
 		//graph
-		GraphSettings graph = config.getGraphSettings();
+		assertEquals(1, config.getGraphSettings().size());
+		GraphSettings graph = config.getGraphSettings().get(0);
 		assertEquals(0, graph.getLayoutX());
 		assertEquals(-1, graph.getLayoutY());
 		assertEquals(40, graph.getLayoutWidth());
@@ -304,7 +305,8 @@ public class ConfigParserTest{
 		assertEquals("C:\\Users\\RoanH\\stats.kpsstats", stats.getSaveFile());
 		
 		//graphs
-		GraphSettings graph = config.getGraphSettings();
+		assertEquals(1, config.getGraphSettings().size());
+		GraphSettings graph = config.getGraphSettings().get(0);
 		assertEquals(1, graph.getLayoutX());
 		assertEquals(2, graph.getLayoutY());
 		assertEquals(5, graph.getLayoutWidth());

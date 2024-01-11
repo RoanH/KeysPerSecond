@@ -26,7 +26,6 @@ import java.util.function.IntConsumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,10 +38,10 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
+import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutValidator;
 import dev.roanh.kps.panels.BasePanel;
@@ -67,32 +66,7 @@ public class LayoutDialog{
 		Main.content.showGrid();
 		JPanel form = new JPanel(new BorderLayout());
 
-		JPanel fields = new JPanel(new GridLayout(0, 5, 2, 2));
-		JPanel modes = new JPanel(new GridLayout(0, 1, 0, 2));
-
-		fields.add(new JLabel("Key", SwingConstants.CENTER));
-		fields.add(new JLabel("X", SwingConstants.CENTER));
-		fields.add(new JLabel("Y", SwingConstants.CENTER));
-		fields.add(new JLabel("Width", SwingConstants.CENTER));
-		fields.add(new JLabel("Height", SwingConstants.CENTER));
-		modes.add(new JLabel("Advanced", SwingConstants.CENTER));
-
-		for(KeyPanelSettings key : Main.config.getKeySettings()){
-			createListItem(key, fields, modes, live);
-		}
-		
-		for(PanelSettings panel : Main.config.getPanels()){
-			createListItem(panel, fields, modes, live);
-		}
-		
-		JPanel keys = new JPanel(new BorderLayout());
-		keys.add(fields, BorderLayout.CENTER);
-		keys.add(modes, BorderLayout.LINE_END);
-
-		JPanel view = new JPanel(new BorderLayout());
-		view.add(keys, BorderLayout.PAGE_START);
-		view.add(new JPanel(), BorderLayout.CENTER);
-		
+		//general layout settings
 		LayoutSettings layout = Main.config.getLayout();
 		JPanel gridSize = new JPanel(new GridLayout(2, 2, 0, 5));
 		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
@@ -118,119 +92,135 @@ public class LayoutDialog{
 		
 		form.add(gridSize, BorderLayout.PAGE_START);
 		
-		JScrollPane pane = new JScrollPane(view);
+		//panel configuration
+		TablePanel panelView = new TablePanel("Panel");
+		
+		for(KeyPanelSettings key : Main.config.getKeySettings()){
+			panelView.addPanelRow(key, live);
+		}
+		
+		for(PanelSettings panel : Main.config.getPanels()){
+			panelView.addPanelRow(panel, live);
+		}
+		
+		JScrollPane pane = new JScrollPane(panelView);
 		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setPreferredSize(new Dimension(450, 200));
 
 		form.add(pane, BorderLayout.CENTER);
 
-		GraphSettings graphConfig = Main.config.getGraphSettings();
-		JPanel graphLayout = new JPanel(new GridLayout(4, 2, 0, 5));
-		graphLayout.setBorder(BorderFactory.createTitledBorder("Graph"));
-
-		LayoutValidator validator = new LayoutValidator();
-		validator.getXField().setModel(new EndNumberModel(graphConfig.getLayoutX(), validator.getXField(), update(graphConfig::setX, live)));
-		validator.getYField().setModel(new EndNumberModel(graphConfig.getLayoutY(), validator.getYField(), update(graphConfig::setY, live)));
-		validator.getWidthField().setModel(new MaxNumberModel(graphConfig.getLayoutWidth(), validator.getWidthField(), update(graphConfig::setWidth, live)));
-		validator.getHeightField().setModel(new MaxNumberModel(graphConfig.getLayoutHeight(), validator.getHeightField(), update(graphConfig::setHeight, live)));
-
-		graphLayout.add(new JLabel("Graph x position: "));
-		JSpinner x = new JSpinner(validator.getXField().getModel());
-		x.setEditor(new SpecialNumberModelEditor(x));
-		graphLayout.add(x);
-
-		graphLayout.add(new JLabel("Graph y position: "));
-		JSpinner y = new JSpinner(validator.getYField().getModel());
-		y.setEditor(new SpecialNumberModelEditor(y));
-		graphLayout.add(y);
-
-		graphLayout.add(new JLabel("Graph width: "));
-		JSpinner w = new JSpinner(validator.getWidthField().getModel());
-		w.setEditor(new SpecialNumberModelEditor(w));
-		graphLayout.add(w);
-
-		graphLayout.add(new JLabel("Graph height: "));
-		JSpinner h = new JSpinner(validator.getHeightField().getModel());
-		h.setEditor(new SpecialNumberModelEditor(h));
-		graphLayout.add(h);
-
-		form.add(graphLayout, BorderLayout.PAGE_END);
-
+		//graph configuration
+		TablePanel graphView = new TablePanel("Graph");
+		for(GraphSettings graph : Main.config.getGraphSettings()){
+			graphView.addGraphRow(graph, live);
+		}
+		
+		JScrollPane graphPane = new JScrollPane(graphView);
+		graphPane.setBorder(BorderFactory.createTitledBorder("Graphs"));
+		graphPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		form.add(graphPane, BorderLayout.PAGE_END);
+		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);
 		Main.content.hideGrid();
 	}
 
-	/**
-	 * Creates a editable list item for the
-	 * layout configuration dialog
-	 * @param info The positionable that links the 
-	 *        editor to the underlying data
-	 * @param fields The GUI panel that holds all the fields
-	 * @param modes The GUI panel that holds all the modes
-	 * @param live Whether or not edits should be displayed in real time
-	 */
-	private static final void createListItem(PanelSettings info, JPanel fields, JPanel modes, boolean live){
-		JLabel nameLabel = new JLabel(info.getName(), SwingConstants.CENTER);
-		fields.add(nameLabel);
-
-		LayoutValidator validator = new LayoutValidator();
-		validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX, live)));
-		validator.getYField().setModel(new EndNumberModel(info.getLayoutY(), validator.getYField(), update(info::setY, live)));
-		validator.getWidthField().setModel(new MaxNumberModel(info.getLayoutWidth(), validator.getWidthField(), update(info::setWidth, live)));
-		validator.getHeightField().setModel(new MaxNumberModel(info.getLayoutHeight(), validator.getHeightField(), update(info::setHeight, live)));
-
-		JSpinner x = new JSpinner(validator.getXField().getModel());
-		x.setEditor(new SpecialNumberModelEditor(x));
-		fields.add(x);
-
-		JSpinner y = new JSpinner(validator.getYField().getModel());
-		y.setEditor(new SpecialNumberModelEditor(y));
-		fields.add(y);
-
-		JSpinner w = new JSpinner(validator.getWidthField().getModel());
-		w.setEditor(new SpecialNumberModelEditor(w));
-		fields.add(w);
-
-		JSpinner h = new JSpinner(validator.getHeightField().getModel());
-		h.setEditor(new SpecialNumberModelEditor(h));
-		fields.add(h);
-
-//		JComboBox<RenderingMode> mode = new JComboBox<RenderingMode>(RenderingMode.values());
-//		mode.setSelectedItem(info.getRenderingMode());
-//		mode.addActionListener((e)->{
-//			info.setRenderingMode((RenderingMode)mode.getSelectedItem());
-//			if(live){
-//				Main.reconfigure();
-//			}
-//		});
-//		modes.add(mode);
+	private static final class TablePanel extends JPanel{
+		/**
+		 * Serial ID.
+		 */
+		private static final long serialVersionUID = 4467273936432261623L;
+		private JPanel fields = new JPanel(new GridLayout(0, 6, 2, 2));
 		
-		JButton edit = new JButton("Edit");
-		edit.addActionListener(e->{
-			info.showEditor(live);
-			nameLabel.setText(info.getName());
-		});
-		modes.add(edit);
-	}
-	
-	
-	
-	/**
-	 * Construct a value change listener that set
-	 * new values to the given field and optionally
-	 * updates the main GUI.
-	 * @param field The field to update with new values.
-	 * @param live Whether to update the GUI on updates.
-	 * @return The newly constructed change listener.
-	 */
-	private static final ValueChangeListener update(IntConsumer field, boolean live){
-		return val->{
-			field.accept(val);
-			if(live){
-				Main.reconfigure();
-			}
-		};
+		public TablePanel(String name){
+			super(new BorderLayout());
+			
+			fields.add(new JLabel(name, SwingConstants.CENTER));
+			fields.add(new JLabel("X", SwingConstants.CENTER));
+			fields.add(new JLabel("Y", SwingConstants.CENTER));
+			fields.add(new JLabel("Width", SwingConstants.CENTER));
+			fields.add(new JLabel("Height", SwingConstants.CENTER));
+			fields.add(new JLabel("Settings", SwingConstants.CENTER));
+			
+			add(fields, BorderLayout.PAGE_START);
+			add(new JPanel(), BorderLayout.CENTER);
+		}
+		
+		private void addGraphRow(GraphSettings info, boolean live){
+			fields.add(new JLabel("KPS", SwingConstants.CENTER));
+			
+			addLocationFields(info, live);
+			
+			JButton edit = new JButton("Edit");
+			fields.add(edit);
+			edit.addActionListener(e->{
+//				info.showEditor(live);
+//				nameLabel.setText(info.getName());
+				//TODO
+			});
+		}
+		
+//		/**
+//		 * Creates a editable list item for the
+//		 * layout configuration dialog
+//		 * @param info The positionable that links the 
+//		 *        editor to the underlying data
+//		 * @param fields The GUI panel that holds all the fields
+//		 * @param live Whether or not edits should be displayed in real time
+//		 */
+		private void addPanelRow(PanelSettings info, boolean live){
+			JLabel nameLabel = new JLabel(info.getName(), SwingConstants.CENTER);
+			fields.add(nameLabel);
+
+			addLocationFields(info, live);
+
+			JButton edit = new JButton("Edit");
+			fields.add(edit);
+			edit.addActionListener(e->{
+				info.showEditor(live);
+				nameLabel.setText(info.getName());
+			});
+		}
+		
+		private void addLocationFields(LocationSettings info, boolean live){
+			LayoutValidator validator = new LayoutValidator();
+			validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX, live)));
+			validator.getYField().setModel(new EndNumberModel(info.getLayoutY(), validator.getYField(), update(info::setY, live)));
+			validator.getWidthField().setModel(new MaxNumberModel(info.getLayoutWidth(), validator.getWidthField(), update(info::setWidth, live)));
+			validator.getHeightField().setModel(new MaxNumberModel(info.getLayoutHeight(), validator.getHeightField(), update(info::setHeight, live)));
+
+			JSpinner x = new JSpinner(validator.getXField().getModel());
+			x.setEditor(new SpecialNumberModelEditor(x));
+			fields.add(x);
+
+			JSpinner y = new JSpinner(validator.getYField().getModel());
+			y.setEditor(new SpecialNumberModelEditor(y));
+			fields.add(y);
+
+			JSpinner w = new JSpinner(validator.getWidthField().getModel());
+			w.setEditor(new SpecialNumberModelEditor(w));
+			fields.add(w);
+
+			JSpinner h = new JSpinner(validator.getHeightField().getModel());
+			h.setEditor(new SpecialNumberModelEditor(h));
+			fields.add(h);
+		}
+		
+		/**
+		 * Construct a value change listener that sets new values
+		 * to the given field and optionally updates the main GUI.
+		 * @param field The field to update with new values.
+		 * @param live Whether to update the GUI on updates.
+		 * @return The newly constructed change listener.
+		 */
+		private final ValueChangeListener update(IntConsumer field, boolean live){
+			return val->{
+				field.accept(val);
+				if(live){
+					Main.reconfigure();
+				}
+			};
+		}
 	}
 	
 	/**

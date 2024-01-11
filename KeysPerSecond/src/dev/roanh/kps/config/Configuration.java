@@ -267,13 +267,15 @@ public class Configuration{
 		return commands;
 	}
 	
-	public GraphSettings getGraphSettings(){
-		if(graphs.size() == 0){//TODO this is a hack
-			return new GraphSettings();
-		}
+	public SettingList<GraphSettings> getGraphSettings(){
+//		if(graphs.size() == 0){//TODO this is a hack
+//			return new GraphSettings();
+//		}
+//		
+//		//TODO consider empty
+//		return graphs.get(0);
 		
-		//TODO consider empty
-		return graphs.get(0);
+		return graphs;
 	}
 	
 	public SettingList<SpecialPanelSettings> getPanels(){

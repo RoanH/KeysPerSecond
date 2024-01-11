@@ -57,13 +57,9 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -78,21 +74,17 @@ import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
+import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
-import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
-import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.GraphPanel;
-import dev.roanh.kps.panels.MaxPanel;
-import dev.roanh.kps.panels.NowPanel;
-import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
@@ -739,6 +731,17 @@ public class Main{
 				}
 			}
 			
+			SettingList<GraphSettings> graphs = Main.config.getGraphSettings();
+			if(cgra.isSelected()){
+				if(graphs.size() == 0){
+					graphs.add(new GraphSettings());
+				}
+			}else{
+				if(graphs.size() != 0){
+					graphs.remove(0);
+				}
+			}
+			
 			LayoutDialog.configureLayout(false);
 		});
 		cmdkeys.addActionListener((e)->{
@@ -914,6 +917,8 @@ public class Main{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			
+			ThemeColor background = config.getTheme().getBackground();
+			boolean opaque = background.getAlpha() != 1.0F ? !ColorManager.transparency : true;
 			try{
 				ColorManager.prepareImages();
 			}catch(IOException e){
@@ -940,6 +945,9 @@ public class Main{
 //			}
 			
 			//TODO new logic
+			
+			
+			//key panels
 			for(KeyPanelSettings info : config.getKeySettings()){
 				System.out.println("key: " + info.getName());
 				Key key = keys.computeIfAbsent(info.getKeyCode(), code->new Key(info));//TODO pass something
@@ -948,9 +956,20 @@ public class Main{
 				}
 			}
 			
+			//special panels
 			for(SpecialPanelSettings panel : config.getPanels()){
 				content.add(panel.createPanel());
 			}
+			
+			//graph panels
+			graph = null;//TODO this logic WILL break with multiple graphs
+			for(GraphSettings info : config.getGraphSettings()){
+				graph = info.createPanel();
+				graph.setOpaque(opaque);//TODO this was in the DETACHED only branch, make sure we need it?
+				content.add(graph);
+			}
+			
+			
 			
 			//TODO old legacy logic
 //			if(config.showMax){
@@ -976,7 +995,10 @@ public class Main{
 			
 			
 			
-			if(content.getComponentCount() == 0 && !config.showGraph){
+			if(content.getComponentCount() == 0){
+				
+				//TODO warn the user and probably roll back to the configuration step?
+				
 				System.out.println("no GUI");//TODO
 				frame.setVisible(false);
 				return;//don't create a GUI if there's nothing to display
@@ -984,16 +1006,9 @@ public class Main{
 
 			Menu.repaint();
 
-			ThemeColor background = config.getTheme().getBackground();
-			boolean opaque = background.getAlpha() != 1.0F ? !ColorManager.transparency : true;
 			JPanel all = new JPanel(new BorderLayout());
 			all.add(content, BorderLayout.CENTER);
 			all.setOpaque(opaque);
-			if(config.showGraph){
-				graph = config.getGraphSettings().createPanel();
-				graph.setOpaque(opaque);//TODO this was in the DETACHED only branch, make sure we need it?
-				content.add(graph);
-			}
 			
 			frame.setAlwaysOnTop(config.isOverlayMode());
 			frame.setSize(layout.getWidth(), layout.getHeight());
