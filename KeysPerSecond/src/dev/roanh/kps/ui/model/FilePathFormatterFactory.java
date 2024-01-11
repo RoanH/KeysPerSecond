@@ -24,6 +24,11 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 
+/**
+ * Formatter factory that creates a formatter that rejects
+ * content containing characters that are illegal in file paths.
+ * @author Roan
+ */
 public class FilePathFormatterFactory extends AbstractFormatterFactory{
 
 	@Override
