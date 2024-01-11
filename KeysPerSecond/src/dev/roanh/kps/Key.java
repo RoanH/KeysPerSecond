@@ -37,12 +37,6 @@ public class Key{
 	 */
 	public int count = 0;
 //	/**
-//	 * The key in string form<br>
-//	 * For example: X
-//	 */
-//	@Deprecated
-//	public String name;
-//	/**
 //	 * The graphical display for this key
 //	 */
 //	@Deprecated
@@ -74,27 +68,6 @@ public class Key{
 		this.shift = shift;
 	}
 
-//	/**
-//	 * Constructs a new Key object
-//	 * for the key with the given
-//	 * name
-//	 * @param name The name of the key
-//	 * @see #name
-//	 */
-//	protected Key(String name){
-//		this.name = name;
-//	}
-
-//	/**
-//	 * Creates a new KeyPanel with this
-//	 * objects as its data source
-//	 * @param i The information object for this key
-//	 * @return A new KeyPanel
-//	 */
-//	protected KeyPanel getPanel(KeyInformation i){
-//		return panel != null ? panel : (panel = new KeyPanel(this, i));
-//	}
-	
 	public Key(){
 		this(0, false, false, false);
 	}

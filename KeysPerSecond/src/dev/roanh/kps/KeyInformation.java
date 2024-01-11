@@ -22,8 +22,6 @@ import java.util.Locale;
 
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
-import dev.roanh.kps.layout.Positionable;
-
 /**
  * Simple class that holds all
  * the essential information 
@@ -31,75 +29,8 @@ import dev.roanh.kps.layout.Positionable;
  * @author Roan
  */
 @Deprecated
-public final class KeyInformation extends Positionable{
-	/**
-	 * The name of this key
-	 */
-	public String name;
-	/**
-	 * The virtual key code of this key<br>
-	 * This code represents the key
-	 */
-	public int keycode;
-	/**
-	 * Whether or not this key is displayed
-	 */
-	public boolean visible = true;
-	/**
-	 * Auto-increment for #x
-	 */
-	public static volatile int autoIndex = -2;
-
-	/**
-	 * Constructs a new KeyInformation
-	 * object with the given information
-	 * @param name The name of the key
-	 * @param code The virtual key code of the key
-	 * @param alt Whether or not alt is down
-	 * @param ctrl Whether or not ctrl is down
-	 * @param shift Whether or not shift is down
-	 * @param mouse Whether or not this is a mouse button
-	 * @see #keycode 
-	 */
-	public KeyInformation(String name, int code, boolean alt, boolean ctrl, boolean shift, boolean mouse){
-		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
-		this.keycode = mouse ? code : CommandKeys.getExtendedKeyCode(code, shift, ctrl, alt);
-		this.name = mouse ? name : getKeyName(name, keycode);
-	}
+public final class KeyInformation{
 	
-	/**
-	 * Constructs a new KeyInformation object with the given key name and extended code key.
-	 * @param name The key name.
-	 * @param extCode The extended key code.
-	 * @see CommandKeys#getExtendedKeyCode(int)
-	 */
-	public KeyInformation(String name, int extCode){
-		super(autoIndex += 2, 0, 2, 3, RenderingMode.VERTICAL);
-		this.keycode = extCode;
-		this.name = getKeyName(name, keycode);
-	}
-
-	/**
-	 * Constructs a new KeyInformation
-	 * object with the given information
-	 * @param name The name of the key
-	 * @param code The virtual key code of the key
-	 * @param visible Whether or not the key is visible
-	 * @param x The x position of the key panel.
-	 * @param y The y position of the key panel.
-	 * @param width The width of the key panel.
-	 * @param height The height of the key panel.
-	 * @param mode The text rendering mode of the key panel.
-	 * @see #keycode
-	 */
-	public KeyInformation(String name, int code, boolean visible, int x, int y, int width, int height, RenderingMode mode){
-		super(x, y, width, height, mode);
-		this.name = name;
-		this.keycode = code;
-		this.visible = visible;
-	}
-	
-	//TODO probably move
 	public static final String getPanelName(int extendedCode){
 		if(CommandKeys.isMouseButton(extendedCode)){
 			return "M" + (-extendedCode);
@@ -110,57 +41,17 @@ public final class KeyInformation extends Positionable{
 				name += "a";
 			}
 
-			if(CommandKeys.hasAlt(extendedCode)){
+			if(CommandKeys.hasCtrl(extendedCode)){
 				name += "c";
 			}
 
-			if(CommandKeys.hasAlt(extendedCode)){
+			if(CommandKeys.hasShift(extendedCode)){
 				name += "s";
 			}
 			
 			String text = getKeyText(extendedCode & CommandKeys.KEYCODE_MASK);
 			return name + (text.length() == 1 ? text.toUpperCase(Locale.ROOT) : text);
 		}
-	}
-
-	/**
-	 * Constructs the key name from the key
-	 * and modifiers
-	 * @param name The name of the key
-	 * @param code The virtual key code of the key
-	 * @return The full name of this given key
-	 */
-	@Deprecated
-	protected static final String getKeyName(String name, int code){
-		return ((CommandKeys.hasAlt(code) ? "a" : "") + (CommandKeys.hasCtrl(code) ? "c" : "") + (CommandKeys.hasShift(code) ? "s" : "")) + (name.length() == 1 ? name.toUpperCase(Locale.ROOT) : getKeyText(code & CommandKeys.KEYCODE_MASK));
-	}
-	
-	/**
-	 * Changes the display name of this
-	 * key to the given string. If {@link Key}
-	 * panels are active with the same key code
-	 * as this {@link KeyInformation} object
-	 * then their display name is also updated.
-	 * @param name The new display name
-	 */
-	public void setName(String name){
-		this.name = name;
-//		Main.keys.getOrDefault(keycode, Main.DUMMY_KEY).name = name;//TODO name stored in multiple places...
-	}
-
-	@Override
-	public String toString(){
-		return "[keycode=" + keycode + ",x=" + getX() + ",y=" + getY() + ",width=" + getWidth() + ",height=" + getHeight() + ",mode=" + getRenderingMode().name() + ",visible=" + visible + ",name=\"" + name + "\"]";
-	}
-
-	@Override
-	public int hashCode(){
-		return keycode;
-	}
-
-	@Override
-	public boolean equals(Object other){
-		return other instanceof KeyInformation && keycode == ((KeyInformation)other).keycode;
 	}
 
 	/**
@@ -291,10 +182,5 @@ public final class KeyInformation extends Positionable{
 		default:
 			return NativeKeyEvent.getKeyText(keyCode);
 		}
-	}
-
-	@Override
-	public String getName(){
-		return name;
 	}
 }
