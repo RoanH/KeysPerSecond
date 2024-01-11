@@ -26,13 +26,10 @@ import java.util.function.IntConsumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -49,6 +46,7 @@ import dev.roanh.kps.ui.model.DynamicInteger;
 import dev.roanh.kps.ui.model.EndNumberModel;
 import dev.roanh.kps.ui.model.MaxNumberModel;
 import dev.roanh.kps.ui.model.SpecialNumberModel.ValueChangeListener;
+import dev.roanh.kps.ui.model.SpecialNumberModelEditor;
 import dev.roanh.util.Dialog;
 
 /**
@@ -220,29 +218,6 @@ public class LayoutDialog{
 					Main.reconfigure();
 				}
 			};
-		}
-	}
-	
-	/**
-	 * Simple editor that allows edits in the default editor field.
-	 * @author Roan
-	 */
-	private static final class SpecialNumberModelEditor extends DefaultEditor{
-		/**
-		 * Serial ID.
-		 */
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Constructs a new special number model editor for the given spinner.
-		 * @param spinner The spinner to create an editor for.
-		 */
-		public SpecialNumberModelEditor(JSpinner spinner){
-			super(spinner);
-			
-			JFormattedTextField disp = getTextField();
-			disp.setEditable(true);
-			disp.setHorizontalAlignment(JTextField.RIGHT);
 		}
 	}
 }
