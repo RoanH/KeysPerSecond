@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.PrecisionSetting;
@@ -35,21 +36,41 @@ import dev.roanh.kps.ui.dialog.PanelEditor;
  * @author Roan
  * @see AvgPanel
  */
-public class AveragePanelSettings extends SpecialPanelSettings{
+public class AveragePanelSettings extends SpecialPanelSettings implements LegacyProxyStore{
+	/**
+	 * Setting for the display precision of the panel (decimal digits).
+	 */
 	private final PrecisionSetting precision = new PrecisionSetting("precision", 0, 3, 0);
 	
+	/**
+	 * Constructs new average panel settings.
+	 */
 	public AveragePanelSettings(){
 		super(PanelType.AVG, "AVG");
 	}
 	
+	/**
+	 * Sets the precision for the panel.
+	 * @param value The number of decimal digits to display.
+	 */
 	public void setPrecision(int value){
 		precision.update(value);
 	}
 	
+	/**
+	 * Gets the precision for the panel.
+	 * @return The number of decimal digits to display.
+	 */
 	public int getPrecision(){
 		return precision.getValue();
 	}
 	
+	/**
+	 * Formats the given number according to the precision
+	 * configured for this average panel.
+	 * @param value The value to format.
+	 * @return The formatted value.
+	 */
 	public String formatAvg(double value){
 		return precision.format(value);
 	}
@@ -66,7 +87,8 @@ public class AveragePanelSettings extends SpecialPanelSettings{
 	
 	@Override
 	public void write(IndentWriter out){
-		//TODO ??? precision
+		super.write(out);
+		precision.write(out);
 	}
 	
 	@Override
@@ -74,6 +96,7 @@ public class AveragePanelSettings extends SpecialPanelSettings{
 		PanelEditor.showEditor(new AvgPanelEditor(this, live));
 	}
 	
+	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("avgX", x));
 		proxyList.add(ProxySetting.of("avgY", y));

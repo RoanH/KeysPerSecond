@@ -22,13 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.BasePanel;
 
-public class LayoutSettings extends SettingGroup{
+public class LayoutSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * The offset from the border of a panel to the actual panel content.
 	 */
@@ -81,6 +82,7 @@ public class LayoutSettings extends SettingGroup{
 		cellSize.write(out);
 	}
 	
+	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("borderOffset", borderOffset));
 		proxyList.add(ProxySetting.of("cellSize", cellSize));

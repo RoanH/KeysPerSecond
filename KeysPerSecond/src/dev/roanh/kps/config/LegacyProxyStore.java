@@ -16,39 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config.group;
+package dev.roanh.kps.config;
 
 import java.util.List;
 
-import dev.roanh.kps.config.LegacyProxyStore;
-import dev.roanh.kps.config.PanelType;
-import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.ProxySetting;
-import dev.roanh.kps.panels.MaxPanel;
-import dev.roanh.kps.ui.dialog.PanelEditor;
 
-public class MaxPanelSettings extends SpecialPanelSettings implements LegacyProxyStore{
+/**
+ * Interface used by setting groups to indicate that they
+ * provide legacy setting mapping proxies.
+ * @author Roan
+ * @see SettingGroup
+ */
+public abstract interface LegacyProxyStore{
 
-	public MaxPanelSettings(){
-		super(PanelType.MAX, "MAX");
-	}
-	
-	@Override
-	public MaxPanel createPanel(){
-		return new MaxPanel(this);
-	}
-	
-	@Override
-	public void showEditor(boolean live){
-		PanelEditor.showEditor(this, live);
-	}
-	
-	@Override
-	public void collectLegacyProxies(List<Setting<?>> proxyList){
-		proxyList.add(ProxySetting.of("maxX", x));
-		proxyList.add(ProxySetting.of("maxY", y));
-		proxyList.add(ProxySetting.of("maxWidth", width));
-		proxyList.add(ProxySetting.of("maxHeight", height));
-		proxyList.add(ProxySetting.of("maxMode", mode));
-	}
+	/**
+	 * Collects mappings of legacy settings for this panel
+	 * used to map legacy settings onto the new config system.
+	 * @param proxyList The list to add the legacy settings to.
+	 * @see ProxySetting
+	 */
+	public abstract void collectLegacyProxies(List<Setting<?>> proxyList);
 }

@@ -22,13 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ColorSetting;
 
-public class ThemeSettings extends SettingGroup{
+public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Whether or not to use custom colors.
 	 */
@@ -99,6 +100,7 @@ public class ThemeSettings extends SettingGroup{
 		background.write(out);
 	}
 	
+	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(new LegacyColorProxy("foregroundColor", foreground));
 		proxyList.add(new LegacyColorProxy("foregroundOpacity", foreground));

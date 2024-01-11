@@ -20,13 +20,14 @@ package dev.roanh.kps.config.group;
 
 import java.util.List;
 
+import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.NowPanel;
 import dev.roanh.kps.ui.dialog.PanelEditor;
 
-public class CurrentPanelSettings extends SpecialPanelSettings{
+public class CurrentPanelSettings extends SpecialPanelSettings implements LegacyProxyStore{
 
 	public CurrentPanelSettings(){
 		super(PanelType.CURRENT, "KPS");
@@ -42,6 +43,7 @@ public class CurrentPanelSettings extends SpecialPanelSettings{
 		PanelEditor.showEditor(this, live);
 	}
 	
+	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("curX", x));
 		proxyList.add(ProxySetting.of("curY", y));

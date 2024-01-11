@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.BooleanSetting;
@@ -32,7 +33,7 @@ import dev.roanh.kps.config.setting.LongSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
-public class StatsSavingSettings extends SettingGroup{
+public class StatsSavingSettings extends SettingGroup implements LegacyProxyStore{
 	//TODO do we want to introduce a file path setting? -- also more validation see the formatter for paths in the model package
 	/**
 	 * Whether or not to periodically save the stats to a file
@@ -139,6 +140,7 @@ public class StatsSavingSettings extends SettingGroup{
 		saveFile.write(out);
 	}
 
+	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("autoSaveStats", autoSave));
 		proxyList.add(ProxySetting.of("statsDest", autoDestination));

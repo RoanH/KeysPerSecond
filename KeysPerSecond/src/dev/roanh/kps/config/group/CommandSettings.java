@@ -24,12 +24,13 @@ import java.util.Map;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.CommandKeySetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 
-public class CommandSettings extends SettingGroup{
+public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Reset stats command key.
 	 */
@@ -122,6 +123,7 @@ public class CommandSettings extends SettingGroup{
 		reload.write(out);
 	}
 
+	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("keyResetStats", resetStats));
 		proxyList.add(ProxySetting.of("keyExit", exit));

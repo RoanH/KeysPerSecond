@@ -22,13 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
+import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.GraphPanel;
 
-public class GraphSettings extends LocationSettings{
+public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 	/**
 	 * Whether to draw the horizontal average line or not.
 	 */
@@ -74,6 +75,7 @@ public class GraphSettings extends LocationSettings{
 		backlog.write(out);
 	}
 	
+	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
 		proxyList.add(ProxySetting.of("graphX", x));
 		proxyList.add(ProxySetting.of("graphY", y));
