@@ -106,15 +106,13 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 		final double insideWidth = (this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 2);
 		final double segment = insideWidth / (config.getBacklog() - 1);
 
-		int i = 0;
-		int px = ox;
+		double px = ox;
 		poly.addPoint(ox, oy);
 		for(int val : values){
-			px = (int)(ox - segment * i);
-			poly.addPoint(px, (int)(oy - ((insideHeight * val) / maxval)));
-			i++;
+			poly.addPoint((int)px, (int)(oy - ((insideHeight * val) / maxval)));
+			px -= segment;
 		}
-		poly.addPoint(px, oy);
+		poly.addPoint((int)(px + segment), oy);
 
 		//average line
 		ThemeColor foreground = Main.config.getTheme().getForeground();
