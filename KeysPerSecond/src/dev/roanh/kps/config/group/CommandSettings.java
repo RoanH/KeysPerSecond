@@ -30,6 +30,10 @@ import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.CommandKeySetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 
+/**
+ * Setting for all the configurable command keys.
+ * @author Roan
+ */
 public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Reset stats command key.
@@ -56,6 +60,9 @@ public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	 */
 	private final CommandKeySetting reload = new CommandKeySetting("reload", NativeKeyEvent.VC_R, false, true);
 
+	/**
+	 * Constructs new command key settings.
+	 */
 	public CommandSettings(){
 		super("commands");
 	}

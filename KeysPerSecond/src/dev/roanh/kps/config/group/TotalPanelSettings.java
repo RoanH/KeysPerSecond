@@ -27,8 +27,16 @@ import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.kps.ui.dialog.PanelEditor;
 
+/**
+ * Configuration for a total panel.
+ * @author Roan
+ * @see TotPanel
+ */
 public class TotalPanelSettings extends SpecialPanelSettings implements LegacyProxyStore{
 
+	/**
+	 * Constructs new total panel settings.
+	 */
 	public TotalPanelSettings(){
 		super(PanelType.TOTAL, "TOT");
 	}
