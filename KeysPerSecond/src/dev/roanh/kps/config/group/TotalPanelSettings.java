@@ -25,6 +25,7 @@ import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.TotPanel;
+import dev.roanh.kps.ui.dialog.Editor;
 import dev.roanh.kps.ui.dialog.PanelEditor;
 
 /**
@@ -48,7 +49,7 @@ public class TotalPanelSettings extends SpecialPanelSettings implements LegacyPr
 	
 	@Override
 	public void showEditor(boolean live){
-		PanelEditor.showEditor(this, live);
+		Editor.showEditor(new PanelEditor(this, live));
 	}
 	
 	@Override

@@ -151,11 +151,7 @@ public class LayoutDialog{
 			
 			JButton edit = new JButton("Edit");
 			fields.add(edit);
-			edit.addActionListener(e->{
-//				info.showEditor(live);
-//				nameLabel.setText(info.getName());
-				//TODO
-			});
+			edit.addActionListener(e->Editor.showEditor(new GraphEditor(info, live)));
 		}
 		
 //		/**

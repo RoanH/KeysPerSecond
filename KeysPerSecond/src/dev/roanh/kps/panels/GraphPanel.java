@@ -150,7 +150,7 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 				maxval = value;
 			}
 			values.addFirst(value);
-			if(values.size() > config.getBacklog()){
+			while(values.size() > config.getBacklog()){
 				values.removeLast();
 			}
 		}

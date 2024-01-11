@@ -751,7 +751,7 @@ public class Main{
 //			configurePrecision();
 		});
 		graph.addActionListener((e)->{
-			configureGraph();
+//			configureGraph();
 		});
 		addkey.addActionListener((e)->{
 			KeysDialog.configureKeys(config.getKeySettings(), false);
@@ -838,37 +838,6 @@ public class Main{
 		}
 		conf.setVisible(false);
 		conf.dispose();
-	}
-	
-	/**
-	 * Shows a dialog to configure the graph.
-	 */
-	private static final void configureGraph(){
-//		JPanel pconfig = new JPanel();
-//		JSpinner backlog = new JSpinner(new SpinnerNumberModel(Main.config.backlog, 1, Integer.MAX_VALUE, 1));
-//		JCheckBox showavg = new JCheckBox();
-//		showavg.setSelected(Main.config.graphAvg);
-//		JLabel lbacklog;
-//		if(config.getUpdateRate() != UpdateRate.MS_1000){
-//			lbacklog = new JLabel("Backlog (seconds / " + (1000 / config.getUpdateRateMs()) + "): ");
-//		}else{
-//			lbacklog = new JLabel("Backlog (seconds): ");
-//		}
-//		JLabel lshowavg = new JLabel("Show average: ");
-//		JPanel glabels = new JPanel(new GridLayout(2, 1));
-//		JPanel gcomponents = new JPanel(new GridLayout(2, 1));
-//		glabels.add(lbacklog);
-//		glabels.add(lshowavg);
-//		gcomponents.add(backlog);
-//		gcomponents.add(showavg);
-//		glabels.setPreferredSize(new Dimension((int)glabels.getPreferredSize().getWidth(), (int)gcomponents.getPreferredSize().getHeight()));
-//		gcomponents.setPreferredSize(new Dimension(50, (int)gcomponents.getPreferredSize().getHeight()));
-//		pconfig.add(glabels);
-//		pconfig.add(gcomponents);
-//		if(Dialog.showSaveDialog(pconfig)){
-//			Main.config.graphAvg = showavg.isSelected();
-//			Main.config.backlog = (int)backlog.getValue();
-//		}
 	}
 	
 	/**

@@ -18,35 +18,24 @@
  */
 package dev.roanh.kps.ui.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.ui.model.FieldChangeListener;
-import dev.roanh.util.Dialog;
 
-public class PanelEditor extends JPanel{
+public class PanelEditor extends Editor{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -2982608015931683558L;
-	protected JPanel labels = new JPanel(new GridLayout(0, 1, 0, 2));
-	protected JPanel fields = new JPanel(new GridLayout(0, 1, 0, 2));
 
 	public PanelEditor(PanelSettings config, boolean live){
-		super(new BorderLayout());
-		this.setBorder(BorderFactory.createTitledBorder("Panel Specific Settings"));
-		this.add(labels, BorderLayout.LINE_START);
-		this.add(fields, BorderLayout.CENTER);
-		
+		super("Panel Specific Settings");
+
 		labels.add(new JLabel("Name: "));
 		JTextField name = new JTextField(config.getName());
 		fields.add(name);
@@ -67,13 +56,5 @@ public class PanelEditor extends JPanel{
 				Main.resetPanels();
 			}
 		});
-	}
-	
-	public static final void showEditor(PanelSettings config, boolean live){
-		showEditor(new PanelEditor(config, live));
-	}
-	
-	public static final void showEditor(PanelEditor editor){
-		Dialog.showMessageDialog(editor);
 	}
 }
