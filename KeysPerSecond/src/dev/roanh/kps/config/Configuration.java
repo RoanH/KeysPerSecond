@@ -18,7 +18,6 @@
  */
 package dev.roanh.kps.config;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.Statistics;
 import dev.roanh.kps.config.group.AveragePanelSettings;

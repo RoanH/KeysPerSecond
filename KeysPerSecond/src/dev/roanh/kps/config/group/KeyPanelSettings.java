@@ -18,11 +18,12 @@
  */
 package dev.roanh.kps.config.group;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.Key;
-import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
@@ -39,7 +40,7 @@ public class KeyPanelSettings extends PanelSettings{
 	}
 	
 	public KeyPanelSettings(int x, int extendedCode){
-		super("keys", x, 0, 2, 3, KeyInformation.getPanelName(extendedCode));
+		super("keys", x, 0, 2, 3, getPanelName(extendedCode));
 		keycode.update(extendedCode);
 	}
 	
@@ -84,5 +85,28 @@ public class KeyPanelSettings extends PanelSettings{
 	@Override
 	public int hashCode(){
 		return Objects.hashCode(keycode.getValue());
+	}
+	
+	private static final String getPanelName(int extendedCode){
+		if(CommandKeys.isMouseButton(extendedCode)){
+			return "M" + (-extendedCode);
+		}else{
+			String name = "";
+			
+			if(CommandKeys.hasAlt(extendedCode)){
+				name += "a";
+			}
+
+			if(CommandKeys.hasCtrl(extendedCode)){
+				name += "c";
+			}
+
+			if(CommandKeys.hasShift(extendedCode)){
+				name += "s";
+			}
+			
+			String text = CommandKeys.getKeyText(extendedCode & CommandKeys.KEYCODE_MASK);
+			return name + (text.length() == 1 ? text.toUpperCase(Locale.ROOT) : text);
+		}
 	}
 }

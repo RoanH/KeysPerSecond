@@ -40,7 +40,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dev.roanh.kps.config.group.StatsSavingSettings;
-import dev.roanh.kps.panels.TotPanel;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
 import dev.roanh.util.FileSelector.FileExtension;

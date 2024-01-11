@@ -198,16 +198,20 @@ public class CommandKeys implements KeyPressListener, KeyReleaseListener{
 	 * @return The key string with modifier keys.
 	 */
 	public static String formatExtendedCode(int code){
-		String name = KeyInformation.getKeyText(getBaseKeyCode(code));
+		String name = getKeyText(getBaseKeyCode(code));
+		
 		if(hasCtrl(code)){
 			name = "Ctrl + " + name;
 		}
+		
 		if(hasAlt(code)){
 			name = "Alt + " + name;
 		}
+		
 		if(hasShift(code)){
 			name = "Shift + " + name;
 		}
+		
 		return name;
 	}
 
@@ -227,11 +231,143 @@ public class CommandKeys implements KeyPressListener, KeyReleaseListener{
 		if(!isAltDown){
 			isAltDown = code == NativeKeyEvent.VC_ALT;
 		}
+		
 		if(!isCtrlDown){
 			isCtrlDown = code == NativeKeyEvent.VC_CONTROL;
 		}
+		
 		if(!isShiftDown){
 			isShiftDown = code == NativeKeyEvent.VC_SHIFT || code == VC_RSHIFT;
+		}
+	}
+	
+	/**
+	 * Gets the key name for a key code.
+	 * @param keyCode The key code.
+	 * @return The key name.
+	 */
+	public static String getKeyText(int keyCode){
+		switch(keyCode){
+		case NativeKeyEvent.VC_ESCAPE:
+			return "Esc";
+		// Begin Function Keys
+		case NativeKeyEvent.VC_F1:
+			return "F1";
+		case NativeKeyEvent.VC_F2:
+			return "F2";
+		case NativeKeyEvent.VC_F3:
+			return "F3";
+		case NativeKeyEvent.VC_F4:
+			return "F4";
+		case NativeKeyEvent.VC_F5:
+			return "F5";
+		case NativeKeyEvent.VC_F6:
+			return "F6";
+		case NativeKeyEvent.VC_F7:
+			return "F7";
+		case NativeKeyEvent.VC_F8:
+			return "F8";
+		case NativeKeyEvent.VC_F9:
+			return "F9";
+		case NativeKeyEvent.VC_F10:
+			return "F10";
+		case NativeKeyEvent.VC_F11:
+			return "F11";
+		case NativeKeyEvent.VC_F12:
+			return "F12";
+		case NativeKeyEvent.VC_F13:
+			return "F13";
+		case NativeKeyEvent.VC_F14:
+			return "F14";
+		case NativeKeyEvent.VC_F15:
+			return "F15";
+		case NativeKeyEvent.VC_F16:
+			return "F16";
+		case NativeKeyEvent.VC_F17:
+			return "F17";
+		case NativeKeyEvent.VC_F18:
+			return "F18";
+		case NativeKeyEvent.VC_F19:
+			return "F19";
+		case NativeKeyEvent.VC_F20:
+			return "F20";
+		case NativeKeyEvent.VC_F21:
+			return "F21";
+		case NativeKeyEvent.VC_F22:
+			return "F22";
+		case NativeKeyEvent.VC_F23:
+			return "F23";
+		case NativeKeyEvent.VC_F24:
+			return "F24";
+		// Begin Alphanumeric Zone
+		case NativeKeyEvent.VC_BACKQUOTE:
+			return "'";
+		case NativeKeyEvent.VC_MINUS:
+			return "-";
+		case NativeKeyEvent.VC_EQUALS:
+			return "=";
+		case NativeKeyEvent.VC_BACKSPACE:
+			return "\u2190";
+		case NativeKeyEvent.VC_TAB:
+			return "Tab";
+		case NativeKeyEvent.VC_CAPS_LOCK:
+			return "Cap";
+		case NativeKeyEvent.VC_OPEN_BRACKET:
+			return "[";
+		case NativeKeyEvent.VC_CLOSE_BRACKET:
+			return "]";
+		case NativeKeyEvent.VC_BACK_SLASH:
+			return "\\";
+		case NativeKeyEvent.VC_SEMICOLON:
+			return ";";
+		case NativeKeyEvent.VC_QUOTE:
+			return "\"";
+		case NativeKeyEvent.VC_ENTER:
+			return "\u21B5";
+		case NativeKeyEvent.VC_COMMA:
+			return ",";
+		case NativeKeyEvent.VC_PERIOD:
+			return ".";
+		case NativeKeyEvent.VC_SLASH:
+			return "/";
+		case NativeKeyEvent.VC_SPACE:
+			return " ";
+		// Begin Edit Key Zone
+		case NativeKeyEvent.VC_INSERT:
+			return "Ins";
+		case NativeKeyEvent.VC_DELETE:
+			return "Del";
+		case NativeKeyEvent.VC_HOME:
+			return "\u2302";
+		case NativeKeyEvent.VC_END:
+			return "End";
+		case NativeKeyEvent.VC_PAGE_UP:
+			return "\u2191";
+		case NativeKeyEvent.VC_PAGE_DOWN:
+			return "\u2193";
+		// Begin Cursor Key Zone
+		case NativeKeyEvent.VC_UP:
+			return "\u25B4";
+		case NativeKeyEvent.VC_LEFT:
+			return "\u25C2";
+		case NativeKeyEvent.VC_CLEAR:
+			return "Clr";
+		case NativeKeyEvent.VC_RIGHT:
+			return "\u25B8";
+		case NativeKeyEvent.VC_DOWN:
+			return "\u25BE";
+		// Begin Modifier and Control Keys
+		case NativeKeyEvent.VC_SHIFT:
+		case CommandKeys.VC_RSHIFT:
+			return "\u21D1";
+		case NativeKeyEvent.VC_CONTROL:
+			return "Ctl";
+		case NativeKeyEvent.VC_ALT:
+			return "Alt";
+		case NativeKeyEvent.VC_META:
+			return "\u2318";
+		default:
+			return NativeKeyEvent.getKeyText(keyCode);
 		}
 	}
 }

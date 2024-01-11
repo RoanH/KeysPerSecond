@@ -24,7 +24,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Dialog.ModalityType;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -36,10 +35,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-
 import dev.roanh.kps.CommandKeys;
-import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.SettingList;
