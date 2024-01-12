@@ -21,8 +21,17 @@ package dev.roanh.kps.config.setting;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
+/**
+ * String setting implementation.
+ * @author Roan
+ */
 public class StringSetting extends Setting<String>{
 
+	/**
+	 * Constructs a new string setting with the given key and default value.
+	 * @param key The setting key to associate the value with.
+	 * @param defaultValue The default value for this setting.
+	 */
 	public StringSetting(String key, String defaultValue){
 		super(key, defaultValue);
 	}
@@ -35,7 +44,6 @@ public class StringSetting extends Setting<String>{
 
 	@Override
 	public void write(IndentWriter out){
-		// TODO Auto-generated method stub
-		
+		out.println(key + ": " + value);
 	}
 }
