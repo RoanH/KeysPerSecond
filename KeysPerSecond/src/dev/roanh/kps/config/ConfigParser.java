@@ -95,7 +95,7 @@ public class ConfigParser{
 		//read data
 		while((line = in.readLine()) != null){
 			line = line.trim();
-			if(line.startsWith("#")){
+			if(line.startsWith("#") || line.isEmpty()){
 				continue;
 			}
 			

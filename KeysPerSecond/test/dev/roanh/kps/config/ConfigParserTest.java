@@ -51,24 +51,16 @@ public class ConfigParserTest{
 //		Configuration config = new Configuration(Paths.get("test/main.kps"));
 		//TODO currently without calling load this never parses anything using the old logic
 		
-		
 		Configuration config = Configuration.newLoadTemporary(Paths.get("test/main.kps"));
 		
 		//TODO assert config version
 
-		
-//		max
-//		avg
-//		cur
-//		total
-//		keys
+		//general
 		assertFalse(config.isOverlayMode());
 		assertFalse(config.isTrackAllKeys());
 		assertFalse(config.isTrackAllButtons());
 		assertEquals(100, config.getUpdateRateMs());
 		assertFalse(config.isKeyModifierTrackingEnabled());
-		
-//		graph enable -- this one is not handled yet
 		
 		//theme
 		ThemeSettings theme = config.getTheme();

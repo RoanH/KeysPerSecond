@@ -29,6 +29,11 @@ import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.GraphPanel;
 
+/**
+ * Configuration for graph panels.
+ * @author Roan
+ * @see GraphPanel
+ */
 public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 	/**
 	 * Whether to draw the horizontal average line or not.
@@ -39,26 +44,52 @@ public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 	 */
 	private final IntSetting backlog = new IntSetting("backlog", 2, Short.MAX_VALUE, 30);
 
+	/**
+	 * Creates new graph settings.
+	 */
 	public GraphSettings(){
 		super("graphs", 0, -1, -1, 3);
 	}
 	
+	/**
+	 * Check if the average should be drawn in the graph.
+	 * @return True if the average KPS should be drawn in the graph.
+	 */
 	public boolean isAverageVisible(){
 		return showAvg.getValue();
 	}
 	
+	/**
+	 * Gets the backlog for the graph, this is the number of events
+	 * or data points tracked for the graph. Each update cycle an
+	 * event is generated so this value is affected by the update rate.
+	 * @return The backlog for the graph.
+	 */
 	public int getBacklog(){
 		return backlog.getValue();
 	}
 	
+	/**
+	 * Sets if the average should be shown in the graph.
+	 * @param visible True if the average KPS should be drawn.
+	 */
 	public void setAverageVisible(boolean visible){
 		showAvg.update(visible);
 	}
 	
+	/**
+	 * Sets the event backlog size for the graph.
+	 * @param backlog The new backlog value.
+	 * @see #getBacklog()
+	 */
 	public void setBacklog(int backlog){
 		this.backlog.update(backlog);
 	}
 	
+	/**
+	 * Creates a new graph panel with this configuration.
+	 * @return The newly created graph panel.
+	 */
 	public GraphPanel createPanel(){
 		return new GraphPanel(this);
 	}

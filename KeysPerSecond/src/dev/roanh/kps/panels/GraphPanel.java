@@ -42,34 +42,40 @@ import dev.roanh.kps.layout.LayoutPosition;
  */
 public class GraphPanel extends JPanel implements LayoutPosition{
 	/**
-	 * Serial ID
+	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 1805853149241193714L;
 	/**
-	 * Data points
-	 */
-	private ConcurrentLinkedDeque<Integer> values = new ConcurrentLinkedDeque<Integer>();
-	/**
-	 * Highest encountered value used as the
-	 * upper bound of the graph
-	 */
-	private int maxval = 1;
-	/**
-	 * Stroke used to draw the graph
+	 * Stroke used to draw the graph.
 	 */
 	private static final Stroke line = new BasicStroke(2.0F, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0F, null, 0);
 	/**
-	 * Stroke used to draw average line
+	 * Stroke used to draw average line.
 	 */
 	private static final Stroke avgstroke = new BasicStroke(1.0F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0F, null, 0);
+	/**
+	 * Data points.
+	 */
+	private ConcurrentLinkedDeque<Integer> values = new ConcurrentLinkedDeque<Integer>();
+	/**
+	 * Highest encountered value used as the upper bound of the graph.
+	 */
+	private int maxval = 1;
+	/**
+	 * The configuration for this graph panel.
+	 */
 	private GraphSettings config;
 	
+	/**
+	 * Constructs a new graph panel with the given configuration.
+	 * @param config The configuration for this panel.
+	 */
 	public GraphPanel(GraphSettings config){
 		this.config = config;
 	}
 
 	/**
-	 * Resets the graph
+	 * Resets the graph data.
 	 */
 	public final void reset(){
 		values.clear();
@@ -143,8 +149,8 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	}
 
 	/**
-	 * Adds a new point to the end of this graph
-	 * @param value The new point to add
+	 * Adds a new point to the end of this graph.
+	 * @param value The new point to add.
 	 */
 	public void addPoint(int value){
 		if(value > maxval){
