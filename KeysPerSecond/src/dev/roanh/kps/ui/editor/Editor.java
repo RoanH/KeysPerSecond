@@ -16,32 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.ui.dialog;
+package dev.roanh.kps.ui.editor;
 
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 
-import dev.roanh.kps.Main;
-import dev.roanh.kps.config.group.AveragePanelSettings;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 
-public class AvgPanelEditor extends PanelEditor{
+import dev.roanh.util.Dialog;
+
+public class Editor extends JPanel{
 	/**
 	 * Serial ID.
 	 */
-	private static final long serialVersionUID = -6191919120127582754L;
+	private static final long serialVersionUID = -3685233769737234444L;
+	protected JPanel labels = new JPanel(new GridLayout(0, 1, 0, 2));
+	protected JPanel fields = new JPanel(new GridLayout(0, 1, 0, 2));
 
-	public AvgPanelEditor(AveragePanelSettings config, boolean live){
-		super(config, live);
-		
-		labels.add(new JLabel("Precision: "));
-		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
-		fields.add(values);
-		values.setSelectedIndex(config.getPrecision());
-		values.addActionListener(e->{
-			config.setPrecision(values.getSelectedIndex());
-			if(live){
-				Main.frame.repaint();
-			}
-		});
+	public Editor(String title){
+		super(new BorderLayout());
+		this.setBorder(BorderFactory.createTitledBorder(title));
+		this.add(labels, BorderLayout.LINE_START);
+		this.add(fields, BorderLayout.CENTER);
+	}
+	
+	public static final void showEditor(Editor editor){
+		Dialog.showMessageDialog(editor);
 	}
 }

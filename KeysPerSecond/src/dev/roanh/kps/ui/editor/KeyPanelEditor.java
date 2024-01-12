@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.ui.dialog;
+package dev.roanh.kps.ui.editor;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;

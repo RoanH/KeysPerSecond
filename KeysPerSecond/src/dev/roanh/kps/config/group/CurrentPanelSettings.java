@@ -25,8 +25,8 @@ import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.legacy.LegacyProxyStore;
 import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.panels.NowPanel;
-import dev.roanh.kps.ui.dialog.Editor;
-import dev.roanh.kps.ui.dialog.PanelEditor;
+import dev.roanh.kps.ui.editor.Editor;
+import dev.roanh.kps.ui.editor.PanelEditor;
 
 /**
  * Configuration for a current KPS panel.

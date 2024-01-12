@@ -30,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.ThemeSettings;
+import dev.roanh.kps.ui.component.ColorPicker;
 import dev.roanh.util.Dialog;
 
 public class ColorDialog extends JPanel{

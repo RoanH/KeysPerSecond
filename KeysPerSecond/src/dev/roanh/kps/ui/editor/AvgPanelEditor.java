@@ -16,36 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.ui.dialog;
+package dev.roanh.kps.ui.editor;
 
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.AveragePanelSettings;
 
-public class GraphEditor extends Editor{
+public class AvgPanelEditor extends PanelEditor{
 	/**
 	 * Serial ID.
 	 */
-	private static final long serialVersionUID = 2459364509023481281L;
+	private static final long serialVersionUID = -6191919120127582754L;
 
-	public GraphEditor(GraphSettings config, boolean live){
-		super("Graph Settings");
-
-		labels.add(new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): "));
-		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 2, Short.MAX_VALUE, 1));
-		backlog.addChangeListener(e->config.setBacklog((int)backlog.getValue()));
-		fields.add(backlog);
+	public AvgPanelEditor(AveragePanelSettings config, boolean live){
+		super(config, live);
 		
-		labels.add(new JLabel("Show average: "));
-		JCheckBox avg = new JCheckBox("", config.isAverageVisible());
-		fields.add(avg);
-		avg.addActionListener(e->{
-			config.setAverageVisible(avg.isSelected());
-			Main.frame.repaint();
+		labels.add(new JLabel("Precision: "));
+		JComboBox<String> values = new JComboBox<String>(new String[]{"No digits beyond the decimal point", "1 digit beyond the decimal point", "2 digits beyond the decimal point", "3 digits beyond the decimal point"});
+		fields.add(values);
+		values.setSelectedIndex(config.getPrecision());
+		values.addActionListener(e->{
+			config.setPrecision(values.getSelectedIndex());
+			if(live){
+				Main.frame.repaint();
+			}
 		});
 	}
 }

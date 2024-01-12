@@ -28,8 +28,8 @@ import dev.roanh.kps.config.legacy.LegacyProxyStore;
 import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.PrecisionSetting;
 import dev.roanh.kps.panels.AvgPanel;
-import dev.roanh.kps.ui.dialog.AvgPanelEditor;
-import dev.roanh.kps.ui.dialog.PanelEditor;
+import dev.roanh.kps.ui.editor.AvgPanelEditor;
+import dev.roanh.kps.ui.editor.PanelEditor;
 
 /**
  * Configuration for the average panel.

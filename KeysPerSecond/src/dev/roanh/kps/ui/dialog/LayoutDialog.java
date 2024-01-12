@@ -45,6 +45,8 @@ import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutValidator;
 import dev.roanh.kps.panels.BasePanel;
+import dev.roanh.kps.ui.editor.Editor;
+import dev.roanh.kps.ui.editor.GraphEditor;
 import dev.roanh.kps.ui.model.DynamicInteger;
 import dev.roanh.kps.ui.model.EndNumberModel;
 import dev.roanh.kps.ui.model.MaxNumberModel;

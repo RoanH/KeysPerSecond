@@ -28,8 +28,8 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.panels.KeyPanel;
-import dev.roanh.kps.ui.dialog.KeyPanelEditor;
-import dev.roanh.kps.ui.dialog.PanelEditor;
+import dev.roanh.kps.ui.editor.KeyPanelEditor;
+import dev.roanh.kps.ui.editor.PanelEditor;
 
 /**
  * Configuration for a key panel.
