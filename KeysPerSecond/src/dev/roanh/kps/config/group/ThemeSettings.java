@@ -31,6 +31,10 @@ import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ColorSetting;
 
+/**
+ * General theme colour settings.
+ * @author Roan
+ */
 public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Whether or not to use custom colors.
@@ -45,6 +49,9 @@ public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	 */
 	private final ColorSetting background = new ColorSetting("background", new ThemeColor(0, 0, 0, 1.0F));
 
+	/**
+	 * Creates new theme settings.
+	 */
 	public ThemeSettings(){
 		super("theme");
 	}
@@ -65,18 +72,36 @@ public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 		return customColors.getValue();
 	}
 	
+	/**
+	 * Gets the theme foreground color to use.
+	 * @return The foreground color.
+	 */
 	public ThemeColor getForeground(){
 		return customColors.getValue() ? foreground.getValue() : foreground.getDefaultValue();
 	}
 	
+	/**
+	 * Gets the theme background color to use.
+	 * @return The background color.
+	 */
 	public ThemeColor getBackground(){
 		return customColors.getValue() ? background.getValue() : background.getDefaultValue();
 	}
 	
+	/**
+	 * Sets the theme foreground color. Note that
+	 * this only takes effect if custom colors are enabled.
+	 * @param foreground The new foreground color.
+	 */
 	public void setForeground(ThemeColor foreground){
 		this.foreground.update(foreground);
 	}
 	
+	/**
+	 * Sets the theme background color. Note that
+	 * this only takes effect if custom colors are enabled.
+	 * @param background The new background color.
+	 */
 	public void setBackground(ThemeColor background){
 		this.background.update(background);
 	}
