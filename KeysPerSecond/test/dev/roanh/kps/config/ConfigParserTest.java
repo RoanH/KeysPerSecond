@@ -78,6 +78,7 @@ public class ConfigParserTest{
 		assertEquals(new ThemeColor(0, 0, 0, 255), theme.getBackground());
 		
 		//commands
+		CommandKeys.isAltDown = false;
 		CommandKeys.isCtrlDown = true;
 		CommandSettings commands = config.getCommands();
 
@@ -256,6 +257,7 @@ public class ConfigParserTest{
 		assertEquals(new ThemeColor(0, 0, 0, 255), theme.getBackground());
 
 		//commands
+		CommandKeys.isAltDown = false;
 		CommandKeys.isCtrlDown = true;
 		CommandSettings commands = config.getCommands();
 
@@ -395,6 +397,7 @@ public class ConfigParserTest{
 
 		//commands
 		CommandKeys.isAltDown = true;
+		CommandKeys.isCtrlDown = false;
 		CommandSettings commands = config.getCommands();
 
 		CommandKeySetting cmd = commands.getCommandResetStats();
