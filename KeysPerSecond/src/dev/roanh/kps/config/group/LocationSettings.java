@@ -25,6 +25,11 @@ import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.layout.LayoutPosition;
 
+/**
+ * General settings for panels that can be places at some position in the GUI.
+ * @author Roan
+ * @see LayoutPosition
+ */
 public class LocationSettings extends SettingGroup implements LayoutPosition{
 	/**
 	 * The x position of the panel (-1 is end).
@@ -43,35 +48,86 @@ public class LocationSettings extends SettingGroup implements LayoutPosition{
 	 */
 	protected final IntSetting height;
 	
+	/**
+	 * Constructs new layout settings with the given default values.
+	 * Provided default values are assumed to be valid.
+	 * @param key The settings group key for this group. 
+	 * @param x The x position of the panel.
+	 * @param y The y position of the panel.
+	 * @param width The width of the panel.
+	 * @param height The height of the panel.
+	 * @see #validate()
+	 */
 	protected LocationSettings(String key, int x, int y, int width, int height){
 		super(key);
 		this.x = new IntSetting("x", -1, Integer.MAX_VALUE, x);
 		this.y = new IntSetting("y", -1, Integer.MAX_VALUE, y);
 		this.width = new IntSetting("width", -1, Integer.MAX_VALUE, width);
 		this.height = new IntSetting("height", -1, Integer.MAX_VALUE, height);
-		validate();
 	}
 	
+	/**
+	 * Sets the x position of this panel. If the new value
+	 * leads to an invalid configuration values will be adjusted.
+	 * @param x The new x position.
+	 * @see #validate()
+	 */
 	public void setX(int x){
 		this.x.update(x);
 		validate();
 	}
 	
+	/**
+	 * Sets the y position of this panel. If the new value
+	 * leads to an invalid configuration values will be adjusted.
+	 * @param y The new x position.
+	 * @see #validate()
+	 */
 	public void setY(int y){
 		this.y.update(y);
 		validate();
 	}
 	
+	/**
+	 * Sets the width of this panel. If the new value
+	 * leads to an invalid configuration values will be adjusted.
+	 * @param width The new width.
+	 * @see #validate()
+	 */
 	public void setWidth(int width){
 		this.width.update(width);
 		validate();
 	}
 	
+	/**
+	 * Sets the height of this panel. If the new value
+	 * leads to an invalid configuration values will be adjusted.
+	 * @param height The new height.
+	 * @see #validate()
+	 */
 	public void setHeight(int height){
 		this.height.update(height);
 		validate();
 	}
 	
+	/**
+	 * Validates that the current configuration is valid.
+	 * This involves check that the special 'end' and 'max'
+	 * options do not conflict. Note that along an axis
+	 * only one property can have such a special value.
+	 * <p>
+	 * In other words:
+	 * <ol>
+	 * <li>If x is end then width cannot be max.</li>
+	 * <li>If width is max then x cannot be end.</li>
+	 * <li>If y is end then height cannot be max.</li>
+	 * <li>If height is max then y cannot be end.</li>
+	 * </ol>
+	 * If these conditions are not satisfied then values will
+	 * be adjusted to be valid before this subroutine returns.
+	 * @return True if the values had to be adjusted to arrive
+	 *         at valid settings, false if no values were adjusted.
+	 */
 	private boolean validate(){
 		boolean defaultUsed = false;
 		
