@@ -31,31 +31,71 @@ import dev.roanh.kps.panels.KeyPanel;
 import dev.roanh.kps.ui.dialog.KeyPanelEditor;
 import dev.roanh.kps.ui.dialog.PanelEditor;
 
+/**
+ * Configuration for a key panel.
+ * @author Roan
+ * @see Key
+ * @see KeyPanel
+ */
 public class KeyPanelSettings extends PanelSettings{
+	/**
+	 * Whether this key panel is visible or not (rendered).
+	 * Hidden panels still track input statistics.
+	 */
 	private final BooleanSetting visible = new BooleanSetting("visible", true);
+	/**
+	 * The key code for the key associated with the panel. Note
+	 * that this could be a mouse button.
+	 */
 	private final IntSetting keycode = new IntSetting("keycode", Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
 	
+	/**
+	 * Constructs new key settings.
+	 */
 	public KeyPanelSettings(){
 		super("keys", "");
 	}
 	
+	/**
+	 * Constructs new key settings for the given key.
+	 * @param x The layout x position to place the key at.
+	 * @param extendedCode The key code of the key for the panel.
+	 * @see CommandKeys#getExtendedKeyCode(int, boolean, boolean, boolean)
+	 */
 	public KeyPanelSettings(int x, int extendedCode){
 		super("keys", x, 0, 2, 3, getPanelName(extendedCode));
 		keycode.update(extendedCode);
 	}
 	
+	/**
+	 * Gets the extended key code for the key associated with this panel.
+	 * @return The key code for this panel.
+	 */
 	public int getKeyCode(){
 		return keycode.getValue();
 	}
 	
+	/**
+	 * Checks if this panel should be rendered in the GUI or not.
+	 * @return True if this panel is visible.
+	 */
 	public boolean isVisible(){
 		return visible.getValue();
 	}
 	
+	/**
+	 * Sets if this panel should be rendered or not.
+	 * @param visible True if this panel should be rendered.
+	 */
 	public void setVisible(boolean visible){
 		this.visible.update(visible);
 	}
 	
+	/**
+	 * Creates a new key panel based on this configuration.
+	 * @param data The key input tracking object.
+	 * @return A newly created key panel.
+	 */
 	public KeyPanel createPanel(Key data){
 		return new KeyPanel(data, this);
 	}
@@ -87,6 +127,11 @@ public class KeyPanelSettings extends PanelSettings{
 		return Objects.hashCode(keycode.getValue());
 	}
 	
+	/**
+	 * Determines the default key panel name based on the given extended key code.
+	 * @param extendedCode The extended key code to compute a name for.
+	 * @return The display name for the given extended key code.
+	 */
 	private static final String getPanelName(int extendedCode){
 		if(CommandKeys.isMouseButton(extendedCode)){
 			return "M" + (-extendedCode);
