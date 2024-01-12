@@ -21,6 +21,7 @@ package dev.roanh.kps.ui.dialog;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -38,7 +39,20 @@ public class ColorDialog extends JPanel{
 	private static final long serialVersionUID = -5867337735121395139L;
 
 	public ColorDialog(ThemeSettings config, boolean live){
-		super(new GridLayout(2, 3, 4, 2));
+		super(new GridLayout(3, 3, 4, 2));
+		
+		//enabled
+		JCheckBox enable = new JCheckBox("", config.hasCustomColors());
+		enable.addActionListener(e->{
+			config.setCustomColorsEnabled(enable.isSelected());
+			if(live){
+				Main.reconfigure();
+			}
+		});
+		
+		add(new JLabel("Enable custom colours: "));
+		add(enable);
+		add(new JLabel());
 		
 		//foreground
 		JLabel lfg = new JLabel("Foreground colour: ");
@@ -54,6 +68,10 @@ public class ColorDialog extends JPanel{
 				Main.reconfigure();
 			}
 		});
+		
+		add(lfg);
+		add(cfg);
+		add(spanelfg);
 
 		//background
 		JLabel lbg = new JLabel("Background colour: ");
@@ -70,9 +88,6 @@ public class ColorDialog extends JPanel{
 			}
 		});
 
-		add(lfg);
-		add(cfg);
-		add(spanelfg);
 		add(lbg);
 		add(cbg);
 		add(spanelbg);
@@ -82,18 +97,14 @@ public class ColorDialog extends JPanel{
 	 * Shows the color configuration dialog
 	 */
 	public static final void configureColors(ThemeSettings config, boolean live){
-		if(!config.hasCustomColors()){
-			Dialog.showMessageDialog("Please enable custom colours first.");
-			return;
-		}
-		
 		ThemeColor foreground = config.getForeground();
 		ThemeColor background = config.getBackground();
 		if(!Dialog.showSaveDialog(new ColorDialog(config, live))){
 			config.setForeground(foreground);
 			config.setBackground(background);
+			if(live){
+				Main.reconfigure();
+			}
 		}
-
-		Main.reconfigure();
 	}
 }

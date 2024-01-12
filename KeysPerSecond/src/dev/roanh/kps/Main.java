@@ -661,10 +661,10 @@ public class Main{
 			graph.repaint();
 		});
 		JButton color = new JButton("Colours");
-		color.setEnabled(false);
+//		color.setEnabled(false);
 		ccol.addActionListener((e)->{
-			color.setEnabled(ccol.isSelected());
-			color.repaint();
+//			color.setEnabled(ccol.isSelected());
+//			color.repaint();
 		});
 		JButton precision = new JButton("Precision");
 		JButton layout = new JButton("Layout");

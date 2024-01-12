@@ -86,10 +86,6 @@ public class Menu{
 	 */
 	private static final JMenu general = new JMenu("General");
 	/**
-	 * Custom colours menu.
-	 */
-	private static final JMenu configcolors = new JMenu("Colours");
-	/**
 	 * Update rate menu.
 	 */
 	private static final JMenu rate = new JMenu("Update rate");
@@ -114,7 +110,6 @@ public class Menu{
 		menu.setBorder(border);
 		configure.getPopupMenu().setBorder(border);
 		general.getPopupMenu().setBorder(border);
-		configcolors.getPopupMenu().setBorder(border);
 		rate.getPopupMenu().setBorder(border);
 		reset.getPopupMenu().setBorder(border);
 		saveLoad.getPopupMenu().setBorder(border);
@@ -139,7 +134,6 @@ public class Menu{
 		JMenuItem commandkeys = new JMenuItem("Commands");
 		JMenuItem layout = new JMenuItem("Panels & Graphs");
 		JMenuItem about = new JMenuItem("About");
-		JCheckBoxMenuItem colorenable = new JCheckBoxMenuItem("Enable custom colours");
 		JCheckBoxMenuItem tAllKeys = new JCheckBoxMenuItem("Track all keys");
 		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
 		JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay mode");
@@ -166,7 +160,6 @@ public class Menu{
 		components.add(treset);
 		components.add(configkeys);
 		components.add(colorcustom);
-		components.add(colorenable);
 		components.add(tAllKeys);
 		components.add(tAllButtons);
 		components.add(overlay);
@@ -174,7 +167,6 @@ public class Menu{
 		components.add(modifiers);
 		configure.setUI(new MenuUI());
 		general.setUI(new MenuUI());
-		configcolors.setUI(new MenuUI());
 		rate.setUI(new MenuUI());
 		reset.setUI(new MenuUI());
 		saveLoad.setUI(new MenuUI());
@@ -242,17 +234,10 @@ public class Menu{
 		colorcustom.addActionListener((e)->{
 			ColorDialog.configureColors(Main.config.getTheme(), true);
 		});
-		colorenable.setSelected(Main.config.getTheme().hasCustomColors());
-		colorenable.addActionListener((e)->{
-			Main.config.getTheme().setCustomColorsEnabled(colorenable.isSelected());
-			Main.reconfigure();
-		});
 		modifiers.setSelected(Main.config.isKeyModifierTrackingEnabled());
 		modifiers.addActionListener((e)->{
 			Main.config.setKeyModifierTrackingEnabled(modifiers.isSelected());
 		});
-		configcolors.add(colorenable);
-		configcolors.add(colorcustom);
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(true);
 		});
@@ -306,7 +291,7 @@ public class Menu{
 		configure.add(general);
 		configure.add(configkeys);
 		configure.add(rate);
-		configure.add(configcolors);
+		configure.add(colorcustom);
 		configure.add(statsSaving);
 		configure.add(commandkeys);
 		configure.add(layout);
@@ -405,7 +390,6 @@ public class Menu{
 		menu.removeAll();
 		configure.removeAll();
 		general.removeAll();
-		configcolors.removeAll();
 		rate.removeAll();
 		reset.removeAll();
 		saveLoad.removeAll();
