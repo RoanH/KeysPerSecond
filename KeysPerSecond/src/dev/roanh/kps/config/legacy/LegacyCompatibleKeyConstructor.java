@@ -25,7 +25,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dev.roanh.kps.config.ListItemConstructor;
-import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 
 /**

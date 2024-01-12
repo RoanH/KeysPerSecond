@@ -19,8 +19,6 @@
 package dev.roanh.kps.ui.dialog;
 
 import java.awt.GridLayout;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -28,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import dev.roanh.kps.CommandKeys;
-import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.setting.CommandKeySetting;
 import dev.roanh.kps.event.listener.KeyPressListener;
