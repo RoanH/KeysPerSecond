@@ -22,16 +22,38 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.panels.BasePanel;
 
+/**
+ * Settings for special panels that display some sort
+ * of derived statistic.
+ * @author Roan
+ * @see PanelType
+ */
 public abstract class SpecialPanelSettings extends PanelSettings{
+	/**
+	 * The type of this panel, indicative of the metric displayed.
+	 */
 	private final PanelType type;
 
-	public SpecialPanelSettings(PanelType type, String defaultName){
+	/**
+	 * Constructs new special panel settings.
+	 * @param type The type of the special panel.
+	 * @param defaultName The display name of the panel.
+	 */
+	protected SpecialPanelSettings(PanelType type, String defaultName){
 		super("panels", defaultName);
 		this.type = type;
 	}
 
+	/**
+	 * Creates a new panel based on these settings.
+	 * @return The newly created panel.
+	 */
 	public abstract BasePanel createPanel();
 	
+	/**
+	 * Gets the type of the panel.
+	 * @return The type of the panel.
+	 */
 	public PanelType getType(){
 		return type;
 	}
