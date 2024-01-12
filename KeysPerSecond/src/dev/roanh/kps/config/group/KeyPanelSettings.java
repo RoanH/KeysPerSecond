@@ -66,10 +66,10 @@ public class KeyPanelSettings extends PanelSettings{
 	}
 	
 	@Override
-	public void write(IndentWriter out){
-		super.write(out);
-		visible.write(out);
+	public void writeItems(IndentWriter out){
 		keycode.write(out);
+		super.writeItems(out);
+		visible.write(out);
 	}
 	
 	@Override

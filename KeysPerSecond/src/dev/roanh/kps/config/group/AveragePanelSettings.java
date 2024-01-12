@@ -86,8 +86,8 @@ public class AveragePanelSettings extends SpecialPanelSettings implements Legacy
 	}
 	
 	@Override
-	public void write(IndentWriter out){
-		super.write(out);
+	public void writeItems(IndentWriter out){
+		super.writeItems(out);
 		precision.write(out);
 	}
 	

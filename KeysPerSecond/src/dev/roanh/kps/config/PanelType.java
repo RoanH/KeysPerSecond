@@ -48,6 +48,10 @@ public enum PanelType{
 		return ctor.get();
 	}
 	
+	public String getKey(){
+		return key;
+	}
+	
 	public static ParsedItem<SpecialPanelSettings> construct(List<String> data){
 		Map<String, String> info = ListItemConstructor.buildMap(data);
 		if(info == null){

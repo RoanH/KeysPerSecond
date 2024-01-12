@@ -511,7 +511,8 @@ public class Configuration{
 		return loc;
 	}
 	
-	private void write(IndentWriter out){
+	//TODO write
+	public void write(IndentWriter out){
 		out.println("version: " + Main.VERSION);
 		out.println();
 		

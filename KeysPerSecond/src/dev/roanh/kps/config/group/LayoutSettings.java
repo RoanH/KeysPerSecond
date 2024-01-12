@@ -37,7 +37,7 @@ public class LayoutSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * The pixel size of one grid cell in the program.
 	 */
-	private final IntSetting cellSize = new IntSetting("clellSize", BasePanel.imageSize, Integer.MAX_VALUE, 22);
+	private final IntSetting cellSize = new IntSetting("cellSize", BasePanel.imageSize, Integer.MAX_VALUE, 22);
 	
 	public LayoutSettings(){
 		super("layout");
@@ -78,8 +78,8 @@ public class LayoutSettings extends SettingGroup implements LegacyProxyStore{
 
 	@Override
 	public void writeItems(IndentWriter out){
-		borderOffset.write(out);
 		cellSize.write(out);
+		borderOffset.write(out);
 	}
 	
 	@Override

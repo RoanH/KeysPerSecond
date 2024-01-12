@@ -100,8 +100,8 @@ public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 	}
 	
 	@Override
-	public void write(IndentWriter out){
-		super.write(out);
+	public void writeItems(IndentWriter out){
+		super.writeItems(out);
 		showAvg.write(out);
 		backlog.write(out);
 	}

@@ -35,7 +35,7 @@ public abstract class SettingGroup{
 	
 	public abstract void writeItems(IndentWriter out);
 	
-	public void write(IndentWriter out){
+	public final void write(IndentWriter out){
 		out.println(key + ":");
 		out.increaseIndent();
 		writeItems(out);

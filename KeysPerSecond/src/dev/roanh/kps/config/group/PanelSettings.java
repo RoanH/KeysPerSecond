@@ -62,9 +62,9 @@ public abstract class PanelSettings extends LocationSettings{
 	}
 	
 	@Override
-	public void write(IndentWriter out){
-		super.write(out);
+	public void writeItems(IndentWriter out){
 		name.write(out);
+		super.writeItems(out);
 		mode.write(out);
 	}
 }

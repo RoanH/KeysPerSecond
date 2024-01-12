@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
@@ -465,5 +466,12 @@ public class ConfigParserTest{
 		assertEquals(RenderingMode.VERTICAL, key2.getRenderingMode());
 		assertTrue(key2.isVisible());
 		assertEquals("S", key2.getName());
+	}
+	
+	//TODO
+	public static void main(String[] args) throws IOException{
+		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
+		config.write(new IndentWriter(new PrintWriter(System.out)));
+		System.out.println();
 	}
 }

@@ -38,7 +38,6 @@ graphs:
     y: 2
     width: 5
     height: 8
-    mode: DETACHED
     showAvg: false
     backlog: 45
 
@@ -89,4 +88,3 @@ keys:
     height: 7
     mode: VALUE_ONLY
     visible: false
-    name: B

@@ -49,6 +49,7 @@ public class IndentWriter{
 	
 	public void println(){
 		writer.print('\n');
+		writer.flush();
 	}
 	
 	public void println(String val){

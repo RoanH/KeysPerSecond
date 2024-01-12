@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps.config.group;
 
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.panels.BasePanel;
 
@@ -33,5 +34,11 @@ public abstract class SpecialPanelSettings extends PanelSettings{
 	
 	public PanelType getType(){
 		return type;
+	}
+	
+	@Override
+	public void writeItems(IndentWriter out){
+		out.println("type: " + type.getKey());
+		super.writeItems(out);
 	}
 }
