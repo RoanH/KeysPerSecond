@@ -29,6 +29,10 @@ import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.BasePanel;
 
+/**
+ * Settings group with all general layout related settings.
+ * @author Roan
+ */
 public class LayoutSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * The offset from the border of a panel to the actual panel content.
@@ -38,29 +42,59 @@ public class LayoutSettings extends SettingGroup implements LegacyProxyStore{
 	 * The pixel size of one grid cell in the program.
 	 */
 	private final IntSetting cellSize = new IntSetting("cellSize", BasePanel.imageSize, Integer.MAX_VALUE, 22);
-	
+
+	/**
+	 * Constructs new layout settings.
+	 */
 	public LayoutSettings(){
 		super("layout");
 	}
 	
+	/**
+	 * Gets the size in pixels of all the layout grid cells.
+	 * @return The grid cell size in pixels.
+	 */
 	public int getCellSize(){
 		return cellSize.getValue();
 	}
 	
+	/**
+	 * Gets the offset from the border of a panel to the actual content.
+	 * @return The distance in pixels from panel border to panel content.
+	 */
 	public int getBorderOffset(){
 		return borderOffset.getValue();
 	}
 
+	/**
+	 * Sets the offset from the panel border to the panel content.
+	 * The value will be adjusted if invalid.
+	 * @param offset The offset in pixels.
+	 * @see #validate()
+	 */
 	public void setBorderOffset(int offset){
 		borderOffset.update(offset);
 		validate();
 	}
 	
+	/**
+	 * Sets the size of the layout cells. The border offset may
+	 * be adjusted if required for the settings to be valid.
+	 * @param size The cell size in pixels.
+	 * @see #validate()
+	 */
 	public void setCellSize(int size){
 		cellSize.update(size);
 		validate();
 	}
 	
+	/**
+	 * Validates that the configured layout options are valid and adjusts
+	 * them if necessary. This check ensures that the border offset always
+	 * leaves an interior for a cell.
+	 * @return True if values had to be adjusted to obtain valid settings,
+	 *         false if no values were adjusted.
+	 */
 	private boolean validate(){
 		if(borderOffset.getValue() > cellSize.getValue() - BasePanel.imageSize){
 			borderOffset.update(cellSize.getValue() - BasePanel.imageSize);
