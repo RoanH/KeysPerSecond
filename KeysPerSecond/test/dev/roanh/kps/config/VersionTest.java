@@ -21,7 +21,6 @@ package dev.roanh.kps.config;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -50,6 +49,8 @@ public class VersionTest{
 		assertTrue(base.isBefore(new Version(6, 0)));
 		assertTrue(base.isBefore(new Version(4, 7)));
 		assertFalse(base.isBefore(new Version(3, 7)));
+		
+		//TODO UNKNOWN is before ALL versions (aka enable all legacy constructs)
 	}
 	
 	@Test
@@ -63,6 +64,6 @@ public class VersionTest{
 		assertEquals(new Version(4, 5), Version.parse("4.5"));
 		assertEquals(new Version(5, 9), Version.parse("v5.9"));
 		assertNotEquals(new Version(4, 5), Version.parse("3.5"));
-		assertThrows(IllegalArgumentException.class, ()->Version.parse("ver6.7"));
+		assertEquals(Version.UNKNOWN, Version.parse("ver6.7"));
 	}
 }

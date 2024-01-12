@@ -50,18 +50,10 @@ public class Version implements Comparable<Version>{
 	
 	public static final Version readVersion(){
 		String version = Util.readArtifactVersion("dev.roanh.kps", "keyspersecond");
-		if(version != null){
-			try{
-				return parse(version);
-			}catch(IllegalArgumentException e){
-				return UNKNOWN;
-			}
-		}else{
-			return UNKNOWN;
-		}
+		return version == null ? UNKNOWN : parse(version);
 	}
 	
-	public static final Version parse(String version) throws IllegalArgumentException{
+	public static final Version parse(String version){
 		version = version.trim();
 		if(version.startsWith("v")){
 			version = version.substring(1);
@@ -71,7 +63,7 @@ public class Version implements Comparable<Version>{
 			String[] args = version.split("\\.");
 			return new Version(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 		}catch(NumberFormatException | ArrayIndexOutOfBoundsException e){
-			throw new IllegalArgumentException(e);
+			return UNKNOWN;
 		}
 	}
 

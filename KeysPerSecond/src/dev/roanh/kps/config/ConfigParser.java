@@ -19,22 +19,12 @@
 package dev.roanh.kps.config;
 
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-
-import dev.roanh.kps.config.group.KeyPanelSettings;
-import dev.roanh.kps.config.group.StatsSavingSettings;
-import dev.roanh.kps.config.legacy.ProxySetting;
 
 public class ConfigParser{
 	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};
@@ -73,15 +63,10 @@ public class ConfigParser{
 			throw new IOException("Empty config file");
 		}
 		
-		if(!line.startsWith("version:")){
-			//the last version to not declare a version
-			version = new Version(8, 4);
+		if(line.startsWith("version:")){
+			version = Version.parse(line.substring(8));
 		}else{
-			try{
-				version = Version.parse(line.substring(8));
-			}catch(IllegalArgumentException e){
-				version = new Version(8, 4);
-			}
+			version = Version.UNKNOWN;
 		}
 		
 		//legacy compatibility
