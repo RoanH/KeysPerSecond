@@ -83,6 +83,18 @@ public class SettingList<T extends SettingGroup> implements Iterable<T>{
 		data.removeIf(condition);
 	}
 	
+	public boolean isEmpty(){
+		return data.isEmpty();
+	}
+	
+	public void clear(){
+		data.clear();
+	}
+	
+	public boolean remove(Object elem){
+		return data.remove(elem);
+	}
+	
 	public void write(IndentWriter out){
 		out.println(key + ":");
 		for(T item : data){

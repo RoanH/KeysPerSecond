@@ -22,7 +22,9 @@ import java.awt.BorderLayout;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.function.BiConsumer;
 import java.util.function.IntConsumer;
+import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,8 +37,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
+import dev.roanh.kps.config.PanelType;
+import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.GraphSettings;
-import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
@@ -91,36 +94,59 @@ public class LayoutDialog{
 		form.add(gridSize, BorderLayout.PAGE_START);
 		
 		//panel configuration
-		TablePanel panelView = new TablePanel("Panel");
-		
-		for(KeyPanelSettings key : Main.config.getKeySettings()){
-			panelView.addPanelRow(key, live);
-		}
-		
-		for(PanelSettings panel : Main.config.getPanels()){
-			panelView.addPanelRow(panel, live);
-		}
+		TablePanel panelView = new TablePanel("Panel", live);
+		panelView.addPanels(Main.config.getKeySettings());
+		panelView.addPanels(Main.config.getPanels());
 		
 		JScrollPane pane = new JScrollPane(panelView);
-		pane.setBorder(BorderFactory.createTitledBorder("Panels"));
+		pane.setBorder(BorderFactory.createEmptyBorder());
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.setPreferredSize(new Dimension(450, 200));
-
-		form.add(pane, BorderLayout.CENTER);
+		pane.setPreferredSize(new Dimension(600, 200));
+		
+		JPanel buttons = new JPanel(new GridLayout(1, 4, 2, 0));
+		buttons.add(createAddButton(panelView, "Add Maximum", Main.config.getPanels(), PanelType.MAX::newSettings, panelView::addPanelRow, live));
+		buttons.add(createAddButton(panelView, "Add Average", Main.config.getPanels(), PanelType.AVG::newSettings, panelView::addPanelRow, live));
+		buttons.add(createAddButton(panelView, "Add KPS", Main.config.getPanels(), PanelType.CURRENT::newSettings, panelView::addPanelRow, live));
+		buttons.add(createAddButton(panelView, "Add Total", Main.config.getPanels(), PanelType.TOTAL::newSettings, panelView::addPanelRow, live));
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBorder(BorderFactory.createTitledBorder("Panels"));
+		panel.add(pane, BorderLayout.CENTER);
+		panel.add(buttons, BorderLayout.PAGE_END);
+		form.add(panel, BorderLayout.CENTER);
 
 		//graph configuration
-		TablePanel graphView = new TablePanel("Graph");
-		for(GraphSettings graph : Main.config.getGraphSettings()){
-			graphView.addGraphRow(graph, live);
-		}
+		TablePanel graphView = new TablePanel("Graph", live);
+		graphView.addGraphs(Main.config.getGraphSettings());
 		
 		JScrollPane graphPane = new JScrollPane(graphView);
-		graphPane.setBorder(BorderFactory.createTitledBorder("Graphs"));
+		graphPane.setBorder(BorderFactory.createEmptyBorder());
 		graphPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		form.add(graphPane, BorderLayout.PAGE_END);
+		graphPane.setPreferredSize(new Dimension(600, 100));
+		
+		JPanel graphPanel = new JPanel(new BorderLayout());
+		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
+		graphPanel.add(graphPane, BorderLayout.CENTER);
+		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), GraphSettings::new, graphView::addGraphRow, live), BorderLayout.PAGE_END);
+		form.add(graphPanel, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);
 		Main.content.hideGrid();
+	}
+	
+	private static <T extends LocationSettings> JButton createAddButton(TablePanel view, String text, SettingList<T> panels, Supplier<T> settingsCtor, BiConsumer<SettingList<T>, T> viewUpdate, boolean live){
+		JButton add = new JButton(text);
+		add.addActionListener(e->{
+			T settings = settingsCtor.get();
+			panels.add(settings);
+			viewUpdate.accept(panels, settings);
+			view.revalidate();
+			if(live){
+				Main.reconfigure();
+			}
+		});
+		
+		return add;
 	}
 
 	private static final class TablePanel extends JPanel{
@@ -128,30 +154,56 @@ public class LayoutDialog{
 		 * Serial ID.
 		 */
 		private static final long serialVersionUID = 4467273936432261623L;
-		private JPanel fields = new JPanel(new GridLayout(0, 6, 2, 2));
+		private JPanel rows = new JPanel(new GridLayout(0, 1, 0, 2));
+		private boolean live;
 		
-		public TablePanel(String name){
+		private TablePanel(String name, boolean live){
 			super(new BorderLayout());
+			this.live = live;
 			
-			fields.add(new JLabel(name, SwingConstants.CENTER));
-			fields.add(new JLabel("X", SwingConstants.CENTER));
-			fields.add(new JLabel("Y", SwingConstants.CENTER));
-			fields.add(new JLabel("Width", SwingConstants.CENTER));
-			fields.add(new JLabel("Height", SwingConstants.CENTER));
-			fields.add(new JLabel("Settings", SwingConstants.CENTER));
-			
-			add(fields, BorderLayout.PAGE_START);
+			addHeaders(name);
+
+			add(rows, BorderLayout.PAGE_START);
 			add(new JPanel(), BorderLayout.CENTER);
 		}
 		
-		private void addGraphRow(GraphSettings info, boolean live){
-			fields.add(new JLabel("KPS", SwingConstants.CENTER));
+		private void addHeaders(String name){
+			JPanel row = new JPanel(new GridLayout(0, 7, 2, 0));
+			row.add(new JLabel(name, SwingConstants.CENTER));
+			row.add(new JLabel("X", SwingConstants.CENTER));
+			row.add(new JLabel("Y", SwingConstants.CENTER));
+			row.add(new JLabel("Width", SwingConstants.CENTER));
+			row.add(new JLabel("Height", SwingConstants.CENTER));
+			row.add(new JLabel("Settings", SwingConstants.CENTER));
+			row.add(new JLabel("Delete", SwingConstants.CENTER));
+			rows.add(row);
+		}
+		
+		private void addGraphRow(SettingList<GraphSettings> panels, GraphSettings info){
+			JPanel row = new JPanel(new GridLayout(0, 7, 2, 0));
+			row.add(new JLabel("KPS", SwingConstants.CENTER));
 			
-			addLocationFields(info, live);
+			addLocationFields(row, info);
 			
 			JButton edit = new JButton("Edit");
-			fields.add(edit);
+			row.add(edit);
 			edit.addActionListener(e->Editor.showEditor(new GraphEditor(info, live)));
+			
+			addDeleteButton(row, panels, info);
+
+			rows.add(row);
+		}
+		
+		private void addGraphs(SettingList<GraphSettings> graphs){
+			for(GraphSettings graph : graphs){
+				addGraphRow(graphs, graph);
+			}
+		}
+		
+		private void addPanels(SettingList<? extends PanelSettings> panels){
+			for(PanelSettings panel : panels){
+				addPanelRow(panels, panel);
+			}
 		}
 		
 //		/**
@@ -162,52 +214,67 @@ public class LayoutDialog{
 //		 * @param fields The GUI panel that holds all the fields
 //		 * @param live Whether or not edits should be displayed in real time
 //		 */
-		private void addPanelRow(PanelSettings info, boolean live){
+		private void addPanelRow(SettingList<? extends PanelSettings> panels, PanelSettings info){
+			JPanel row = new JPanel(new GridLayout(0, 7, 2, 0));
+			
 			JLabel nameLabel = new JLabel(info.getName(), SwingConstants.CENTER);
-			fields.add(nameLabel);
+			row.add(nameLabel);
 
-			addLocationFields(info, live);
+			addLocationFields(row, info);
 
 			JButton edit = new JButton("Edit");
-			fields.add(edit);
+			row.add(edit);
 			edit.addActionListener(e->{
 				info.showEditor(live);
 				nameLabel.setText(info.getName());
 			});
+			
+			addDeleteButton(row, panels, info);
+			
+			rows.add(row);
 		}
 		
-		private void addLocationFields(LocationSettings info, boolean live){
+		private void addDeleteButton(JPanel row, SettingList<? extends LocationSettings> panels, LocationSettings info){
+			JButton delete = new JButton("Remove");
+			row.add(delete);
+			delete.addActionListener(e->{
+				panels.remove(info);
+				rows.remove(row);
+				revalidate();
+			});
+		}
+		
+		private void addLocationFields(JPanel row, LocationSettings info){
 			LayoutValidator validator = new LayoutValidator();
-			validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX, live)));
-			validator.getYField().setModel(new EndNumberModel(info.getLayoutY(), validator.getYField(), update(info::setY, live)));
-			validator.getWidthField().setModel(new MaxNumberModel(info.getLayoutWidth(), validator.getWidthField(), update(info::setWidth, live)));
-			validator.getHeightField().setModel(new MaxNumberModel(info.getLayoutHeight(), validator.getHeightField(), update(info::setHeight, live)));
+			validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX)));
+			validator.getYField().setModel(new EndNumberModel(info.getLayoutY(), validator.getYField(), update(info::setY)));
+			validator.getWidthField().setModel(new MaxNumberModel(info.getLayoutWidth(), validator.getWidthField(), update(info::setWidth)));
+			validator.getHeightField().setModel(new MaxNumberModel(info.getLayoutHeight(), validator.getHeightField(), update(info::setHeight)));
 
 			JSpinner x = new JSpinner(validator.getXField().getModel());
 			x.setEditor(new SpecialNumberModelEditor(x));
-			fields.add(x);
+			row.add(x);
 
 			JSpinner y = new JSpinner(validator.getYField().getModel());
 			y.setEditor(new SpecialNumberModelEditor(y));
-			fields.add(y);
+			row.add(y);
 
 			JSpinner w = new JSpinner(validator.getWidthField().getModel());
 			w.setEditor(new SpecialNumberModelEditor(w));
-			fields.add(w);
+			row.add(w);
 
 			JSpinner h = new JSpinner(validator.getHeightField().getModel());
 			h.setEditor(new SpecialNumberModelEditor(h));
-			fields.add(h);
+			row.add(h);
 		}
 		
 		/**
 		 * Construct a value change listener that sets new values
 		 * to the given field and optionally updates the main GUI.
 		 * @param field The field to update with new values.
-		 * @param live Whether to update the GUI on updates.
 		 * @return The newly constructed change listener.
 		 */
-		private final ValueChangeListener update(IntConsumer field, boolean live){
+		private ValueChangeListener update(IntConsumer field){
 			return val->{
 				field.accept(val);
 				if(live){
