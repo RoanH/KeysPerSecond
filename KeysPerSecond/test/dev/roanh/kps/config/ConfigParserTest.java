@@ -240,7 +240,6 @@ public class ConfigParserTest{
 	@Test
 	public void fullTest2() throws IOException{
 		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
-
 		
 		//general
 		assertFalse(config.isOverlayMode());
@@ -375,5 +374,101 @@ public class ConfigParserTest{
 		assertEquals(RenderingMode.VALUE_ONLY, key2.getRenderingMode());
 		assertFalse(key2.isVisible());
 		assertEquals("B", key2.getName());
+	}
+	
+	@Test
+	public void fullTest3() throws IOException{
+		Configuration config = Configuration.newLoadTemporary(Paths.get("test/nodefault.kps"));
+		
+		//general
+		assertTrue(config.isOverlayMode());
+		assertTrue(config.isTrackAllKeys());
+		assertTrue(config.isTrackAllButtons());
+		assertEquals(250, config.getUpdateRateMs());
+		assertTrue(config.isKeyModifierTrackingEnabled());
+		
+		//theme
+		ThemeSettings theme = config.getTheme();
+		assertTrue(theme.hasCustomColors());
+		assertEquals(new ThemeColor(1, 2, 3, 0), theme.getForeground());
+		assertEquals(new ThemeColor(104, 105, 106, 0.5F), theme.getBackground());
+
+		//commands
+		CommandKeys.isAltDown = true;
+		CommandSettings commands = config.getCommands();
+
+		CommandKeySetting cmd = commands.getCommandResetStats();
+		assertTrue(cmd.matches(1));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandExit();
+		assertTrue(cmd.matches(2));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandResetTotals();
+		assertTrue(cmd.matches(3));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandHide();
+		assertTrue(cmd.matches(4));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandPause();
+		assertTrue(cmd.matches(5));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandReload();
+		assertTrue(cmd.matches(6));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+		
+		//layout
+		assertEquals(34, config.getCellSize());
+		assertEquals(4, config.getBorderOffset());
+
+		//stats
+		StatsSavingSettings stats = config.getStatsSavingSettings();
+		assertTrue(stats.isAutoSaveEnabled());
+		assertEquals("C:\\Users\\test", stats.getAutoSaveDestination());
+		assertEquals("test", stats.getAutoSaveFormat());
+		assertEquals(100, stats.getAutoSaveInterval());
+		assertTrue(stats.isSaveOnExitEnabled());
+		assertTrue(stats.isLoadOnLaunchEnabled());
+		assertEquals("C:\\Users\\RoanH\\alsotest", stats.getSaveFile());
+		
+		//graphs
+		assertEquals(0, config.getGraphSettings().size());
+		
+		//special panels
+		assertEquals(0, config.getPanels().size());
+		
+		//keys
+		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		assertEquals(2, keys.size());
+		
+		KeyPanelSettings key1 = keys.get(0);
+		assertEquals(1, key1.getKeyCode());
+		assertEquals(3, key1.getLayoutX());
+		assertEquals(5, key1.getLayoutY());
+		assertEquals(7, key1.getLayoutWidth());
+		assertEquals(10, key1.getLayoutHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, key1.getRenderingMode());
+		assertFalse(key1.isVisible());
+		assertEquals("R", key1.getName());
+		
+		KeyPanelSettings key2 = keys.get(1);
+		assertEquals(2, key2.getKeyCode());
+		assertEquals(4, key2.getLayoutX());
+		assertEquals(6, key2.getLayoutY());
+		assertEquals(8, key2.getLayoutWidth());
+		assertEquals(11, key2.getLayoutHeight());
+		assertEquals(RenderingMode.VERTICAL, key2.getRenderingMode());
+		assertTrue(key2.isVisible());
+		assertEquals("S", key2.getName());
 	}
 }

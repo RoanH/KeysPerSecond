@@ -222,6 +222,7 @@ public class Configuration{
 			total.collectLegacyProxies(settings);
 			panels.add(total);
 			
+			settings.add(new BooleanSetting("showKeys", true));
 			settings.add(new LegacyPanelShowSetting("showMax", panels, max));
 			settings.add(new LegacyPanelShowSetting("showAvg", panels, avg));
 			settings.add(new LegacyPanelShowSetting("showCur", panels, current));

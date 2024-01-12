@@ -28,6 +28,7 @@ import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ColorSetting;
+import dev.roanh.kps.config.setting.ProxySetting;
 
 public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	/**
@@ -102,6 +103,7 @@ public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	
 	@Override
 	public void collectLegacyProxies(List<Setting<?>> proxyList){
+		proxyList.add(ProxySetting.of("customColors", customColors));
 		proxyList.add(new LegacyColorProxy("foregroundColor", foreground));
 		proxyList.add(new LegacyColorProxy("foregroundOpacity", foreground));
 		proxyList.add(new LegacyColorProxy("backgroundColor", background));
