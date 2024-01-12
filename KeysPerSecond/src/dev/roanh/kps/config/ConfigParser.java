@@ -140,7 +140,7 @@ public class ConfigParser{
 		
 		Map<String, String> item = new HashMap<String, String>();
 		while(in.ready()){
-			in.mark(1000);
+			in.mark(10000);
 			if(in.read(lead, 0, 2) != 2){
 				//end of file hit or not enough group data
 				in.reset();
@@ -178,7 +178,7 @@ public class ConfigParser{
 		boolean defaultUsed = false;
 		List<String> item = null;
 		while(in.ready()){
-			in.mark(1000);
+			in.mark(10000);
 			if(in.read(lead, 0, 4) != 4){
 				//end of file hit or not enough list data
 				in.reset();
