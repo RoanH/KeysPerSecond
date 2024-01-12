@@ -73,7 +73,7 @@ public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	}
 	
 	/**
-	 * Gets the theme foreground color to use.
+	 * Gets the effective theme foreground color to use.
 	 * @return The foreground color.
 	 */
 	public ThemeColor getForeground(){
@@ -81,11 +81,31 @@ public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	}
 	
 	/**
-	 * Gets the theme background color to use.
+	 * Gets the effective theme background color to use.
 	 * @return The background color.
 	 */
 	public ThemeColor getBackground(){
 		return customColors.getValue() ? background.getValue() : background.getDefaultValue();
+	}
+	
+	/**
+	 * Gets the current custom foreground color ignoring if
+	 * custom colors are enabled or not.
+	 * @return The custom foreground color.
+	 * @see #getForeground()
+	 */
+	public ThemeColor getCustomForeground(){
+		return foreground.getValue();
+	}
+	
+	/**
+	 * Gets the current custom background color ignoring if
+	 * custom colors are enabled or not.
+	 * @return The custom background color.
+	 * @see #getBackground()
+	 */
+	public ThemeColor getCustomBackground(){
+		return background.getValue();
 	}
 	
 	/**
