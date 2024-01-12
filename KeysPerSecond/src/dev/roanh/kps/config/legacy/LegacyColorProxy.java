@@ -23,9 +23,25 @@ import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.setting.ColorSetting;
 
+/**
+ * Extension of a regular color setting that can deal
+ * with the two settings that were used to describe
+ * colours in legacy configuration formats. This setting
+ * handler the RGB values like normal, but overwrites
+ * the alpha of the existing colour instead of fully replacing it.
+ * @author Roan
+ */
 public class LegacyColorProxy extends Setting<ThemeColor>{
+	/**
+	 * The color setting to update with parsed data.
+	 */
 	private ColorSetting setting;
 
+	/**
+	 * Constructs a new legacy color setting proxy.
+	 * @param key The legacy configuration setting key.
+	 * @param setting The setting to update with parsed values.
+	 */
 	public LegacyColorProxy(String key, ColorSetting setting){
 		super(key, setting.getDefaultValue());
 		this.setting = setting;
