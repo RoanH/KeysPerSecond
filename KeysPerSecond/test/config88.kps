@@ -88,3 +88,4 @@ keys:
     height: 7
     mode: VALUE_ONLY
     visible: false
+    name: B
