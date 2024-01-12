@@ -49,8 +49,8 @@ public class VersionTest{
 		assertTrue(base.isBefore(new Version(6, 0)));
 		assertTrue(base.isBefore(new Version(4, 7)));
 		assertFalse(base.isBefore(new Version(3, 7)));
-		
-		//TODO UNKNOWN is before ALL versions (aka enable all legacy constructs)
+		assertFalse(base.isBefore(Version.UNKNOWN));
+		assertTrue(Version.UNKNOWN.isBefore(0, 0));
 	}
 	
 	@Test
