@@ -16,25 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config;
+package dev.roanh.kps.config.legacy;
 
-import java.util.List;
+import dev.roanh.kps.config.SettingList;
+import dev.roanh.kps.config.group.LocationSettings;
+import dev.roanh.kps.config.setting.BooleanSetting;
 
-import dev.roanh.kps.config.setting.ProxySetting;
+public class LegacyPanelShowSetting extends BooleanSetting{
+	private SettingList<? extends LocationSettings> data;
+	private LocationSettings item;
+	
+	public LegacyPanelShowSetting(String key, SettingList<? extends LocationSettings> data, LocationSettings item){
+		super(key, true);
+		this.data = data;
+		this.item = item;
+	}
 
-/**
- * Interface used by setting groups to indicate that they
- * provide legacy setting mapping proxies.
- * @author Roan
- * @see SettingGroup
- */
-public abstract interface LegacyProxyStore{
-
-	/**
-	 * Collects mappings of legacy settings for this panel
-	 * used to map legacy settings onto the new config system.
-	 * @param proxyList The list to add the legacy settings to.
-	 * @see ProxySetting
-	 */
-	public abstract void collectLegacyProxies(List<Setting<?>> proxyList);
+	@Override
+	public boolean parse(String data){
+		if(super.parse(data)){
+			return true;
+		}
+		
+		if(getValue()){
+			return true;
+		}else{
+			this.data.remove(item);
+			return false;
+		}
+	}
 }

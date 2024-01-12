@@ -22,13 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
 import dev.roanh.kps.config.ThemeColor;
+import dev.roanh.kps.config.legacy.LegacyColorProxy;
+import dev.roanh.kps.config.legacy.LegacyProxyStore;
+import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.ColorSetting;
-import dev.roanh.kps.config.setting.ProxySetting;
 
 public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 	/**
@@ -108,35 +109,5 @@ public class ThemeSettings extends SettingGroup implements LegacyProxyStore{
 		proxyList.add(new LegacyColorProxy("foregroundOpacity", foreground));
 		proxyList.add(new LegacyColorProxy("backgroundColor", background));
 		proxyList.add(new LegacyColorProxy("backgroundOpacity", background));
-	}
-	
-	private static final class LegacyColorProxy extends Setting<ThemeColor>{
-		private ColorSetting setting;
-
-		protected LegacyColorProxy(String key, ColorSetting setting){
-			super(key, setting.getDefaultValue());
-			this.setting = setting;
-		}
-
-		@Override
-		public boolean parse(String data){
-			try{
-				float alpha = Float.parseFloat(data);
-				if(alpha < 0.0F || alpha > 1.0F){
-					setting.reset();
-					return true;
-				}else{
-					setting.update(new ThemeColor(setting.getValue().getRGB(), alpha));
-					return false;
-				}
-			}catch(NumberFormatException e){
-				return setting.parse(data);
-			}
-		}
-
-		@Override
-		public void write(IndentWriter out){
-			throw new IllegalStateException("Legacy proxy settings should never be written.");
-		}
 	}
 }

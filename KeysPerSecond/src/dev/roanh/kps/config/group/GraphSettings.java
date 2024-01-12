@@ -22,11 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
+import dev.roanh.kps.config.legacy.LegacyGraphSetting;
+import dev.roanh.kps.config.legacy.LegacyProxyStore;
+import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
-import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.panels.GraphPanel;
 
 /**
@@ -116,38 +117,5 @@ public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 		proxyList.add(ProxySetting.of("graphAverage", showAvg));
 		proxyList.add(new LegacyGraphSetting("graphMode", "INLINE"));
 		proxyList.add(new LegacyGraphSetting("graphPosition", null));
-	}
-	
-	/**
-	 * Small legacy setting that ensures parsing of the legacy
-	 * graphMode setting does not throw a warning that a default
-	 * was used as long as the configured value was set to the
-	 * only currently supported option of inline. In addition this
-	 * setting silently discards the legacy graphPosition setting
-	 * that accompanied the detached graph mode setting.
-	 * @author Roan
-	 */
-	private static final class LegacyGraphSetting extends Setting<String>{
-
-		/**
-		 * Constructs a new legacy graph mode setting.
-		 * @param key The setting key, either graphMode or graphPosition.
-		 * @param required The only accepted value to not trigger a
-		 *        warning that a default value was used. If null all
-		 *        values are accepted without generating a warning.
-		 */
-		private LegacyGraphSetting(String key, String required){
-			super(key, required);
-		}
-
-		@Override
-		public boolean parse(String data){
-			return getDefaultValue() != null && !data.equalsIgnoreCase(getDefaultValue());
-		}
-
-		@Override
-		public void write(IndentWriter out){
-			throw new IllegalStateException("Legacy proxy settings should never be written.");
-		}
 	}
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config;
+package dev.roanh.kps.config.legacy;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.roanh.kps.config.ListItemConstructor;
+import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 
 /**

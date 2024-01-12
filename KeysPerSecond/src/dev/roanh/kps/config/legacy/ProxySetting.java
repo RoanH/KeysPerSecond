@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.config.setting;
+package dev.roanh.kps.config.legacy;
 
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;

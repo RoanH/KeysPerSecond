@@ -24,11 +24,11 @@ import java.util.Map;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
+import dev.roanh.kps.config.legacy.LegacyProxyStore;
+import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.CommandKeySetting;
-import dev.roanh.kps.config.setting.ProxySetting;
 
 /**
  * Setting for all the configurable command keys.

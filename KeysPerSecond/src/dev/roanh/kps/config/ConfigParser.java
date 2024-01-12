@@ -34,7 +34,7 @@ import java.util.function.Function;
 
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
-import dev.roanh.kps.config.setting.ProxySetting;
+import dev.roanh.kps.config.legacy.ProxySetting;
 
 public class ConfigParser{
 	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};

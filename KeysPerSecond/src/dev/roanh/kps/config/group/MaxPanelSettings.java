@@ -20,10 +20,10 @@ package dev.roanh.kps.config.group;
 
 import java.util.List;
 
-import dev.roanh.kps.config.LegacyProxyStore;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.Setting;
-import dev.roanh.kps.config.setting.ProxySetting;
+import dev.roanh.kps.config.legacy.LegacyProxyStore;
+import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.panels.MaxPanel;
 import dev.roanh.kps.ui.dialog.Editor;
 import dev.roanh.kps.ui.dialog.PanelEditor;
