@@ -166,7 +166,7 @@ public class Main{
 	/**
 	 * Graph panel.
 	 */
-	protected static GraphPanel graph = null;
+	protected static List<GraphPanel> graphs = new ArrayList<GraphPanel>();
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
@@ -392,7 +392,7 @@ public class Main{
 					System.out.println("Current keys per second: " + totaltmp);
 				}
 				
-				if(graph != null){
+				for(GraphPanel graph : graphs){
 					graph.addPoint(totaltmp);
 					graph.repaint();
 				}
@@ -931,11 +931,12 @@ public class Main{
 			}
 			
 			//graph panels
-			graph = null;//TODO this logic WILL break with multiple graphs
+			graphs.clear();
 			for(GraphSettings info : config.getGraphSettings()){
-				graph = info.createPanel();
+				GraphPanel graph = info.createPanel();
 				graph.setOpaque(opaque);//TODO this was in the DETACHED only branch, make sure we need it?
 				content.add(graph);
+				graphs.add(graph);
 			}
 			
 			
@@ -1018,7 +1019,7 @@ public class Main{
 		max = 0;
 		hits = 0;
 		tmp.set(0);
-		graph.reset();
+		graphs.forEach(GraphPanel::reset);
 		frame.repaint();
 	}
 

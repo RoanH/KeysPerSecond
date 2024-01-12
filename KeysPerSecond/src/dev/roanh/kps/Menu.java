@@ -58,6 +58,7 @@ import javax.swing.plaf.basic.BasicMenuUI;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
@@ -130,7 +131,7 @@ public class Menu{
 		JMenuItem sresetmax = new JMenuItem("Reset maximum");
 		JMenuItem sresetavg = new JMenuItem("Reset average");
 		JMenuItem sresettot = new JMenuItem("Reset total");
-		JMenuItem sresetgraph = new JMenuItem("Reset graph");
+		JMenuItem sresetgraph = new JMenuItem("Reset graphs");
 		JMenuItem treset = new JMenuItem("Reset key totals");
 		JMenuItem configkeys = new JMenuItem("Keys");
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
@@ -212,7 +213,7 @@ public class Menu{
 			Main.hits = 0;
 		});
 		sresetgraph.addActionListener((e)->{
-			Main.graph.reset();
+			Main.graphs.forEach(GraphPanel::reset);
 		});
 		commandkeys.addActionListener((e)->{
 			CommandKeysDialog.configureCommandKeys(Main.config.getCommands());

@@ -46,6 +46,7 @@ import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.group.ThemeSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
+import dev.roanh.kps.config.setting.LegacyPanelShowSetting;
 import dev.roanh.kps.config.setting.ProxySetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
 import dev.roanh.kps.layout.LayoutPosition;
@@ -220,6 +221,12 @@ public class Configuration{
 			TotalPanelSettings total = new TotalPanelSettings();
 			total.collectLegacyProxies(settings);
 			panels.add(total);
+			
+			settings.add(new LegacyPanelShowSetting("showMax", panels, max));
+			settings.add(new LegacyPanelShowSetting("showAvg", panels, avg));
+			settings.add(new LegacyPanelShowSetting("showCur", panels, current));
+			settings.add(new LegacyPanelShowSetting("showTotal", panels, total));
+			settings.add(new LegacyPanelShowSetting("graphEnabled", graphs, graph));
 		}
 		
 		return settings;
