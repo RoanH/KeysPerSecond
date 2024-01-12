@@ -138,12 +138,12 @@ public class KeyPanelSettings extends PanelSettings{
 		}else{
 			String name = "";
 			
-			if(CommandKeys.hasAlt(extendedCode)){
-				name += "a";
-			}
-
 			if(CommandKeys.hasCtrl(extendedCode)){
 				name += "c";
+			}
+			
+			if(CommandKeys.hasAlt(extendedCode)){
+				name += "a";
 			}
 
 			if(CommandKeys.hasShift(extendedCode)){
