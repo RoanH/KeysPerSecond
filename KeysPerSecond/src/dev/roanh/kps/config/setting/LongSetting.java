@@ -21,10 +21,27 @@ package dev.roanh.kps.config.setting;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
+/**
+ * Long setting implementation.
+ * @author Roan
+ */
 public class LongSetting extends Setting<Long>{
+	/**
+	 * The minimum valid value.
+	 */
 	private final long min;
+	/**
+	 * The maximum valid value.
+	 */
 	private final long max;
 	
+	/**
+	 * Constructs a new long setting.
+	 * @param key The setting key to associate the value with.
+	 * @param min The minimum allowed value.
+	 * @param max The maximum allowed value.
+	 * @param defaultValue The default value for this setting.
+	 */
 	public LongSetting(String key, long min, long max, long defaultValue){
 		super(key, defaultValue);
 		this.min = min;

@@ -21,10 +21,27 @@ package dev.roanh.kps.config.setting;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
+/**
+ * Integer setting implementation.
+ * @author Roan
+ */
 public class IntSetting extends Setting<Integer>{
+	/**
+	 * The minimum valid value.
+	 */
 	private final int min;
+	/**
+	 * The maximum valid value.
+	 */
 	private final int max;
 	
+	/**
+	 * Constructs a new integer setting.
+	 * @param key The setting key to associate the value with.
+	 * @param min The minimum allowed value.
+	 * @param max The maximum allowed value.
+	 * @param defaultValue The default value for this setting.
+	 */
 	public IntSetting(String key, int min, int max, int defaultValue){
 		super(key, defaultValue);
 		this.min = min;

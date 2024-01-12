@@ -21,8 +21,17 @@ package dev.roanh.kps.config.setting;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
+/**
+ * Boolean setting implementation.
+ * @author Roan
+ */
 public class BooleanSetting extends Setting<Boolean>{
 
+	/**
+	 * Constructs a new boolean setting with the given key and default value.
+	 * @param key The setting key to associate the value with.
+	 * @param defaultValue The default value for this setting.
+	 */
 	public BooleanSetting(String key, boolean defaultValue){
 		super(key, defaultValue);
 	}
