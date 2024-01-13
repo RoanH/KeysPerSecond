@@ -22,40 +22,92 @@ import java.awt.Color;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Class representing a theme color.
+ * @author Roan
+ */
 public class ThemeColor{
+	/**
+	 * The RBG component of this color.
+	 */
 	private final Color color;
+	/**
+	 * The alpha component of this color.
+	 */
 	private final float alpha;
 	
+	/**
+	 * Constructs a new theme color.
+	 * @param rgb The RGB component of this color.
+	 * @param alpha The alpha component of this color (0 - 255).
+	 */
 	public ThemeColor(int rgb, int alpha){
 		this(rgb, alpha / 255.0F);
 	}
 	
+	/**
+	 * Constructs a new theme color.
+	 * @param rgb The RGB component of this color.
+	 * @param alpha The alpha component of this color (0 - 1).
+	 */
 	public ThemeColor(int rgb, float alpha){
 		color = new Color(rgb);
 		this.alpha = alpha;
 	}
 	
+	/**
+	 * Constructs a new theme color.
+	 * @param r The red component of this color (0 - 255).
+	 * @param g The green component of this color (0 - 255).
+	 * @param b The blue component of this color (0 - 255).
+	 * @param alpha The alpha component of this color (0 - 255).
+	 */
 	public ThemeColor(int r, int g, int b, int alpha){
 		this(r, g, b, alpha / 255.0F);
 	}
 	
+	/**
+	 * Constructs a new theme color.
+	 * @param r The red component of this color (0 - 255).
+	 * @param g The green component of this color (0 - 255).
+	 * @param b The blue component of this color (0 - 255).
+	 * @param alpha The alpha component of this color (0 - 1).
+	 */
 	public ThemeColor(int r, int g, int b, float alpha){
 		color = new Color(r, g, b);
 		this.alpha = alpha;
 	}
 	
+	/**
+	 * Gets the RGB component of this color.
+	 * @return The RGB component of this color.
+	 */
 	public Color getColor(){
 		return color;
 	}
 	
+	/**
+	 * Gets the alpha component of this color
+	 * @return The alpha component of this color.
+	 */
 	public float getAlpha(){
 		return alpha;
 	}
 	
+	/**
+	 * Gets the RGB component of this color.
+	 * @return The RGB component of this color.
+	 */
 	public int getRGB(){
 		return color.getRGB() & 0xFFFFFF;
 	}
 	
+	/**
+	 * Converts this color to a HEX string in the format
+	 * RRGGBBAA, where the alpha part will be omitted if
+	 * the alpha value is equal to 255 (max opacity).
+	 * @return A HEX string for this color.
+	 */
 	public String toHex(){
 		int alpha = Math.round(this.alpha * 255.0F);
 		String rgb = String.format("%6s", Integer.toHexString(getRGB())).replace(' ', '0').toUpperCase(Locale.ROOT);
