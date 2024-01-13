@@ -20,13 +20,9 @@ package dev.roanh.kps;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +39,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -51,45 +46,27 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import com.github.kwhat.jnativehook.NativeHookException;
 
 import dev.roanh.kps.config.Configuration;
-import dev.roanh.kps.config.PanelType;
-import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
-import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
-import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
-import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
-import dev.roanh.kps.config.group.TotalPanelSettings;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.GraphPanel;
-import dev.roanh.kps.ui.dialog.ColorDialog;
-import dev.roanh.kps.ui.dialog.CommandKeysDialog;
-import dev.roanh.kps.ui.dialog.KeysDialog;
-import dev.roanh.kps.ui.dialog.LayoutDialog;
 import dev.roanh.kps.ui.dialog.MainDialog;
-import dev.roanh.kps.ui.dialog.StatsSavingDialog;
-import dev.roanh.kps.ui.dialog.UpdateRateDialog;
 import dev.roanh.kps.ui.listener.CloseListener;
-import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.ExclamationMarkPath;
 import dev.roanh.util.Util;
@@ -545,295 +522,6 @@ public class Main{
 		return -button;
 	}
 
-	/**
-	 * Asks the user for a configuration
-	 * though a series of dialogs
-	 * These dialogs also provide the
-	 * option of saving or loading an
-	 * existing configuration
-	 */
-	private static final void configure(){
-		JPanel form = new JPanel(new BorderLayout());
-		JPanel boxes = new JPanel(new GridLayout(11, 0));
-		JPanel labels = new JPanel(new GridLayout(11, 0));
-		JCheckBox cmax = new JCheckBox();
-		JCheckBox cavg = new JCheckBox();
-		JCheckBox ccur = new JCheckBox();
-		JCheckBox ckey = new JCheckBox();
-		JCheckBox cgra = new JCheckBox();
-		JCheckBox ctop = new JCheckBox();
-		JCheckBox ccol = new JCheckBox();
-		JCheckBox callKeys = new JCheckBox();
-		JCheckBox callButtons = new JCheckBox();
-		JCheckBox ctot = new JCheckBox();
-		JCheckBox cmod = new JCheckBox();
-		cmax.setSelected(true);
-		cavg.setSelected(true);
-		ccur.setSelected(true);
-		ckey.setSelected(true);
-		JLabel lmax = new JLabel("Show maximum: ");
-		JLabel lavg = new JLabel("Show average: ");
-		JLabel lcur = new JLabel("Show current: ");
-		JLabel lkey = new JLabel("Show keys");
-		JLabel lgra = new JLabel("Show graph: ");
-		JLabel ltop = new JLabel("Overlay mode: ");
-		JLabel lcol = new JLabel("Custom colours: ");
-		JLabel lallKeys = new JLabel("Track all keys");
-		JLabel lallButtons = new JLabel("Track all buttons");
-		JLabel ltot = new JLabel("Show total");
-		JLabel lmod = new JLabel("Key-modifier tracking");
-		ltop.setToolTipText("Requires you to run osu! out of full screen mode, known to not (always) work with the wine version of osu!");
-		boxes.add(cmax);
-		boxes.add(cavg);
-		boxes.add(ccur);
-		boxes.add(ctot);
-		boxes.add(ckey);
-		boxes.add(cgra);
-		boxes.add(ctop);
-		boxes.add(ccol);
-		boxes.add(callKeys);
-		boxes.add(callButtons);
-		boxes.add(cmod);
-		labels.add(lmax);
-		labels.add(lavg);
-		labels.add(lcur);
-		labels.add(ltot);
-		labels.add(lkey);
-		labels.add(lgra);
-		labels.add(ltop);
-		labels.add(lcol);
-		labels.add(lallKeys);
-		labels.add(lallButtons);
-		labels.add(lmod);
-		ctop.addActionListener((e)->{
-			config.setOverlayMode(ctop.isSelected());
-		});
-		callKeys.addActionListener((e)->{
-			config.setTrackAllKeys(callKeys.isSelected());
-		});
-		callButtons.addActionListener((e)->{
-			config.setTrackAllButtons(callButtons.isSelected());
-		});
-		cmax.addActionListener((e)->{
-			config.showMax = cmax.isSelected();
-		});
-		cavg.addActionListener((e)->{
-			config.showAvg = cavg.isSelected();
-		});
-		ccur.addActionListener((e)->{
-			config.showCur = ccur.isSelected();
-		});
-		cgra.addActionListener((e)->{
-			config.showGraph = cgra.isSelected();
-		});
-		ccol.addActionListener((e)->{
-			config.getTheme().setCustomColorsEnabled(ccol.isSelected());
-		});
-		ckey.addActionListener((e)->{
-			config.setShowKeys(ckey.isSelected());
-		});
-		ctot.addActionListener((e)->{
-			config.showTotal = ctot.isSelected();
-		});
-		cmod.addActionListener((e)->{
-			config.setKeyModifierTrackingEnabled(cmod.isSelected());
-		});
-		JPanel options = new JPanel();
-		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));
-		options.add(labels);
-		options.add(boxes);
-		JPanel buttons = new JPanel(new GridLayout(10, 1));
-		JButton save = new JButton("Save config");
-		JButton addkey = new JButton("Add key");
-		JButton load = new JButton("Load config");
-		JButton updaterate = new JButton("Update rate");
-		JButton cmdkeys = new JButton("Commands");
-		JButton graph = new JButton("Graph");
-		graph.setEnabled(false);
-		cgra.addActionListener((e)->{
-			graph.setEnabled(cgra.isSelected());
-			graph.repaint();
-		});
-		JButton color = new JButton("Colours");
-//		color.setEnabled(false);
-		ccol.addActionListener((e)->{
-//			color.setEnabled(ccol.isSelected());
-//			color.repaint();
-		});
-		JButton precision = new JButton("Precision");
-		JButton layout = new JButton("Layout");
-		JButton autoSave = new JButton("Stats saving");
-		buttons.add(addkey);
-		buttons.add(load);
-		buttons.add(save);
-		buttons.add(graph);
-		buttons.add(updaterate);
-		buttons.add(color);
-		buttons.add(precision);
-		buttons.add(autoSave);
-		buttons.add(cmdkeys);
-		buttons.add(layout);
-		form.add(options, BorderLayout.CENTER);
-		options.setBorder(BorderFactory.createTitledBorder("General"));
-		buttons.setBorder(BorderFactory.createTitledBorder("Configuration"));
-		JPanel all = new JPanel(new BorderLayout());
-		all.add(options, BorderLayout.LINE_START);
-		all.add(buttons, BorderLayout.LINE_END);
-		form.add(all, BorderLayout.CENTER);
-		layout.addActionListener((e)->{
-			SettingList<SpecialPanelSettings> panels = Main.config.getPanels();
-			
-			//TODO this strategy is super bad
-			
-			if(panels.contains(PanelType.AVG, SpecialPanelSettings::getType)){
-				if(!cavg.isSelected()){
-					panels.removeIf(p->p.getType() == PanelType.AVG);
-				}
-			}else{
-				if(cavg.isSelected()){
-					panels.add(new AveragePanelSettings());
-				}
-			}
-			
-			if(panels.contains(PanelType.CURRENT, SpecialPanelSettings::getType)){
-				if(!cavg.isSelected()){
-					panels.removeIf(p->p.getType() == PanelType.CURRENT);
-				}
-			}else{
-				if(cavg.isSelected()){
-					panels.add(new CurrentPanelSettings());
-				}
-			}
-			
-			if(panels.contains(PanelType.MAX, SpecialPanelSettings::getType)){
-				if(!cavg.isSelected()){
-					panels.removeIf(p->p.getType() == PanelType.MAX);
-				}
-			}else{
-				if(cavg.isSelected()){
-					panels.add(new MaxPanelSettings());
-				}
-			}
-			
-			if(panels.contains(PanelType.TOTAL, SpecialPanelSettings::getType)){
-				if(!cavg.isSelected()){
-					panels.removeIf(p->p.getType() == PanelType.TOTAL);
-				}
-			}else{
-				if(cavg.isSelected()){
-					panels.add(new TotalPanelSettings());
-				}
-			}
-			
-			SettingList<GraphSettings> graphs = Main.config.getGraphSettings();
-			if(cgra.isSelected()){
-				if(graphs.size() == 0){
-					graphs.add(new GraphSettings());
-				}
-			}else{
-				if(graphs.size() != 0){
-					graphs.remove(0);
-				}
-			}
-			
-			LayoutDialog.configureLayout(false);
-		});
-		cmdkeys.addActionListener((e)->{
-			CommandKeysDialog.configureCommandKeys(config.getCommands());
-		});
-		precision.addActionListener((e)->{
-//			configurePrecision();
-		});
-		graph.addActionListener((e)->{
-//			configureGraph();
-		});
-		addkey.addActionListener((e)->{
-			KeysDialog.configureKeys(config.getKeySettings(), false);
-		});
-		color.addActionListener((e)->{
-			ColorDialog.configureColors(config.getTheme(), false);
-		});
-		save.addActionListener((e)->{
-			config.saveConfig(false);
-		});
-		load.addActionListener((e)->{
-			if(!Configuration.loadConfiguration()){
-				return;
-			}
-
-			cmax.setSelected(config.showMax);
-			ccur.setSelected(config.showCur);
-			cavg.setSelected(config.showAvg);
-			cgra.setSelected(config.showGraph);
-			if(config.showGraph){
-				graph.setEnabled(true);
-			}
-//			ccol.setSelected(config.hasCustomColors());
-//			if(config.hasCustomColors()){
-				color.setEnabled(true);
-//			}
-			callKeys.setSelected(config.isTrackAllKeys());
-			callButtons.setSelected(config.isTrackAllButtons());
-			ckey.setSelected(config.showKeys());
-			ctop.setSelected(config.isOverlayMode());
-			ctot.setSelected(config.showTotal);
-			cmod.setSelected(config.isKeyModifierTrackingEnabled());
-		});
-		updaterate.addActionListener((e)->{
-			UpdateRateDialog.configureUpdateRate();
-		});
-		autoSave.addActionListener((e)->{
-			StatsSavingDialog.configureStatsSaving(Main.config.getStatsSavingSettings(), false);
-		});
-		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", VERSION));
-		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
-		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
-		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
-		links.add(forum);
-		links.add(git);
-		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
-		git.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
-		info.add(links);
-		form.add(info, BorderLayout.PAGE_END);
-		
-		JButton ok = new JButton("OK");
-		JButton exit = new JButton("Exit");
-		exit.addActionListener(e->exit());
-		
-		CountDownLatch latch = new CountDownLatch(1);
-		ok.addActionListener(e->latch.countDown());
-		
-		JPanel bottomButtons = new JPanel();
-		bottomButtons.add(ok);
-		bottomButtons.add(exit);
-		
-		JPanel dialog = new JPanel(new BorderLayout());
-		dialog.add(form, BorderLayout.CENTER);
-		dialog.add(bottomButtons, BorderLayout.PAGE_END);
-		
-		dialog.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
-		JFrame conf = new JFrame("KeysPerSecond");
-		conf.add(dialog);
-		conf.pack();
-		conf.setResizable(false);
-		conf.setLocationRelativeTo(null);
-		List<Image> icons = new ArrayList<Image>();
-		icons.add(icon);
-		icons.add(iconSmall);
-		conf.setIconImages(icons);
-		conf.addWindowListener(new CloseListener());
-		conf.setVisible(true);
-		
-		try{
-			latch.await();
-		}catch(InterruptedException e1){
-		}
-		conf.setVisible(false);
-		conf.dispose();
-	}
-	
 	/**
 	 * Changes the update rate
 	 * @param newRate The new update rate
