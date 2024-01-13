@@ -18,13 +18,33 @@
  */
 package dev.roanh.kps.config.setting;
 
+/**
+ * Precision setting used to format real numbers.
+ * @author Roan
+ */
 public class PrecisionSetting extends IntSetting{
+	/**
+	 * The format string used for formatting.
+	 */
 	private String format;
 
+	/**
+	 * Constructs a new precision setting.
+	 * @param key The setting key.
+	 * @param min The minimum precision value.
+	 * @param max The maximum precision value.
+	 * @param defaultValue The default precision value.
+	 */
 	public PrecisionSetting(String key, int min, int max, int defaultValue){
 		super(key, min, max, defaultValue);
 	}
 	
+	/**
+	 * Formats the given double value according to
+	 * the precision value configured for this setting.
+	 * @param value The value to format.
+	 * @return The formatted value.
+	 */
 	public String format(double value){
 		return String.format(format, value);
 	}
