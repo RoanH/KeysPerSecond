@@ -137,7 +137,7 @@ public class MainDialog extends JPanel{
 		
 		//about
 		JPanel aboutPanel = new JPanel(new BorderLayout());
-		aboutPanel.setBorder(BorderFactory.createTitledBorder("About"));
+		aboutPanel.setBorder(BorderFactory.createTitledBorder("Help"));
 		JButton about = new JButton("About");
 		aboutPanel.add(about);
 		about.addActionListener(e->AboutDialog.showAbout());
@@ -166,9 +166,9 @@ public class MainDialog extends JPanel{
 			
 			JPanel labels = new JPanel(new GridLayout(4, 0));
 			labels.add(new JLabel("Overlay mode: "));
-			labels.add(new JLabel("Track all keys"));
-			labels.add(new JLabel("Track all buttons"));
-			labels.add(new JLabel("Key-modifier tracking"));
+			labels.add(new JLabel("Track all keys: "));
+			labels.add(new JLabel("Track all buttons: "));
+			labels.add(new JLabel("Key-modifier tracking: "));
 			add(labels, BorderLayout.CENTER);
 			
 			JPanel boxes = new JPanel(new GridLayout(4, 0));
