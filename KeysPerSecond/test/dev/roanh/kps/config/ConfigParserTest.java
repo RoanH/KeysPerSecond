@@ -21,12 +21,15 @@ package dev.roanh.kps.config;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.Point;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Iterator;
+
+import javax.swing.JFrame;
 
 import org.junit.jupiter.api.Test;
 
@@ -62,6 +65,11 @@ public class ConfigParserTest{
 		assertEquals(100, config.getUpdateRateMs());
 		assertFalse(config.isKeyModifierTrackingEnabled());
 		
+		//position
+		JFrame frame = new JFrame();
+		config.applyFramePosition(frame);
+		assertEquals(new Point(100, 90), frame.getLocation());
+		
 		//theme
 		ThemeSettings theme = config.getTheme();
 		assertFalse(theme.hasCustomColors());
@@ -75,9 +83,9 @@ public class ConfigParserTest{
 		CommandSettings commands = config.getCommands();
 
 		CommandKeySetting cmd = commands.getCommandResetStats();
-		assertEquals(1114137, cmd.getValue());
-		assertTrue(cmd.matches(25));
-		assertEquals("Ctrl + P", cmd.toDisplayString());
+		assertNull(cmd.getValue());
+		assertFalse(cmd.matches(25));
+		assertEquals("Unbound", cmd.toDisplayString());
 
 		cmd = commands.getCommandExit();
 		assertEquals(1114134, cmd.getValue());
@@ -473,6 +481,154 @@ public class ConfigParserTest{
 		assertEquals(RenderingMode.VERTICAL, key2.getRenderingMode());
 		assertTrue(key2.isVisible());
 		assertEquals("S", key2.getName());
+	}
+	
+	@Test
+	public void fullTest4() throws IOException{
+		ConfigParser parser = ConfigParser.parse(Paths.get("test/config88nodefault.kps"));
+		assertFalse(parser.wasDefaultUsed());
+		assertEquals(new Version(8, 8), parser.getVersion());
+		
+		Configuration config = parser.getConfig();
+		
+		//general
+		assertTrue(config.isOverlayMode());
+		assertTrue(config.isTrackAllKeys());
+		assertTrue(config.isTrackAllButtons());
+		assertEquals(250, config.getUpdateRateMs());
+		assertTrue(config.isKeyModifierTrackingEnabled());
+		
+		//position
+		JFrame frame = new JFrame();
+		config.applyFramePosition(frame);
+		assertEquals(new Point(100, 90), frame.getLocation());
+		
+		//theme
+		ThemeSettings theme = config.getTheme();
+		assertTrue(theme.hasCustomColors());
+		assertEquals(new ThemeColor(1, 2, 3, 0), theme.getForeground());
+		assertEquals(new ThemeColor(104, 105, 106, 0.5F), theme.getBackground());
+
+		//commands
+		CommandKeys.isAltDown = true;
+		CommandKeys.isCtrlDown = false;
+		CommandSettings commands = config.getCommands();
+
+		CommandKeySetting cmd = commands.getCommandResetStats();
+		assertNull(cmd.getValue());
+		assertFalse(cmd.matches(25));
+		assertEquals("Unbound", cmd.toDisplayString());
+
+		cmd = commands.getCommandExit();
+		assertTrue(cmd.matches(2));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandResetTotals();
+		assertTrue(cmd.matches(3));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandHide();
+		assertTrue(cmd.matches(4));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandPause();
+		assertTrue(cmd.matches(5));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+
+		cmd = commands.getCommandReload();
+		assertTrue(cmd.matches(6));
+		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
+		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+		
+		//layout
+		assertEquals(34, config.getCellSize());
+		assertEquals(4, config.getBorderOffset());
+
+		//stats
+		StatsSavingSettings stats = config.getStatsSavingSettings();
+		assertTrue(stats.isAutoSaveEnabled());
+		assertEquals("C:\\Users\\test", stats.getAutoSaveDestination());
+		assertEquals("test", stats.getAutoSaveFormat());
+		assertEquals(100, stats.getAutoSaveInterval());
+		assertTrue(stats.isSaveOnExitEnabled());
+		assertTrue(stats.isLoadOnLaunchEnabled());
+		assertEquals("C:\\Users\\RoanH\\alsotest", stats.getSaveFile());
+		
+		//graphs
+		assertEquals(1, config.getGraphSettings().size());
+		GraphSettings graph = config.getGraphSettings().get(0);
+		assertEquals(1, graph.getLayoutX());
+		assertEquals(2, graph.getLayoutY());
+		assertEquals(5, graph.getLayoutWidth());
+		assertEquals(8, graph.getLayoutHeight());
+		assertFalse(graph.isAverageVisible());
+		assertEquals(45, graph.getBacklog());
+		
+		//special panels
+		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
+		
+		MaxPanelSettings maxSettings = assertInstanceOf(MaxPanelSettings.class, panels.next());
+		assertEquals(6, maxSettings.getLayoutX());
+		assertEquals(3, maxSettings.getLayoutY());
+		assertEquals(5, maxSettings.getLayoutWidth());
+		assertEquals(1, maxSettings.getLayoutHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, maxSettings.getRenderingMode());
+		assertEquals("NMAX", maxSettings.getName());
+		
+		AveragePanelSettings avgSettings = assertInstanceOf(AveragePanelSettings.class, panels.next());
+		assertEquals(9, avgSettings.getLayoutX());
+		assertEquals(8, avgSettings.getLayoutY());
+		assertEquals(7, avgSettings.getLayoutWidth());
+		assertEquals(6, avgSettings.getLayoutHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, avgSettings.getRenderingMode());
+		assertEquals("average", avgSettings.getName());
+		assertEquals(2, avgSettings.getPrecision());
+		
+		CurrentPanelSettings curSettings = assertInstanceOf(CurrentPanelSettings.class, panels.next());
+		assertEquals(0, curSettings.getLayoutX());
+		assertEquals(9, curSettings.getLayoutY());
+		assertEquals(4, curSettings.getLayoutWidth());
+		assertEquals(5, curSettings.getLayoutHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, curSettings.getRenderingMode());
+		assertEquals("kps", curSettings.getName());//technically 'CUR' historically
+		
+		TotalPanelSettings totSettings = assertInstanceOf(TotalPanelSettings.class, panels.next());
+		assertEquals(1, totSettings.getLayoutX());
+		assertEquals(1, totSettings.getLayoutY());
+		assertEquals(5, totSettings.getLayoutWidth());
+		assertEquals(2, totSettings.getLayoutHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, totSettings.getRenderingMode());
+		assertEquals("Total Panel", totSettings.getName());
+		
+		assertFalse(panels.hasNext());
+		
+		//keys
+		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		assertEquals(2, keys.size());
+		
+		KeyPanelSettings key1 = keys.get(0);
+		assertEquals(1048606, key1.getKeyCode());
+		assertEquals(13, key1.getLayoutX());
+		assertEquals(0, key1.getLayoutY());
+		assertEquals(2, key1.getLayoutWidth());
+		assertEquals(3, key1.getLayoutHeight());
+		assertEquals(RenderingMode.VALUE_ONLY, key1.getRenderingMode());
+		assertTrue(key1.isVisible());
+		assertEquals("A", key1.getName());
+		
+		KeyPanelSettings key2 = keys.get(1);
+		assertEquals(1048607, key2.getKeyCode());
+		assertEquals(12, key2.getLayoutX());
+		assertEquals(9, key2.getLayoutY());
+		assertEquals(6, key2.getLayoutWidth());
+		assertEquals(7, key2.getLayoutHeight());
+		assertEquals(RenderingMode.VERTICAL, key2.getRenderingMode());
+		assertFalse(key2.isVisible());
+		assertEquals("B", key2.getName());
 	}
 	
 //	//TODO

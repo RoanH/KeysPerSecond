@@ -11,6 +11,9 @@ updateRate: 100
 precision: 0
 enableKeyModifierCombinations: false
 
+# Position
+position: [x=100,y=90]
+
 # Graph
 graphEnabled: true
 graphBacklog: 1800

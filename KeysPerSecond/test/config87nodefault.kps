@@ -26,7 +26,7 @@ foregroundOpacity: 0.0
 backgroundOpacity: 0.5
 
 # Command keys
-keyResetStats: [keycode=1,ctrl=false,alt=true]
+keyResetStats: unbound
 keyExit: [keycode=2,ctrl=false,alt=true]
 keyResetTotals: [keycode=3,ctrl=false,alt=true]
 keyHide: [keycode=4,ctrl=false,alt=true]
