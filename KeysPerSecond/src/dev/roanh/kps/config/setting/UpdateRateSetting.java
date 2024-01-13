@@ -22,8 +22,18 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.UpdateRate;
 
+/**
+ * Setting for update rates.
+ * @author Roan
+ * @see UpdateRate
+ */
 public class UpdateRateSetting extends Setting<UpdateRate>{
 
+	/**
+	 * Constructs a new update rate setting.
+	 * @param key The configuration setting key.
+	 * @param defaultValue The default setting value.
+	 */
 	public UpdateRateSetting(String key, UpdateRate defaultValue){
 		super(key, defaultValue);
 	}
