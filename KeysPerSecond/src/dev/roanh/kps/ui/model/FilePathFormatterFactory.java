@@ -30,6 +30,10 @@ import javax.swing.JFormattedTextField.AbstractFormatterFactory;
  * @author Roan
  */
 public class FilePathFormatterFactory extends AbstractFormatterFactory{
+	/**
+	 * List of characters that are invalid in file paths.
+	 */
+	private static final char[] INVALID_CHARS = new char[]{'/', '\\', '?', '%', '*', ':', '|', '"', '<', '>'};
 
 	@Override
 	public AbstractFormatter getFormatter(JFormattedTextField tf){
@@ -41,13 +45,12 @@ public class FilePathFormatterFactory extends AbstractFormatterFactory{
 
 			@Override
 			public Object stringToValue(String text) throws ParseException{
-				for(char ch : new char[]{'/', '\\', '?', '%', '*', ':', '|', '"', '<', '>'}){
-					int index = text.indexOf(ch);
-					if(index != -1){
-						throw new ParseException("Invalid character found", index);
-					}
+				int errorPos = computeErrorPos(text);
+				if(errorPos == -1){
+					return text;
+				}else{
+					throw new ParseException("Invalid character found", errorPos);
 				}
-				return text;
 			}
 
 			@Override
@@ -55,5 +58,32 @@ public class FilePathFormatterFactory extends AbstractFormatterFactory{
 				return value instanceof String ? (String)value : null;
 			}
 		};
+	}
+	
+	/**
+	 * Finds the first position in the given path string that
+	 * contains an invalid character for a file path.
+	 * @param path The path to check.
+	 * @return The position of the first invalid character or
+	 *         -1 if there are no invalid characters in the path.
+	 */
+	private static final int computeErrorPos(String path){
+		for(char ch : INVALID_CHARS){
+			int index = path.indexOf(ch);
+			if(index != -1){
+				return index;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Tests if there are any invalid characters in the given file path.
+	 * @param path The file path to check.
+	 * @return True if the file path does not contain any invalid characters.
+	 */
+	public static final boolean isValid(String path){
+		return computeErrorPos(path) == -1;
 	}
 }
