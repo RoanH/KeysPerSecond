@@ -30,9 +30,9 @@ import dev.roanh.kps.config.IndentWriter;
  */
 public class CommandKeySetting extends IntSetting{
 	/**
-	 * Regex used to parse the legacy command format used until v8.8.
-	 * Group 1: command key code.
-	 * Group 2: true/false if ctrl needs to be pressed to activate the command.
+	 * Regex used to parse the legacy command format used until v8.8.<br>
+	 * Group 1: command key code.<br>
+	 * Group 2: true/false if ctrl needs to be pressed to activate the command.<br>
 	 * Group 3: true/false if alt needs to be pressed to activate the command.
 	 */
 	private static final Pattern LEGACY_COMMAND_REGEX = Pattern.compile("\\[keycode=(\\d+),ctrl=(true|false),alt=(true|false)]");

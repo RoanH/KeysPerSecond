@@ -33,15 +33,15 @@ import dev.roanh.kps.config.ThemeColor;
  */
 public class ColorSetting extends Setting<ThemeColor>{
 	/**
-	 * Regex for the legacy RGB color format.
-	 * Group 1: integer red component.
-	 * Group 2: integer green component.
+	 * Regex for the legacy RGB color format.<br>
+	 * Group 1: integer red component.<br>
+	 * Group 2: integer green component.<br>
 	 * Group 3: integer blue component.
 	 */
 	private static final Pattern LEGACY_COLOR_REGEX = Pattern.compile("\\[r=(\\d{1,3}),g=(\\d{1,3}),b=(\\d{1,3})]");
 	/**
-	 * Regex for the new HEX based #RRGGBBAA color format, where alpha is optional.
-	 * Group 1: RGB HEX color.
+	 * Regex for the new HEX based #RRGGBBAA color format, where alpha is optional.<br>
+	 * Group 1: RGB HEX color.<br>
 	 * Group 2: alpha HEX color or null if there is no alpha component (defaults to fully opaque).
 	 */
 	private static final Pattern COLOR_REGEX = Pattern.compile("#([A-F0-9]{6})([A-F0-9]{2})?");

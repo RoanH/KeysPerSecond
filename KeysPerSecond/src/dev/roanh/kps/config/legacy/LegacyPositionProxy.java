@@ -26,11 +26,27 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.group.PositionSettings;
 
+/**
+ * Proxy setting for the legacy position setting.
+ * @author Roan
+ * @see PositionSettings
+ */
 public class LegacyPositionProxy extends Setting<Void>{
-	//1=x/2=y
+	/**
+	 * Legacy format regex:<br>
+	 * Group 1: x coordinate.<br>
+	 * Group 2: y coordinate.
+	 */
 	private static final Pattern LEGACY_POSITION_REGEX = Pattern.compile("\\[x=(\\d+),y=(\\d+)]");
+	/**
+	 * The position settings to proxy to.
+	 */
 	private final PositionSettings position;
 	
+	/**
+	 * Constructs a new legacy position setting proxy with the given target to update.
+	 * @param setting The setting being proxied.
+	 */
 	public LegacyPositionProxy(PositionSettings setting){
 		super("position", null);
 		position = setting;
