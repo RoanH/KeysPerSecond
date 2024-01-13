@@ -28,6 +28,7 @@ import dev.roanh.kps.panels.KeyPanel;
  * @author Roan
  */
 public class Key{
+	//TODO these probably should not all be public/protected...
 	/**
 	 * Whether or not this key is currently pressed
 	 */
