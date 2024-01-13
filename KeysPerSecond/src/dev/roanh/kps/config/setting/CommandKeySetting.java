@@ -26,27 +26,53 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.config.IndentWriter;
 
+/**
+ * Setting for command keys.
+ * @author Roan
+ */
 public class CommandKeySetting extends IntSetting{
 	/**
 	 * Regex used to parse the legacy command format used until v8.8.
 	 * Group 1: command key code.
-	 * Group 2: true/false if Ctrl needs to be pressed to activate the command.
-	 * Group 3: true/false if Alt needs to be pressed to activate the command.
+	 * Group 2: true/false if ctrl needs to be pressed to activate the command.
+	 * Group 3: true/false if alt needs to be pressed to activate the command.
 	 */
 	private static final Pattern LEGACY_COMMAND_REGEX = Pattern.compile("\\[keycode=(\\d+),ctrl=(true|false),alt=(true|false)]");
 
+	/**
+	 * Constructs a new command key setting.
+	 * @param key The setting key.
+	 * @param code The code of the key for this command (not the extended key code).
+	 * @param alt If alt has to be down to trigger the command.
+	 * @param ctrl If ctrl has to be down to trigger the command.
+	 */
 	public CommandKeySetting(String key, int code, boolean alt, boolean ctrl){
 		super(key, Integer.MIN_VALUE, Integer.MAX_VALUE, CommandKeys.getExtendedKeyCode(code, false, ctrl, alt));
 	}
 	
+	/**
+	 * Tests if the given key activates this setting at the moment.
+	 * Note that the result of this subroutine depends both on the
+	 * provided key and whether ctrl and alt are currently pressed.
+	 * @param code The code of the key that was pressed (not the extended key code).
+	 * @return True if the command key matches at the moment.
+	 */
 	public boolean matches(int code){
 		return value != null && value.intValue() == CommandKeys.getExtendedKeyCode(code, false, CommandKeys.isCtrlDown, CommandKeys.isAltDown);
 	}
 	
+	/**
+	 * Unbinds this command key to nothing, meaning it never triggers.
+	 */
 	public void unbind(){
 		update(null);
 	}
 	
+	/**
+	 * Gets a display string for this command key such as
+	 * 'Ctrl + S' or 'Unbound' if the key is not bound.
+	 * @return A display string for the command.
+	 */
 	public String toDisplayString(){
 		if(value == null){
 			return "Unbound";
