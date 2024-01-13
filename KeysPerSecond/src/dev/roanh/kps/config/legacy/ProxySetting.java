@@ -21,9 +21,25 @@ package dev.roanh.kps.config.legacy;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
+/**
+ * Proxy setting used to map old settings onto new settings.
+ * Generally used to set new settings based on the value for
+ * old legacy settings that no longer exist.
+ * @author Roan
+ * @param <T> The type of the setting.
+ */
 public class ProxySetting<T> extends Setting<T>{
+	/**
+	 * All the settings to update with received data.
+	 */
 	private final Setting<T>[] targets;
 	
+	/**
+	 * Constructs a new proxy setting.
+	 * @param key The configuration key.
+	 * @param defaultValue The default value for this setting.
+	 * @param targets A list of target settings to update with received data.
+	 */
 	@SafeVarargs
 	protected ProxySetting(String key, T defaultValue, Setting<T>... targets){
 		super(key, defaultValue);
@@ -44,11 +60,26 @@ public class ProxySetting<T> extends Setting<T>{
 		throw new IllegalStateException("Legacy proxy settings should never be written.");
 	}
 	
+	/**
+	 * Constructs a new proxy setting.
+	 * @param <T> The setting data type.
+	 * @param key The configuration key.
+	 * @param defaultValue The default setting value.
+	 * @param targets A list of settings to update with received data.
+	 * @return The newly constructed proxy setting.
+	 */
 	@SafeVarargs
 	public static final <T> ProxySetting<T> of(String key, T defaultValue, Setting<T>... targets){
 		return new ProxySetting<T>(key, defaultValue, targets);
 	}
 	
+	/**
+	 * Constructs a new proxy setting.
+	 * @param <T> The setting data type.
+	 * @param key The configuration key.
+	 * @param target The target setting to update with received data.
+	 * @return The newly constructed proxy setting.
+	 */
 	public static final <T> ProxySetting<T> of(String key, Setting<T> target){
 		return new ProxySetting<T>(key, target.getDefaultValue(), target);
 	}
