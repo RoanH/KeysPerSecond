@@ -21,8 +21,6 @@ package dev.roanh.kps.config.setting;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-
 import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.config.IndentWriter;
 
@@ -77,7 +75,7 @@ public class CommandKeySetting extends IntSetting{
 		if(value == null){
 			return "Unbound";
 		}else{
-			return (CommandKeys.hasCtrl(value) ? "Ctrl + " : "") + (CommandKeys.hasAlt(value) ? "Alt + " : "") + NativeKeyEvent.getKeyText(value & CommandKeys.KEYCODE_MASK);
+			return CommandKeys.formatExtendedCode(value);
 		}
 	}
 
