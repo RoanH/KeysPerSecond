@@ -18,6 +18,8 @@
  */
 package dev.roanh.kps.ui.model;
 
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.text.ParseException;
 
 import javax.swing.JFormattedTextField;
@@ -27,14 +29,11 @@ import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 /**
  * Formatter factory that creates a formatter that rejects
  * content containing characters that are illegal in file paths.
+ * 
  * @author Roan
  */
 public class FilePathFormatterFactory extends AbstractFormatterFactory{
-	/**
-	 * List of characters that are invalid in file paths.
-	 */
-	private static final char[] INVALID_CHARS = new char[]{'/', '\\', '?', '%', '*', ':', '|', '"', '<', '>'};
-
+	
 	@Override
 	public AbstractFormatter getFormatter(JFormattedTextField tf){
 		return new AbstractFormatter(){
@@ -45,11 +44,10 @@ public class FilePathFormatterFactory extends AbstractFormatterFactory{
 
 			@Override
 			public Object stringToValue(String text) throws ParseException{
-				int errorPos = computeErrorPos(text);
-				if(errorPos == -1){
+				if(isValidPath(text)){
 					return text;
 				}else{
-					throw new ParseException("Invalid character found", errorPos);
+					throw new ParseException("Invalid character found", 0);
 				}
 			}
 
@@ -61,29 +59,16 @@ public class FilePathFormatterFactory extends AbstractFormatterFactory{
 	}
 	
 	/**
-	 * Finds the first position in the given path string that
-	 * contains an invalid character for a file path.
-	 * @param path The path to check.
-	 * @return The position of the first invalid character or
-	 *         -1 if there are no invalid characters in the path.
-	 */
-	private static final int computeErrorPos(String path){
-		for(char ch : INVALID_CHARS){
-			int index = path.indexOf(ch);
-			if(index != -1){
-				return index;
-			}
-		}
-		
-		return -1;
-	}
-	
-	/**
 	 * Tests if there are any invalid characters in the given file path.
 	 * @param path The file path to check.
 	 * @return True if the file path does not contain any invalid characters.
 	 */
-	public static final boolean isValid(String path){
-		return computeErrorPos(path) == -1;
+	public static final boolean isValidPath(String path){
+		try{
+			Paths.get(path);
+			return true;
+		}catch(InvalidPathException e){
+			return false;
+		}
 	}
 }

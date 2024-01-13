@@ -32,7 +32,6 @@ import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.LongSetting;
 import dev.roanh.kps.config.setting.PathSetting;
-import dev.roanh.kps.config.setting.StringSetting;
 
 public class StatsSavingSettings extends SettingGroup implements LegacyProxyStore{
 	/**
@@ -46,7 +45,7 @@ public class StatsSavingSettings extends SettingGroup implements LegacyProxyStor
 	/**
 	 * The date time formatter pattern to use for the statistics auto saving file name.
 	 */
-	private final StringSetting autoFormat = new StringSetting("autoFormat", "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'");
+	private final PathSetting autoFormat = new PathSetting("autoFormat", "'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'");
 	/**
 	 * The statistics auto saving save interval in milliseconds.
 	 */

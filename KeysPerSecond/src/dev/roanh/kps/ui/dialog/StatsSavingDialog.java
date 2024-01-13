@@ -67,7 +67,7 @@ public class StatsSavingDialog extends JPanel{
 
 		JPanel selectFile = new JPanel(new BorderLayout(2, 0));
 		selectFile.add(new JLabel("Save location: "), BorderLayout.LINE_START);
-		selectedFile = new JTextField(config.getSaveFile());
+		selectedFile = new JFormattedTextField(new FilePathFormatterFactory(), config.getSaveFile());
 		selectFile.add(selectedFile, BorderLayout.CENTER);
 		JButton select = new JButton("Select");
 		selectFile.add(select, BorderLayout.LINE_END);
@@ -104,7 +104,7 @@ public class StatsSavingDialog extends JPanel{
 		JPanel extras = new JPanel(new GridLayout(3, 1, 0, 2));
 		
 		JButton seldest = new JButton("Select");
-		ldest = new JTextField(config.getAutoSaveDestination());
+		ldest = new JFormattedTextField(new FilePathFormatterFactory(), config.getAutoSaveDestination());
 		fields.add(ldest);
 		extras.add(seldest);
 		labels.add(new JLabel("Save location: "));

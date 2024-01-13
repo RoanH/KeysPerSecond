@@ -40,7 +40,7 @@ public class PathSetting extends StringSetting{
 	public boolean parse(String data){
 		super.parse(data);
 
-		if(!FilePathFormatterFactory.isValid(getValue())){
+		if(!FilePathFormatterFactory.isValidPath(getValue())){
 			reset();
 			return true;
 		}else{
