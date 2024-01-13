@@ -52,6 +52,7 @@ import javax.swing.SwingUtilities;
 
 import com.github.kwhat.jnativehook.NativeHookException;
 
+import dev.roanh.kps.config.ConfigParser;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
@@ -292,13 +293,7 @@ public class Main{
 	private static final Configuration parseConfiguration(String config) throws IOException{
 		try{
 			Path path = Paths.get(config);
-			if(Files.exists(path)){
-				Configuration toLoad = new Configuration(path);
-				toLoad.loadConfig(path);
-				return toLoad;
-			}else{
-				return null;
-			}
+			return Files.exists(path) ? ConfigParser.read(path) : null;
 		}catch(InvalidPathException e){
 			int index = config.lastIndexOf(File.separatorChar);
 			try{
@@ -321,10 +316,7 @@ public class Main{
 				try(DirectoryStream<Path> files = Files.newDirectoryStream(dir, filter)){
 					Iterator<Path> iter = files.iterator();
 					if(iter.hasNext()){
-						Path path = iter.next();
-						Configuration toLoad = new Configuration(path);
-						toLoad.loadConfig(path);
-						return toLoad;
+						return ConfigParser.read(iter.next());
 					}
 				}
 				
@@ -493,7 +485,7 @@ public class Main{
 			suspended = !suspended;
 			Menu.pause.setSelected(suspended);
 		}else if(commands.getCommandReload().matches(code)){
-			config.reloadConfig();
+			reloadConfig();
 			Menu.resetData();
 		}
 	}
@@ -672,6 +664,20 @@ public class Main{
 	
 	public static void removeKey(int keycode){
 		keys.remove(keycode);
+	}
+	
+	/**
+	 * Reloads the current configuration from file.
+	 */
+	public static void reloadConfig(){
+		if(config.getPath() != null){
+			try{
+				config = ConfigParser.read(config.getPath());
+			}catch(IOException e){
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	static{

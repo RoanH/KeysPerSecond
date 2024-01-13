@@ -134,20 +134,11 @@ public class Configuration{
 	}
 	
 	/**
-	 * Constructs a new configuration object
-	 * @param data The data file
+	 * Constructs a new configuration object.
+	 * @param data The data file.
 	 */
 	public Configuration(Path data){
 		this.data = data;
-		//TODO keep this way of loading data or restore the old two step method that requires a load? -- not having
-		//partially initialised objects are makes more sense to me but would require more codebase changes
-	}
-	
-	//TODO refactor into real logic or remove
-	public static Configuration newLoadTemporary(Path config) throws IOException{
-		Configuration c = new Configuration(config);
-		new ConfigParser().parse(Files.newBufferedReader(config), c);
-		return c;
 	}
 	
 	protected List<Setting<?>> getLegacySettings(Version version){
@@ -339,20 +330,10 @@ public class Configuration{
 	}
 	
 	/**
-	 * Reloads the configuration from file
-	 */
-	public final void reloadConfig(){
-		Configuration toLoad = new Configuration(data);
-		if(data != null){
-			toLoad.load(data);
-			Main.config = toLoad;
-		}
-	}
-	
-	/**
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
 	 */
+	//TODO move this method?
 	public static final boolean loadConfiguration(){
 		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
@@ -365,25 +346,21 @@ public class Configuration{
 			);
 			return false;
 		}
-		Configuration toLoad = new Configuration(saveloc);
-		if(toLoad.load(saveloc)){
-			Dialog.showMessageDialog("Configuration succesfully loaded but some default values were used");
-		}else{
-			Dialog.showMessageDialog("Configuration succesfully loaded");
+		
+		try{
+			ConfigParser parser = ConfigParser.parse(saveloc);
+			if(parser.wasDefaultUsed()){
+				Dialog.showMessageDialog("Configuration loaded succesfully but some default values were used.");
+			}else{
+				Dialog.showMessageDialog("Configuration loaded succesfully.");
+			}
+			
+			Main.config = parser.getConfig();
+			return true;
+		}catch(IOException e){
+			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
+			return false;
 		}
-		Main.config = toLoad;
-		return true;
-	}
-
-	/**
-	 * Loads a configuration file silently without
-	 * reporting non critical exceptions to the user
-	 * @param saveloc The save location
-	 * @return Whether or not the configuration was loaded successfully
-	 */
-	public final boolean loadConfig(Path saveloc){
-		load(saveloc);
-		return true;
 	}
 
 	/**
@@ -391,7 +368,8 @@ public class Configuration{
 	 * @param saveloc The save location
 	 * @return Whether or not some defaults were used
 	 */
-	private final boolean load(Path saveloc){
+	@Deprecated
+	private final boolean loadLegacy(Path saveloc){
 		boolean modified = false;
 		try(BufferedReader in = Files.newBufferedReader(saveloc)){
 			String line;
@@ -482,7 +460,9 @@ public class Configuration{
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
 		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
 		if(saveloc != null){
-			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE))){
+			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc))){
+				
+				
 				
 				if(savepos && Main.frame.isVisible()){
 					out.println("# Position");

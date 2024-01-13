@@ -1,0 +1,91 @@
+version: v8.8
+
+# General
+overlay: false
+trackAllKeys: false
+trackAllButtons: false
+updateRate: 100
+enableKeyModifierCombinations: false
+
+theme:
+  customColors: false
+  foreground: #00FFFF
+  background: #000000
+
+commands:
+  resetStats: 1114137
+  exit: 1114134
+  resetTotals: 1114135
+  hide: 1114133
+  pause: 1114132
+  reload: 1114131
+
+layout:
+  cellSize: 22
+  borderOffset: 2
+
+statsSaving:
+  autoSave: false
+  autoDestination: C:\Users\RoanH
+  autoFormat: 'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'
+  autoInterval: 600000
+  saveOnExit: false
+  loadOnLaunch: false
+  saveFile: C:\Users\RoanH\stats.kpsstats
+
+graphs:
+  - x: 1
+    y: 2
+    width: 5
+    height: 8
+    showAvg: false
+    backlog: 45
+
+panels:
+  - type: max
+    x: 6
+    y: 3
+    width: 5
+    height: 1
+    mode: VALUE_ONLY
+    name: NMAX
+  - type: avg
+    x: 9
+    y: 8
+    width: 7
+    height: 6
+    mode: VALUE_ONLY
+    name: average
+    precision: 2
+  - type: current
+    x: 0
+    y: 9
+    width: 4
+    height: 5
+    mode: VALUE_ONLY
+    name: kps
+  - type: total
+    x: 1
+    y: 1
+    width: 2
+    height: 2
+    mode: VALUE_ONLY
+    name: Total Panel
+
+keys:
+  - keycode: 1048606
+    x: 13
+    y: 0
+    width: 2
+    height: 3
+    mode: VALUE_ONLY
+    visible: true
+    name: A
+  - keycode: 1048607
+    x: 12
+    y: 9
+    width: 6
+    height: 7
+    mode: VALUE_ONLY
+    visible: false
+    name: B

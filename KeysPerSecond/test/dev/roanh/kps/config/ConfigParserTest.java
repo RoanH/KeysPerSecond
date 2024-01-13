@@ -49,12 +49,11 @@ public class ConfigParserTest{
 	
 	@Test
 	public void fullTest1() throws IOException{
-//		Configuration config = new Configuration(Paths.get("test/main.kps"));
-		//TODO currently without calling load this never parses anything using the old logic
+		ConfigParser parser = ConfigParser.parse(Paths.get("test/legacy.kps"));
+		assertFalse(parser.wasDefaultUsed());
+		assertEquals(Version.UNKNOWN, parser.getVersion());
 		
-		Configuration config = Configuration.newLoadTemporary(Paths.get("test/main.kps"));
-		
-		//TODO assert config version
+		Configuration config = parser.getConfig();
 
 		//general
 		assertFalse(config.isOverlayMode());
@@ -233,7 +232,11 @@ public class ConfigParserTest{
 	
 	@Test
 	public void fullTest2() throws IOException{
-		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
+		ConfigParser parser = ConfigParser.parse(Paths.get("test/config88.kps"));
+		assertFalse(parser.wasDefaultUsed());
+		assertEquals(new Version(8, 8), parser.getVersion());
+		
+		Configuration config = parser.getConfig();
 		
 		//general
 		assertFalse(config.isOverlayMode());
@@ -373,7 +376,11 @@ public class ConfigParserTest{
 	
 	@Test
 	public void fullTest3() throws IOException{
-		Configuration config = Configuration.newLoadTemporary(Paths.get("test/nodefault.kps"));
+		ConfigParser parser = ConfigParser.parse(Paths.get("test/config87nodefault.kps"));
+		assertFalse(parser.wasDefaultUsed());
+		assertEquals(new Version(8, 7), parser.getVersion());
+		
+		Configuration config = parser.getConfig();
 		
 		//general
 		assertTrue(config.isOverlayMode());
@@ -468,10 +475,10 @@ public class ConfigParserTest{
 		assertEquals("S", key2.getName());
 	}
 	
-	//TODO
-	public static void main(String[] args) throws IOException{
-		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
-		config.write(new IndentWriter(new PrintWriter(System.out)));
-		System.out.println();
-	}
+//	//TODO
+//	public static void main(String[] args) throws IOException{
+//		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
+//		config.write(new IndentWriter(new PrintWriter(System.out)));
+//		System.out.println();
+//	}
 }

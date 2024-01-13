@@ -20,6 +20,8 @@ package dev.roanh.kps.config;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,37 +29,56 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigParser{
+	private static final int MARK_LIMIT = 10000;
 	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};
 	private static final char[] LIST_ITEM_BODY = new char[]{' ', ' ', ' ', ' '};
 	private static final char[] GROUP_BODY = new char[]{' ', ' '};
-	private Version version;
-	
-	private boolean defaultUsed;//overriden, default used when not specified doesn't count, this is when given values are replaced with safe values deliberately
-	
-	public ConfigParser(){
-		//TODO ?
-	}
-	
-	private Map<String, Setting<?>> settings = new HashMap<String, Setting<?>>();//TODO config#getSettings -- linked hash map would address the trackAll issue
+	private Map<String, Setting<?>> settings = new HashMap<String, Setting<?>>();
 	private Map<String, SettingGroup> groups = new HashMap<String, SettingGroup>();
 	private Map<String, SettingList<? extends SettingGroup>> lists = new HashMap<String, SettingList<? extends SettingGroup>>();
+	private Version version;
+	private boolean defaultUsed;//overriden, default used when not specified doesn't count, this is when given values are replaced with safe values deliberately
+	private Configuration config;
 	
-	//TODO make private again
-	public void parse(BufferedReader in, Configuration config) throws IOException{
-		//map settings to parse
-		for(Setting<?> setting : config.getSettings()){
-			settings.put(setting.getKey(), setting);
+	private ConfigParser(Path path){
+		config = new Configuration(path);
+	}
+	
+	public static Configuration read(Path path) throws IOException{
+		return parse(path).getConfig();
+	}
+	
+	public static ConfigParser parse(Path path) throws IOException{
+		ConfigParser parser = new ConfigParser(path);
+		parser.parse();
+		return parser;
+	}
+	
+	public Version getVersion(){
+		return version;
+	}
+	
+	public Configuration getConfig(){
+		return config;
+	}
+	
+	public boolean wasDefaultUsed(){
+		return defaultUsed;
+	}
+	
+	private void parse() throws IOException{
+		try(BufferedReader in = Files.newBufferedReader(config.getPath())){
+			//read version
+			readVersion(in);
+
+			//read data
+			prepareMaps(version);
+			readData(in);
 		}
-		
-		for(SettingGroup group : config.getSettingGroups()){
-			groups.put(group.getKey(), group);
-		}
-		
-		for(SettingList<? extends SettingGroup> list : config.getSettingLists()){
-			lists.put(list.getKey(), list);
-		}
-		
-		//read version
+	}
+	
+	private void readVersion(BufferedReader in) throws IOException{
+		in.mark(MARK_LIMIT);
 		String line = in.readLine();
 		if(line == null){
 			throw new IOException("Empty config file");
@@ -66,66 +87,76 @@ public class ConfigParser{
 		if(line.startsWith("version:")){
 			version = Version.parse(line.substring(8));
 		}else{
+			in.reset();
 			version = Version.UNKNOWN;
+		}
+	}
+	
+	private void prepareMaps(Version version){
+		//map settings to parse
+		for(Setting<?> setting : config.getSettings()){
+			settings.put(setting.getKey(), setting);
+		}
+
+		for(SettingGroup group : config.getSettingGroups()){
+			groups.put(group.getKey(), group);
+		}
+
+		for(SettingList<? extends SettingGroup> list : config.getSettingLists()){
+			lists.put(list.getKey(), list);
 		}
 		
 		//legacy compatibility
 		for(Setting<?> setting : config.getLegacySettings(version)){
 			settings.put(setting.getKey(), setting);
 		}
-
-		//TODO debug
-		System.out.println("Reading config in format: " + version);
-		
-		//read data
+	}
+	
+	private void readData(BufferedReader in) throws IOException{
+		String line;
 		while((line = in.readLine()) != null){
 			line = line.trim();
 			if(line.startsWith("#") || line.isEmpty()){
 				continue;
 			}
-			
+
 			int mark = line.indexOf(':');
 			if(mark != -1){
 				String key = line.substring(0, mark).trim();
-				
+
 				//direct settings
 				Setting<?> setting = settings.get(key);
 				if(setting != null){
-					System.out.println("Parsing setting: " + setting.getKey());
 					defaultUsed |= setting.parse(line.substring(mark + 1, line.length()).trim());
 					continue;
 				}
-				
+
 				//setting groups
 				SettingGroup group = groups.get(key);
 				if(group != null){
-					System.out.println("Parsing group: " + group.getKey());
 					defaultUsed |= parseGroup(in, group);
 					continue;
 				}
-				
+
 				//setting lists
 				SettingList<? extends SettingGroup> list = lists.get(key);
 				if(list != null){
-					System.out.println("Parsing list: " + list.getKey());
 					defaultUsed |= parseList(in, list);
 					continue;
 				}
 			}
-			
-			//unknown / invalid setting //TODO
-			System.out.println("invalid setting: " + line);
+
+			//unknown / invalid settings just get ignored but do generate a default used warning
 			defaultUsed = true;
 		}
 	}
 	
-	//TODO group parsing and list parsing share way too much logic
 	private static boolean parseGroup(BufferedReader in, SettingGroup target) throws IOException{
 		char[] lead = new char[2];
 		
 		Map<String, String> item = new HashMap<String, String>();
 		while(in.ready()){
-			in.mark(10000);
+			in.mark(MARK_LIMIT);
 			if(in.read(lead, 0, 2) != 2){
 				//end of file hit or not enough group data
 				in.reset();
@@ -163,7 +194,7 @@ public class ConfigParser{
 		boolean defaultUsed = false;
 		List<String> item = null;
 		while(in.ready()){
-			in.mark(10000);
+			in.mark(MARK_LIMIT);
 			if(in.read(lead, 0, 4) != 4){
 				//end of file hit or not enough list data
 				in.reset();
