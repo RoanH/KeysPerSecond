@@ -72,11 +72,7 @@ public class CommandKeySetting extends IntSetting{
 	 * @return A display string for the command.
 	 */
 	public String toDisplayString(){
-		if(value == null){
-			return "Unbound";
-		}else{
-			return CommandKeys.formatExtendedCode(value);
-		}
+		return value == null ? "Unbound" : CommandKeys.formatExtendedCode(value);
 	}
 
 	@Override
