@@ -83,9 +83,9 @@ public class ConfigParserTest{
 		CommandSettings commands = config.getCommands();
 
 		CommandKeySetting cmd = commands.getCommandResetStats();
-		assertNull(cmd.getValue());
-		assertFalse(cmd.matches(25));
-		assertEquals("Unbound", cmd.toDisplayString());
+		assertEquals(1114137, cmd.getValue());
+		assertTrue(cmd.matches(25));
+		assertEquals("Ctrl + P", cmd.toDisplayString());
 
 		cmd = commands.getCommandExit();
 		assertEquals(1114134, cmd.getValue());
@@ -409,9 +409,9 @@ public class ConfigParserTest{
 		CommandSettings commands = config.getCommands();
 
 		CommandKeySetting cmd = commands.getCommandResetStats();
-		assertTrue(cmd.matches(1));
-		assertTrue(CommandKeys.hasAlt(cmd.getValue()));
-		assertFalse(CommandKeys.hasCtrl(cmd.getValue()));
+		assertNull(cmd.getValue());
+		assertFalse(cmd.matches(25));
+		assertEquals("Unbound", cmd.toDisplayString());
 
 		cmd = commands.getCommandExit();
 		assertTrue(cmd.matches(2));
@@ -507,7 +507,7 @@ public class ConfigParserTest{
 		ThemeSettings theme = config.getTheme();
 		assertTrue(theme.hasCustomColors());
 		assertEquals(new ThemeColor(1, 2, 3, 0), theme.getForeground());
-		assertEquals(new ThemeColor(104, 105, 106, 0.5F), theme.getBackground());
+		assertEquals(new ThemeColor(104, 105, 106, 0), theme.getBackground());
 
 		//commands
 		CommandKeys.isAltDown = true;

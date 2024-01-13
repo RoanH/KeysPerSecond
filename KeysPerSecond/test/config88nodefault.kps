@@ -7,14 +7,14 @@ trackAllButtons: true
 updateRate: 250
 enableKeyModifierCombinations: true
 
-position:
+frame:
   x: 100
   y: 90
 
 theme:
   customColors: true
   foreground: #01020300
-  background: #68696A80
+  background: #68696A00
 
 commands:
   resetStats: unbound
@@ -35,7 +35,7 @@ statsSaving:
   autoInterval: 100
   saveOnExit: true
   loadOnLaunch: true
-  saveFile: C:\\Users\\RoanH\\alsotest
+  saveFile: C:\Users\RoanH\alsotest
 
 graphs:
   - x: 1
