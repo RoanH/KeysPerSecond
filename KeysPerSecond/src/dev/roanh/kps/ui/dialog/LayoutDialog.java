@@ -243,6 +243,9 @@ public class LayoutDialog{
 				panels.remove(info);
 				rows.remove(row);
 				revalidate();
+				if(live){
+					Main.reconfigure();
+				}
 			});
 		}
 		
