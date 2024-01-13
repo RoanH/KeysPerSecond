@@ -605,7 +605,7 @@ public enum RenderingMode{
 			font = new Font("Dialog", properties, size);
 			fm = g.getFontMetrics(font);
 			size--;
-		}while(!(getHeight(g, font) <= maxHeight && stringWidth(text, fm) <= maxWidth));
+		}while(!(getHeight(g, font) <= maxHeight && stringWidth(text, fm) <= maxWidth) && size >= 0);
 
 		return font;
 	}
