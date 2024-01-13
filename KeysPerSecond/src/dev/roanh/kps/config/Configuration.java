@@ -126,41 +126,6 @@ public class Configuration{
 	 */
 	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
 	
-	//TODO OLD LOGIC ------------------------
-	
-	//general
-	/**
-	 * Whether or not to show the max value
-	 */
-	@Deprecated
-	public boolean showMax = true;
-	/**
-	 * Whether or not to show the average value
-	 */
-	@Deprecated
-	public boolean showAvg = true;
-	/**
-	 * Whether or not to show the current value
-	 */
-	@Deprecated
-	public boolean showCur = true;
-	/**
-	 * Whether or not to show the keys
-	 */
-	@Deprecated
-	protected boolean showKeys = true;
-	/**
-	 * Whether or not to show the graph
-	 */
-	@Deprecated
-	public boolean showGraph = false;
-	/**
-	 * Whether or not to show the total number of hits
-	 */
-	@Deprecated
-	public boolean showTotal = false;
-
-	
 	public Configuration(){
 		this(null);
 		panels.add(new MaxPanelSettings());
@@ -183,16 +148,6 @@ public class Configuration{
 		Configuration c = new Configuration(config);
 		new ConfigParser().parse(Files.newBufferedReader(config), c);
 		return c;
-	}
-	
-	protected List<Setting<?>> getSettings(){
-		List<Setting<?>> settings = new ArrayList<Setting<?>>();
-		settings.add(overlay);
-		settings.add(trackAllKeys);
-		settings.add(trackAllButtons);
-		settings.add(updateRate);
-		settings.add(enableModifiers);
-		return settings;
 	}
 	
 	protected List<Setting<?>> getLegacySettings(Version version){
@@ -237,6 +192,10 @@ public class Configuration{
 		}
 		
 		return settings;
+	}
+	
+	protected List<Setting<?>> getSettings(){
+		return Arrays.asList(overlay, trackAllKeys, trackAllButtons, updateRate, enableModifiers);
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){
@@ -284,13 +243,6 @@ public class Configuration{
 	}
 	
 	public SettingList<GraphSettings> getGraphSettings(){
-//		if(graphs.size() == 0){//TODO this is a hack
-//			return new GraphSettings();
-//		}
-//		
-//		//TODO consider empty
-//		return graphs.get(0);
-		
 		return graphs;
 	}
 	
@@ -371,27 +323,11 @@ public class Configuration{
 	}
 	
 	/**
-	 * Sets if tracked keys are shown.
-	 * @param show True if tracked key panels should be visible.
-	 */
-	public void setShowKeys(boolean show){
-		showKeys = show;
-	}
-	
-	/**
 	 * Checks if overlay mode is enabled.
 	 * @return True if overlay mode is enabled.
 	 */
 	public boolean isOverlayMode(){
 		return overlay.getValue();
-	}
-	
-	/**
-	 * Checks if tracked keys are shown.
-	 * @return True if tracked key panels are visible.
-	 */
-	public boolean showKeys(){
-		return showKeys;
 	}
 	
 	/**
@@ -472,10 +408,6 @@ public class Configuration{
 				}
 			}
 			
-			
-			
-			
-			
 			//TODO this bit of logic needs to be moved -- probably to the statistics class
 			if(statsSaving.isLoadOnLaunchEnabled()){
 				try{
@@ -486,8 +418,6 @@ public class Configuration{
 				}
 			}
 			
-			
-			
 			in.close();
 			return modified;
 		}catch(Throwable t){
@@ -495,8 +425,6 @@ public class Configuration{
 			return true;
 		}
 	}
-
-	
 
 	/**
 	 * Parses the text representation of the position
@@ -555,94 +483,13 @@ public class Configuration{
 		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
 		if(saveloc != null){
 			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE))){
-				//general
-				out.print("version: ");
-				out.println(Main.VERSION);
-				out.println();
-				out.println("# General");
-				out.println("showMax: " + showMax);
-				out.println("showAvg: " + showAvg);
-				out.println("showCur: " + showCur);
-				out.println("showTotal: " + showTotal);
-				out.println("showKeys: " + showKeys);
-				out.println("overlay: " + overlay);
-				out.println("trackAllKeys: " + trackAllKeys);
-				out.println("trackAllButtons: " + trackAllButtons);
-				out.println("updateRate: " + updateRate);
-//				out.println("precision: " + precision);
-				out.println("enableKeyModifierCombinations: " + enableModifiers);
-				out.println();
-				//advanced
-				out.println("# Graph");
-				out.println("graphEnabled: " + showGraph);
-//				out.println("graphBacklog: " + backlog);
-//				out.println("graphAverage: " + graphAvg);
-				out.println();
-				out.println("# Colors");
-//				out.println("customColors: " + customColors);
-//				out.println("foregroundColor: [r=" + foreground.getRed() + ",g=" + foreground.getGreen() + ",b=" + foreground.getBlue() + "]");
-//				out.println("backgroundColor: [r=" + background.getRed() + ",g=" + background.getGreen() + ",b=" + background.getBlue() + "]");
-//				out.println("foregroundOpacity: " + opacityfg);
-//				out.println("backgroundOpacity: " + opacitybg);
-				out.println();
+				
 				if(savepos && Main.frame.isVisible()){
 					out.println("# Position");
 					out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
 					out.println();
 				}
-//				out.println("# Command keys");
-//				out.println("keyResetStats: " + getCommandResetStats().toSaveString());
-//				out.println("keyExit: " + commandExit.toSaveString());
-//				out.println("keyResetTotals: " + commandResetTotals.toSaveString());
-//				out.println("keyHide: " + commandHide.toSaveString());
-//				out.println("keyPause: " + commandPause.toSaveString());
-//				out.println("keyReload: " + commandReload.toSaveString());
-				out.println();
-				out.println("# Layout");
-//				out.println("maxX: " + maxPanel.getX());
-//				out.println("maxY: " + maxPanel.getY());
-//				out.println("maxWidth: " + maxPanel.getWidth());
-//				out.println("maxHeight: " + maxPanel.getHeight());
-//				out.println("maxMode: " + maxPanel.getRenderingMode().name());
-//				out.println("avgX: " + avgPanel.getX());
-//				out.println("avgY: " + avgPanel.getY());
-//				out.println("avgWidth: " + avgPanel.getWidth());
-//				out.println("avgHeight: " + avgPanel.getHeight());
-//				out.println("avgMode: " + avgPanel.getRenderingMode().name());
-//				out.println("curX: " + curPanel.getX());
-//				out.println("curY: " + curPanel.getY());
-//				out.println("curWidth: " + curPanel.getWidth());
-//				out.println("curHeight: " + curPanel.getHeight());
-//				out.println("curMode: " + curPanel.getRenderingMode().name());
-//				out.println("totX: " + totPanel.getX());
-//				out.println("totY: " + totPanel.getY());
-//				out.println("totWidth: " + totPanel.getWidth());
-//				out.println("totHeight: " + totPanel.getHeight());
-//				out.println("totMode: " + totPanel.getRenderingMode().name());
-//				out.println("graphX: " + graphX);
-//				out.println("graphY: " + graphY);
-//				out.println("graphWidth: " + graphWidth);
-//				out.println("graphHeight: " + graphHeight);
-//				out.println("graphMode: " + graphMode.name());
-//				out.println("cellSize: " + cellSize);
-//				out.println("borderOffset: " + borderOffset);
-				out.println();
-//				out.println("# Stats auto saving");
-//				out.println("autoSaveStats: " + autoSaveStats);
-//				out.println("statsDest: " + statsDest);
-//				out.println("statsFormat: " + statsFormat);
-//				out.println("statsSaveInterval: " + statsSaveInterval);
-//				out.println("saveStatsOnExit: " + saveStatsOnExit);
-//				out.println("loadStatsOnLaunch: " + loadStatsOnLaunch);
-//				out.println("statsSaveFile: " + statsSaveFile);
-				out.println();
-//				out.println("# Keys");
-//				out.println("keys: ");
-//				for(KeyInformation i : keyinfo){
-//					out.println("  - " + i.toString());
-//				}
-				out.close();
-				out.flush();
+
 				Dialog.showMessageDialog("Configuration succesfully saved");
 			}catch(Exception e1){
 				e1.printStackTrace();

@@ -452,7 +452,7 @@ public class Main{
 		
 		if(config.isTrackAllKeys() && key == null){
 //			key = new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code));
-			key = new Key();
+			key = new Key();//TODO this should probably pass alt/ctrl/shift status, technically that is a bug that existed in v8.7 too
 			keys.put(code, key);
 		}
 		
@@ -579,7 +579,7 @@ public class Main{
 			//key panels
 			for(KeyPanelSettings info : config.getKeySettings()){
 				Key key = keys.computeIfAbsent(info.getKeyCode(), code->new Key(info));
-				if(config.showKeys() && info.isVisible()){
+				if(info.isVisible()){
 					content.add(info.createPanel(key));
 				}
 			}
