@@ -53,15 +53,12 @@ public class LegacyPanelShowSetting extends BooleanSetting{
 
 	@Override
 	public boolean parse(String data){
-		if(super.parse(data)){
-			return true;
+		boolean defaultUsed = super.parse(data);
+		
+		if(!getValue()){
+			this.data.remove(item);
 		}
 		
-		if(getValue()){
-			return true;
-		}else{
-			this.data.remove(item);
-			return false;
-		}
+		return defaultUsed;
 	}
 }
