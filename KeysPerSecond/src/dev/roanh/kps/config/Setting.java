@@ -66,22 +66,42 @@ public abstract class Setting<T>{
 	 */
 	public abstract void write(IndentWriter out);
 	
+	/**
+	 * Gets the key identifier for this setting.
+	 * @return The key identifier for this setting.
+	 */
 	public String getKey(){
 		return key;
 	}
 	
+	/**
+	 * Updates this setting with a new value. Note
+	 * that this method does not validate values.
+	 * @param newValue The new value to set.
+	 */
 	public void update(T newValue){
 		value = newValue;
 	}
 	
+	/**
+	 * Resets this setting to its default value.
+	 */
 	public void reset(){
 		value = defaultValue;
 	}
 	
+	/**
+	 * Gets the current value for this setting.
+	 * @return The current value for this setting.
+	 */
 	public T getValue(){
 		return value;
 	}
 	
+	/**
+	 * Gets the default value for this setting.
+	 * @return The default value for this setting.
+	 */
 	public T getDefaultValue(){
 		return defaultValue;
 	}
