@@ -18,52 +18,41 @@
  */
 package dev.roanh.kps.config.legacy;
 
+import java.awt.Point;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
+import dev.roanh.kps.config.group.PositionSettings;
 
-/**
- * Proxy setting used to map old settings onto new settings.
- * Generally used to set new settings based on the value for
- * old legacy settings that no longer exist.
- * @author Roan
- */
-public class ProxySetting extends Setting<Void>{
-	/**
-	 * All the settings to update with received data.
-	 */
-	private final Setting<?>[] targets;
+public class LegacyPositionProxy extends Setting<Void>{
+	//1=x/2=y
+	private static final Pattern LEGACY_POSITION_REGEX = Pattern.compile("\\[x=(\\d+),y=(\\d+)]");
+	private final PositionSettings position;
 	
-	/**
-	 * Constructs a new proxy setting.
-	 * @param key The configuration key.
-	 * @param targets A list of target settings to update with received data.
-	 */
-	private ProxySetting(String key, Setting<?>... targets){
-		super(key, null);
-		this.targets = targets;
+	public LegacyPositionProxy(PositionSettings setting){
+		super("position", null);
+		position = setting;
 	}
 
 	@Override
 	public boolean parse(String data){
-		boolean defaultUsed = false;
-		for(Setting<?> setting : targets){
-			defaultUsed |= setting.parse(data);
+		Matcher m = LEGACY_POSITION_REGEX.matcher(data);
+		if(m.matches()){
+			try{
+				position.update(new Point(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))));
+				return false;
+			}catch(NumberFormatException e){
+				return true;
+			}
+		}else{
+			return true;
 		}
-		return defaultUsed;
 	}
 
 	@Override
 	public void write(IndentWriter out){
 		throw new IllegalStateException("Legacy proxy settings should never be written.");
-	}
-	
-	/**
-	 * Constructs a new proxy setting.
-	 * @param key The configuration key.
-	 * @param targets A list of settings to update with received data.
-	 * @return The newly constructed proxy setting.
-	 */
-	public static final ProxySetting of(String key, Setting<?>... targets){
-		return new ProxySetting(key, targets);
 	}
 }

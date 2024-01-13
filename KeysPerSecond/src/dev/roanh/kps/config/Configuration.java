@@ -19,18 +19,18 @@
 package dev.roanh.kps.config;
 
 import java.awt.Point;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.swing.JFrame;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.Statistics;
@@ -41,6 +41,7 @@ import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
+import dev.roanh.kps.config.group.PositionSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.group.ThemeSettings;
@@ -97,6 +98,7 @@ public class Configuration{
 	 * Whether or not to track all mouse button presses
 	 */
 	private BooleanSetting trackAllButtons = new BooleanSetting("trackAllButtons", false);
+	private PositionSettings position = new PositionSettings();
 	/**
 	 * Default colour scheme settings.
 	 */
@@ -145,7 +147,7 @@ public class Configuration{
 		List<Setting<?>> settings = new ArrayList<Setting<?>>();
 		
 		if(version.isBefore(8, 2)){
-			settings.add(ProxySetting.of("trackAllKeys", false, trackAllKeys, trackAllButtons));
+			settings.add(ProxySetting.of("trackAllKeys", trackAllKeys, trackAllButtons));
 		}
 		
 		if(version.isBefore(8, 8)){
@@ -153,6 +155,7 @@ public class Configuration{
 			commands.collectLegacyProxies(settings);
 			layout.collectLegacyProxies(settings);
 			theme.collectLegacyProxies(settings);
+			position.collectLegacyProxies(settings);
 			
 			GraphSettings graph = new GraphSettings();
 			graph.collectLegacyProxies(settings);
@@ -190,7 +193,7 @@ public class Configuration{
 	}
 	
 	protected List<SettingGroup> getSettingGroups(){
-		return Arrays.asList(theme, commands, layout, statsSaving);
+		return Arrays.asList(position, theme, commands, layout, statsSaving);
 	}
 	
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
@@ -329,6 +332,12 @@ public class Configuration{
 		updateRate.update(rate);
 	}
 	
+	public void applyFramePosition(JFrame frame){
+		if(position.isPresent()){
+			frame.setLocation(position.getLocation());
+		}
+	}
+	
 	/**
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
@@ -356,97 +365,22 @@ public class Configuration{
 			}
 			
 			Main.config = parser.getConfig();
-			return true;
-		}catch(IOException e){
-			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
-			return false;
-		}
-	}
-
-	/**
-	 * Loads a configuration file
-	 * @param saveloc The save location
-	 * @return Whether or not some defaults were used
-	 */
-	@Deprecated
-	private final boolean loadLegacy(Path saveloc){
-		boolean modified = false;
-		try(BufferedReader in = Files.newBufferedReader(saveloc)){
-			String line;
-			while((line = in.readLine()) != null){
-				if(line.startsWith("#") || line.isEmpty()){
-					continue;
-				}
-				String[] args = line.split(":", 2);
-				args[1] = args[1].trim();
-				switch(args[0].trim()){
-				case "position":
-					Main.frame.setLocation(parsePosition(args[1]));
-					break;
-				}
-			}
+			Main.config.applyFramePosition(Main.frame);
 			
-			//TODO this bit of logic needs to be moved -- probably to the statistics class
-			if(statsSaving.isLoadOnLaunchEnabled()){
+			//TODO move logic?
+			if(Main.config.statsSaving.isLoadOnLaunchEnabled()){
 				try{
-					Statistics.loadStats(Paths.get(statsSaving.getSaveFile()));
+					Statistics.loadStats(Paths.get(Main.config.statsSaving.getSaveFile()));
 				}catch(Exception e){
 					e.printStackTrace();
 					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
 				}
 			}
 			
-			in.close();
-			return modified;
-		}catch(Throwable t){
-			t.printStackTrace();
 			return true;
-		}
-	}
-
-	/**
-	 * Parses the text representation of the position
-	 * to it's actual data
-	 * @param data The text data
-	 * @return The position data
-	 */
-	private final Point parsePosition(String data){
-		data = data.replace(" ", "").substring(1, data.length() - 1);
-		String[] args = data.split(",");
-		Point loc = new Point();
-		try{
-			for(String arg : args){
-				if(arg.startsWith("x=")){
-					loc.x = Integer.parseInt(arg.replace("x=", ""));
-				}else if(arg.startsWith("y=")){
-					loc.y = Integer.parseInt(arg.replace("y=", ""));
-				}
-			}
-		}catch(Exception e){
-		}
-		return loc;
-	}
-	
-	//TODO write
-	public void write(IndentWriter out){
-		out.println("version: " + Main.VERSION);
-		out.println();
-		
-		out.println("# General");
-		for(Setting<?> setting : getSettings()){
-			setting.write(out);
-		}
-		
-		//TODO onscreen position
-		
-		for(SettingGroup group : getSettingGroups()){
-			out.println();
-			group.write(out);
-		}
-		
-		for(SettingList<?> list : getSettingLists()){
-			out.println();
-			list.write(out);
+		}catch(IOException e){
+			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
+			return false;
 		}
 	}
 
@@ -461,20 +395,40 @@ public class Configuration{
 		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
 		if(saveloc != null){
 			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc))){
-				
-				
-				
-				if(savepos && Main.frame.isVisible()){
-					out.println("# Position");
-					out.println("position: [x=" + Main.frame.getLocationOnScreen().x + ",y=" + Main.frame.getLocationOnScreen().y + "]");
-					out.println();
-				}
-
-				Dialog.showMessageDialog("Configuration succesfully saved");
+				write(new IndentWriter(out), savepos);
+				Dialog.showMessageDialog("Configuration saved succesfully.");
 			}catch(Exception e1){
 				e1.printStackTrace();
 				Dialog.showErrorDialog("Failed to save the config!");
 			}
+		}
+	}
+
+	private void write(IndentWriter out, boolean pos){
+		out.println("version: " + Main.VERSION);
+		out.println();
+
+		out.println("# General");
+		for(Setting<?> setting : getSettings()){
+			setting.write(out);
+		}
+
+		for(SettingGroup group : getSettingGroups()){
+			if(group == position){
+				if(pos && Main.frame.isVisible()){
+					out.println();
+					position.update(Main.frame.getLocationOnScreen());
+					position.write(out);
+				}
+			}else{
+				out.println();
+				group.write(out);
+			}
+		}
+
+		for(SettingList<?> list : getSettingLists()){
+			out.println();
+			list.write(out);
 		}
 	}
 }

@@ -31,7 +31,7 @@ import dev.roanh.kps.config.setting.ColorSetting;
  * the alpha of the existing colour instead of fully replacing it.
  * @author Roan
  */
-public class LegacyColorProxy extends Setting<ThemeColor>{
+public class LegacyColorProxy extends Setting<Void>{
 	/**
 	 * The color setting to update with parsed data.
 	 */
@@ -43,7 +43,7 @@ public class LegacyColorProxy extends Setting<ThemeColor>{
 	 * @param setting The setting to update with parsed values.
 	 */
 	public LegacyColorProxy(String key, ColorSetting setting){
-		super(key, setting.getDefaultValue());
+		super(key, null);
 		this.setting = setting;
 	}
 
