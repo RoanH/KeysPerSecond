@@ -24,8 +24,18 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 
+/**
+ * Setting for rendering modes.
+ * @author Roan
+ * @see RenderingMode
+ */
 public class RenderingModeSetting extends Setting<RenderingMode>{
 
+	/**
+	 * Constructs a new rendering mode setting.
+	 * @param key The setting key.
+	 * @param defaultValue The default setting value.
+	 */
 	public RenderingModeSetting(String key, RenderingMode defaultValue){
 		super(key, defaultValue);
 	}
