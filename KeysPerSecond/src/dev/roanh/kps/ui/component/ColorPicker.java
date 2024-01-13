@@ -23,6 +23,7 @@ import java.awt.event.MouseListener;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import javax.swing.BorderFactory;
 import javax.swing.JColorChooser;
 import javax.swing.JPanel;
 
@@ -30,22 +31,34 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.util.Dialog;
 
+/**
+ * Simple color picker implementation.
+ * @author Roan
+ */
 public class ColorPicker extends JPanel implements MouseListener{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 3576402284968096657L;
-	private Supplier<ThemeColor> read;
-	private Consumer<ThemeColor> write;
 	/**
-	 * Whether or not the color chooser is open
+	 * The function to use to read the current color.
 	 */
-	private boolean open = false;
+	private Supplier<ThemeColor> read;
+	/**
+	 * The function to use to save a newly selected color.
+	 */
+	private Consumer<ThemeColor> write;
 	/**
 	 * Color chooser instance
 	 */
 	private final JColorChooser chooser = new JColorChooser();
 	
+	/**
+	 * Constructs a new color picker.
+	 * @param read The function to use to read the current color.
+	 * @param write The function to use to save a newly selected color.
+	 * @param live True if the GUI is already live and updates should be reflected in real time.
+	 */
 	public ColorPicker(Supplier<ThemeColor> read, Consumer<ThemeColor> write, boolean live){
 		this.read = read;
 		this.write = c->{
@@ -55,20 +68,17 @@ public class ColorPicker extends JPanel implements MouseListener{
 			}
 		};
 		
+		setBorder(BorderFactory.createLoweredBevelBorder());
 		setBackground(read.get().getColor());
 		this.addMouseListener(this);
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e){
-		if(!open){
-			open = true;
-			chooser.setColor(getBackground());
-			if(Dialog.showSaveDialog(chooser)){
-				setBackground(chooser.getColor());
-				write.accept(new ThemeColor(chooser.getColor().getRGB(), read.get().getAlpha()));
-			}
-			open = false;
+		chooser.setColor(getBackground());
+		if(Dialog.showSaveDialog(chooser)){
+			setBackground(chooser.getColor());
+			write.accept(new ThemeColor(chooser.getColor().getRGB(), read.get().getAlpha()));
 		}
 	}
 
