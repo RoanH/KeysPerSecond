@@ -20,6 +20,7 @@ package dev.roanh.kps.ui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.BorderFactory;
@@ -32,6 +33,7 @@ import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.ui.listener.CloseListener;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -41,17 +43,13 @@ public class MainDialog extends JPanel{
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -2620857098469751291L;
+	private Configuration config;
+	private CheckBoxPanel options;
 	
-	
-	
-	private static Configuration config;
-	
-	private CheckBoxPanel options = new CheckBoxPanel();
-	
-	
-	
-	public MainDialog(){
+	public MainDialog(Configuration config){
 		super(new BorderLayout());
+		this.config = config;
+		options = new CheckBoxPanel();
 		
 		add(buildLeftPanel(), BorderLayout.CENTER);
 		add(buildRightPanel(), BorderLayout.LINE_END);
@@ -196,65 +194,47 @@ public class MainDialog extends JPanel{
 		}
 	}
 	
-	
-	public static final void configureAlt(){
-		config = Main.config;
-		
-		Dialog.showDialog(new MainDialog(), new String[]{"OK", "Exit"});
-		
-	}
-	
-	
-	
 	/**
-	 * Asks the user for a configuration
-	 * though a series of dialogs
-	 * These dialogs also provide the
-	 * option of saving or loading an
-	 * existing configuration
+	 * Shows the initial configuration dialog for the program.
+	 * @param config The configuration to configure.
 	 */
-	public static final void configure(){
-		config = Main.config;//TODO no
-		
-		
-		
-		
+	public static final void configure(Configuration config){
+		CountDownLatch latch = new CountDownLatch(1);
+		JPanel bottomButtons = new JPanel();
+
 		JButton ok = new JButton("OK");
+		bottomButtons.add(ok);
+		ok.addActionListener(e->{
+			if(config.isValid()){
+				latch.countDown();
+			}else{
+				Dialog.showMessageDialog("Please make sure your layout has at least one panel to display.");
+			}
+		});
+		
 		JButton exit = new JButton("Exit");
+		bottomButtons.add(exit);
 		exit.addActionListener(e->Main.exit());
 		
-		CountDownLatch latch = new CountDownLatch(1);
-		ok.addActionListener(e->latch.countDown());
-		
-		JPanel bottomButtons = new JPanel();
-		bottomButtons.add(ok);
-		bottomButtons.add(exit);
-		
 		JPanel dialog = new JPanel(new BorderLayout());
-		dialog.add(new MainDialog(), BorderLayout.CENTER);
+		dialog.add(new MainDialog(config), BorderLayout.CENTER);
 		dialog.add(bottomButtons, BorderLayout.PAGE_END);
-		
 		dialog.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
-		
-		
 		
 		JFrame conf = new JFrame("KeysPerSecond");
 		conf.add(dialog);
 		conf.pack();
 		conf.setResizable(false);
 		conf.setLocationRelativeTo(null);
-//		List<Image> icons = new ArrayList<Image>();
-//		icons.add(Main.icon);
-//		icons.add(Main.iconSmall);
-//		conf.setIconImages(icons);
-//		conf.addWindowListener(Main.onClose);
+		conf.setIconImages(Arrays.asList(Main.icon, Main.iconSmall));
+		conf.addWindowListener(new CloseListener());
 		conf.setVisible(true);
 		
 		try{
 			latch.await();
 		}catch(InterruptedException e1){
 		}
+		
 		conf.setVisible(false);
 		conf.dispose();
 	}

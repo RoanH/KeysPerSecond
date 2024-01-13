@@ -247,6 +247,10 @@ public class Configuration{
 		return Arrays.asList(graphs, panels, keys);
 	}
 	
+	public boolean isValid(){
+		return !graphs.isEmpty() || !panels.isEmpty() || !keys.isEmpty();
+	}
+	
 	/**
 	 * Gets the location on disk for this configuration file.
 	 * @return The on disk location of the configuration file.

@@ -173,11 +173,11 @@ public class Main{
 	/**
 	 * Small icon for the program
 	 */
-	private static final Image iconSmall;
+	public static final Image iconSmall;
 	/**
 	 * Icon for the program
 	 */
-	private static final Image icon;
+	public static final Image icon;
 	/**
 	 * Dummy key for getOrDefault operations
 	 */
@@ -250,7 +250,7 @@ public class Main{
 			}
 		}else{
 			try{
-				MainDialog.configure();//TODO this is a replacement
+				MainDialog.configure(Main.config);
 			}catch(Exception e){
 				e.printStackTrace();
 				try{
