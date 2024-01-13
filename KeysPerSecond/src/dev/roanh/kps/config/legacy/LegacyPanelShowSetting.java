@@ -22,10 +22,29 @@ import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.setting.BooleanSetting;
 
+/**
+ * Legacy setting that handles the various show settings
+ * for certain panels in the legacy configuration format.
+ * If these settings are detected and set to false the
+ * relevant panel is removed from the configuration.
+ * @author Roan
+ */
 public class LegacyPanelShowSetting extends BooleanSetting{
+	/**
+	 * The list with panels to update if the item needs to be removed.
+	 */
 	private SettingList<? extends LocationSettings> data;
+	/**
+	 * The item to remove if the setting is found and set to false.
+	 */
 	private LocationSettings item;
 	
+	/**
+	 * Creates a new legacy panel show setting.
+	 * @param key The configuration key.
+	 * @param data The list with panels to update.
+	 * @param item The item to potentially remove.
+	 */
 	public LegacyPanelShowSetting(String key, SettingList<? extends LocationSettings> data, LocationSettings item){
 		super(key, true);
 		this.data = data;
