@@ -29,25 +29,55 @@ import dev.roanh.kps.config.legacy.LegacyPositionProxy;
 import dev.roanh.kps.config.legacy.LegacyProxyStore;
 import dev.roanh.kps.config.setting.IntSetting;
 
+/**
+ * Position setting that also tracks if it was ever updated from default.
+ * @author Roan
+ */
 public class PositionSettings extends SettingGroup implements LegacyProxyStore{
+	/**
+	 * The position x coordinate.
+	 */
 	private final IntSetting x = new IntSetting("x", 0, Integer.MAX_VALUE, 0);
+	/**
+	 * The position y coordinate.
+	 */
 	private final IntSetting y = new IntSetting("y", 0, Integer.MAX_VALUE, 0);
+	/**
+	 * If this setting was ever updated.
+	 */
 	private boolean parsed = false;
 	
+	/**
+	 * Constructs a new position setting.
+	 */
 	public PositionSettings(){
 		super("frame");
 	}
 
+	/**
+	 * Stores a new position in this setting.
+	 * @param location The new position.
+	 */
 	public void update(Point location){
 		x.update(location.x);
 		y.update(location.y);
 		parsed = true;
 	}
 	
+	/**
+	 * Tests if this setting was updated with some value at
+	 * some point in time. If this is false then the value
+	 * of this setting is still the initial default.
+	 * @return True if this setting was updated at some point.
+	 */
 	public boolean hasPosition(){
 		return parsed;
 	}
 	
+	/**
+	 * Gets the position represented by this settting.
+	 * @return The configured point.
+	 */
 	public Point getLocation(){
 		return new Point(x.getValue(), y.getValue());
 	}

@@ -18,7 +18,6 @@
  */
 package dev.roanh.kps.config;
 
-import java.awt.Point;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -29,8 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.swing.JFrame;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.Statistics;
