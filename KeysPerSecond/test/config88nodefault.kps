@@ -74,18 +74,18 @@ panels:
 
 keys:
   - keycode: 1048606
+    name: A
     x: 13
     y: 0
     width: 2
     height: 3
     mode: VALUE_ONLY
     visible: true
-    name: A
   - keycode: 1048607
+    name: B
     x: 12
     y: 9
     width: 6
     height: 7
     mode: VERTICAL
     visible: false
-    name: B

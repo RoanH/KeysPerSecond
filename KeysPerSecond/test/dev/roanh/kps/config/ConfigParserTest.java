@@ -26,12 +26,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
 import dev.roanh.kps.CommandKeys;
+import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
@@ -636,24 +641,17 @@ public class ConfigParserTest{
 		assertEquals("B", key2.getName());
 	}
 	
-//	@Test
-//	public void readWriteTest(e){
-//
-//		ConfigParser parser = ConfigParser.parse(Paths.get("test/config88nodefault.kps"));
-//		assertFalse(parser.wasDefaultUsed());
-//		assertEquals(new Version(8, 8), parser.getVersion());
-//		
-//		Configuration config = parser.getConfig();
-//		
-//		config.write
-//		
-//		
-//	}
-	
-//	//TODO
-//	public static void main(String[] args) throws IOException{
-//		Configuration config = Configuration.newLoadTemporary(Paths.get("test/config88.kps"));
-//		config.write(new IndentWriter(new PrintWriter(System.out)));
-//		System.out.println();
-//	}
+	@Test
+	public void readWriteTest() throws IOException{
+		ConfigParser parser = ConfigParser.parse(Paths.get("test/config88nodefault.kps"));
+		assertFalse(parser.wasDefaultUsed());
+		assertEquals(new Version(8, 8), parser.getVersion());
+		
+		Configuration config = parser.getConfig();
+		StringWriter buf = new StringWriter();
+		config.write(new IndentWriter(new PrintWriter(buf)), false);
+		
+		String original = new String(Files.readAllBytes(Paths.get("test/config88nodefault.kps")), StandardCharsets.UTF_8);
+		assertEquals("version: " + Main.VERSION + original.substring(13), buf.toString());
+	}
 }
