@@ -44,7 +44,7 @@ public class PositionSettings extends SettingGroup implements LegacyProxyStore{
 		parsed = true;
 	}
 	
-	public boolean isPresent(){
+	public boolean hasPosition(){
 		return parsed;
 	}
 	

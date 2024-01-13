@@ -29,8 +29,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-import javax.swing.JFrame;
-
 import org.junit.jupiter.api.Test;
 
 import dev.roanh.kps.CommandKeys;
@@ -41,6 +39,7 @@ import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
+import dev.roanh.kps.config.group.PositionSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.StatsSavingSettings;
 import dev.roanh.kps.config.group.ThemeSettings;
@@ -66,9 +65,9 @@ public class ConfigParserTest{
 		assertFalse(config.isKeyModifierTrackingEnabled());
 		
 		//position
-		JFrame frame = new JFrame();
-		config.applyFramePosition(frame);
-		assertEquals(new Point(100, 90), frame.getLocation());
+		PositionSettings pos = config.getFramePosition();
+		assertTrue(pos.hasPosition());
+		assertEquals(new Point(100, 90), pos.getLocation());
 		
 		//theme
 		ThemeSettings theme = config.getTheme();
@@ -253,6 +252,11 @@ public class ConfigParserTest{
 		assertEquals(100, config.getUpdateRateMs());
 		assertFalse(config.isKeyModifierTrackingEnabled());
 		
+		//position
+		PositionSettings pos = config.getFramePosition();
+		assertTrue(pos.hasPosition());
+		assertEquals(new Point(100, 90), pos.getLocation());
+		
 		//theme
 		ThemeSettings theme = config.getTheme();
 		assertFalse(theme.hasCustomColors());
@@ -397,6 +401,9 @@ public class ConfigParserTest{
 		assertEquals(250, config.getUpdateRateMs());
 		assertTrue(config.isKeyModifierTrackingEnabled());
 		
+		//position
+		assertFalse(config.getFramePosition().hasPosition());
+		
 		//theme
 		ThemeSettings theme = config.getTheme();
 		assertTrue(theme.hasCustomColors());
@@ -499,9 +506,7 @@ public class ConfigParserTest{
 		assertTrue(config.isKeyModifierTrackingEnabled());
 		
 		//position
-		JFrame frame = new JFrame();
-		config.applyFramePosition(frame);
-		assertEquals(new Point(100, 90), frame.getLocation());
+		assertFalse(config.getFramePosition().hasPosition());
 		
 		//theme
 		ThemeSettings theme = config.getTheme();
@@ -630,6 +635,20 @@ public class ConfigParserTest{
 		assertFalse(key2.isVisible());
 		assertEquals("B", key2.getName());
 	}
+	
+//	@Test
+//	public void readWriteTest(e){
+//
+//		ConfigParser parser = ConfigParser.parse(Paths.get("test/config88nodefault.kps"));
+//		assertFalse(parser.wasDefaultUsed());
+//		assertEquals(new Version(8, 8), parser.getVersion());
+//		
+//		Configuration config = parser.getConfig();
+//		
+//		config.write
+//		
+//		
+//	}
 	
 //	//TODO
 //	public static void main(String[] args) throws IOException{

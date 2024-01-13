@@ -7,10 +7,6 @@ trackAllButtons: true
 updateRate: 250
 enableKeyModifierCombinations: true
 
-frame:
-  x: 100
-  y: 90
-
 theme:
   customColors: true
   foreground: #01020300

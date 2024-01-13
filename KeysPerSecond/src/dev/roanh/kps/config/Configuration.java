@@ -232,6 +232,10 @@ public class Configuration{
 		return layout.getBorderOffset();
 	}
 	
+	public PositionSettings getFramePosition(){
+		return position;
+	}
+	
 	public CommandSettings getCommands(){
 		return commands;
 	}
@@ -332,12 +336,6 @@ public class Configuration{
 		updateRate.update(rate);
 	}
 	
-	public void applyFramePosition(JFrame frame){
-		if(position.isPresent()){
-			frame.setLocation(position.getLocation());
-		}
-	}
-	
 	/**
 	 * Loads a configuration file (with GUI)
 	 * @return Whether or not the config was loaded successfully
@@ -365,7 +363,9 @@ public class Configuration{
 			}
 			
 			Main.config = parser.getConfig();
-			Main.config.applyFramePosition(Main.frame);
+			if(Main.config.position.hasPosition()){
+				Main.frame.setLocation(Main.config.position.getLocation());
+			}
 			
 			//TODO move logic?
 			if(Main.config.statsSaving.isLoadOnLaunchEnabled()){
@@ -404,7 +404,7 @@ public class Configuration{
 		}
 	}
 
-	private void write(IndentWriter out, boolean pos){
+	public void write(IndentWriter out, boolean pos){
 		out.println("version: " + Main.VERSION);
 		out.println();
 
