@@ -25,7 +25,7 @@ import javax.swing.JTextField;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.PanelSettings;
-import dev.roanh.kps.ui.model.FieldChangeListener;
+import dev.roanh.kps.ui.listener.FieldChangeListener;
 
 public class PanelEditor extends Editor{
 	/**

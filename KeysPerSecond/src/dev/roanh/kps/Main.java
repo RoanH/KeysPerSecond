@@ -88,6 +88,7 @@ import dev.roanh.kps.ui.dialog.LayoutDialog;
 import dev.roanh.kps.ui.dialog.MainDialog;
 import dev.roanh.kps.ui.dialog.StatsSavingDialog;
 import dev.roanh.kps.ui.dialog.UpdateRateDialog;
+import dev.roanh.kps.ui.listener.CloseListener;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.ExclamationMarkPath;
@@ -201,10 +202,6 @@ public class Main{
 	 */
 	private static final Image icon;
 	/**
-	 * Called when a frame is closed
-	 */
-	private static final WindowListener onClose;//TODO ???
-	/**
 	 * Dummy key for getOrDefault operations
 	 */
 	protected static final Key DUMMY_KEY;
@@ -276,7 +273,7 @@ public class Main{
 			}
 		}else{
 			try{
-				MainDialog.configureAlt();//TODO this is a replacement
+				MainDialog.configure();//TODO this is a replacement
 			}catch(Exception e){
 				e.printStackTrace();
 				try{
@@ -826,7 +823,7 @@ public class Main{
 		icons.add(icon);
 		icons.add(iconSmall);
 		conf.setIconImages(icons);
-		conf.addWindowListener(onClose);
+		conf.addWindowListener(new CloseListener());
 		conf.setVisible(true);
 		
 		try{
@@ -861,7 +858,7 @@ public class Main{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		new Listener(frame);
-		frame.addWindowListener(onClose);
+		frame.addWindowListener(new CloseListener());
 		reconfigure();
 	}
 	
@@ -1003,37 +1000,6 @@ public class Main{
 			img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_RGB);
 		}
 		icon = img;
-		onClose = new WindowListener(){
-
-			@Override
-			public void windowOpened(WindowEvent e){
-			}
-
-			@Override
-			public void windowClosing(WindowEvent e){
-				exit();
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e){
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e){
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e){
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e){
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e){
-			}
-		};
 		DUMMY_KEY = new Key(){
 
 			@Override

@@ -223,13 +223,6 @@ public class MainDialog extends JPanel{
 	public static final void configure(){
 		config = Main.config;//TODO no
 		
-		JPanel form = new JPanel(new BorderLayout());
-		
-		
-		
-		
-		
-		
 		
 		
 		
@@ -245,7 +238,7 @@ public class MainDialog extends JPanel{
 		bottomButtons.add(exit);
 		
 		JPanel dialog = new JPanel(new BorderLayout());
-		dialog.add(form, BorderLayout.CENTER);
+		dialog.add(new MainDialog(), BorderLayout.CENTER);
 		dialog.add(bottomButtons, BorderLayout.PAGE_END);
 		
 		dialog.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

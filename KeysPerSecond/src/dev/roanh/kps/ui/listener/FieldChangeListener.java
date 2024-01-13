@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.ui.model;
+package dev.roanh.kps.ui.listener;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
