@@ -22,37 +22,84 @@ import java.util.Objects;
 
 import dev.roanh.util.Util;
 
+/**
+ * Class representing program versions.
+ * @author Roan
+ */
 public class Version implements Comparable<Version>{
+	/**
+	 * Constant used for unknown versions.
+	 */
 	public static final Version UNKNOWN = new Version();
+	/**
+	 * The major version number.
+	 */
 	private final int major;
+	/**
+	 * The minor version number.
+	 */
 	private final int minor;
 	
+	/**
+	 * Constructs a new version with the given major and minor version.
+	 * @param major The major version number.
+	 * @param minor The minor version number.
+	 */
 	public Version(int major, int minor){
 		this.major = major;
 		this.minor = minor;
 	}
 	
+	/**
+	 * Construct for {@link #UNKNOWN}.
+	 */
 	private Version(){
 		this(-1, -1);
 	}
 	
+	/**
+	 * Tests if this version is strictly before the given other version.
+	 * @param major The major version number of the other version.
+	 * @param minor The minor version number of the other version.
+	 * @return True if this version is strictly before the given version.
+	 */
 	public boolean isBefore(int major, int minor){
 		return this.major == major ? (this.minor < minor) : (this.major < major);
 	}
 	
+	/**
+	 * Tests if this version is strictly before the given other version.
+	 * @param version The other version to test against.
+	 * @return True if this version is strictly before the given version.
+	 */
 	public boolean isBefore(Version version){
 		return this.compareTo(version) < 0;
 	}
 	
+	/**
+	 * Tests if this version represents the unknown version.
+	 * @return True if this version is 'unknown'.
+	 * @see #UNKNOWN
+	 */
 	public boolean isUnknown(){
 		return this == UNKNOWN;
 	}
 	
+	/**
+	 * Reads the current KeysPerSecond version from the JAR.
+	 * @return The current KeysPerSecond version.
+	 */
 	public static final Version readVersion(){
 		String version = Util.readArtifactVersion("dev.roanh.kps", "keyspersecond");
 		return version == null ? UNKNOWN : parse(version);
 	}
 	
+	/**
+	 * Parses the given string encoded version number in
+	 * 'v8.0' or '8.0' format.
+	 * @param version The version to parse.
+	 * @return The parsed version or {@link #UNKNOWN} if parsing failed.
+	 */
 	public static final Version parse(String version){
 		version = version.trim();
 		if(version.startsWith("v")){
