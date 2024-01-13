@@ -26,13 +26,31 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.ThemeColor;
 
+/**
+ * Setting for theme colors.
+ * @author Roan
+ * @see ThemeColor
+ */
 public class ColorSetting extends Setting<ThemeColor>{
-	//rgb = group 1-2-3
+	/**
+	 * Regex for the legacy RGB color format.
+	 * Group 1: integer red component.
+	 * Group 2: integer green component.
+	 * Group 3: integer blue component.
+	 */
 	private static final Pattern LEGACY_COLOR_REGEX = Pattern.compile("\\[r=(\\d{1,3}),g=(\\d{1,3}),b=(\\d{1,3})]");
-	//rgb = group 1, alpha = group 2 if exists
+	/**
+	 * Regex for the new HEX based #RRGGBBAA color format, where alpha is optional.
+	 * Group 1: RGB HEX color.
+	 * Group 2: alpha HEX color or null if there is no alpha component (defaults to fully opaque).
+	 */
 	private static final Pattern COLOR_REGEX = Pattern.compile("#([A-F0-9]{6})([A-F0-9]{2})?");
 	
-	
+	/**
+	 * Constructs a new color setting.
+	 * @param key The setting key.
+	 * @param defaultValue The default setting value.
+	 */
 	public ColorSetting(String key, ThemeColor defaultValue){
 		super(key, defaultValue);
 	}
