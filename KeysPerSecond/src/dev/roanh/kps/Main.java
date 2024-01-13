@@ -890,32 +890,9 @@ public class Main{
 				e.printStackTrace();
 			}
 			
-			//TODO legacy logic
-//			Key k;
-//			int panels = 0;
-//			for(KeyInformation i : config.keyinfo){
-//				if(!keys.containsKey(i.keycode)){
-//					keys.put(i.keycode, k = new Key(i.name));
-//					k.alt = CommandKeys.hasAlt(i.keycode);
-//					k.ctrl = CommandKeys.hasCtrl(i.keycode);
-//					k.shift = CommandKeys.hasShift(i.keycode);
-//				}else{
-//					k = keys.get(i.keycode);
-//				}
-//				if(config.showKeys() && i.visible){
-//					content.add(k.getPanel(i));
-//					k.getPanel(i).sizeChanged();
-//					panels++;
-//				}
-//			}
-			
-			//TODO new logic
-			
-			
 			//key panels
 			for(KeyPanelSettings info : config.getKeySettings()){
-				System.out.println("key: " + info.getName());
-				Key key = keys.computeIfAbsent(info.getKeyCode(), code->new Key(info));//TODO pass something
+				Key key = keys.computeIfAbsent(info.getKeyCode(), code->new Key(info));
 				if(config.showKeys() && info.isVisible()){
 					content.add(info.createPanel(key));
 				}
@@ -934,32 +911,6 @@ public class Main{
 				content.add(graph);
 				graphs.add(graph);
 			}
-			
-			
-			
-			//TODO old legacy logic
-//			if(config.showMax){
-////				content.add(MaxPanel.INSTANCE);
-////				MaxPanel.INSTANCE.sizeChanged();
-//				panels++;
-//			}
-//			if(config.showAvg){
-////				content.add(new AvgPanel(config.getAveragePanelSettings()));
-//				//TODO should be event handler based AvgPanel.INSTANCE.sizeChanged();
-//				panels++;
-//			}
-//			if(config.showCur){
-////				content.add(NowPanel.INSTANCE);
-////				NowPanel.INSTANCE.sizeChanged();
-//				panels++;
-//			}
-//			if(config.showTotal){
-//				content.add(TotPanel.INSTANCE);
-//				TotPanel.INSTANCE.sizeChanged();
-//				panels++;
-//			}
-			
-			
 			
 			if(content.getComponentCount() == 0){
 				
