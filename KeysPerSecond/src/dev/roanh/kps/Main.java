@@ -85,6 +85,7 @@ import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
+import dev.roanh.kps.ui.dialog.MainDialog;
 import dev.roanh.kps.ui.dialog.StatsSavingDialog;
 import dev.roanh.kps.ui.dialog.UpdateRateDialog;
 import dev.roanh.util.ClickableLink;
@@ -178,7 +179,7 @@ public class Main{
 	/**
 	 * The configuration
 	 */
-	public static Configuration config = new Configuration(null);
+	public static Configuration config = new Configuration();
 	/**
 	 * The loop timer
 	 */
@@ -202,7 +203,7 @@ public class Main{
 	/**
 	 * Called when a frame is closed
 	 */
-	private static final WindowListener onClose;
+	private static final WindowListener onClose;//TODO ???
 	/**
 	 * Dummy key for getOrDefault operations
 	 */
@@ -275,7 +276,7 @@ public class Main{
 			}
 		}else{
 			try{
-				configure();
+				MainDialog.configureAlt();//TODO this is a replacement
 			}catch(Exception e){
 				e.printStackTrace();
 				try{
@@ -951,7 +952,7 @@ public class Main{
 	/**
 	 * Shuts down the program
 	 */
-	protected static final void exit(){
+	public static final void exit(){
 		Statistics.saveStatsOnExit();
 		System.exit(0);
 	}

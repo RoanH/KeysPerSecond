@@ -161,7 +161,12 @@ public class Configuration{
 	public boolean showTotal = false;
 
 	
-	
+	public Configuration(){
+		this(null);
+		panels.add(new MaxPanelSettings());
+		panels.add(new AveragePanelSettings());
+		panels.add(new CurrentPanelSettings());
+	}
 	
 	/**
 	 * Constructs a new configuration object
