@@ -77,13 +77,11 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 		add(newButton(config.getCommandReload()));
 	}
 	
-//	/**
-//	 * Constructs a new button that asks for a new command
-//	 * key and uses the given consumer to save the new command.
-//	 * @param readFun A supplier that provides the current command.
-//	 * @param saveFun A consumer that write the new command.
-//	 * @return The constructed button.
-//	 */
+	/**
+	 * Constructs a new button shows a dialog to update a command key.
+	 * @param key The command key to update.
+	 * @return The constructed button.
+	 */
 	private JButton newButton(CommandKeySetting key){
 		JButton button = new JButton(key.toDisplayString());
 		button.addActionListener((e)->{
@@ -95,7 +93,8 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 	}
 
 	/**
-	 * Show the command key configuration dialog
+	 * Show the command key configuration dialog.
+	 * @param config The configuration to update.
 	 */
 	public static final void configureCommandKeys(CommandSettings config){
 		CommandKeysDialog dialog = new CommandKeysDialog(config);
@@ -104,11 +103,10 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 		Main.eventManager.unregisterKeyPressListener(dialog);
 	}
 	
-//	/**
-//	 * Prompts the user for a new command key.
-//	 * @param current The current command key.
-//	 * @return The new command key or null.
-//	 */
+	/**
+	 * Prompts the user to configure a command key.
+	 * @param key The command key to configure.
+	 */
 	private void askForNewKey(CommandKeySetting key){
 		JPanel form = new JPanel(new GridLayout(2, 1));
 		JLabel txt = new JLabel("Press a key and click 'Save' or press 'Unbind'");
