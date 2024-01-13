@@ -33,12 +33,19 @@ import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
 
+/**
+ * Simple about dialog displaying general information and useful links.
+ * @author Roan
+ */
 public class AboutDialog extends JPanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 7583745921634902889L;
 
+	/**
+	 * Constructs a new about dialog.
+	 */
 	public AboutDialog(){
 		super(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();

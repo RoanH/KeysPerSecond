@@ -21,20 +21,49 @@ package dev.roanh.kps.config;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * Abstract base class for automatically validating settings.
+ * @author Roan
+ * @param <T> The data type for this setting.
+ */
 public abstract class Setting<T>{
+	/**
+	 * The configuration file key identifying this setting.
+	 */
 	protected final String key;
+	/**
+	 * The current value for this setting.
+	 */
 	protected T value;
+	/**
+	 * The default value for this setting.
+	 */
 	private T defaultValue;
 	
+	/**
+	 * Constructs a new setting with the given identifier and default value.
+	 * @param key The identifier for this setting.
+	 * @param defaultValue The default value for this setting.
+	 */
 	protected Setting(String key, T defaultValue){
 		this.key = key;
 		this.defaultValue = defaultValue;
 		update(defaultValue);
 	}
 	
-	//call update with the parsed value OR call rest to use a default -- return true if default value was used (reset called)
+	/**
+	 * Parses this setting from the given string data. This function will either
+	 * call {@link #update(Object)} to set the parsed setting or {@link #reset()}
+	 * to signal that the setting could not be parsed from the given data.
+	 * @param data The data to attempt to parse.
+	 * @return True if the data could not be parsed, meaning the default value was used.
+	 */
 	public abstract boolean parse(String data);
 	
+	/**
+	 * Writes this setting to the given writer.
+	 * @param out The writer to write to.
+	 */
 	public abstract void write(IndentWriter out);
 	
 	public String getKey(){
