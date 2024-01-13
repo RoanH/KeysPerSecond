@@ -1,3 +1,21 @@
+/*
+ * KeysPerSecond: An open source input statistics displayer.
+ * Copyright (C) 2017  Roan Hofland (roan@roanh.dev).  All rights reserved.
+ * GitHub Repository: https://github.com/RoanH/KeysPerSecond
+ *
+ * KeysPerSecond is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * KeysPerSecond is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package dev.roanh.kps.ui.dialog;
 
 import java.awt.BorderLayout;
@@ -37,8 +55,6 @@ public class MainDialog extends JPanel{
 	
 	private CheckBoxPanel options = new CheckBoxPanel();
 	
-	//TODO note right click menu somewhere
-	
 	
 	
 	public MainDialog(){
@@ -46,24 +62,40 @@ public class MainDialog extends JPanel{
 		
 		add(buildLeftPanel(), BorderLayout.CENTER);
 		add(buildRightPanel(), BorderLayout.LINE_END);
-		//TODO footer
+		add(buildBottomPanel(), BorderLayout.PAGE_END);
+	}
+	
+	private JPanel buildBottomPanel(){
+		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
+		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
 		
+		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
+		git.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
+		
+		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
+		links.add(forum);
+		links.add(git);
+		
+		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
+		info.add(Util.getVersionLabel("KeysPerSecond", Main.VERSION));
+		info.add(links);
+		return info;
 	}
 	
 	private JPanel buildLeftPanel(){
 		//info
-		JLabel info = new JLabel("<html>You can either configure the program on this screen or use the right <b>right click</b> menu after the program is already visible to see changes take effect in real time.</html>");
+		JLabel info = new JLabel("<html><body style='width:210px'>You can either configure the program on this screen or use the right <b>right click</b> menu after the program is already visible to see changes take effect in real time.</body></html>");
 		info.setBorder(BorderFactory.createTitledBorder("Information"));
 		
 		//main configuration
 		JPanel main = new JPanel(new GridLayout(2, 1));
 		main.setBorder(BorderFactory.createTitledBorder("Main Configuration"));
 
-		JButton keys = new JButton("Keys & Buttons");
+		JButton keys = new JButton("Configure Keys & Buttons");
 		main.add(keys);
 		keys.addActionListener(e->KeysDialog.configureKeys(config.getKeySettings(), false));
 		
-		JButton layout = new JButton("Graphs & Panels");
+		JButton layout = new JButton("Configure Graphs & Panels");
 		main.add(layout);
 		layout.addActionListener(e->LayoutDialog.configureLayout(false));
 
@@ -112,10 +144,18 @@ public class MainDialog extends JPanel{
 		settings.add(cmdkeys);
 		cmdkeys.addActionListener(e->CommandKeysDialog.configureCommandKeys(config.getCommands()));
 		
+		//about
+		JPanel aboutPanel = new JPanel(new BorderLayout());
+		aboutPanel.setBorder(BorderFactory.createTitledBorder("About"));
+		JButton about = new JButton("About");
+		aboutPanel.add(about);
+		about.addActionListener(e->AboutDialog.showAbout());
+		
 		//right panel
 		JPanel right = new JPanel(new BorderLayout());
 		right.add(configuration, BorderLayout.PAGE_START);
 		right.add(settings, BorderLayout.CENTER);
+		right.add(aboutPanel, BorderLayout.PAGE_END);
 		return right;
 	}
 	
@@ -185,36 +225,13 @@ public class MainDialog extends JPanel{
 		
 		JPanel form = new JPanel(new BorderLayout());
 		
-		JPanel options = new JPanel();
-//		labels.setPreferredSize(new Dimension((int)labels.getPreferredSize().getWidth(), (int)boxes.getPreferredSize().getHeight()));//TODO required?
-//		options.add(labels);
-//		options.add(boxes);
-		
-		
-		
-		JPanel buttons = new JPanel(new GridLayout(10, 1));
-		form.add(options, BorderLayout.CENTER);
-		options.setBorder(BorderFactory.createTitledBorder("General"));
-		buttons.setBorder(BorderFactory.createTitledBorder("Configuration"));
-		JPanel all = new JPanel(new BorderLayout());
-		all.add(options, BorderLayout.LINE_START);
-		all.add(buttons, BorderLayout.LINE_END);
-		form.add(all, BorderLayout.CENTER);
 		
 		
 		
 		
-		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", Main.VERSION));
-		JPanel links = new JPanel(new GridLayout(1, 2, -2, 0));
-		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
-		JLabel git = new JLabel("<html>- <font color=blue><u>GitHub</u></font></html>", SwingConstants.LEFT);
-		links.add(forum);
-		links.add(git);
-		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
-		git.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
-		info.add(links);
-		form.add(info, BorderLayout.PAGE_END);
+		
+		
+		
 		
 		JButton ok = new JButton("OK");
 		JButton exit = new JButton("Exit");

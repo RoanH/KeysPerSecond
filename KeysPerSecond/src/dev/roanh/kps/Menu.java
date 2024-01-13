@@ -59,6 +59,7 @@ import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.panels.GraphPanel;
+import dev.roanh.kps.ui.dialog.AboutDialog;
 import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
@@ -128,7 +129,7 @@ public class Menu{
 		JMenuItem sresettot = new JMenuItem("Reset total");
 		JMenuItem sresetgraph = new JMenuItem("Reset graphs");
 		JMenuItem treset = new JMenuItem("Reset key totals");
-		JMenuItem configkeys = new JMenuItem("Keys");
+		JMenuItem configkeys = new JMenuItem("Keys & Buttons");
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
 		JMenuItem statsSaving = new JMenuItem("Stats saving");
 		JMenuItem commandkeys = new JMenuItem("Commands");
@@ -184,7 +185,7 @@ public class Menu{
 			Main.exit();
 		});
 		about.addActionListener((e)->{
-			showAbout();
+			AboutDialog.showAbout();
 		});
 		pause.setSelected(Main.suspended);
 		pause.addActionListener((e)->{
@@ -310,79 +311,6 @@ public class Menu{
 		menu.add(exit);
 	}
 	
-	/**
-	 * Shows an about dialog with useful information.
-	 */
-	private static void showAbout(){
-		JPanel content = new JPanel(new GridBagLayout());
-		GridBagConstraints gc = new GridBagConstraints();
-		gc.weightx = 1.0D;
-		gc.gridx = 0;
-		
-		JLabel header = new JLabel("KeysPerSecond " + Main.VERSION, SwingConstants.CENTER);
-		header.setFont(new Font("Dialog", Font.BOLD, 18));
-		content.add(header, gc);
-		
-		content.add(new JLabel(
-			"<html>KeysPerSecond is an open source input statistics displayer"
-			+ "<br>released for free under the GPLv3. Any bugs and feature"
-			+ "<br>requests can be reported on GitHub.</html>"
-		), gc);
-		
-		content.add(Box.createVerticalStrut(10), gc);
-		
-		//github
-		gc.anchor = GridBagConstraints.LINE_START;
-		JPanel line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
-		line.add(new JLabel("<html><b>GitHub:</b></html>", SwingConstants.LEFT), gc);
-		content.add(line, gc);
-		
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
-		line.add(new JLabel("  - "));
-		JLabel label = new JLabel("<html><font color=blue><u>Main Page</u></font></html>");
-		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond"));
-		line.add(label);
-		content.add(line, gc);
-		
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
-		line.add(new JLabel("  - "));
-		label = new JLabel("<html><font color=blue><u>Issues</u></font></html>");
-		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond/issues"));
-		line.add(label);
-		line.add(new JLabel("(bugs & feature requests)"));
-		content.add(line, gc);
-		
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
-		line.add(new JLabel("  - "));
-		label = new JLabel("<html><font color=blue><u>Releases</u></font></html>");
-		label.addMouseListener(new ClickableLink("https://github.com/RoanH/KeysPerSecond/releases"));
-		line.add(label);
-		line.add(new JLabel("(release notes & downloads)"));
-		content.add(line, gc);
-		
-		//version
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		line.add(new JLabel("<html><b>Latest version</b>: "));
-		JLabel versionLabel = new JLabel("checking...");
-		line.add(versionLabel);
-		content.add(line, gc);
-		
-		new Thread(()->{
-			String version = Util.checkVersion("RoanH", "KeysPerSecond");
-			versionLabel.setText(version.equals(Main.VERSION) ? version : (version + "  (update available)"));
-		}, "Version Checker").start();
-		
-		//contact
-		line = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		line.add(new JLabel("<html><b>Contact</b>:&nbsp;&nbsp;Roan Hofland</html>"));
-		JLabel email = new JLabel("<html>&lt;<font color=blue><u>roan@roanh.dev</u></font>&gt;</html>");
-		email.addMouseListener(new ClickableLink("mailto:roan@roanh.dev"));
-		line.add(email);
-		content.add(line, gc);
-		
-		Dialog.showMessageDialog(content);
-	}
-
 	/**
 	 * Applies a new configuration to the program
 	 */
