@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import dev.roanh.kps.Statistics;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.SettingGroup;
@@ -33,6 +34,11 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.LongSetting;
 import dev.roanh.kps.config.setting.PathSetting;
 
+/**
+ * Settings for automatic statistics saving.
+ * @author Roan
+ * @see Statistics
+ */
 public class StatsSavingSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Whether or not to periodically save the stats to a file.
@@ -63,62 +69,126 @@ public class StatsSavingSettings extends SettingGroup implements LegacyProxyStor
 	 */
 	private final PathSetting saveFile = new PathSetting("saveFile", Objects.toString(System.getProperty("user.home"), "") + File.separator + "stats.kpsstats");
 
+	/**
+	 * Constructs new stats saving settings.
+	 */
 	public StatsSavingSettings(){
 		super("statsSaving");
 	}
 	
+	/**
+	 * Checks if periodic stats saving is enabled.
+	 * @return True if periodic stats saving is enabled.
+	 */
 	public boolean isAutoSaveEnabled(){
 		return autoSave.getValue();
 	}
 	
+	/**
+	 * Gets the folder periodic stats are saved too.
+	 * @return The folder to periodically save stats to.
+	 * @see #isAutoSaveEnabled()
+	 */
 	public String getAutoSaveDestination(){
 		return autoDestination.getValue();
 	}
 	
+	/**
+	 * Gets the file name format used for periodic stats saving.
+	 * @return The file name format used.
+	 * @see #isAutoSaveEnabled()
+	 */
 	public String getAutoSaveFormat(){
 		return autoFormat.getValue();
 	}
 	
+	/**
+	 * Gets the interval stats are saved at.
+	 * @return The automatic stats saving interval.
+	 * @see #isAutoSaveEnabled()
+	 */
 	public long getAutoSaveInterval(){
 		return autoInterval.getValue();
 	}
 	
+	/**
+	 * Checks if saving statics on program exit is enabled.
+	 * @return True if statistics are saved on exit.
+	 */
 	public boolean isSaveOnExitEnabled(){
 		return saveOnExit.getValue();
 	}
 	
+	/**
+	 * Checks if loading statics on program launch is enabled.
+	 * @return True if statistics are loaded on launch.
+	 */
 	public boolean isLoadOnLaunchEnabled(){
 		return loadOnLaunch.getValue();
 	}
 	
+	/**
+	 * Gets the file statistics are saved and loaded from on exit and launch.
+	 * @return The auto save file.
+	 * @see #isSaveOnExitEnabled()
+	 * @see #isLoadOnLaunchEnabled()
+	 */
 	public String getSaveFile(){
 		return saveFile.getValue();
 	}
 	
+	/**
+	 * Enables or disables periodic stats saving.
+	 * @param enabled True to enable stats saving.
+	 */
 	public void setAutoSaveEnabled(boolean enabled){
 		autoSave.update(enabled);
 	}
 	
+	/**
+	 * Sets the folder to periodically save stats to.
+	 * @param dest The stats save folder.
+	 */
 	public void setAutoSaveDestination(String dest){
 		autoDestination.update(dest);
 	}
 	
+	/**
+	 * Sets the file name format used for periodic stats saving.
+	 * @param format The file name format to use.
+	 */
 	public void setAutoSaveFormat(String format){
 		autoFormat.update(format);
 	}
 	
+	/**
+	 * Sets the interval stats are automatically saved at.
+	 * @param millis The save interval in milliseconds.
+	 */
 	public void setAutoSaveInterval(long millis){
 		autoInterval.update(millis);
 	}
 	
+	/**
+	 * Enables or disables saving statistics on exit.
+	 * @param enabled True to enable saving statistics on exit.
+	 */
 	public void setSaveOnExitEnabled(boolean enabled){
 		saveOnExit.update(enabled);
 	}
 	
+	/**
+	 * Enables or disables loading statistics on launch.
+	 * @param enabled True to enable loading statistics on launch.
+	 */
 	public void setLoadOnLaunchEnabled(boolean enabled){
 		loadOnLaunch.update(enabled);
 	}
 	
+	/**
+	 * Sets the file that statistics are saved/loaded from on exit/launch.
+	 * @param file The statistics save file.
+	 */
 	public void setSaveFile(String file){
 		saveFile.update(file);
 	}
