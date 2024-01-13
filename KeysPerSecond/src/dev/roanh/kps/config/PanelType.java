@@ -30,28 +30,73 @@ import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 
+/**
+ * Enum of special panel types that exist.
+ * @author Roan
+ * @see SpecialPanelSettings
+ */
 public enum PanelType{
+	/**
+	 * Maximum panel that shows the highest recorded KPS.
+	 */
 	MAX("max", MaxPanelSettings::new),
+	/**
+	 * Average panel that shows the average KPS.
+	 */
 	AVG("avg", AveragePanelSettings::new),
-	CURRENT("current", CurrentPanelSettings::new),//TODO current/cur/kps/now ???
+	/**
+	 * Current panel that shows the current KPS.
+	 */
+	CURRENT("current", CurrentPanelSettings::new),
+	/**
+	 * Total panel that shows the total number of hits.
+	 */
 	TOTAL("total", TotalPanelSettings::new);
 	
+	/**
+	 * The panel type identifier.
+	 */
 	private final String key;
+	/**
+	 * A constructor to create a new configuration for a panel type.
+	 */
 	private final Supplier<SpecialPanelSettings> ctor;
 	
+	/**
+	 * Constructs a new panel type.
+	 * @param <T> The panel settings type.
+	 * @param key The panel type identifier.
+	 * @param ctor A supplier of new panel settings.
+	 */
 	private <T extends PanelSettings> PanelType(String key, Supplier<SpecialPanelSettings> ctor){
 		this.key = key;
 		this.ctor = ctor;
 	}
 	
+	/**
+	 * Creates new settings for this panel type.
+	 * @return The newly created settings.
+	 */
 	public SpecialPanelSettings newSettings(){
 		return ctor.get();
 	}
 	
+	/**
+	 * Gets the identifier key for this panel type.
+	 * @return The identifier for this panel type.
+	 */
 	public String getKey(){
 		return key;
 	}
 	
+	/**
+	 * Constructs new panel settings based on the given list
+	 * of configuration data.
+	 * @param data The panel configuration data.
+	 * @return The parsed panel settings or null if the data
+	 *         did not encoded valid panel settings.
+	 * @see ListItemConstructor
+	 */
 	public static ParsedItem<SpecialPanelSettings> construct(List<String> data){
 		Map<String, String> info = ListItemConstructor.buildMap(data);
 		if(info == null){
