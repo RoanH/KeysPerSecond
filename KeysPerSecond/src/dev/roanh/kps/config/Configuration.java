@@ -82,7 +82,7 @@ public class Configuration{
 	/**
 	 * The amount of milliseconds a single time frame takes
 	 */
-	private UpdateRateSetting updateRate = new UpdateRateSetting("updateRate", UpdateRate.MS_1000);
+	private UpdateRateSetting updateRate = new UpdateRateSetting("updateRate", UpdateRate.MS_100);
 	/**
 	 * Whether or not the enable tracking key-modifier combinations
 	 */
