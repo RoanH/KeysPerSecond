@@ -118,11 +118,11 @@ public class Menu{
 		JMenuItem sresettot = new JMenuItem("Reset total");
 		JMenuItem sresetgraph = new JMenuItem("Reset graphs");
 		JMenuItem treset = new JMenuItem("Reset key totals");
-		JMenuItem configkeys = new JMenuItem("Keys & Buttons");
+		JMenuItem configkeys = new JMenuItem("Keys & buttons");
 		JMenuItem colorcustom = new JMenuItem("Configure colours");
 		JMenuItem statsSaving = new JMenuItem("Stats saving");
 		JMenuItem commandkeys = new JMenuItem("Commands");
-		JMenuItem layout = new JMenuItem("Panels & Graphs");
+		JMenuItem layout = new JMenuItem("Layout panels & graphs");
 		JMenuItem about = new JMenuItem("About");
 		JCheckBoxMenuItem tAllKeys = new JCheckBoxMenuItem("Track all keys");
 		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
@@ -280,11 +280,11 @@ public class Menu{
 
 		configure.add(general);
 		configure.add(configkeys);
+		configure.add(layout);
 		configure.add(rate);
 		configure.add(colorcustom);
 		configure.add(statsSaving);
 		configure.add(commandkeys);
-		configure.add(layout);
 
 		saveLoad.add(load);
 		saveLoad.add(save);
@@ -292,10 +292,10 @@ public class Menu{
 		saveLoad.add(saveStats);
 
 		menu.add(configure);
+		menu.add(saveLoad);
+		menu.add(pause);
 		menu.add(snap);
 		menu.add(reset);
-		menu.add(pause);
-		menu.add(saveLoad);
 		menu.add(about);
 		menu.add(exit);
 	}

@@ -82,11 +82,11 @@ public class MainDialog extends JPanel{
 		JPanel main = new JPanel(new GridLayout(2, 1));
 		main.setBorder(BorderFactory.createTitledBorder("Main Configuration"));
 
-		JButton keys = new JButton("Configure Keys & Buttons");
+		JButton keys = new JButton("Configure keys & buttons");
 		main.add(keys);
 		keys.addActionListener(e->KeysDialog.configureKeys(config.getKeySettings(), false));
 		
-		JButton layout = new JButton("Configure Graphs & Panels");
+		JButton layout = new JButton("Configure layout, graphs & panels");
 		main.add(layout);
 		layout.addActionListener(e->LayoutDialog.configureLayout(false));
 
