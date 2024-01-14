@@ -672,8 +672,8 @@ public class Main{
 			try{
 				config = ConfigParser.read(config.getPath());
 			}catch(IOException e){
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				Dialog.showErrorDialog("Failed to reload the configuration, cause: " + e.getMessage());
 			}
 		}
 	}
