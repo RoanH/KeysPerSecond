@@ -43,20 +43,54 @@ import dev.roanh.kps.ui.model.FilePathFormatterFactory;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 
+/**
+ * Dialog used to configure auto saving.
+ * @author Roan
+ */
 public class StatsSavingDialog extends JPanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 2934388616261272855L;
+	/**
+	 * Whether to save stats on exit.
+	 */
 	private JCheckBox saveOnExit;
+	/**
+	 * Whether to load stats on launch.
+	 */
 	private JCheckBox loadOnStart;
+	/**
+	 * The time unit for the auto save interval.
+	 * @see #time
+	 */
 	private JComboBox<Unit> timeUnit = new JComboBox<Unit>(Unit.values());
+	/**
+	 * The save file for save/launch stats saving/loading.
+	 */
 	private JTextField selectedFile;
+	/**
+	 * True if periodic stats auto saves are enabled.
+	 */
 	private JCheckBox enabled;
+	/**
+	 * The periodic stats saving file format.
+	 */
 	private JFormattedTextField format;
+	/**
+	 * The folder to auto save stats to periodically.
+	 */
 	private JTextField ldest;
+	/**
+	 * The save interval.
+	 * @see #timeUnit
+	 */
 	private JSpinner time;
 
+	/**
+	 * Constructs a new stats saving dialog.
+	 * @param config The configuration to update.
+	 */
 	private StatsSavingDialog(StatsSavingSettings config){
 		super(new BorderLayout());
 		
@@ -188,6 +222,7 @@ public class StatsSavingDialog extends JPanel{
 
 	/**
 	 * Show the auto save statistics configuration dialog
+	 * @param config The configuration to update.
 	 * @param live Whether or not the program is already running
 	 */
 	public static final void configureStatsSaving(StatsSavingSettings config, boolean live){
