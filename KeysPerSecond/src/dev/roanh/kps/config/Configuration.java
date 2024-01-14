@@ -49,35 +49,38 @@ import dev.roanh.kps.layout.LayoutPosition;
 import dev.roanh.util.Dialog;
 
 /**
- * This class contains all the configurable
- * properties for the program
+ * This class contains all the configurable properties for the program.
  * @author Roan
  */
 public class Configuration{
 	/**
-	 * The original configuration file
+	 * The original configuration file path or null
+	 * if this configuration was not loaded from a file.
 	 */
 	private final Path data;
 	/**
-	 * Whether or not the frame forces itself to be the top window
+	 * Whether or not the frame forces itself to be the top window.
 	 */
 	private BooleanSetting overlay = new BooleanSetting("overlay", false);
 	/**
-	 * The amount of milliseconds a single time frame takes
+	 * The number of milliseconds a single time frame takes.
 	 */
 	private UpdateRateSetting updateRate = new UpdateRateSetting("updateRate", UpdateRate.MS_100);
 	/**
-	 * Whether or not the enable tracking key-modifier combinations
+	 * Whether or not the enable tracking key-modifier combinations.
 	 */
 	private BooleanSetting enableModifiers = new BooleanSetting("enableKeyModifierCombinations", false);
 	/**
-	 * Whether or not to track all key presses
+	 * Whether or not to track all key presses.
 	 */
 	private BooleanSetting trackAllKeys = new BooleanSetting("trackAllKeys", false);
 	/**
-	 * Whether or not to track all mouse button presses
+	 * Whether or not to track all mouse button presses.
 	 */
 	private BooleanSetting trackAllButtons = new BooleanSetting("trackAllButtons", false);
+	/**
+	 * The saved on screen position of the main frame (if previously saved).
+	 */
 	private PositionSettings position = new PositionSettings();
 	/**
 	 * Default colour scheme settings.
@@ -108,6 +111,9 @@ public class Configuration{
 	 */
 	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
 	
+	/**
+	 * Constructs a new configuration with default settings.
+	 */
 	public Configuration(){
 		this(null);
 		panels.add(new MaxPanelSettings());
@@ -116,13 +122,21 @@ public class Configuration{
 	}
 	
 	/**
-	 * Constructs a new configuration object.
-	 * @param data The data file.
+	 * Constructs a new configuration object with the
+	 * given file to save settings to.
+	 * @param data The data save file.
 	 */
-	public Configuration(Path data){
+	protected Configuration(Path data){
 		this.data = data;
 	}
 	
+	/**
+	 * Gets a list of legacy settings that can be used to parse
+	 * discontinued settings to current settings with a different name.
+	 * @param version The version of the configuration data being parsed
+	 *        can be used to determine which legacy settings should be included.
+	 * @return A list of legacy setting to parse.
+	 */
 	protected List<Setting<?>> getLegacySettings(Version version){
 		List<Setting<?>> settings = new ArrayList<Setting<?>>();
 		
@@ -168,18 +182,35 @@ public class Configuration{
 		return settings;
 	}
 	
+	/**
+	 * Gets a list of all settings in this configuration.
+	 * @return All settings in this configuration.
+	 */
 	protected List<Setting<?>> getSettings(){
 		return Arrays.asList(overlay, trackAllKeys, trackAllButtons, updateRate, enableModifiers);
 	}
 	
+	/**
+	 * Gets a list of setting groups in this configuration.
+	 * @return All setting groups in this configuration.
+	 */
 	protected List<SettingGroup> getSettingGroups(){
 		return Arrays.asList(position, theme, commands, layout, statsSaving);
 	}
 	
+	/**
+	 * Gets list of all setting lists in this configuration.
+	 * @return All setting lists in this configuration.
+	 */
 	protected List<SettingList<? extends SettingGroup>> getSettingLists(){
 		return Arrays.asList(graphs, panels, keys);
 	}
 	
+	/**
+	 * Tests if this configuration has at least one displayable panel. Note that
+	 * this does not guarantee that the configuration actually results in a visible GUI.
+	 * @return True if this configuration has at least one displayable panel.
+	 */
 	public boolean isValid(){
 		return !graphs.isEmpty() || !panels.isEmpty() || !keys.isEmpty();
 	}
@@ -192,54 +223,109 @@ public class Configuration{
 		return data;
 	}
 	
+	/**
+	 * Gets the theme settings for this configuration.
+	 * @return The theme settings.
+	 */
 	public ThemeSettings getTheme(){
 		return theme;
 	}
 	
+	/**
+	 * Gets a list of layout panels in this configuration.
+	 * @return All layout panels in this configuration.
+	 */
 	public List<LayoutPosition> getLayoutComponents(){
 		return Stream.concat(panels.stream(), Stream.concat(keys.stream(), graphs.stream())).collect(Collectors.toList());
 	}
 	
+	/**
+	 * Gets the layout settings for this configuration.
+	 * @return The layout settings.
+	 */
 	public LayoutSettings getLayout(){
 		return layout;
 	}
 	
+	/**
+	 * Gets the size in pixels of all the layout grid cells.
+	 * @return The grid cell size in pixels.
+	 * @se {@link #getLayout()}
+	 */
 	public int getCellSize(){
 		return layout.getCellSize();
 	}
 	
+	/**
+	 * Gets the offset from the border of a panel to the actual content.
+	 * @return The distance in pixels from panel border to panel content.
+	 * @see #getLayout()
+	 */
 	public int getBorderOffset(){
 		return layout.getBorderOffset();
 	}
 	
+	/**
+	 * Gets the save frame position if one was saved.
+	 * @return The frame position.
+	 * @see PositionSettings#hasPosition()
+	 */
 	public PositionSettings getFramePosition(){
 		return position;
 	}
 	
+	/**
+	 * Gets the command configuration.
+	 * @return The command settings.
+	 */
 	public CommandSettings getCommands(){
 		return commands;
 	}
 	
+	/**
+	 * Gets a list of all graphs and their settings.
+	 * @return All graph settings.
+	 */
 	public SettingList<GraphSettings> getGraphSettings(){
 		return graphs;
 	}
 	
+	/**
+	 * Gets a list of all special panels and their settings.
+	 * @return All special panel settings.
+	 */
 	public SettingList<SpecialPanelSettings> getPanels(){
 		return panels;
 	}
 	
-	public StatsSavingSettings getStatsSavingSettings(){
-		return statsSaving;
-	}
-	
+	/**
+	 * Gets a list of all key panels and their settings.
+	 * @return All key panel settings.
+	 */
 	public SettingList<KeyPanelSettings> getKeySettings(){
 		return keys;
 	}
 	
+	/**
+	 * Gets the auto saving configuration.
+	 * @return The auto saving configuration.
+	 */
+	public StatsSavingSettings getStatsSavingSettings(){
+		return statsSaving;
+	}
+	
+	/**
+	 * Checks if key-modifier tracking is enabled.
+	 * @return True if key-modifier tracking is enabled.
+	 */
 	public final boolean isKeyModifierTrackingEnabled(){
 		return enableModifiers.getValue();
 	}
 	
+	/**
+	 * Enables or disables key-modifier tracking.
+	 * @param enabled True to enable key-modifer tracking.
+	 */
 	public void setKeyModifierTrackingEnabled(boolean enabled){
 		enableModifiers.update(enabled);
 	}
@@ -317,10 +403,9 @@ public class Configuration{
 	}
 	
 	/**
-	 * Saves this configuration file
-	 * @param pos Whether or not the ask
-	 *        to save the on screen position
-	 *        of the program
+	 * Saves this configuration file.
+	 * @param pos Whether or not the ask to save
+	 *        the on screen position of the program.
 	 */
 	public final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
@@ -331,11 +416,16 @@ public class Configuration{
 				Dialog.showMessageDialog("Configuration saved succesfully.");
 			}catch(Exception e1){
 				e1.printStackTrace();
-				Dialog.showErrorDialog("Failed to save the config!");
+				Dialog.showErrorDialog("Failed to save the configuration!");
 			}
 		}
 	}
 
+	/**
+	 * Writes this configuration to the given writer.
+	 * @param out The writer to write to.
+	 * @param pos If true the current frame position will be written.
+	 */
 	public void write(IndentWriter out, boolean pos){
 		out.println("version: " + Main.VERSION);
 		out.println();
