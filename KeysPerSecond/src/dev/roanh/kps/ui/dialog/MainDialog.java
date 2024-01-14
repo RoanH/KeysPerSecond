@@ -38,14 +38,28 @@ import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
 
+/**
+ * Main configuration dialog shown on first launch.
+ * @author Roan
+ */
 public class MainDialog extends JPanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -2620857098469751291L;
+	/**
+	 * The configuration to update.
+	 */
 	private Configuration config;
+	/**
+	 * Panel with check box options.
+	 */
 	private CheckBoxPanel options;
 	
+	/**
+	 * Constructs a new main dialog.
+	 * @param config The configuration to update.
+	 */
 	public MainDialog(Configuration config){
 		super(new BorderLayout());
 		this.config = config;
@@ -56,6 +70,10 @@ public class MainDialog extends JPanel{
 		add(buildBottomPanel(), BorderLayout.PAGE_END);
 	}
 	
+	/**
+	 * Builds the bottom GUI panel that shows links and version information.
+	 * @return The constructed bottom GUI panel.
+	 */
 	private JPanel buildBottomPanel(){
 		JLabel forum = new JLabel("<html><font color=blue><u>Forums</u></font> -</html>", SwingConstants.RIGHT);
 		forum.addMouseListener(new ClickableLink("https://osu.ppy.sh/community/forums/topics/552405"));
@@ -73,6 +91,11 @@ public class MainDialog extends JPanel{
 		return info;
 	}
 	
+	/**
+	 * Builds the left GUI panel that shows general info, main configuration and check boxes.
+	 * @return The constructed left GUI panel.
+	 * @see #options
+	 */
 	private JPanel buildLeftPanel(){
 		//info
 		JLabel info = new JLabel("<html><body style='width:210px'>You can either configure the program on this screen or use the right <b>right click</b> menu after the program is already visible to see changes take effect in real time.</body></html>");
@@ -98,6 +121,10 @@ public class MainDialog extends JPanel{
 		return left;
 	}
 	
+	/**
+	 * Builds the right GUI panel shows config saving/loading, settings and about.
+	 * @return The constructed right GUI panel.
+	 */
 	private JPanel buildRightPanel(){
 		//configuration
 		JPanel configuration = new JPanel(new GridLayout(2, 1));
@@ -150,16 +177,35 @@ public class MainDialog extends JPanel{
 		return right;
 	}
 	
+	/**
+	 * Panel with check box style options.
+	 * @author Roan
+	 */
 	private class CheckBoxPanel extends JPanel{
 		/**
 		 * Serial ID.
 		 */
 		private static final long serialVersionUID = 7814497194364064857L;
+		/**
+		 * Whether overlay mode is enabled.
+		 */
 		private final JCheckBox overlay = new JCheckBox();
+		/**
+		 * Whether all keys are tracked.
+		 */
 		private final JCheckBox allKeys = new JCheckBox();
+		/**
+		 * Whether all buttons are tracked.
+		 */
 		private final JCheckBox allButtons = new JCheckBox();
+		/**
+		 * Whether key-modifier tracking is enabled.
+		 */
 		private final JCheckBox modifiers = new JCheckBox();
 		
+		/**
+		 * Constructs a new check box panel.
+		 */
 		private CheckBoxPanel(){
 			super(new BorderLayout());
 			setBorder(BorderFactory.createTitledBorder("Options"));
@@ -186,6 +232,9 @@ public class MainDialog extends JPanel{
 			syncBoxes();
 		}
 		
+		/**
+		 * Syncs all check boxes with current configuration setting.
+		 */
 		private void syncBoxes(){
 			overlay.setSelected(config.isOverlayMode());
 			allKeys.setSelected(config.isTrackAllKeys());
