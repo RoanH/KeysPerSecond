@@ -51,9 +51,9 @@ import dev.roanh.util.Dialog;
 public class LayoutDialog{
 
 	/**
-	 * Shows the layout configuration dialog
+	 * Shows the layout configuration dialog.
 	 * @param live Whether or not changes should be
-	 *        applied in real time
+	 *        applied in real time.
 	 */
 	public static final void configureLayout(boolean live){
 		Main.content.showGrid();
@@ -126,6 +126,15 @@ public class LayoutDialog{
 		Main.content.hideGrid();
 	}
 	
+	/**
+	 * Constructs a new button to a new panel.
+	 * @param <T> The panel settings type.
+	 * @param view The table to add the new panel to.
+	 * @param text The name of button.
+	 * @param panels The list of panels to update with the new panels.
+	 * @param settingsCtor The function to use to create new empty panel settings.
+	 * @return The newly constructed button.
+	 */
 	private static <T extends PanelSettings> JButton createAddButton(TablePanel view, String text, SettingList<T> panels, Supplier<T> settingsCtor){
 		JButton add = new JButton(text);
 		add.addActionListener(e->{
