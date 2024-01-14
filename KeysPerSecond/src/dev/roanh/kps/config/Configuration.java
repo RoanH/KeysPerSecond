@@ -18,11 +18,9 @@
  */
 package dev.roanh.kps.config;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.Statistics;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
@@ -50,8 +47,6 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
 import dev.roanh.kps.layout.LayoutPosition;
 import dev.roanh.util.Dialog;
-import dev.roanh.util.FileSelector;
-import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * This class contains all the configurable
@@ -59,18 +54,6 @@ import dev.roanh.util.FileSelector.FileExtension;
  * @author Roan
  */
 public class Configuration{
-	/**
-	 * Extension filter for all KeysPerSecond configuration files.
-	 */
-	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps", "kpsconf", "kpsconf2", "kpsconf3");
-	/**
-	 * Extension filter for the current KeysPerSecond configuration file format.
-	 */
-	private static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps");
-	/**
-	 * Extension filter for legacy KeysPerSecond configuration file formats.
-	 */
-	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
 	/**
 	 * The original configuration file
 	 */
@@ -334,54 +317,6 @@ public class Configuration{
 	}
 	
 	/**
-	 * Loads a configuration file (with GUI)
-	 * @return Whether or not the config was loaded successfully
-	 */
-	//TODO move this method?
-	public static final boolean loadConfiguration(){
-		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
-		if(saveloc == null){
-			return false;
-		}else if(saveloc.getFileName().toString().endsWith("kpsconf") || saveloc.getFileName().toString().endsWith("kpsconf2")){
-			Dialog.showMessageDialog(
-				"You are trying to load a legacy configuration file.\n"
-				+ "This is no longer possible with this version of the program.\n"
-				+ "You should convert your configuration file first using version 8.4."
-			);
-			return false;
-		}
-		
-		try{
-			ConfigParser parser = ConfigParser.parse(saveloc);
-			if(parser.wasDefaultUsed()){
-				Dialog.showMessageDialog("Configuration loaded succesfully but some default values were used.");
-			}else{
-				Dialog.showMessageDialog("Configuration loaded succesfully.");
-			}
-			
-			Main.config = parser.getConfig();
-			if(Main.config.position.hasPosition()){
-				Main.frame.setLocation(Main.config.position.getLocation());
-			}
-			
-			//TODO move logic?
-			if(Main.config.statsSaving.isLoadOnLaunchEnabled()){
-				try{
-					Statistics.loadStats(Paths.get(Main.config.statsSaving.getSaveFile()));
-				}catch(Exception e){
-					e.printStackTrace();
-					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
-				}
-			}
-			
-			return true;
-		}catch(IOException e){
-			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
-			return false;
-		}
-	}
-
-	/**
 	 * Saves this configuration file
 	 * @param pos Whether or not the ask
 	 *        to save the on screen position
@@ -389,7 +324,7 @@ public class Configuration{
 	 */
 	public final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
-		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
+		Path saveloc = Dialog.showFileSaveDialog(ConfigParser.KPS_NEW_EXT, "config");
 		if(saveloc != null){
 			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc))){
 				write(new IndentWriter(out), savepos);
