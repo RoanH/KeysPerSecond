@@ -38,7 +38,7 @@ import dev.roanh.util.FileSelector.FileExtension;
 /**
  * Class used to parse configuration files.
  * @author Roan
- * @se Configuration
+ * @see Configuration
  */
 public class ConfigParser{
 	/**
