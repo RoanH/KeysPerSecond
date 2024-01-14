@@ -35,6 +35,11 @@ import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
 import dev.roanh.util.FileSelector.FileExtension;
 
+/**
+ * Class used to parse configuration files.
+ * @author Roan
+ * @se Configuration
+ */
 public class ConfigParser{
 	/**
 	 * Extension filter for the current KeysPerSecond configuration file format.
@@ -48,17 +53,51 @@ public class ConfigParser{
 	 * Extension filter for legacy KeysPerSecond configuration file formats.
 	 */
 	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
+	/**
+	 * The read ahead limit mark used when parsing.
+	 */
 	private static final int MARK_LIMIT = 10000;
+	/**
+	 * Start of a new list item prefix.
+	 */
 	private static final char[] LIST_ITEM_START = new char[]{' ', ' ', '-', ' '};
+	/**
+	 * Continuation of a list item body prefix.
+	 */
 	private static final char[] LIST_ITEM_BODY = new char[]{' ', ' ', ' ', ' '};
+	/**
+	 * Group item body prefix (indent).
+	 */
 	private static final char[] GROUP_BODY = new char[]{' ', ' '};
+	/**
+	 * A key index map of settings to parse.
+	 */
 	private Map<String, Setting<?>> settings = new HashMap<String, Setting<?>>();
+	/**
+	 * A key index map of setting groups to parse.
+	 */
 	private Map<String, SettingGroup> groups = new HashMap<String, SettingGroup>();
+	/**
+	 * A key index map of setting lists to parse.
+	 */
 	private Map<String, SettingList<? extends SettingGroup>> lists = new HashMap<String, SettingList<? extends SettingGroup>>();
+	/**
+	 * The version of the configuration being parsed.
+	 */
 	private Version version;
-	private boolean defaultUsed;//overriden, default used when not specified doesn't count, this is when given values are replaced with safe values deliberately
+	/**
+	 * Set to true when a setting could not be parsed and had to be reset to default values.
+	 */
+	private boolean defaultUsed;
+	/**
+	 * The configuration being parsed.
+	 */
 	private Configuration config;
 	
+	/**
+	 * Constructs a new configuration parser.
+	 * @param path The path to configuration file to read.
+	 */
 	private ConfigParser(Path path){
 		config = new Configuration(path);
 	}
@@ -105,33 +144,63 @@ public class ConfigParser{
 			
 			return true;
 		}catch(IOException e){
+			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
 			return false;
 		}
 	}
 	
+	/**
+	 * Reads the configuration at the given path.
+	 * @param path The path to the configuration to parse.
+	 * @return The parsed configuration file.
+	 * @throws IOException When an IOException occurs.
+	 */
 	public static Configuration read(Path path) throws IOException{
 		return parse(path).getConfig();
 	}
 	
+	/**
+	 * Reads and parses the configuration at the given path.
+	 * @param path The path to configuration to parse.
+	 * @return The config parser containing the parsed configuration.
+	 * @throws IOException When an IOException occurs.
+	 */
 	public static ConfigParser parse(Path path) throws IOException{
 		ConfigParser parser = new ConfigParser(path);
 		parser.parse();
 		return parser;
 	}
 	
+	/**
+	 * Gets the version of the parsed configuration file.
+	 * This indicates the KeysPerSecond version that wrote it.
+	 * @return The version for the parsed configuration file.
+	 */
 	public Version getVersion(){
 		return version;
 	}
 	
+	/**
+	 * Gets the parsed configuration file.
+	 * @return The parsed configuration file.
+	 */
 	public Configuration getConfig(){
 		return config;
 	}
 	
+	/**
+	 * Tests if any settings were reset to their default value because parsing them failed.
+	 * @return True if any default values were used.
+	 */
 	public boolean wasDefaultUsed(){
 		return defaultUsed;
 	}
 	
+	/**
+	 * Parses the set configuration file.
+	 * @throws IOException When an IOException occurs.
+	 */
 	private void parse() throws IOException{
 		try(BufferedReader in = Files.newBufferedReader(config.getPath())){
 			//read version
@@ -143,6 +212,11 @@ public class ConfigParser{
 		}
 	}
 	
+	/**
+	 * Reads the configuration version from the file being parsed.
+	 * @param in The reader to the configuration file.
+	 * @throws IOException When an IOException occurs.
+	 */
 	private void readVersion(BufferedReader in) throws IOException{
 		in.mark(MARK_LIMIT);
 		String line = in.readLine();
@@ -158,6 +232,11 @@ public class ConfigParser{
 		}
 	}
 	
+	/**
+	 * Prepares key-setting maps for all the settings to parse.
+	 * @param version The version of the configuration being read
+	 *        to use to determine which legacy compatibility settings to include.
+	 */
 	private void prepareMaps(Version version){
 		//map settings to parse
 		for(Setting<?> setting : config.getSettings()){
@@ -178,6 +257,11 @@ public class ConfigParser{
 		}
 	}
 	
+	/**
+	 * Reads all settings from the configuration being read.
+	 * @param in The reader to the configuration file.
+	 * @throws IOException When an IOException occurs.
+	 */
 	private void readData(BufferedReader in) throws IOException{
 		String line;
 		while((line = in.readLine()) != null){
@@ -200,14 +284,14 @@ public class ConfigParser{
 				//setting groups
 				SettingGroup group = groups.get(key);
 				if(group != null){
-					defaultUsed |= parseGroup(in, group);
+					parseGroup(in, group);
 					continue;
 				}
 
 				//setting lists
 				SettingList<? extends SettingGroup> list = lists.get(key);
 				if(list != null){
-					defaultUsed |= parseList(in, list);
+					parseList(in, list);
 					continue;
 				}
 			}
@@ -217,7 +301,13 @@ public class ConfigParser{
 		}
 	}
 	
-	private static boolean parseGroup(BufferedReader in, SettingGroup target) throws IOException{
+	/**
+	 * Parses a setting group.
+	 * @param in The reader to read from.
+	 * @param target The group to store the parsed data in.
+	 * @throws IOException When an IOException occurs.
+	 */
+	private void parseGroup(BufferedReader in, SettingGroup target) throws IOException{
 		char[] lead = new char[2];
 		
 		Map<String, String> item = new HashMap<String, String>();
@@ -251,13 +341,19 @@ public class ConfigParser{
 			item.put(line.substring(0, mark).trim(), line.substring(mark + 1, line.length()).trim());
 		}
 		
-		return target.parse(item);
+		defaultUsed |= target.parse(item);
 	}
 	
-	private static <T extends SettingGroup> boolean parseList(BufferedReader in, SettingList<T> list) throws IOException{
+	/**
+	 * Parses a setting list.
+	 * @param <T> The list data type.
+	 * @param in The reader to read from.
+	 * @param list The list to store the parsed data in.
+	 * @throws IOException When an IOException occurs.
+	 */
+	private <T extends SettingGroup> void parseList(BufferedReader in, SettingList<T> list) throws IOException{
 		char[] lead = new char[4];
 		
-		boolean defaultUsed = false;
 		List<String> item = null;
 		while(in.ready()){
 			in.mark(MARK_LIMIT);
@@ -293,7 +389,5 @@ public class ConfigParser{
 		if(item != null){
 			defaultUsed |= list.add(item);
 		}
-		
-		return defaultUsed;
 	}
 }
