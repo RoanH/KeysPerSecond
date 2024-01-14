@@ -20,9 +20,7 @@ package dev.roanh.kps.ui.component;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.util.function.Consumer;
 import java.util.function.IntConsumer;
-import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -80,6 +78,10 @@ public class TablePanel extends JPanel{
 		row.add(new JLabel("Settings", SwingConstants.CENTER));
 		row.add(new JLabel("Delete", SwingConstants.CENTER));
 		rows.add(row);
+	}
+	
+	public boolean isLive(){
+		return live;
 	}
 	
 	public void addGraphs(SettingList<GraphSettings> graphs){

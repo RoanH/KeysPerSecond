@@ -23,7 +23,6 @@ import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.function.BiConsumer;
-import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
@@ -34,26 +33,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.GraphSettings;
-import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.LocationSettings;
-import dev.roanh.kps.config.group.PanelSettings;
-import dev.roanh.kps.layout.LayoutValidator;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.ui.component.TablePanel;
-import dev.roanh.kps.ui.editor.Editor;
-import dev.roanh.kps.ui.editor.GraphEditor;
 import dev.roanh.kps.ui.model.DynamicInteger;
-import dev.roanh.kps.ui.model.EndNumberModel;
-import dev.roanh.kps.ui.model.MaxNumberModel;
-import dev.roanh.kps.ui.model.SpecialNumberModel.ValueChangeListener;
-import dev.roanh.kps.ui.model.SpecialNumberModelEditor;
 import dev.roanh.util.Dialog;
 
 /**
@@ -108,10 +97,10 @@ public class LayoutDialog{
 		pane.setPreferredSize(new Dimension(600, 200));
 		
 		JPanel buttons = new JPanel(new GridLayout(1, 4, 2, 0));
-		buttons.add(createAddButton(panelView, "Add Maximum", Main.config.getPanels(), PanelType.MAX::newSettings, panelView::addPanelRow, live));
-		buttons.add(createAddButton(panelView, "Add Average", Main.config.getPanels(), PanelType.AVG::newSettings, panelView::addPanelRow, live));
-		buttons.add(createAddButton(panelView, "Add KPS", Main.config.getPanels(), PanelType.CURRENT::newSettings, panelView::addPanelRow, live));
-		buttons.add(createAddButton(panelView, "Add Total", Main.config.getPanels(), PanelType.TOTAL::newSettings, panelView::addPanelRow, live));
+		buttons.add(createAddButton(panelView, "Add Maximum", Main.config.getPanels(), PanelType.MAX::newSettings, panelView::addPanelRow));
+		buttons.add(createAddButton(panelView, "Add Average", Main.config.getPanels(), PanelType.AVG::newSettings, panelView::addPanelRow));
+		buttons.add(createAddButton(panelView, "Add KPS", Main.config.getPanels(), PanelType.CURRENT::newSettings, panelView::addPanelRow));
+		buttons.add(createAddButton(panelView, "Add Total", Main.config.getPanels(), PanelType.TOTAL::newSettings, panelView::addPanelRow));
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createTitledBorder("Panels"));
@@ -131,21 +120,21 @@ public class LayoutDialog{
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
 		graphPanel.add(graphPane, BorderLayout.CENTER);
-		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), GraphSettings::new, graphView::addGraphRow, live), BorderLayout.PAGE_END);
+		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), GraphSettings::new, graphView::addGraphRow), BorderLayout.PAGE_END);
 		form.add(graphPanel, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);
 		Main.content.hideGrid();
 	}
 	
-	private static <T extends LocationSettings> JButton createAddButton(TablePanel view, String text, SettingList<T> panels, Supplier<T> settingsCtor, BiConsumer<SettingList<T>, T> viewUpdate, boolean live){
+	private static <T extends LocationSettings> JButton createAddButton(TablePanel view, String text, SettingList<T> panels, Supplier<T> settingsCtor, BiConsumer<SettingList<T>, T> viewUpdate){
 		JButton add = new JButton(text);
 		add.addActionListener(e->{
 			T settings = settingsCtor.get();
 			panels.add(settings);
 			viewUpdate.accept(panels, settings);
 			view.revalidate();
-			if(live){
+			if(view.isLive()){
 				Main.reconfigure();
 			}
 		});

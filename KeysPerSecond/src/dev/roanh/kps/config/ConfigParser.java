@@ -147,7 +147,6 @@ public class ConfigParser{
 			}
 
 			//unknown / invalid settings just get ignored but do generate a default used warning
-			System.out.println("unknown: " + line);
 			defaultUsed = true;
 		}
 	}

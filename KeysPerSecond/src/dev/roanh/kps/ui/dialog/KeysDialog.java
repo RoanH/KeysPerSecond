@@ -29,13 +29,10 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
 
 import dev.roanh.kps.CommandKeys;
 import dev.roanh.kps.Main;
@@ -68,12 +65,8 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	/**
 	 * Table model showing all added keys and buttons.
 	 */
-//	private KeysModel model = new KeysModel();
-	private SettingList<KeyPanelSettings> config;
-	private boolean live;
-	
 	private TablePanel keys;
-
+	private SettingList<KeyPanelSettings> config;
 	
 	/**
 	 * Constructs a new KeysDialog.
@@ -82,17 +75,12 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	private KeysDialog(SettingList<KeyPanelSettings> config, boolean live){
 		super(new BorderLayout());
 		this.config = config;
-		this.live = live;
 		
 		//left panel showing added keys
 		JPanel left = new JPanel(new BorderLayout());
 		left.setBorder(BorderFactory.createTitledBorder("Currently added keys"));
-//		left.add(new JLabel("You can remove a key or update its display name and visbility below."), BorderLayout.PAGE_START);
-		//JTable keys = new JTable();
+
 		keys = new TablePanel("Key", false, live);
-//		keys.setModel(model);
-//		keys.setDragEnabled(false);
-		
 		keys.addKeys(config);
 		JScrollPane pane = new JScrollPane(keys);
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -150,16 +138,13 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		JButton button = new JButton(text);
 		button.addActionListener(e->{
 			KeyPanelSettings info = new KeyPanelSettings(placePanel(), Main.getExtendedButtonCode(code));
-//			KeyInformation key = new KeyInformation("M" + code, Main.getExtendedButtonCode(code), false, false, false, true);
 			if(config.contains(info)){
-//				KeyInformation.autoIndex -= 2;
 				Dialog.showMessageDialog("The M" + code + " button was already added before.\nIt was not added again.");
 			}else{
 				config.add(info);
 				keys.addPanelRow(config, info);
 				keys.revalidate();
-//				model.fireTableDataChanged();
-				if(live){
+				if(keys.isLive()){
 					Main.reconfigure();
 				}
 			}
@@ -181,14 +166,12 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		
 		KeyPanelSettings info = new KeyPanelSettings(placePanel(), lastKey);
 		if(config.contains(info)){
-//			KeyInformation.autoIndex -= 2;
 			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
 		}else{
 			config.add(info);
-//			model.fireTableDataChanged();
 			keys.addPanelRow(config, info);
 			keys.revalidate();
-			if(live){
+			if(keys.isLive()){
 				Main.reconfigure();
 			}
 		}
@@ -280,86 +263,5 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		}
 
 		return conflicts.length - free;
-	}
-
-	/**
-	 * Table model that displays all configured keys.
-	 * @author Roan
-	 */
-	//TODO obsolete I guess
-	private class KeysModel extends DefaultTableModel{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = -5510962859479828507L;
-
-		@Override
-		public int getRowCount(){
-			return config == null ? 0 : config.size();
-		}
-
-		@Override
-		public int getColumnCount(){
-			return 3;
-		}
-
-		@Override
-		public Object getValueAt(int rowIndex, int columnIndex){
-			switch(columnIndex){
-			case 0:
-				return config.get(rowIndex).getName();
-			case 1:
-				return config.get(rowIndex).isVisible();
-			case 2:
-				return false;
-			default:
-				return null;
-			}
-		}
-
-		@Override
-		public String getColumnName(int col){
-			switch(col){
-			case 0:
-				return "Key";
-			case 1:
-				return "Visible";
-			case 2:
-				return "Remove";
-			default:
-				return null;
-			}
-		}
-
-		@Override
-		public Class<?> getColumnClass(int columnIndex){
-			if(columnIndex == 1 || columnIndex == 2){
-				return Boolean.class;
-			}
-			return super.getColumnClass(columnIndex);
-		}
-
-		@Override
-		public boolean isCellEditable(int row, int col){
-			return true;
-		}
-
-		@Override
-		public void setValueAt(Object value, int row, int col){
-			switch(col){
-			case 0:
-				config.get(row).setName((String)value);
-				break;
-			case 1:
-				config.get(row).setVisible((boolean)value);
-				break;
-			case 2:
-				if((boolean)value == true){
-					Main.removeKey(config.remove(row).getKeyCode());
-					this.fireTableDataChanged();
-				}
-				break;
-			}
-		}
 	}
 }
