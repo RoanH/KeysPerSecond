@@ -66,10 +66,15 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * Table model showing all added keys and buttons.
 	 */
 	private TablePanel keys;
+	/**
+	 * The configuration being updated.
+	 */
 	private SettingList<KeyPanelSettings> config;
 	
 	/**
 	 * Constructs a new KeysDialog.
+	 * @param config The configuration to update.
+	 * @param live If the setting live and changes should be reflected in real time.
 	 * @see #configureKeys(SettingList, boolean)
 	 */
 	private KeysDialog(SettingList<KeyPanelSettings> config, boolean live){
@@ -185,7 +190,9 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	}
 
 	/**
-	 * Shows the key configuration dialog
+	 * Shows the key configuration dialog.
+	 * @param config The configuration to update.
+	 * @param live If the setting live and changes should be reflected in real time.
 	 */
 	public static final void configureKeys(SettingList<KeyPanelSettings> config, boolean live){
 		KeysDialog dialog = new KeysDialog(config, live);
