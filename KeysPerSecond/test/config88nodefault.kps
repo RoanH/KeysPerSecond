@@ -34,7 +34,8 @@ statsSaving:
   saveFile: C:\Users\RoanH\alsotest
 
 graphs:
-  - x: 1
+  - name: KPS
+    x: 1
     y: 2
     width: 5
     height: 8
