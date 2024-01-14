@@ -26,14 +26,28 @@ import javax.swing.JPanel;
 
 import dev.roanh.util.Dialog;
 
-public class Editor extends JPanel{
+/**
+ * Base class for setting editors.
+ * @author Roan
+ */
+public abstract class Editor extends JPanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -3685233769737234444L;
+	/**
+	 * Panel containing setting names.
+	 */
 	protected JPanel labels = new JPanel(new GridLayout(0, 1, 0, 2));
+	/**
+	 * Panel containing setting editors.
+	 */
 	protected JPanel fields = new JPanel(new GridLayout(0, 1, 0, 2));
 
+	/**
+	 * Constructs a new editor with the given title.
+	 * @param title The UI title to show.
+	 */
 	public Editor(String title){
 		super(new BorderLayout());
 		this.setBorder(BorderFactory.createTitledBorder(title));
@@ -41,6 +55,10 @@ public class Editor extends JPanel{
 		this.add(fields, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Shows the given editor in a dialog.
+	 * @param editor The editor to show.
+	 */
 	public static final void showEditor(Editor editor){
 		Dialog.showMessageDialog(editor);
 	}

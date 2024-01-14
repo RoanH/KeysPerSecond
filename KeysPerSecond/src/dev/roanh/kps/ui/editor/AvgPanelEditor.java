@@ -24,12 +24,22 @@ import javax.swing.JLabel;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 
+/**
+ * Editor for the average panel settings.
+ * @author Roan
+ * @see AveragePanelSettings
+ */
 public class AvgPanelEditor extends DataPanelEditor{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -6191919120127582754L;
 
+	/**
+	 * Constructs a new average panel settings editor.
+	 * @param config The settings to update.
+	 * @param live If updates should be reflected in real time.
+	 */
 	public AvgPanelEditor(AveragePanelSettings config, boolean live){
 		super(config, live);
 		

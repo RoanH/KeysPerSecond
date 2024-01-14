@@ -24,12 +24,22 @@ import javax.swing.JLabel;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 
+/**
+ * Editor for key panel settings.
+ * @author Roan
+ * @see KeyPanelSettings
+ */
 public class KeyPanelEditor extends DataPanelEditor{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 8336531868831372183L;
 
+	/**
+	 * Constructs a new editor.
+	 * @param config The configuration to update.
+	 * @param live If updates should be reflected in real time.
+	 */
 	public KeyPanelEditor(KeyPanelSettings config, boolean live){
 		super(config, live);
 		

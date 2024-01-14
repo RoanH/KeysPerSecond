@@ -27,12 +27,22 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.DataPanelSettings;
 import dev.roanh.kps.ui.listener.FieldChangeListener;
 
+/**
+ * Editor for data panels.
+ * @author Roan
+ * @see DataPanelSettings
+ */
 public class DataPanelEditor extends Editor{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -2982608015931683558L;
 
+	/**
+	 * Constructs a new editor.
+	 * @param config The settings to update.
+	 * @param live If updates should be reflected in real time.
+	 */
 	public DataPanelEditor(DataPanelSettings config, boolean live){
 		super("Panel Specific Settings");
 
