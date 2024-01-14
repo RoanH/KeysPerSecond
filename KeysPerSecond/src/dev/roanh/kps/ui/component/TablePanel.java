@@ -133,24 +133,44 @@ public class TablePanel extends JPanel{
 		}
 	}
 	
-//	/**
-//	 * Creates a editable list item for the
-//	 * layout configuration dialog
-//	 * @param info The positionable that links the 
-//	 *        editor to the underlying data
-//	 * @param fields The GUI panel that holds all the fields
-//	 * @param live Whether or not edits should be displayed in real time
-//	 */
+	/**
+	 * Add a row to the table to configure the given settings.
+	 * @param panels The list to update when the row is removed.
+	 * @param info The settings to configure with the row.
+	 */
 	public void addPanelRow(SettingList<? extends PanelSettings> panels, PanelSettings info){
 		JPanel row = new JPanel(new GridLayout(0, location ? 7 : 3, 2, 0));
 		
+		//name
 		JLabel nameLabel = new JLabel(info.getName(), SwingConstants.CENTER);
 		row.add(nameLabel);
 
+		//location
 		if(location){
-			addLocationFields(row, info);
+			LayoutValidator validator = new LayoutValidator();
+			validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX)));
+			validator.getYField().setModel(new EndNumberModel(info.getLayoutY(), validator.getYField(), update(info::setY)));
+			validator.getWidthField().setModel(new MaxNumberModel(info.getLayoutWidth(), validator.getWidthField(), update(info::setWidth)));
+			validator.getHeightField().setModel(new MaxNumberModel(info.getLayoutHeight(), validator.getHeightField(), update(info::setHeight)));
+
+			JSpinner x = new JSpinner(validator.getXField().getModel());
+			x.setEditor(new SpecialNumberModelEditor(x));
+			row.add(x);
+
+			JSpinner y = new JSpinner(validator.getYField().getModel());
+			y.setEditor(new SpecialNumberModelEditor(y));
+			row.add(y);
+
+			JSpinner w = new JSpinner(validator.getWidthField().getModel());
+			w.setEditor(new SpecialNumberModelEditor(w));
+			row.add(w);
+
+			JSpinner h = new JSpinner(validator.getHeightField().getModel());
+			h.setEditor(new SpecialNumberModelEditor(h));
+			row.add(h);
 		}
 
+		//edit
 		JButton edit = new JButton("Edit");
 		row.add(edit);
 		edit.addActionListener(e->{
@@ -158,12 +178,7 @@ public class TablePanel extends JPanel{
 			nameLabel.setText(info.getName());
 		});
 		
-		addDeleteButton(row, panels, info);
-		
-		rows.add(row);
-	}
-	
-	private void addDeleteButton(JPanel row, SettingList<? extends LocationSettings> panels, LocationSettings info){
+		//delete
 		JButton delete = new JButton("Remove");
 		row.add(delete);
 		delete.addActionListener(e->{
@@ -178,30 +193,8 @@ public class TablePanel extends JPanel{
 				Main.reconfigure();
 			}
 		});
-	}
-	
-	private void addLocationFields(JPanel row, LocationSettings info){
-		LayoutValidator validator = new LayoutValidator();
-		validator.getXField().setModel(new EndNumberModel(info.getLayoutX(), validator.getXField(), update(info::setX)));
-		validator.getYField().setModel(new EndNumberModel(info.getLayoutY(), validator.getYField(), update(info::setY)));
-		validator.getWidthField().setModel(new MaxNumberModel(info.getLayoutWidth(), validator.getWidthField(), update(info::setWidth)));
-		validator.getHeightField().setModel(new MaxNumberModel(info.getLayoutHeight(), validator.getHeightField(), update(info::setHeight)));
-
-		JSpinner x = new JSpinner(validator.getXField().getModel());
-		x.setEditor(new SpecialNumberModelEditor(x));
-		row.add(x);
-
-		JSpinner y = new JSpinner(validator.getYField().getModel());
-		y.setEditor(new SpecialNumberModelEditor(y));
-		row.add(y);
-
-		JSpinner w = new JSpinner(validator.getWidthField().getModel());
-		w.setEditor(new SpecialNumberModelEditor(w));
-		row.add(w);
-
-		JSpinner h = new JSpinner(validator.getHeightField().getModel());
-		h.setEditor(new SpecialNumberModelEditor(h));
-		row.add(h);
+		
+		rows.add(row);
 	}
 	
 	/**
