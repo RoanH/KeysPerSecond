@@ -316,7 +316,6 @@ public class Menu{
 		Main.hits = 0;
 		Main.reconfigure();
 		Main.mainLoop();
-//		KeyInformation.autoIndex = Main.config.keyinfo.size() * 2 - 2;
 	}
 
 	/**
