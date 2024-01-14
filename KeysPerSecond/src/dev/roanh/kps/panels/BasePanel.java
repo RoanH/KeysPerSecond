@@ -25,8 +25,9 @@ import javax.swing.JPanel;
 
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
-import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.RenderingMode.RenderCache;
+import dev.roanh.kps.config.ThemeColor;
+import dev.roanh.kps.config.group.DataPanelSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 
 /**
@@ -49,6 +50,19 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * RenderCache for this panel
 	 */
 	private RenderCache cache = new RenderCache();
+	/**
+	 * Settings for this panel.
+	 */
+	private DataPanelSettings config;
+	
+	/**
+	 * Constructs a new base panel with the given settings.
+	 * @param config The panel settings.
+	 */
+	public BasePanel(DataPanelSettings config){
+		this.config = config;
+		sizeChanged();
+	}
 
 	/**
 	 * Signals this panel that its size
@@ -56,78 +70,81 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * the render cache should be invalidated
 	 */
 	public void sizeChanged(){
-		cache.init(getRenderingMode());
+		cache.init(config.getRenderingMode());
 		this.repaint();
-	}
-
-	/**
-	 * Constructs a new BasePanel
-	 */
-	protected BasePanel(){
-		this.setOpaque(!ColorManager.transparency);
 	}
 
 	@Override
 	public void paintComponent(Graphics g1){
 		Graphics2D g = (Graphics2D)g1;
 
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, Main.config.getBackgroundOpacity()));
-		g.setColor(Main.config.getBackgroundColor());
+		ThemeColor background = Main.config.getTheme().getBackground();
+		ThemeColor foreground = Main.config.getTheme().getForeground();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, background.getAlpha()));
+		g.setColor(background.getColor());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Main.config.getForegroundOpacity()));
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
 		g.addRenderingHints(Main.desktopHints);
 
-		g.drawImage(ColorManager.graph_upper_left,   Main.config.borderOffset, Main.config.borderOffset, Main.config.borderOffset + imageSize, Main.config.borderOffset + imageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_left,   Main.config.borderOffset, this.getHeight() - Main.config.borderOffset - imageSize, Main.config.borderOffset + imageSize, this.getHeight() - Main.config.borderOffset, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - Main.config.borderOffset - imageSize, Main.config.borderOffset, this.getWidth() - Main.config.borderOffset, Main.config.borderOffset + imageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - Main.config.borderOffset - imageSize, this.getHeight() - Main.config.borderOffset - imageSize, this.getWidth() - Main.config.borderOffset, this.getHeight() - Main.config.borderOffset, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_side_left,    Main.config.borderOffset, Main.config.borderOffset + imageSize, Main.config.borderOffset + imageSize, this.getHeight() - Main.config.borderOffset - imageSize, 0, 0, 4, 56, this);
-		g.drawImage(ColorManager.graph_upper_middle, Main.config.borderOffset + imageSize, Main.config.borderOffset, this.getWidth() - Main.config.borderOffset - imageSize, Main.config.borderOffset + imageSize, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_lower_middle, Main.config.borderOffset + imageSize, this.getHeight() - Main.config.borderOffset - imageSize, this.getWidth() - Main.config.borderOffset - imageSize, this.getHeight() - Main.config.borderOffset, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - Main.config.borderOffset - imageSize, Main.config.borderOffset + imageSize, this.getWidth() - Main.config.borderOffset, this.getHeight() - Main.config.borderOffset - imageSize, 0, 0, 4, 56, this);
+		int borderOffset = Main.config.getBorderOffset();
+		g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + imageSize, borderOffset + imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - imageSize, borderOffset + imageSize, this.getHeight() - borderOffset, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - borderOffset - imageSize, borderOffset, this.getWidth() - borderOffset, borderOffset + imageSize, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - borderOffset - imageSize, this.getHeight() - borderOffset - imageSize, this.getWidth() - borderOffset, this.getHeight() - borderOffset, 0, 0, 4, 4, this);
+		g.drawImage(ColorManager.graph_side_left,    borderOffset, borderOffset + imageSize, borderOffset + imageSize, this.getHeight() - borderOffset - imageSize, 0, 0, 4, 56, this);
+		g.drawImage(ColorManager.graph_upper_middle, borderOffset + imageSize, borderOffset, this.getWidth() - borderOffset - imageSize, borderOffset + imageSize, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_lower_middle, borderOffset + imageSize, this.getHeight() - borderOffset - imageSize, this.getWidth() - borderOffset - imageSize, this.getHeight() - borderOffset, 0, 0, 46, 4, this);
+		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - borderOffset - imageSize, borderOffset + imageSize, this.getWidth() - borderOffset, this.getHeight() - borderOffset - imageSize, 0, 0, 4, 56, this);
 		
 		if(isActive()){
 			g.setColor(ColorManager.activeColor);
 			g.fillRect(
-				Main.config.borderOffset + (imageSize / 4) * 3,
-				Main.config.borderOffset + (imageSize / 4) * 2,
-				this.getWidth() - 2 * Main.config.borderOffset - (imageSize / 4) * 6,
-				this.getHeight() - 2 * Main.config.borderOffset - (imageSize / 4) * 4
+				borderOffset + (imageSize / 4) * 3,
+				borderOffset + (imageSize / 4) * 2,
+				this.getWidth() - 2 * borderOffset - (imageSize / 4) * 6,
+				this.getHeight() - 2 * borderOffset - (imageSize / 4) * 4
 			);
-			g.setColor(Main.config.getBackgroundColor());
+			g.setColor(background.getColor());
 		}else{
-			g.setColor(Main.config.getForegroundColor());
+			g.setColor(foreground.getColor());
 		}
 
-		cache.renderTitle(getTitle(), g, this);
+		cache.renderTitle(config.getName(), g, this);
 
 		cache.renderValue(getValue(), g, this);
 	}
 
 	/**
-	 * Gets whether or not this panel
-	 * should be highlighted
-	 * @return Whether the panel is "active" or not
+	 * Gets whether or not this panel should be highlighted.
+	 * @return Whether the panel is "active" or not.
 	 */
 	protected boolean isActive(){
 		return false;
 	}
 
 	/**
-	 * Gets the title for this panel
-	 * @return The title for this panel
-	 */
-	protected abstract String getTitle();
-
-	/**
-	 * Gets the value for this panel
-	 * @return The value for this panel
+	 * Gets the value for this panel.
+	 * @return The value for this panel.
 	 */
 	protected abstract String getValue();
 
-	/**
-	 * Gets the rendering mode for this panel
-	 * @return The rendering mode for this panel
-	 */
-	protected abstract RenderingMode getRenderingMode();
+	@Override
+	public int getLayoutX(){
+		return config.getLayoutX();
+	}
+
+	@Override
+	public int getLayoutY(){
+		return config.getLayoutY();
+	}
+
+	@Override
+	public int getLayoutWidth(){
+		return config.getLayoutWidth();
+	}
+
+	@Override
+	public int getLayoutHeight(){
+		return config.getLayoutHeight();
+	}
 }

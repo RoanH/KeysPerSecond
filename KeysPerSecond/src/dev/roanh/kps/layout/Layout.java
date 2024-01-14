@@ -85,7 +85,7 @@ public class Layout implements LayoutManager2{
 	 * @return The width in pixels of this layout
 	 */
 	public int getWidth(){
-		return Main.config.cellSize * (maxw + extraWidth);
+		return Main.config.getCellSize() * (maxw + extraWidth);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class Layout implements LayoutManager2{
 	 * @return The height in pixels of this layout
 	 */
 	public int getHeight(){
-		return Main.config.cellSize * (maxh + extraHeight);
+		return Main.config.getCellSize() * (maxh + extraHeight);
 	}
 
 	/**
@@ -102,16 +102,19 @@ public class Layout implements LayoutManager2{
 	 */
 	public void add(Component comp){
 		LayoutPosition lp = (LayoutPosition)comp;
+		
 		if(lp.getLayoutX() != -1){
 			maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
 		}else{
 			extraWidth += lp.getLayoutWidth();
 		}
+		
 		if(lp.getLayoutY() != -1){
 			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		}else{
 			extraHeight += lp.getLayoutHeight();
 		}
+		
 		if(comp.getParent() == null){
 			parent.add(comp);
 		}
@@ -130,7 +133,7 @@ public class Layout implements LayoutManager2{
 			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		}
 	}
-
+	
 	@Override
 	public String toString(){
 		return "Layout[components=" + parent.getComponentCount() + ",maxw=" + maxw + ",maxh=" + maxh + "]";
@@ -185,11 +188,10 @@ public class Layout implements LayoutManager2{
 		if(!(maxw == 0 && extraWidth == 0) && !(maxh == 0 && extraHeight == 0)){
 			double dx = parent.getWidth() / (maxw + extraWidth);
 			double dy = parent.getHeight() / (maxh + extraHeight);
-			LayoutPosition lp;
 			int width = maxw;
 			int height = maxh;
 			for(Component component : parent.getComponents()){
-				lp = (LayoutPosition)component;
+				LayoutPosition lp = (LayoutPosition)component;
 				if(lp.getLayoutX() == -1){
 					if(lp.getLayoutY() == -1){
 						component.setBounds(

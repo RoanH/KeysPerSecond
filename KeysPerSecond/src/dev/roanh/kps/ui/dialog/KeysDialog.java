@@ -23,25 +23,25 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Dialog.ModalityType;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import javax.swing.ScrollPaneConstants;
 
 import dev.roanh.kps.CommandKeys;
-import dev.roanh.kps.KeyInformation;
 import dev.roanh.kps.Main;
+import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.config.SettingList;
+import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.event.listener.KeyPressListener;
+import dev.roanh.kps.layout.LayoutPosition;
+import dev.roanh.kps.ui.component.TablePanel;
 import dev.roanh.util.Dialog;
 
 /**
@@ -65,24 +65,31 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	/**
 	 * Table model showing all added keys and buttons.
 	 */
-	private KeysModel model = new KeysModel();
+	private TablePanel keys;
+	/**
+	 * The configuration being updated.
+	 */
+	private SettingList<KeyPanelSettings> config;
 	
 	/**
 	 * Constructs a new KeysDialog.
-	 * @see #configureKeys()
+	 * @param config The configuration to update.
+	 * @param live If the setting live and changes should be reflected in real time.
+	 * @see #configureKeys(SettingList, boolean)
 	 */
-	private KeysDialog(){
+	private KeysDialog(SettingList<KeyPanelSettings> config, boolean live){
 		super(new BorderLayout());
+		this.config = config;
 		
 		//left panel showing added keys
 		JPanel left = new JPanel(new BorderLayout());
 		left.setBorder(BorderFactory.createTitledBorder("Currently added keys"));
-		left.add(new JLabel("You can remove a key or update its display name and visbility below."), BorderLayout.PAGE_START);
-		JTable keys = new JTable();
-		keys.setModel(model);
-		keys.setDragEnabled(false);
+
+		keys = new TablePanel("Key", false, live);
+		keys.addPanels(config);
 		JScrollPane pane = new JScrollPane(keys);
-		pane.setPreferredSize(new Dimension((int)this.getPreferredSize().getWidth() + 50, 200));
+		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		pane.setPreferredSize(new Dimension(300, 200));
 		left.add(pane, BorderLayout.CENTER);
 		
 		//right panel for adding keys/buttons
@@ -135,13 +142,16 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	private JButton newButton(int code, String text){
 		JButton button = new JButton(text);
 		button.addActionListener(e->{
-			KeyInformation key = new KeyInformation("M" + code, Main.getExtendedButtonCode(code), false, false, false, true);
-			if(Main.config.keyinfo.contains(key)){
-				KeyInformation.autoIndex -= 2;
+			KeyPanelSettings info = new KeyPanelSettings(placePanel(), Main.getExtendedButtonCode(code));
+			if(config.contains(info)){
 				Dialog.showMessageDialog("The M" + code + " button was already added before.\nIt was not added again.");
 			}else{
-				Main.config.keyinfo.add(key);
-				model.fireTableDataChanged();
+				config.add(info);
+				keys.addPanelRow(config, info);
+				keys.revalidate();
+				if(keys.isLive()){
+					Main.reconfigure();
+				}
 			}
 		});
 		
@@ -159,128 +169,106 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 			return;
 		}
 		
-		KeyInformation info = new KeyInformation(NativeKeyEvent.getKeyText(lastKey), lastKey);
-		if(Main.config.keyinfo.contains(info)){
-			KeyInformation.autoIndex -= 2;
+		KeyPanelSettings info = new KeyPanelSettings(placePanel(), lastKey);
+		if(config.contains(info)){
 			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
 		}else{
-			Main.config.keyinfo.add(info);
-			model.fireTableDataChanged();
+			config.add(info);
+			keys.addPanelRow(config, info);
+			keys.revalidate();
+			if(keys.isLive()){
+				Main.reconfigure();
+			}
 		}
 	}
 	
 	@Override
 	public void onKeyPress(int code){
-		lastKey = Main.config.enableModifiers ? CommandKeys.getExtendedKeyCode(code) : CommandKeys.getExtendedKeyCode(code, false, false, false);
+		lastKey = Main.getExtendedKeyCode(code);
 		pressed.setText("<" + CommandKeys.formatExtendedCode(lastKey) + ">");
 		pressed.repaint();
 	}
 
 	/**
-	 * Shows the key configuration dialog
+	 * Shows the key configuration dialog.
+	 * @param config The configuration to update.
+	 * @param live If the setting live and changes should be reflected in real time.
 	 */
-	public static final void configureKeys(){
-		List<KeyInformation> copy = new ArrayList<KeyInformation>(Main.config.keyinfo);
-		boolean[] visibleState = new boolean[copy.size()];
-		String[] nameState = new String[copy.size()];
-		int autoIndex = KeyInformation.autoIndex;
-		for(int i = 0; i < copy.size(); i++){
-			visibleState[i] = copy.get(i).visible;
-			nameState[i] = copy.get(i).name;
-		}
-		
-		KeysDialog dialog = new KeysDialog();
+	public static final void configureKeys(SettingList<KeyPanelSettings> config, boolean live){
+		KeysDialog dialog = new KeysDialog(config, live);
 		Main.eventManager.registerKeyPressListener(dialog);
-		if(!Dialog.showSaveDialog(dialog, true, ModalityType.APPLICATION_MODAL)){
-			for(int i = 0; i < copy.size(); i++){
-				copy.get(i).visible = visibleState[i];
-				copy.get(i).setName(nameState[i]);
-			}
-			KeyInformation.autoIndex = autoIndex;
-			Main.config.keyinfo = copy;
-		}
-		
+		Dialog.showMessageDialog(dialog, true, ModalityType.APPLICATION_MODAL);
 		Main.eventManager.unregisterKeyPressListener(dialog);
 	}
 	
 	/**
-	 * Table model that displays all configured keys.
-	 * @author Roan
+	 * Computes a location where a panel of default size can be
+	 * placed without overlapping any existing panels.
+	 * @return A location where a panel can be placed without overlap.
 	 */
-	private static class KeysModel extends DefaultTableModel{
-		/**
-		 * Serial ID
-		 */
-		private static final long serialVersionUID = -5510962859479828507L;
-
-		@Override
-		public int getRowCount(){
-			return Main.config.keyinfo.size();
-		}
-
-		@Override
-		public int getColumnCount(){
-			return 3;
-		}
-
-		@Override
-		public Object getValueAt(int rowIndex, int columnIndex){
-			switch(columnIndex){
-			case 0:
-				return Main.config.keyinfo.get(rowIndex).name;
-			case 1:
-				return Main.config.keyinfo.get(rowIndex).visible;
-			case 2:
-				return false;
-			default:
-				return null;
-			}
-		}
-
-		@Override
-		public String getColumnName(int col){
-			switch(col){
-			case 0:
-				return "Key";
-			case 1:
-				return "Visible";
-			case 2:
-				return "Remove";
-			default:
-				return null;
-			}
-		}
-
-		@Override
-		public Class<?> getColumnClass(int columnIndex){
-			if(columnIndex == 1 || columnIndex == 2){
-				return Boolean.class;
-			}
-			return super.getColumnClass(columnIndex);
-		}
-
-		@Override
-		public boolean isCellEditable(int row, int col){
-			return true;
-		}
-
-		@Override
-		public void setValueAt(Object value, int row, int col){
-			switch(col){
-			case 0:
-				Main.config.keyinfo.get(row).setName((String)value);
-				break;
-			case 1:
-				Main.config.keyinfo.get(row).visible = (boolean)value;
-				break;
-			case 2:
-				if((boolean)value == true){
-					Main.keys.remove(Main.config.keyinfo.get(row).keycode);
-					Main.config.keyinfo.remove(row);
-					this.fireTableDataChanged();
+	private Point placePanel(){
+		return placePanel(Main.config, 2, 3);
+	}
+	
+	/**
+	 * Computes a location where a panel of the given the given size can be
+	 * placed without overlapping any existing panels.
+	 * @param config The configuration get all panels from.
+	 * @param width The width of the panel to place.
+	 * @param height The height of the panel to place.
+	 * @return A location where the requested panel can be placed without overlap.
+	 */
+	private Point placePanel(Configuration config, int width, int height){
+		//determine a valid stretch of rows not blocked by max width panels
+		List<LayoutPosition> components = config.getLayoutComponents();
+		boolean[] hconf = new boolean[components.stream().filter(lp->lp.getLayoutY() != -1).mapToInt(lp->lp.getLayoutY() + lp.getLayoutHeight()).max().orElse(0)];
+		
+		for(LayoutPosition lp : components){
+			if(lp.getLayoutY() != -1){
+				for(int i = 0; i < lp.getLayoutHeight(); i++){
+					hconf[lp.getLayoutY() + i] = lp.getLayoutWidth() == -1;
 				}
-				break;
 			}
 		}
+		
+		int row = findRange(hconf, height);
+		
+		//determine a valid stretch of columns
+		int maxw = components.stream().filter(lp->lp.getLayoutX() != -1).mapToInt(lp->lp.getLayoutX() + lp.getLayoutWidth()).max().orElse(0);
+		boolean[] conflicts = new boolean[maxw];
+		
+		for(LayoutPosition lp : components){
+			if(row <= lp.getLayoutY() && lp.getLayoutY() < row + height && lp.getLayoutX() != -1){
+				for(int i = 0; i < lp.getLayoutWidth(); i++){
+					conflicts[lp.getLayoutX() + i] = true;
+				}
+			}
+		}
+
+		return new Point(findRange(conflicts, width), row);
+	}
+	
+	/**
+	 * Finds the first index of a range of false values of
+	 * the given size in the given array of conflicts.
+	 * @param conflicts An array with conflict values.
+	 * @param size The length of the range to find.
+	 * @return The first index of a valid range, possibly
+	 *         one such that the range runs out of the array.
+	 */
+	private int findRange(boolean[] conflicts, int size){
+		int free = 0;
+		for(int i = 0; i < conflicts.length; i++){
+			if(conflicts[i]){
+				free = 0;
+			}else{
+				free++;
+				if(free >= size){
+					return i - size + 1;
+				}
+			}
+		}
+
+		return conflicts.length - free;
 	}
 }

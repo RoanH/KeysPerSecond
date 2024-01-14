@@ -1,0 +1,77 @@
+version: v8.7
+
+# General
+showMax: false
+showAvg: false
+showCur: false
+showTotal: false
+showKeys: true
+overlay: true
+trackAllKeys: true
+trackAllButtons: true
+updateRate: 250
+precision: 0
+enableKeyModifierCombinations: true
+
+# Graph
+graphEnabled: false
+graphBacklog: 1800
+graphAverage: true
+
+# Colors
+customColors: true
+foregroundColor: [r=1,g=2,b=3]
+backgroundColor: [r=104,g=105,b=106]
+foregroundOpacity: 0.0
+backgroundOpacity: 0.5
+
+# Command keys
+keyResetStats: unbound
+keyExit: [keycode=2,ctrl=false,alt=true]
+keyResetTotals: [keycode=3,ctrl=false,alt=true]
+keyHide: [keycode=4,ctrl=false,alt=true]
+keyPause: [keycode=5,ctrl=false,alt=true]
+keyReload: [keycode=6,ctrl=false,alt=true]
+
+# Layout
+maxX: 23
+maxY: 0
+maxWidth: 2
+maxHeight: 3
+maxMode: VERTICAL
+avgX: 21
+avgY: 0
+avgWidth: 2
+avgHeight: 3
+avgMode: VERTICAL
+curX: 25
+curY: 0
+curWidth: 2
+curHeight: 3
+curMode: VERTICAL
+totX: 25
+totY: 0
+totWidth: 2
+totHeight: 3
+totMode: VERTICAL
+graphX: 0
+graphY: -1
+graphWidth: 40
+graphHeight: 7
+graphMode: INLINE
+cellSize: 34
+borderOffset: 4
+
+# Stats auto saving
+autoSaveStats: true
+statsDest: C:\Users\test
+statsFormat: test
+statsSaveInterval: 100
+saveStatsOnExit: true
+loadStatsOnLaunch: true
+statsSaveFile: C:\Users\RoanH\alsotest
+
+# Keys
+keys: 
+  - [keycode=1,x=3,y=5,width=7,height=10,mode=VALUE_ONLY,visible=false,name="R"]
+  - [keycode=2,x=4,y=6,width=8,height=11,mode=VERTICAL,visible=true,name="S"]

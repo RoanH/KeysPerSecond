@@ -126,8 +126,10 @@ public enum UpdateRate{
 	 * Resolves an update rate from its millisecond rate.
 	 * @param ms The update rate in milliseconds.
 	 * @return The update rate instance.
+	 * @throws IllegalArgumentException When the given rate
+	 *         does not correspond to a valid update rate.
 	 */
-	public static UpdateRate fromMs(int ms){
+	public static UpdateRate fromMs(int ms) throws IllegalArgumentException{
 		for(UpdateRate rate : values()){
 			if(rate.ms == ms){
 				return rate;

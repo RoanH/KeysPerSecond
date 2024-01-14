@@ -19,8 +19,7 @@
 package dev.roanh.kps.panels;
 
 import dev.roanh.kps.Key;
-import dev.roanh.kps.KeyInformation;
-import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.group.KeyPanelSettings;
 
 /**
  * Panel to display the number
@@ -34,69 +33,31 @@ public final class KeyPanel extends BasePanel{
 	 */
 	private static final long serialVersionUID = 8816524158873355997L;
 	/**
-	 * The key object associated with this panel<br>
-	 * This key object keep track of the amount of this
-	 * the assigned key has been hit
+	 * The key object associated with this panel. This key object
+	 * keeps track of the number of times the assigned key has been hit.
 	 */
 	private Key key;
-	/**
-	 * The key information object
-	 * for this key
-	 */
-	protected KeyInformation info;
 
 	/**
-	 * Constructs a new KeyPanel
-	 * with the given key object
-	 * @param key The key object to
-	 *        associate this panel with
-	 * @param i The key information object
-	 *        for the key for this panel
+	 * Constructs a new KeyPanel with the given key object.
+	 * @param key The key object to associate this panel with.
+	 * @param settings The key settings object for this panel.
 	 * @see Key
-	 * @see #key
+	 * @see KeyPanelSettings
 	 */
-	public KeyPanel(Key key, KeyInformation i){
+	public KeyPanel(Key key, KeyPanelSettings settings){
+		super(settings);
 		this.key = key;
-		info = i;
+		key.setPanel(this);
 	}
 
 	@Override
 	protected boolean isActive(){
-		return key.down;
-	}
-
-	@Override
-	protected String getTitle(){
-		return key.name;
+		return key.isDown();
 	}
 
 	@Override
 	protected String getValue(){
-		return String.valueOf(key.count);
-	}
-
-	@Override
-	public int getLayoutX(){
-		return info.getX();
-	}
-
-	@Override
-	public int getLayoutY(){
-		return info.getY();
-	}
-
-	@Override
-	public int getLayoutWidth(){
-		return info.getWidth();
-	}
-
-	@Override
-	public int getLayoutHeight(){
-		return info.getHeight();
-	}
-
-	@Override
-	protected RenderingMode getRenderingMode(){
-		return info.getRenderingMode();
+		return String.valueOf(key.getCount());
 	}
 }
