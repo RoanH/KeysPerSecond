@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
-import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.RenderingMode.RenderCache;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.DataPanelSettings;
@@ -71,7 +70,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * the render cache should be invalidated
 	 */
 	public void sizeChanged(){
-		cache.init(getRenderingMode());
+		cache.init(config.getRenderingMode());
 		this.repaint();
 	}
 
@@ -110,42 +109,25 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 			g.setColor(foreground.getColor());
 		}
 
-		cache.renderTitle(getTitle(), g, this);
+		cache.renderTitle(config.getName(), g, this);
 
 		cache.renderValue(getValue(), g, this);
 	}
 
 	/**
-	 * Gets whether or not this panel
-	 * should be highlighted
-	 * @return Whether the panel is "active" or not
+	 * Gets whether or not this panel should be highlighted.
+	 * @return Whether the panel is "active" or not.
 	 */
 	protected boolean isActive(){
 		return false;
 	}
 
 	/**
-	 * Gets the value for this panel
-	 * @return The value for this panel
+	 * Gets the value for this panel.
+	 * @return The value for this panel.
 	 */
 	protected abstract String getValue();
 
-	/**
-	 * Gets the rendering mode for this panel
-	 * @return The rendering mode for this panel
-	 */
-	public RenderingMode getRenderingMode(){
-		return config.getRenderingMode();
-	}
-	
-	/**
-	 * Gets the title for this panel
-	 * @return The title for this panel
-	 */
-	public String getTitle(){
-		return config.getName();
-	}
-	
 	@Override
 	public int getLayoutX(){
 		return config.getLayoutX();
