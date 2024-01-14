@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
 import dev.roanh.kps.CommandKeys;
@@ -43,6 +44,7 @@ import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.event.listener.KeyPressListener;
 import dev.roanh.kps.layout.LayoutPosition;
+import dev.roanh.kps.ui.component.TablePanel;
 import dev.roanh.util.Dialog;
 
 /**
@@ -66,9 +68,12 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	/**
 	 * Table model showing all added keys and buttons.
 	 */
-	private KeysModel model = new KeysModel();
+//	private KeysModel model = new KeysModel();
 	private SettingList<KeyPanelSettings> config;
 	private boolean live;
+	
+	private TablePanel keys;
+
 	
 	/**
 	 * Constructs a new KeysDialog.
@@ -82,12 +87,16 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		//left panel showing added keys
 		JPanel left = new JPanel(new BorderLayout());
 		left.setBorder(BorderFactory.createTitledBorder("Currently added keys"));
-		left.add(new JLabel("You can remove a key or update its display name and visbility below."), BorderLayout.PAGE_START);
-		JTable keys = new JTable();
-		keys.setModel(model);
-		keys.setDragEnabled(false);
+//		left.add(new JLabel("You can remove a key or update its display name and visbility below."), BorderLayout.PAGE_START);
+		//JTable keys = new JTable();
+		keys = new TablePanel("Key", false, live);
+//		keys.setModel(model);
+//		keys.setDragEnabled(false);
+		
+		keys.addKeys(config);
 		JScrollPane pane = new JScrollPane(keys);
-		pane.setPreferredSize(new Dimension((int)this.getPreferredSize().getWidth() + 50, 200));
+		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		pane.setPreferredSize(new Dimension(300, 200));
 		left.add(pane, BorderLayout.CENTER);
 		
 		//right panel for adding keys/buttons
@@ -147,7 +156,9 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 				Dialog.showMessageDialog("The M" + code + " button was already added before.\nIt was not added again.");
 			}else{
 				config.add(info);
-				model.fireTableDataChanged();
+				keys.addPanelRow(config, info);
+				keys.revalidate();
+//				model.fireTableDataChanged();
 				if(live){
 					Main.reconfigure();
 				}
@@ -174,7 +185,9 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
 		}else{
 			config.add(info);
-			model.fireTableDataChanged();
+//			model.fireTableDataChanged();
+			keys.addPanelRow(config, info);
+			keys.revalidate();
 			if(live){
 				Main.reconfigure();
 			}
@@ -273,6 +286,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * Table model that displays all configured keys.
 	 * @author Roan
 	 */
+	//TODO obsolete I guess
 	private class KeysModel extends DefaultTableModel{
 		/**
 		 * Serial ID
