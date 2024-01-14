@@ -16,41 +16,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps;
+package dev.roanh.kps.config.setting;
 
 /**
- * Enum specifying all the different
- * layout positions for the graph
+ * Precision setting used to format real numbers.
  * @author Roan
  */
-public enum GraphMode{
+public class PrecisionSetting extends IntSetting{
 	/**
-	 * Indicates that the graph is placed
-	 * in the same window as the other tiles
+	 * The format string used for formatting.
 	 */
-	INLINE("Inline"),
-	/**
-	 * Indicates that the graph is placed
-	 * in it's own window
-	 */
-	DETACHED("Detached");
+	private String format;
 
 	/**
-	 * The display name of this mode
+	 * Constructs a new precision setting.
+	 * @param key The setting key.
+	 * @param min The minimum precision value.
+	 * @param max The maximum precision value.
+	 * @param defaultValue The default precision value.
 	 */
-	private String name;
-
+	public PrecisionSetting(String key, int min, int max, int defaultValue){
+		super(key, min, max, defaultValue);
+	}
+	
 	/**
-	 * Constructs a new GraphMode with
-	 * the given display name 
-	 * @param name The display name for this mode
+	 * Formats the given double value according to
+	 * the precision value configured for this setting.
+	 * @param value The value to format.
+	 * @return The formatted value.
 	 */
-	private GraphMode(String name){
-		this.name = name;
+	public String format(double value){
+		return String.format(format, value);
 	}
 
 	@Override
-	public String toString(){
-		return name;
+	public void update(Integer newValue){
+		super.update(newValue);
+		format = "%1$." + getValue() + "f";
 	}
 }

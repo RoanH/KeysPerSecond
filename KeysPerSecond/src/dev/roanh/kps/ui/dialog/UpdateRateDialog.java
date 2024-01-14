@@ -51,11 +51,11 @@ public class UpdateRateDialog extends JPanel{
 	 * Constructs a new update rate configuration dialog.
 	 */
 	private UpdateRateDialog(){
-		super(new BorderLayout());
+		super(new BorderLayout(0, 5));
 		
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
 		info.add(new JLabel("Here you can change the rate at which"));
-		info.add(new JLabel("the graph, max, avg & cur are updated."));
+		info.add(new JLabel("most panels are updated."));
 		
 		update.setSelectedItem(Main.config.getUpdateRate());
 		update.setRenderer(new RateCellRenderer());

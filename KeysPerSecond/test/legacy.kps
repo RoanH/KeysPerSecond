@@ -1,0 +1,79 @@
+# General
+showMax: true
+showAvg: true
+showCur: true
+showTotal: true
+showKeys: true
+overlay: false
+trackAllKeys: false
+trackAllButtons: false
+updateRate: 100
+precision: 0
+enableKeyModifierCombinations: false
+
+# Position
+position: [x=100,y=90]
+
+# Graph
+graphEnabled: true
+graphBacklog: 1800
+graphAverage: true
+
+# Colors
+customColors: false
+foregroundColor: [r=0,g=255,b=255]
+backgroundColor: [r=0,g=0,b=0]
+foregroundOpacity: 1.0
+backgroundOpacity: 1.0
+
+# Command keys
+keyResetStats: [keycode=25,ctrl=true,alt=false]
+keyExit: [keycode=22,ctrl=true,alt=false]
+keyResetTotals: [keycode=23,ctrl=true,alt=false]
+keyHide: [keycode=21,ctrl=true,alt=false]
+keyPause: [keycode=20,ctrl=true,alt=false]
+keyReload: [keycode=19,ctrl=true,alt=false]
+
+# Layout
+maxX: 23
+maxY: 0
+maxWidth: 2
+maxHeight: 3
+maxMode: VERTICAL
+avgX: 21
+avgY: 0
+avgWidth: 2
+avgHeight: 3
+avgMode: VERTICAL
+curX: 25
+curY: 0
+curWidth: 2
+curHeight: 3
+curMode: VERTICAL
+totX: 25
+totY: 0
+totWidth: 2
+totHeight: 3
+totMode: VERTICAL
+graphX: 0
+graphY: -1
+graphWidth: 40
+graphHeight: 7
+graphMode: INLINE
+cellSize: 22
+borderOffset: 2
+
+# Stats auto saving
+autoSaveStats: false
+statsDest: C:\Users\RoanH
+statsFormat: 'kps stats' yyyy-MM-dd HH.mm.ss'.kpsstats'
+statsSaveInterval: 600000
+
+# Keys
+keys: 
+  - [keycode=1048606,x=13,y=0,width=2,height=3,mode=VERTICAL,visible=true,name="A"]
+  - [keycode=1048607,x=15,y=0,width=2,height=3,mode=VERTICAL,visible=true,name="S"]
+  - [keycode=1048615,x=17,y=0,width=2,height=3,mode=VERTICAL,visible=true,name=";"]
+  - [keycode=1048616,x=19,y=0,width=2,height=3,mode=VERTICAL,visible=true,name="""]
+  - [keycode=1048593,x=11,y=0,width=2,height=3,mode=VERTICAL,visible=true,name="W"]
+  - [keycode=1048594,x=9,y=0,width=2,height=3,mode=VERTICAL,visible=true,name="E"]

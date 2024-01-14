@@ -19,11 +19,10 @@
 package dev.roanh.kps.panels;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.RenderingMode;
+import dev.roanh.kps.config.group.AveragePanelSettings;
 
 /**
- * Panel used to display the
- * average keys pressed per second
+ * Panel used to display the average keys pressed per second.
  * @author Roan
  */
 public final class AvgPanel extends BasePanel{
@@ -32,49 +31,21 @@ public final class AvgPanel extends BasePanel{
 	 */
 	private static final long serialVersionUID = 5628759695450014071L;
 	/**
-	 * Static instance of this panel that is reused all the time
+	 * The panel configuration.
 	 */
-	public static final AvgPanel INSTANCE = new AvgPanel();
+	private AveragePanelSettings settings;
 
 	/**
 	 * Constructs a new average panel
+	 * @param settings The configuration for this panel.
 	 */
-	private AvgPanel(){
-		sizeChanged();
-	}
-
-	@Override
-	protected String getTitle(){
-		return "AVG";
+	public AvgPanel(AveragePanelSettings settings){
+		super(settings);
+		this.settings = settings;
 	}
 
 	@Override
 	protected String getValue(){
-		return String.format("%1$." + Main.config.precision + "f", Main.avg);
-	}
-
-	@Override
-	public int getLayoutX(){
-		return Main.config.avgPanel.getX();
-	}
-
-	@Override
-	public int getLayoutY(){
-		return Main.config.avgPanel.getY();
-	}
-
-	@Override
-	public int getLayoutWidth(){
-		return Main.config.avgPanel.getWidth();
-	}
-
-	@Override
-	public int getLayoutHeight(){
-		return Main.config.avgPanel.getHeight();
-	}
-
-	@Override
-	protected RenderingMode getRenderingMode(){
-		return Main.config.avgPanel.getRenderingMode();
+		return settings.formatAvg(Main.avg);
 	}
 }
