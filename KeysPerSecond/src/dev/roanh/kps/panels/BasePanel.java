@@ -28,7 +28,7 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.RenderingMode.RenderCache;
 import dev.roanh.kps.config.ThemeColor;
-import dev.roanh.kps.config.group.PanelSettings;
+import dev.roanh.kps.config.group.DataPanelSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 
 /**
@@ -51,9 +51,9 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * RenderCache for this panel
 	 */
 	private RenderCache cache = new RenderCache();
-	private PanelSettings config;
+	private DataPanelSettings config;
 	
-	public BasePanel(PanelSettings config){
+	public BasePanel(DataPanelSettings config){
 		this.config = config;
 		//TODO add listener for rendering mode changes
 		sizeChanged();

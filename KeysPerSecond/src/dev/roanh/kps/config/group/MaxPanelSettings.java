@@ -25,8 +25,8 @@ import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.legacy.LegacyProxyStore;
 import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.panels.MaxPanel;
+import dev.roanh.kps.ui.editor.DataPanelEditor;
 import dev.roanh.kps.ui.editor.Editor;
-import dev.roanh.kps.ui.editor.PanelEditor;
 
 /**
  * Configuration for a maximum panel.
@@ -49,7 +49,7 @@ public class MaxPanelSettings extends SpecialPanelSettings implements LegacyProx
 	
 	@Override
 	public void showEditor(boolean live){
-		Editor.showEditor(new PanelEditor(this, live));
+		Editor.showEditor(new DataPanelEditor(this, live));
 	}
 	
 	@Override

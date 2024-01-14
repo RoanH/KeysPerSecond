@@ -30,7 +30,7 @@ import dev.roanh.kps.layout.LayoutPosition;
  * @author Roan
  * @see LayoutPosition
  */
-public class LocationSettings extends SettingGroup implements LayoutPosition{
+public abstract class LocationSettings extends SettingGroup implements LayoutPosition{
 	/**
 	 * The x position of the panel (-1 is end).
 	 */

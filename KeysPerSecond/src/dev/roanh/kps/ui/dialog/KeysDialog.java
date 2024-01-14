@@ -81,7 +81,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		left.setBorder(BorderFactory.createTitledBorder("Currently added keys"));
 
 		keys = new TablePanel("Key", false, live);
-		keys.addKeys(config);
+		keys.addPanels(config);
 		JScrollPane pane = new JScrollPane(keys);
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setPreferredSize(new Dimension(300, 200));

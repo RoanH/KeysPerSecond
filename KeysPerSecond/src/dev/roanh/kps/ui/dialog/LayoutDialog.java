@@ -22,7 +22,6 @@ import java.awt.BorderLayout;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
@@ -39,7 +38,7 @@ import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
-import dev.roanh.kps.config.group.LocationSettings;
+import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.ui.component.TablePanel;
 import dev.roanh.kps.ui.model.DynamicInteger;
@@ -97,10 +96,10 @@ public class LayoutDialog{
 		pane.setPreferredSize(new Dimension(600, 200));
 		
 		JPanel buttons = new JPanel(new GridLayout(1, 4, 2, 0));
-		buttons.add(createAddButton(panelView, "Add Maximum", Main.config.getPanels(), PanelType.MAX::newSettings, panelView::addPanelRow));
-		buttons.add(createAddButton(panelView, "Add Average", Main.config.getPanels(), PanelType.AVG::newSettings, panelView::addPanelRow));
-		buttons.add(createAddButton(panelView, "Add KPS", Main.config.getPanels(), PanelType.CURRENT::newSettings, panelView::addPanelRow));
-		buttons.add(createAddButton(panelView, "Add Total", Main.config.getPanels(), PanelType.TOTAL::newSettings, panelView::addPanelRow));
+		buttons.add(createAddButton(panelView, "Add Maximum", Main.config.getPanels(), PanelType.MAX::newSettings));
+		buttons.add(createAddButton(panelView, "Add Average", Main.config.getPanels(), PanelType.AVG::newSettings));
+		buttons.add(createAddButton(panelView, "Add KPS", Main.config.getPanels(), PanelType.CURRENT::newSettings));
+		buttons.add(createAddButton(panelView, "Add Total", Main.config.getPanels(), PanelType.TOTAL::newSettings));
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createTitledBorder("Panels"));
@@ -120,19 +119,19 @@ public class LayoutDialog{
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
 		graphPanel.add(graphPane, BorderLayout.CENTER);
-		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), GraphSettings::new, graphView::addGraphRow), BorderLayout.PAGE_END);
+		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), GraphSettings::new), BorderLayout.PAGE_END);
 		form.add(graphPanel, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);
 		Main.content.hideGrid();
 	}
 	
-	private static <T extends LocationSettings> JButton createAddButton(TablePanel view, String text, SettingList<T> panels, Supplier<T> settingsCtor, BiConsumer<SettingList<T>, T> viewUpdate){
+	private static <T extends PanelSettings> JButton createAddButton(TablePanel view, String text, SettingList<T> panels, Supplier<T> settingsCtor){
 		JButton add = new JButton(text);
 		add.addActionListener(e->{
 			T settings = settingsCtor.get();
 			panels.add(settings);
-			viewUpdate.accept(panels, settings);
+			view.addPanelRow(panels, settings);
 			view.revalidate();
 			if(view.isLive()){
 				Main.reconfigure();

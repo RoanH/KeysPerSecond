@@ -29,13 +29,15 @@ import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.panels.GraphPanel;
+import dev.roanh.kps.ui.editor.Editor;
+import dev.roanh.kps.ui.editor.GraphEditor;
 
 /**
  * Configuration for graph panels.
  * @author Roan
  * @see GraphPanel
  */
-public class GraphSettings extends LocationSettings implements LegacyProxyStore{
+public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 	/**
 	 * Whether to draw the horizontal average line or not.
 	 */
@@ -49,7 +51,7 @@ public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 	 * Creates new graph settings.
 	 */
 	public GraphSettings(){
-		super("graphs", 0, -1, -1, 3);
+		super("graphs", 0, -1, -1, 3, "KPS");
 	}
 	
 	/**
@@ -93,6 +95,11 @@ public class GraphSettings extends LocationSettings implements LegacyProxyStore{
 	 */
 	public GraphPanel createPanel(){
 		return new GraphPanel(this);
+	}
+	
+	@Override
+	public void showEditor(boolean live){
+		Editor.showEditor(new GraphEditor(this, live));
 	}
 
 	@Override

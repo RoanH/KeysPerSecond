@@ -24,16 +24,16 @@ import javax.swing.JTextField;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.config.group.PanelSettings;
+import dev.roanh.kps.config.group.DataPanelSettings;
 import dev.roanh.kps.ui.listener.FieldChangeListener;
 
-public class PanelEditor extends Editor{
+public class DataPanelEditor extends Editor{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -2982608015931683558L;
 
-	public PanelEditor(PanelSettings config, boolean live){
+	public DataPanelEditor(DataPanelSettings config, boolean live){
 		super("Panel Specific Settings");
 
 		labels.add(new JLabel("Name: "));

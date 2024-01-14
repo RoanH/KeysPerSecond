@@ -29,7 +29,7 @@ import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.PrecisionSetting;
 import dev.roanh.kps.panels.AvgPanel;
 import dev.roanh.kps.ui.editor.AvgPanelEditor;
-import dev.roanh.kps.ui.editor.PanelEditor;
+import dev.roanh.kps.ui.editor.Editor;
 
 /**
  * Configuration for the average panel.
@@ -93,7 +93,7 @@ public class AveragePanelSettings extends SpecialPanelSettings implements Legacy
 	
 	@Override
 	public void showEditor(boolean live){
-		PanelEditor.showEditor(new AvgPanelEditor(this, live));
+		Editor.showEditor(new AvgPanelEditor(this, live));
 	}
 	
 	@Override

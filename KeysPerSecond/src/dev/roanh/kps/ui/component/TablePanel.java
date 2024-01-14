@@ -36,22 +36,43 @@ import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutValidator;
-import dev.roanh.kps.ui.editor.Editor;
-import dev.roanh.kps.ui.editor.GraphEditor;
 import dev.roanh.kps.ui.model.EndNumberModel;
 import dev.roanh.kps.ui.model.MaxNumberModel;
 import dev.roanh.kps.ui.model.SpecialNumberModel.ValueChangeListener;
 import dev.roanh.kps.ui.model.SpecialNumberModelEditor;
 
+/**
+ * Table like view for displaying panels.
+ * @author Roan
+ * @see PanelSettings
+ * @see KeyPanelSettings
+ * @see GraphSettings
+ */
 public class TablePanel extends JPanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 4467273936432261623L;
+	/**
+	 * The JPanel holding all the table rows.
+	 */
 	private JPanel rows = new JPanel(new GridLayout(0, 1, 0, 2));
+	/**
+	 * True if the GUI is already live and updates should be reflected in real time.
+	 */
 	private boolean live;
+	/**
+	 * True if the table contains editors for the panel location and size.
+	 * @see LocationSettings
+	 */
 	private boolean location;
 	
+	/**
+	 * Creates a new table panel with the given settings.
+	 * @param name The header name for the first column.
+	 * @param location True if location editors should be added.
+	 * @param live True if the GUI is live and should be updated in real time.
+	 */
 	public TablePanel(String name, boolean location, boolean live){
 		super(new BorderLayout());
 		this.live = live;
@@ -64,6 +85,10 @@ public class TablePanel extends JPanel{
 		add(new JPanel(), BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Adds the table headers.
+	 * @param name The name for the first column.
+	 */
 	private void addHeaders(String name){
 		JPanel row = new JPanel(new GridLayout(0, location ? 7 : 3, 2, 0));
 		row.add(new JLabel(name, SwingConstants.CENTER));
@@ -80,25 +105,31 @@ public class TablePanel extends JPanel{
 		rows.add(row);
 	}
 	
+	/**
+	 * Checks if this table is operating in live mode where updates are reflected in real time.
+	 * @return True if this table is in live mode.
+	 */
 	public boolean isLive(){
 		return live;
 	}
 	
+	/**
+	 * Adds a list of graph rows to this table.
+	 * @param graphs The graph settings to create rows for.
+	 */
 	public void addGraphs(SettingList<GraphSettings> graphs){
 		for(GraphSettings graph : graphs){
-			addGraphRow(graphs, graph);
+			addPanelRow(graphs, graph);
 		}
 	}
 	
+	/**
+	 * Adds a list of panel rows to this table.
+	 * @param panels The panel settings to create rows for.
+	 */
 	public void addPanels(SettingList<? extends PanelSettings> panels){
 		for(PanelSettings panel : panels){
 			addPanelRow(panels, panel);
-		}
-	}
-	
-	public void addKeys(SettingList<KeyPanelSettings> keys){
-		for(KeyPanelSettings key : keys){
-			addPanelRow(keys, key);
 		}
 	}
 	
@@ -129,23 +160,6 @@ public class TablePanel extends JPanel{
 		
 		addDeleteButton(row, panels, info);
 		
-		rows.add(row);
-	}
-	
-	public void addGraphRow(SettingList<GraphSettings> panels, GraphSettings info){
-		JPanel row = new JPanel(new GridLayout(0, location ? 7 : 3, 2, 0));
-		row.add(new JLabel("KPS", SwingConstants.CENTER));
-		
-		if(location){
-			addLocationFields(row, info);
-		}
-		
-		JButton edit = new JButton("Edit");
-		row.add(edit);
-		edit.addActionListener(e->Editor.showEditor(new GraphEditor(info, live)));
-		
-		addDeleteButton(row, panels, info);
-
 		rows.add(row);
 	}
 	

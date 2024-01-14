@@ -24,7 +24,7 @@ import javax.swing.JLabel;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 
-public class KeyPanelEditor extends PanelEditor{
+public class KeyPanelEditor extends DataPanelEditor{
 	/**
 	 * Serial ID.
 	 */

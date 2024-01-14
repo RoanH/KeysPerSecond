@@ -24,7 +24,7 @@ import javax.swing.JLabel;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 
-public class AvgPanelEditor extends PanelEditor{
+public class AvgPanelEditor extends DataPanelEditor{
 	/**
 	 * Serial ID.
 	 */

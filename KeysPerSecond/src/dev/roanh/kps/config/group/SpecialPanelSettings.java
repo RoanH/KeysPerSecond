@@ -28,7 +28,7 @@ import dev.roanh.kps.panels.BasePanel;
  * @author Roan
  * @see PanelType
  */
-public abstract class SpecialPanelSettings extends PanelSettings{
+public abstract class SpecialPanelSettings extends DataPanelSettings{
 	/**
 	 * The type of this panel, indicative of the metric displayed.
 	 */

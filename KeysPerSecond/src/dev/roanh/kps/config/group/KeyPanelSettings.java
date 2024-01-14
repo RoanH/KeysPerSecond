@@ -29,8 +29,8 @@ import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.panels.KeyPanel;
+import dev.roanh.kps.ui.editor.Editor;
 import dev.roanh.kps.ui.editor.KeyPanelEditor;
-import dev.roanh.kps.ui.editor.PanelEditor;
 
 /**
  * Configuration for a key panel.
@@ -38,7 +38,7 @@ import dev.roanh.kps.ui.editor.PanelEditor;
  * @see Key
  * @see KeyPanel
  */
-public class KeyPanelSettings extends PanelSettings{
+public class KeyPanelSettings extends DataPanelSettings{
 	/**
 	 * Whether this key panel is visible or not (rendered).
 	 * Hidden panels still track input statistics.
@@ -115,7 +115,7 @@ public class KeyPanelSettings extends PanelSettings{
 	
 	@Override
 	public void showEditor(boolean live){
-		PanelEditor.showEditor(new KeyPanelEditor(this, live));
+		Editor.showEditor(new KeyPanelEditor(this, live));
 	}
 	
 	@Override

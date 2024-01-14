@@ -20,13 +20,11 @@ package dev.roanh.kps.config.group;
 
 import java.util.Map;
 
-import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.config.setting.RenderingModeSetting;
 import dev.roanh.kps.config.setting.StringSetting;
 
 /**
- * Settings for a named value display panel.
+ * Settings for a named panel.
  * @author Roan
  */
 public abstract class PanelSettings extends LocationSettings{
@@ -34,10 +32,6 @@ public abstract class PanelSettings extends LocationSettings{
 	 * The name of this panel.
 	 */
 	protected final StringSetting name;
-	/**
-	 * The rendering mode used the panel.
-	 */
-	protected final RenderingModeSetting mode = new RenderingModeSetting("mode", RenderingMode.VERTICAL);
 	
 	/**
 	 * Constructs new panel settings.
@@ -63,28 +57,11 @@ public abstract class PanelSettings extends LocationSettings{
 	}
 
 	/**
-	 * Gets the rendering mode for this panel.
-	 * @return The rendering mode for this panel.
-	 * @see RenderingMode
-	 */
-	public RenderingMode getRenderingMode(){
-		return mode.getValue();
-	}
-
-	/**
 	 * Gets the display name of this panel.
 	 * @return The name of this panel.
 	 */
 	public String getName(){
 		return name.getValue();
-	}
-	
-	/**
-	 * Sets the rendering mode for the panel.
-	 * @param mode The new rendering mode.
-	 */
-	public void setRenderingMode(RenderingMode mode){
-		this.mode.update(mode);
 	}
 	
 	/**
@@ -104,13 +81,12 @@ public abstract class PanelSettings extends LocationSettings{
 	
 	@Override
 	public boolean parse(Map<String, String> data){
-		return super.parse(data) | findAndParse(data, name, mode);
+		return super.parse(data) | findAndParse(data, name);
 	}
 	
 	@Override
 	public void writeItems(IndentWriter out){
 		name.write(out);
 		super.writeItems(out);
-		mode.write(out);
 	}
 }
