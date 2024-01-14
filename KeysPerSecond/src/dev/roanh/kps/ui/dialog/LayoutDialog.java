@@ -40,6 +40,7 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
@@ -244,6 +245,10 @@ public class LayoutDialog{
 				rows.remove(row);
 				revalidate();
 				if(live){
+					if(info instanceof KeyPanelSettings){
+						Main.removeKey(((KeyPanelSettings)info).getKeyCode());
+					}
+					
 					Main.reconfigure();
 				}
 			});

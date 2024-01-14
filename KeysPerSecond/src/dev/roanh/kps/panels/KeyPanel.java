@@ -53,11 +53,11 @@ public final class KeyPanel extends BasePanel{
 
 	@Override
 	protected boolean isActive(){
-		return key.down;
+		return key.isDown();
 	}
 
 	@Override
 	protected String getValue(){
-		return String.valueOf(key.count);
+		return String.valueOf(key.getCount());
 	}
 }

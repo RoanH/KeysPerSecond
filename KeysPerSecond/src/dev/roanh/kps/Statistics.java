@@ -163,19 +163,15 @@ public class Statistics{
 				out.print("  - [keycode=");
 				out.print(entry.getKey());
 				out.print(",count=");
-				out.print(key.count);
+				out.print(key.getCount());
 				out.print(",alt=");
-				out.print(key.alt);
+				out.print(key.hasAlt());
 				out.print(",ctrl=");
-				out.print(key.ctrl);
+				out.print(key.hasCtrl());
 				out.print(",shift=");
-				out.print(key.shift);
-//				out.print(",name=\""); -- TODO no longer required going forward
-//				out.print(key.name);
-				out.println("\"]");
+				out.print(key.hasShift());
+				out.println(",name=\"-\"]");//no longer required since v8.8
 			}
-			out.flush();
-			out.close();
 		}
 	}
 	
@@ -248,7 +244,6 @@ public class Statistics{
 							Key key = Main.keys.get(code);
 							if(key == null){
 								key = new Key(
-//									m.group(6), -- legacy no longer a thing
 									Integer.parseInt(m.group(2)),
 									Boolean.parseBoolean(m.group(3)),
 									Boolean.parseBoolean(m.group(4)),
@@ -256,7 +251,7 @@ public class Statistics{
 								);
 								Main.keys.put(code, key);
 							}else{
-								key.count = Integer.parseInt(m.group(2));
+								key.setCount(Integer.parseInt(m.group(2)));
 							}
 						}else{
 							in.reset();

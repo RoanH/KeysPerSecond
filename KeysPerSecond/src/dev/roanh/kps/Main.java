@@ -388,23 +388,24 @@ public class Main{
 		if(config.isKeyModifierTrackingEnabled()){
 			if(code == CommandKeys.ALT){
 				for(Key k : keys.values()){
-					if(k.alt){
+					if(k.hasAlt()){
 						k.keyReleased();
 					}
 				}
 			}else if(code == CommandKeys.CTRL){
 				for(Key k : keys.values()){
-					if(k.ctrl){
+					if(k.hasCtrl()){
 						k.keyReleased();
 					}
 				}
 			}else if(CommandKeys.isShift(code)){
 				for(Key k : keys.values()){
-					if(k.shift){
+					if(k.hasShift()){
 						k.keyReleased();
 					}
 				}
 			}
+			
 			for(Entry<Integer, Key> k : keys.entrySet()){
 				if(CommandKeys.getBaseKeyCode(code) == CommandKeys.getBaseKeyCode(k.getKey())){
 					k.getValue().keyReleased();
@@ -424,7 +425,6 @@ public class Main{
 		Key key = keys.get(code);
 		
 		if(config.isTrackAllButtons() && key == null){
-//			key = new Key("M" + button);
 			key = new Key();
 			keys.put(code, key);
 		}
@@ -443,21 +443,22 @@ public class Main{
 		Key key = keys.get(code);
 		
 		if(config.isTrackAllKeys() && key == null){
-//			key = new Key(KeyInformation.getKeyName(NativeKeyEvent.getKeyText(rawCode), code));
-			key = new Key();//TODO this should probably pass alt/ctrl/shift status, technically that is a bug that existed in v8.7 too
+			key = new Key(code);
 			keys.put(code, key);
 		}
 		
 		if(!suspended && key != null){
 			key.keyPressed();
 			if(config.isKeyModifierTrackingEnabled()){
-				if(key.alt){
+				if(key.hasAlt()){
 					keys.getOrDefault(CommandKeys.ALT, DUMMY_KEY).keyReleased();
 				}
-				if(key.ctrl){
+				
+				if(key.hasCtrl()){
 					keys.getOrDefault(CommandKeys.CTRL, DUMMY_KEY).keyReleased();
 				}
-				if(key.shift){
+				
+				if(key.hasShift()){
 					keys.getOrDefault(CommandKeys.RSHIFT, DUMMY_KEY).keyReleased();
 					keys.getOrDefault(CommandKeys.LSHIFT, DUMMY_KEY).keyReleased();
 				}
@@ -542,6 +543,10 @@ public class Main{
 		reconfigure();
 	}
 	
+	/**
+	 * Signals to all panels that size related information has changed
+	 * and that all rendering caches should be invalidated.
+	 */
 	public static final void resetPanels(){
 		for(Component component : content.getComponents()){
 			if(component instanceof BasePanel){
@@ -554,14 +559,15 @@ public class Main{
 	 * Reconfigures the layout of the program
 	 */
 	public static final void reconfigure(){
-		System.out.println("reconf");//TODO remove
-		
 		SwingUtilities.invokeLater(()->{
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			
+			//theme
 			ThemeColor background = config.getTheme().getBackground();
 			boolean opaque = background.getAlpha() != 1.0F ? !ColorManager.transparency : true;
+			Menu.repaint();
+
 			try{
 				ColorManager.prepareImages();
 			}catch(IOException e){
@@ -585,22 +591,11 @@ public class Main{
 			graphs.clear();
 			for(GraphSettings info : config.getGraphSettings()){
 				GraphPanel graph = info.createPanel();
-				graph.setOpaque(opaque);//TODO this was in the DETACHED only branch, make sure we need it?
 				content.add(graph);
 				graphs.add(graph);
 			}
 			
-			if(content.getComponentCount() == 0){
-				
-				//TODO warn the user and probably roll back to the configuration step?
-				
-				System.out.println("no GUI");//TODO
-				frame.setVisible(false);
-				return;//don't create a GUI if there's nothing to display
-			}
-
-			Menu.repaint();
-
+			//frame configuration
 			JPanel all = new JPanel(new BorderLayout());
 			all.add(content, BorderLayout.CENTER);
 			all.setOpaque(opaque);
@@ -616,14 +611,14 @@ public class Main{
 				content.setBackground(background.getColor());
 			}
 			frame.add(all);
-			frame.setVisible(content.getComponentCount() > 0);
-			
-			//Start stats saving
-			Statistics.cancelScheduledTask();
-			if(config.getStatsSavingSettings().isAutoSaveEnabled()){
-				Statistics.saveStatsTask();
-			}
+			frame.setVisible(true);
 		});
+		
+		//Start stats saving
+		Statistics.cancelScheduledTask();
+		if(config.getStatsSavingSettings().isAutoSaveEnabled()){
+			Statistics.saveStatsTask();
+		}
 	}
 
 	/**
@@ -635,10 +630,10 @@ public class Main{
 	}
 
 	/**
-	 * Resets avg, max, tot &amp; cur
+	 * Resets all derived statistics.
 	 */
 	protected static final void resetStats(){
-		System.out.println("Reset max & avg | max: " + max + " avg: " + avg + " tot: " + hits);
+		System.out.println("Reset stats | max: " + max + " avg: " + avg + " tot: " + hits);
 		n = 0;
 		avg = 0;
 		max = 0;
@@ -649,19 +644,22 @@ public class Main{
 	}
 
 	/**
-	 * Resets key count totals
+	 * Resets key count totals.
 	 */
 	protected static final void resetTotals(){
-		System.out.print("Reset key counts | ");
-		for(Key k : keys.values()){
-//			System.out.print(k.name + ":" + k.count + " ");
-			//TODO either stop printing this or loop the entry set and call getkeyname
-			k.count = 0;
+		System.out.print("Reset key counts |");
+		for(Entry<Integer, Key> key : keys.entrySet()){
+			System.out.print(" " + CommandKeys.formatExtendedCode(key.getKey()) + ":" + key.getValue().getCount());
+			key.getValue().setCount(0);
 		}
-		System.out.println();
+		
 		frame.repaint();
 	}
 	
+	/**
+	 * Removes all tracked information for the given key code.
+	 * @param keycode The key code to remove.
+	 */
 	public static void removeKey(int keycode){
 		keys.remove(keycode);
 	}

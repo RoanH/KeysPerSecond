@@ -28,32 +28,31 @@ import dev.roanh.kps.panels.KeyPanel;
  * @author Roan
  */
 public class Key{
-	//TODO these probably should not all be public/protected...
 	/**
 	 * Whether or not this key is currently pressed
 	 */
-	public boolean down = false;
+	private boolean down = false;
 	/**
 	 * The total number of times this key has been pressed
 	 */
-	public int count = 0;
-//	/**
-//	 * The graphical display for this key
-//	 */
-//	@Deprecated
-	private KeyPanel panel = null;//TODO Note: EXCLUSIVELY FOR REPAINTS
+	private int count = 0;
+	/**
+	 * The graphical display for this key, used
+	 * for instant rendering updates.
+	 */
+	private KeyPanel panel = null;
 	/**
 	 * Whether or not alt has to be down
 	 */
-	protected boolean alt;
+	private boolean alt;
 	/**
 	 * Whether or not ctrl has to be down
 	 */
-	protected boolean ctrl;
+	private boolean ctrl;
 	/**
 	 * Whether or not shift has to be down
 	 */
-	protected boolean shift;
+	private boolean shift;
 	
 	/**
 	 * Constructs a new key object with the given hit count and modifier keys.
@@ -72,13 +71,41 @@ public class Key{
 	public Key(){
 		this(0, false, false, false);
 	}
+	
+	public Key(int extendedCode){
+		this(0, CommandKeys.hasAlt(extendedCode), CommandKeys.hasCtrl(extendedCode), CommandKeys.hasShift(extendedCode));
+	}
 
 	public Key(KeyPanelSettings info){
-		this(0, CommandKeys.hasAlt(info.getKeyCode()), CommandKeys.hasCtrl(info.getKeyCode()), CommandKeys.hasShift(info.getKeyCode()));
+		this(info.getKeyCode());
 	}
 	
 	public void setPanel(KeyPanel panel){
 		this.panel = panel;
+	}
+	
+	public int getCount(){
+		return count;
+	}
+	
+	public boolean hasShift(){
+		return shift;
+	}
+	
+	public boolean hasCtrl(){
+		return ctrl;
+	}
+	
+	public boolean hasAlt(){
+		return alt;
+	}
+	
+	public boolean isDown(){
+		return down;
+	}
+	
+	public void setCount(int count){
+		this.count = count;
 	}
 
 	/**
