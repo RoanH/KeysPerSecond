@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Dialog.ModalityType;
 import java.util.List;
 
@@ -139,7 +140,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	private JButton newButton(int code, String text){
 		JButton button = new JButton(text);
 		button.addActionListener(e->{
-			KeyPanelSettings info = new KeyPanelSettings(placePanelX(), Main.getExtendedButtonCode(code));
+			KeyPanelSettings info = new KeyPanelSettings(placePanel(), Main.getExtendedButtonCode(code));
 //			KeyInformation key = new KeyInformation("M" + code, Main.getExtendedButtonCode(code), false, false, false, true);
 			if(config.contains(info)){
 //				KeyInformation.autoIndex -= 2;
@@ -167,7 +168,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 			return;
 		}
 		
-		KeyPanelSettings info = new KeyPanelSettings(placePanelX(), lastKey);
+		KeyPanelSettings info = new KeyPanelSettings(placePanel(), lastKey);
 		if(config.contains(info)){
 //			KeyInformation.autoIndex -= 2;
 			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
@@ -197,37 +198,75 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		Main.eventManager.unregisterKeyPressListener(dialog);
 	}
 	
-	private int placePanelX(){
-		return placePanelX(Main.config, 2, 3);
+	/**
+	 * Computes a location where a panel of default size can be
+	 * placed without overlapping any existing panels.
+	 * @return A location where a panel can be placed without overlap.
+	 */
+	private Point placePanel(){
+		return placePanel(Main.config, 2, 3);
 	}
 	
-	//TODO completely untested
-	private int placePanelX(Configuration config, int width, int height){
+	/**
+	 * Computes a location where a panel of the given the given size can be
+	 * placed without overlapping any existing panels.
+	 * @param config The configuration get all panels from.
+	 * @param width The width of the panel to place.
+	 * @param height The height of the panel to place.
+	 * @return A location where the requested panel can be placed without overlap.
+	 */
+	private Point placePanel(Configuration config, int width, int height){
+		//determine a valid stretch of rows not blocked by max width panels
 		List<LayoutPosition> components = config.getLayoutComponents();
-		int maxw = components.stream().mapToInt(lp->lp.getLayoutX() + lp.getLayoutWidth()).max().orElse(0);
-		boolean[] conflict = new boolean[maxw];
+		boolean[] hconf = new boolean[components.stream().filter(lp->lp.getLayoutY() != -1).mapToInt(lp->lp.getLayoutY() + lp.getLayoutHeight()).max().orElse(0)];
 		
 		for(LayoutPosition lp : components){
-			if(lp.getLayoutY() < height && lp.getLayoutX() != -1 && lp.getLayoutY() != -1){
+			if(lp.getLayoutY() != -1){
+				for(int i = 0; i < lp.getLayoutHeight(); i++){
+					hconf[lp.getLayoutY() + i] = lp.getLayoutWidth() == -1;
+				}
+			}
+		}
+		
+		int row = findRange(hconf, height);
+		
+		//determine a valid stretch of columns
+		int maxw = components.stream().filter(lp->lp.getLayoutX() != -1).mapToInt(lp->lp.getLayoutX() + lp.getLayoutWidth()).max().orElse(0);
+		boolean[] conflicts = new boolean[maxw];
+		
+		for(LayoutPosition lp : components){
+			if(row <= lp.getLayoutY() && lp.getLayoutY() < row + height && lp.getLayoutX() != -1){
 				for(int i = 0; i < lp.getLayoutWidth(); i++){
-					conflict[lp.getLayoutX() + i] = true;
+					conflicts[lp.getLayoutX() + i] = true;
 				}
 			}
 		}
 
+		return new Point(findRange(conflicts, width), row);
+	}
+	
+	/**
+	 * Finds the first index of a range of false values of
+	 * the given size in the given array of conflicts.
+	 * @param conflicts An array with conflict values.
+	 * @param size The length of the range to find.
+	 * @return The first index of a valid range, possibly
+	 *         one such that the range runs out of the array.
+	 */
+	private int findRange(boolean[] conflicts, int size){
 		int free = 0;
-		for(int i = 0; i < conflict.length; i++){
-			if(conflict[i]){
+		for(int i = 0; i < conflicts.length; i++){
+			if(conflicts[i]){
 				free = 0;
 			}else{
 				free++;
-				if(free >= width){
-					return i - width + 1;
+				if(free >= size){
+					return i - size + 1;
 				}
 			}
 		}
 
-		return maxw;
+		return conflicts.length - free;
 	}
 
 	/**

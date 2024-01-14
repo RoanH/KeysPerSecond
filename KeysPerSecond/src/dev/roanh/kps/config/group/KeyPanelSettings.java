@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps.config.group;
 
+import java.awt.Point;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -58,12 +59,12 @@ public class KeyPanelSettings extends PanelSettings{
 	
 	/**
 	 * Constructs new key settings for the given key.
-	 * @param x The layout x position to place the key at.
+	 * @param loc The layout location position to place the key at.
 	 * @param extendedCode The key code of the key for the panel.
 	 * @see CommandKeys#getExtendedKeyCode(int, boolean, boolean, boolean)
 	 */
-	public KeyPanelSettings(int x, int extendedCode){
-		super("keys", x, 0, 2, 3, getPanelName(extendedCode));
+	public KeyPanelSettings(Point loc, int extendedCode){
+		super("keys", loc.x, loc.y, 2, 3, getPanelName(extendedCode));
 		keycode.update(extendedCode);
 	}
 	
