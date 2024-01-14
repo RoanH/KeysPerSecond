@@ -250,7 +250,7 @@ public class Configuration{
 	/**
 	 * Gets the size in pixels of all the layout grid cells.
 	 * @return The grid cell size in pixels.
-	 * @se {@link #getLayout()}
+	 * @see #getLayout()
 	 */
 	public int getCellSize(){
 		return layout.getCellSize();
