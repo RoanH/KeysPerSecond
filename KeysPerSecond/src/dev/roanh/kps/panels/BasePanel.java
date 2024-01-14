@@ -51,11 +51,17 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	 * RenderCache for this panel
 	 */
 	private RenderCache cache = new RenderCache();
+	/**
+	 * Settings for this panel.
+	 */
 	private DataPanelSettings config;
 	
+	/**
+	 * Constructs a new base panel with the given settings.
+	 * @param config The panel settings.
+	 */
 	public BasePanel(DataPanelSettings config){
 		this.config = config;
-		//TODO add listener for rendering mode changes
 		sizeChanged();
 	}
 
@@ -67,13 +73,6 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	public void sizeChanged(){
 		cache.init(getRenderingMode());
 		this.repaint();
-	}
-
-	/**
-	 * Constructs a new BasePanel
-	 */
-	protected BasePanel(){
-		this.setOpaque(!ColorManager.transparency);
 	}
 
 	@Override
