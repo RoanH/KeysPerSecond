@@ -35,12 +35,13 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.layout.LayoutPosition;
+import dev.roanh.kps.ui.editor.EditorProvider;
 
 /**
  * Panel to draw continuous graphs.
  * @author Roan
  */
-public class GraphPanel extends JPanel implements LayoutPosition{
+public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider{
 	/**
 	 * Serial ID.
 	 */
@@ -181,5 +182,10 @@ public class GraphPanel extends JPanel implements LayoutPosition{
 	@Override
 	public int getLayoutHeight(){
 		return config.getLayoutHeight();
+	}
+
+	@Override
+	public void showEditor(boolean live){
+		config.showEditor(live);
 	}
 }
