@@ -56,6 +56,7 @@ import dev.roanh.kps.config.ConfigParser;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.config.Version;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
@@ -100,7 +101,7 @@ public class Main{
 	/**
 	 * String holding the version of the program.
 	 */
-	public static final String VERSION = "v8.7";//XXX the version number  - don't forget build.gradle
+	public static final Version VERSION = Version.readVersion();
 	/**
 	 * The number of seconds the average has
 	 * been calculated for
