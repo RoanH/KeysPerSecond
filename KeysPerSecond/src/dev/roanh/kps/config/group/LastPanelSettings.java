@@ -38,12 +38,12 @@ public class LastPanelSettings extends SpecialPanelSettings{
 	 * Maximum number of time units to show at the same time.
 	 * E.g., two units could mean showing '5m 26s'.
 	 */
-	private IntSetting units = new IntSetting("units", 1, 4, 1);
+	private final IntSetting units = new IntSetting("units", 1, 4, 1);
 	/**
 	 * Whether milliseconds are considered as a valid unit to show or not.
 	 * If false milliseconds are never shown.
 	 */
-	private BooleanSetting millis = new BooleanSetting("showMillis", false);
+	private final BooleanSetting millis = new BooleanSetting("showMillis", false);
 
 	/**
 	 * Constructs new last panel settings.
