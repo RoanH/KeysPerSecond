@@ -33,7 +33,7 @@ public abstract class SpecialPanelSettings extends DataPanelSettings{
 	 * The type of this panel, indicative of the metric displayed.
 	 */
 	private final PanelType type;
-
+	
 	/**
 	 * Constructs new special panel settings.
 	 * @param type The type of the special panel.

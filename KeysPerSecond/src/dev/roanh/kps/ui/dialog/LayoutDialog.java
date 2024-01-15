@@ -95,11 +95,12 @@ public class LayoutDialog{
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setPreferredSize(new Dimension(600, 200));
 		
-		JPanel buttons = new JPanel(new GridLayout(1, 4, 2, 0));
+		JPanel buttons = new JPanel(new GridLayout(1, 0, 2, 0));
 		buttons.add(createAddButton(panelView, "Add Maximum", Main.config.getPanels(), PanelType.MAX::newSettings));
 		buttons.add(createAddButton(panelView, "Add Average", Main.config.getPanels(), PanelType.AVG::newSettings));
 		buttons.add(createAddButton(panelView, "Add KPS", Main.config.getPanels(), PanelType.CURRENT::newSettings));
 		buttons.add(createAddButton(panelView, "Add Total", Main.config.getPanels(), PanelType.TOTAL::newSettings));
+		buttons.add(createAddButton(panelView, "Add Last", Main.config.getPanels(), PanelType.LAST::newSettings));
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createTitledBorder("Panels"));

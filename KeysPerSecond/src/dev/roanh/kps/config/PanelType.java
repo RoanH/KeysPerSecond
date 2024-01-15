@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
+import dev.roanh.kps.config.group.LastPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
@@ -51,7 +52,11 @@ public enum PanelType{
 	/**
 	 * Total panel that shows the total number of hits.
 	 */
-	TOTAL("total", TotalPanelSettings::new);
+	TOTAL("total", TotalPanelSettings::new),
+	/**
+	 * Last panel that shows the time since the last tracked input.
+	 */
+	LAST("last", LastPanelSettings::new);
 	
 	/**
 	 * The panel type identifier.
