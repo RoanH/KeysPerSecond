@@ -190,7 +190,7 @@ public class Statistics{
 		try{
 			loadStats(file);
 			Dialog.showMessageDialog("Statistics succesfully loaded");
-		}catch(Exception e){
+		}catch(IOException e){
 			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to load the statistics!\nCause: " + e.getMessage());
 		}
@@ -199,9 +199,9 @@ public class Statistics{
 	/**
 	 * Loads the statistics from a file
 	 * @param file The file to load from.
-	 * @throws Exception When an Exception occurs.
+	 * @throws IOException When an Exception occurs.
 	 */
-	public static void loadStats(Path file) throws Exception{
+	public static void loadStats(Path file) throws IOException{
 		try(BufferedReader in = Files.newBufferedReader(file)){
 			String line;
 			while((line = in.readLine()) != null){
@@ -268,8 +268,6 @@ public class Statistics{
 			in.close();
 		}catch(MalformedInputException e){
 			throw new UnsupportedOperationException("Loading legacy statistics files is unsupported in this version.", e);
-		}catch(Exception e){
-			throw e;
 		}
 
 		Main.frame.repaint();
