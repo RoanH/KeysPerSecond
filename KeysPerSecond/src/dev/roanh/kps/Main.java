@@ -171,7 +171,7 @@ public class Main{
 	/**
 	 * The layout for the main panel of the program
 	 */
-	public static final Layout layout = new Layout(content);
+	public static Layout layout;
 	/**
 	 * Small icon for the program
 	 */
@@ -219,6 +219,7 @@ public class Main{
 		//set UI components
 		content = new GridPanel();
 		frame = new JFrame("KeysPerSecond");
+		layout = new Layout(content);
 		
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
