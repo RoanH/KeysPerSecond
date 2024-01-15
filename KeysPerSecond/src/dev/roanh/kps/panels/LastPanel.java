@@ -21,15 +21,33 @@ package dev.roanh.kps.panels;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.LastPanelSettings;
 
+/**
+ * Panel showing the time since the last input.
+ * @author Roan
+ */
 public class LastPanel extends BasePanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -2570027494924539862L;
+	/**
+	 * Array of time resolutions to use when formatting times.
+	 */
 	private static final Resolution[] magnitudes = new Resolution[]{Resolution.HOUR, Resolution.MINUTE, Resolution.SECOND, Resolution.MILLIS};
+	/**
+	 * Last used resolution, used to invalidate cached rendering
+	 * info when the resolution magnitude changes.
+	 */
 	private int lastResolution = 0;
+	/**
+	 * The settings for this panel.
+	 */
 	private LastPanelSettings config;
 
+	/**
+	 * Constructs a new last panel.
+	 * @param config The panel configuration.
+	 */
 	public LastPanel(LastPanelSettings config){
 		super(config);
 		this.config = config;
@@ -42,10 +60,11 @@ public class LastPanel extends BasePanel{
 			return "-";
 		}
 		
-		String value = "";
 		long diff = (System.nanoTime() - Main.lastHitTime) / 1000000;
 		for(int i = 0; i < magnitudes.length; i++){
 			if(diff >= magnitudes[i].millis){
+				String value = "";
+				
 				for(int j = magnitudes.length - 1; j > i; j--){
 					Resolution res = magnitudes[j];
 					if(j - i < config.getUnitCount() && (res != Resolution.MILLIS || config.showMillis())){
@@ -67,16 +86,48 @@ public class LastPanel extends BasePanel{
 		return "?";
 	}
 	
+	/**
+	 * Helper class with time unit properties.
+	 * @author Roan
+	 */
 	private static enum Resolution{
+		/**
+		 * Hour resolution.
+		 */
 		HOUR(24, 60 * 60 * 1000, "h"),
+		/**
+		 * Minute resolution.
+		 */
 		MINUTE(60, 60 * 1000, "m"),
+		/**
+		 * Second resolution.
+		 */
 		SECOND(60, 1000, "s"),
+		/**
+		 * Millisecond resolution.
+		 */
 		MILLIS(1000, 0, "ms");
 		
+		/**
+		 * The factor get from a single unit of this resolution
+		 * to a single unit of one resolution larger.
+		 */
 		private final int factor;
+		/**
+		 * The total number of milliseconds in a single unit of this resolution.
+		 */
 		private final long millis;
+		/**
+		 * The suffix to use for this resolution.
+		 */
 		private final String suffix;
 		
+		/**
+		 * Constructs a new resolution.
+		 * @param factor The factor up to the next resolution.
+		 * @param millis The total number of milliseconds in one unit.
+		 * @param suffix The suffix for this resolution.
+		 */
 		private Resolution(int factor, long millis, String suffix){
 			this.factor = factor;
 			this.millis = millis;
