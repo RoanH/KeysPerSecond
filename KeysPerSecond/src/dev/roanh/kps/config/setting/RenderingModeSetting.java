@@ -53,14 +53,10 @@ public class RenderingModeSetting extends Setting<RenderingMode>{
 				update(RenderingMode.VERTICAL);
 				return false;
 			case "HORIZONTAL_TDAN":
-				update(RenderingMode.DIAGONAL1);
-				return false;
-			case "HORIZONTAL_TDAN2":
-				update(RenderingMode.DIAGONAL3);
-				return false;
 			case "HORIZONTAL_TDANS":
 				update(RenderingMode.DIAGONAL1);
 				return false;
+			case "HORIZONTAL_TDAN2":
 			case "HORIZONTAL_TDAN2S":
 				update(RenderingMode.DIAGONAL3);
 				return false;

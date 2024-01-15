@@ -28,5 +28,21 @@
       <Class name="dev.roanh.kps.model.SpecialNumberModel"/>
     </Or>
   </Match>
+  
+  <Match>
+    <!-- We assume Graphics2D to be used -->
+    <Bug pattern="BC_UNCONFIRMED_CAST"/>
+    <Or>
+      <Method name="paintMenuItem"/>
+      <Method name="paintComponent"/>
+    </Or>
+    <Or>
+      <Class name="dev.roanh.kps.Menu$MenuItemUI"/>
+      <Class name="dev.roanh.kps.Menu$MenuUI"/>
+      <Class name="dev.roanh.kps.layout.GridPanel"/>
+      <Class name="dev.roanh.kps.panels.BasePanel"/>
+      <Class name="dev.roanh.kps.panels.GraphPanel"/>
+    </Or>
+  </Match>
 
 </FindBugsFilter>
