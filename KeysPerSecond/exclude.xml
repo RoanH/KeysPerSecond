@@ -63,8 +63,9 @@
     <!-- This is fine -->
     <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
     <Or>
-      <Class name="dev.roan.kps.ui.component.ColorPicker"/>
-      <Class name="dev.roan.kps.ui.model.SpecialNumberModelEditor"/>
+      <Class name="dev.roanh.kps.ui.component.ColorPicker"/>
+      <Class name="dev.roanh.kps.ui.model.SpecialNumberModelEditor"/>
+      <Class name="dev.roanh.kps.panels.BasePanel"/>
     </Or>
   </Match>
   
