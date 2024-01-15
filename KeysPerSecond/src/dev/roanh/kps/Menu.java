@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps;
 
+import java.awt.AWTException;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -26,8 +27,12 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
+import java.awt.MenuItem;
 import java.awt.Point;
+import java.awt.PopupMenu;
 import java.awt.Rectangle;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -91,6 +96,10 @@ public class Menu{
 	 * The pause menu item.
 	 */
 	protected static final JCheckBoxMenuItem pause = new JCheckBoxMenuItem("Pause");
+	/**
+	 * The icon for the system tray.
+	 */
+	private static TrayIcon trayIcon = null;
 
 	/**
 	 * Repaints the component border
@@ -124,6 +133,7 @@ public class Menu{
 		JMenuItem commandkeys = new JMenuItem("Commands");
 		JMenuItem layout = new JMenuItem("Layout panels & graphs");
 		JMenuItem about = new JMenuItem("About");
+		JMenuItem minimizeButton = new JMenuItem("Hide window");
 		JCheckBoxMenuItem tAllKeys = new JCheckBoxMenuItem("Track all keys");
 		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
 		JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay mode");
@@ -138,6 +148,7 @@ public class Menu{
 		components.add(statsSaving);
 		components.add(layout);
 		components.add(about);
+		components.add(minimizeButton);
 		components.add(save);
 		components.add(snap);
 		components.add(exit);
@@ -167,7 +178,7 @@ public class Menu{
 			JFrame frame = (JFrame)KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
 			Point loc = frame.getLocationOnScreen();
 			Rectangle bounds = frame.getGraphicsConfiguration().getBounds();
-			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x, 
+			frame.setLocation(Math.abs(loc.x - bounds.x) < 100 ? bounds.x : Math.abs((loc.x + frame.getWidth()) - (bounds.x + bounds.width)) < 100 ? bounds.x + bounds.width - frame.getWidth() : loc.x,
 			                  Math.abs(loc.y - bounds.y) < 100 ? bounds.y : Math.abs((loc.y + frame.getHeight()) - (bounds.y + bounds.height)) < 100 ? bounds.y + bounds.height - frame.getHeight() : loc.y);
 		});
 		exit.addActionListener((e)->{
@@ -175,6 +186,9 @@ public class Menu{
 		});
 		about.addActionListener((e)->{
 			AboutDialog.showAbout();
+		});
+		minimizeButton.addActionListener(e->{
+			minimizeToSystemTray();
 		});
 		pause.setSelected(Main.suspended);
 		pause.addActionListener((e)->{
@@ -231,7 +245,7 @@ public class Menu{
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(true);
 		});
-		
+
 		List<JCheckBoxMenuItem> rates = new ArrayList<JCheckBoxMenuItem>();
 		for(UpdateRate val : UpdateRate.values()){
 			JCheckBoxMenuItem item = new JCheckBoxMenuItem(val.toString(), Main.config.getUpdateRate() == val);
@@ -247,7 +261,7 @@ public class Menu{
 			components.add(item);
 			item.setUI(new MenuItemUI());
 		}
-		
+
 		save.addActionListener((e)->{
 			Main.config.saveConfig(true);
 		});
@@ -297,9 +311,73 @@ public class Menu{
 		menu.add(snap);
 		menu.add(reset);
 		menu.add(about);
+		menu.add(minimizeButton);
 		menu.add(exit);
 	}
+
+	/**
+	 * Minimises the window to the system tray and hides the main frame.
+	 */
+	public static void minimizeToSystemTray(){
+		Main.frame.setVisible(false);
+		if(SystemTray.isSupported()){
+			SystemTray systemTray = SystemTray.getSystemTray();
+
+			if(trayIcon == null){
+				PopupMenu popupMenu = new PopupMenu();
+				MenuItem exit = new MenuItem("Exit");
+				popupMenu.add(exit);
+
+				exit.addActionListener(e->{
+					Main.exit();
+				});
+
+				trayIcon = new TrayIcon(Main.iconSmall, "KeysPerSecond", popupMenu);
+				trayIcon.addMouseListener(new MouseListener(){
+					
+					@Override
+					public void mouseClicked(MouseEvent e){
+						if(e.getButton() == MouseEvent.BUTTON1){
+							restoreFromSystemTray();
+						}
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e){
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e){
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e){
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e){
+					}
+				});
+			}
+
+			try{
+				systemTray.add(trayIcon);
+			}catch(AWTException e){
+				e.printStackTrace();
+			}
+		}
+	}
 	
+	/**
+	 * Removes the system tray icon if present and makes the main frame visible again.
+	 */
+	public static void restoreFromSystemTray(){
+		Main.frame.setVisible(true);
+		if(SystemTray.isSupported()){
+			SystemTray.getSystemTray().remove(trayIcon);
+		}
+	}
+
 	/**
 	 * Applies a new configuration to the program
 	 */
