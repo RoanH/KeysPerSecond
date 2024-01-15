@@ -33,6 +33,20 @@ public abstract class SpecialPanelSettings extends DataPanelSettings{
 	 * The type of this panel, indicative of the metric displayed.
 	 */
 	private final PanelType type;
+	
+	/**
+	 * Constructs new panel settings.
+	 * @param key The settings group key.
+	 * @param x The x position of the panel.
+	 * @param y The y position of the panel.
+	 * @param width The width of the panel.
+	 * @param height The height of the panel.
+	 * @param defaultName The display name of the panel.
+	 */
+	protected SpecialPanelSettings(PanelType type, int x, int y, int width, int height, String defaultName){
+		super("panels", x, y, width, height, defaultName);
+		this.type = type;
+	}
 
 	/**
 	 * Constructs new special panel settings.

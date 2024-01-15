@@ -154,6 +154,7 @@ public class Key{
 			count++;
 			down = true;
 			Main.tmp.incrementAndGet();
+			Main.lastHitTime = System.nanoTime();
 			if(panel != null){
 				panel.repaint();
 			}

@@ -681,11 +681,15 @@ public enum RenderingMode{
 		 */
 		public final void init(RenderingMode mode){
 			this.mode = mode;
-			valuePos = null;
 			titlePos = null;
-			valueFont = null;
 			titleFont = null;
 			titleLen = -1;
+			invalidateValueCache();
+		}
+		
+		public final void invalidateValueCache(){
+			valuePos = null;
+			valueFont = null;
 			valueLen = -1;
 		}
 

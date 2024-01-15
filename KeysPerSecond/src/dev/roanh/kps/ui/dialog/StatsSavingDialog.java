@@ -256,7 +256,7 @@ public class StatsSavingDialog extends JPanel{
 	 * @author Roan
 	 * @see TimeUnit
 	 */
-	private static enum Unit{
+	public static enum Unit{
 		/**
 		 * Represents the hour unit.
 		 * Larger units are not offered.
