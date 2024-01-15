@@ -137,7 +137,7 @@ public class ConfigParser{
 			if(Main.config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
 				try{
 					Statistics.loadStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
-				}catch(Exception e){
+				}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
 					e.printStackTrace();
 					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
 				}
