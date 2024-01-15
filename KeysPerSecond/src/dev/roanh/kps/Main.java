@@ -235,7 +235,7 @@ public class Main{
 			eventManager.registerInputSource(new NativeHookInputSource(eventManager));
 		}catch(NativeHookException ex){
 			System.err.println("There was a problem registering the native hook.");
-			System.err.println(ex.getMessage());
+			ex.printStackTrace();
 			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
 			System.exit(1);
 		}
