@@ -22,12 +22,13 @@ import java.util.Map;
 
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.setting.StringSetting;
+import dev.roanh.kps.ui.editor.EditorProvider;
 
 /**
  * Settings for a named panel.
  * @author Roan
  */
-public abstract class PanelSettings extends LocationSettings{
+public abstract class PanelSettings extends LocationSettings implements EditorProvider{
 	/**
 	 * The name of this panel.
 	 */
@@ -71,13 +72,6 @@ public abstract class PanelSettings extends LocationSettings{
 	public void setName(String name){
 		this.name.update(name);
 	}
-	
-	/**
-	 * Shows an editor to edit advanced panel properties.
-	 * @param live True if the GUI is already live and
-	 *        updates should be reflected in real time.
-	 */
-	public abstract void showEditor(boolean live);
 	
 	@Override
 	public boolean parse(Map<String, String> data){

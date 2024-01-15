@@ -496,7 +496,7 @@ public class Menu{
 	 * UI for JMenuItems
 	 * @author Roan
 	 */
-	private static final class MenuItemUI extends BasicMenuItemUI implements MouseListener, PopupMenuListener{
+	public static final class MenuItemUI extends BasicMenuItemUI implements MouseListener, PopupMenuListener{
 		/**
 		 * Whether or not the component currently has a mouse over it
 		 */
