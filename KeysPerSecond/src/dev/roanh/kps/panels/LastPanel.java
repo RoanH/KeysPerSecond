@@ -60,20 +60,21 @@ public class LastPanel extends BasePanel{
 			return "-";
 		}
 		
+		boolean millis = config.showMillis();
 		long diff = (System.nanoTime() - Main.lastHitTime) / 1000000;
 		for(int i = 0; i < magnitudes.length; i++){
-			if(diff >= magnitudes[i].millis){
+			if(diff >= magnitudes[i].millis || (magnitudes[i] == Resolution.SECOND && !millis)){
 				String value = "";
 				
 				for(int j = magnitudes.length - 1; j > i; j--){
 					Resolution res = magnitudes[j];
-					if(j - i < config.getUnitCount() && (res != Resolution.MILLIS || config.showMillis())){
+					if(j - i < config.getUnitCount() && (res != Resolution.MILLIS || millis)){
 						value = " " + (diff % res.factor) + res.suffix + value;
 					}
 					diff /= res.factor;
 				}
 				
-				if(lastResolution < i){
+				if(lastResolution != i){
 					lastResolution = i;
 					cache.invalidateValueCache();
 				}
