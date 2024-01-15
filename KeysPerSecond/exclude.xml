@@ -51,5 +51,9 @@
     <Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE"/>
     <Class name="dev.roanh.kps.event.source.NativeHookInputSource"/>
   </Match>
+  
+  
+  
+  
 
 </FindBugsFilter>

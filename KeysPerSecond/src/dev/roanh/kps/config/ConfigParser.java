@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.Statistics;
@@ -110,7 +111,7 @@ public class ConfigParser{
 		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
 			return false;
-		}else if(saveloc.getFileName().toString().endsWith("kpsconf") || saveloc.getFileName().toString().endsWith("kpsconf2")){
+		}else if(Objects.toString(saveloc.getFileName()).endsWith("kpsconf") || Objects.toString(saveloc.getFileName()).endsWith("kpsconf2")){
 			Dialog.showMessageDialog(
 				"You are trying to load a legacy configuration file.\n"
 				+ "This is no longer possible with this version of the program.\n"

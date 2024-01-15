@@ -107,6 +107,8 @@ public class Statistics{
 				Files.createDirectories(target);
 				target.resolve(DateTimeFormatter.ofPattern(config.getAutoSaveFormat()).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
 				saveStats(target);
+			}catch(RuntimeException e){
+				throw e;
 			}catch(Exception e){
 				//Main priority here is to not interrupt whatever the user is doing
 				e.printStackTrace();

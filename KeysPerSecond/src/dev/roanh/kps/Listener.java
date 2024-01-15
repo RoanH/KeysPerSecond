@@ -156,6 +156,8 @@ public class Listener implements MouseMotionListener, MouseListener, ActionListe
 							e.getComponent().getLocation(tmp);
 							e.getComponent().setLocation(tmp.x, tmp.y + d);
 							break;
+						default:
+							break;
 						}
 					}
 				}

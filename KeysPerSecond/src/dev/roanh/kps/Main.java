@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -310,7 +311,7 @@ public class Main{
 				Path dir = Paths.get(config.substring(0, index));
 				final String name = config.substring(index + 1);
 				Filter<Path> filter = p->{
-					String other = p.getFileName().toString();
+					String other = Objects.toString(p.getFileName());
 					for(int i = 0; i < name.length(); i++){
 						char ch = name.charAt(i);
 						if(ch == '?'){
