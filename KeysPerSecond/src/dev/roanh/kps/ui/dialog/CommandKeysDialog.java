@@ -127,6 +127,8 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 		case 1:
 			key.unbind();
 			break;
+		default:
+			break;
 		}
 	}
 

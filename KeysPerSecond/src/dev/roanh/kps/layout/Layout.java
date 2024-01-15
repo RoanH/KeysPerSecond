@@ -67,7 +67,6 @@ public class Layout implements LayoutManager2{
 	 */
 	public Layout(Container parent){
 		this.parent = parent;
-		parent.setLayout(this);
 	}
 
 	/**
@@ -186,8 +185,8 @@ public class Layout implements LayoutManager2{
 	@Override
 	public void layoutContainer(Container parent){
 		if(!(maxw == 0 && extraWidth == 0) && !(maxh == 0 && extraHeight == 0)){
-			double dx = parent.getWidth() / (maxw + extraWidth);
-			double dy = parent.getHeight() / (maxh + extraHeight);
+			double dx = parent.getWidth() / (double)(maxw + extraWidth);
+			double dy = parent.getHeight() / (double)(maxh + extraHeight);
 			int width = maxw;
 			int height = maxh;
 			for(Component component : parent.getComponents()){

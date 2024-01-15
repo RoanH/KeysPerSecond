@@ -5,6 +5,7 @@ plugins{
 	id 'maven-publish'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
 	id 'edu.sc.seis.launch4j' version '2.5.1'
+	id 'com.github.spotbugs' version '5.0.14'
 	id 'jacoco'
 }
 
@@ -64,6 +65,23 @@ test{
 
 	testLogging{
 		events "passed", "skipped", "failed"
+	}
+}
+
+spotbugs{
+	showProgress = true
+	effort = 'max'
+	reportLevel = 'low'
+	excludeFilter = file("$rootDir/exclude.xml")
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask){
+	reports{
+		html{
+			required = true
+			outputLocation = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+			stylesheet = 'fancy-hist.xsl'
+		}
 	}
 }
 

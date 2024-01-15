@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+  <!-- https://spotbugs.readthedocs.io/en/stable/filter.html -->
+
+  <Match>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP"/>
+      <Bug pattern="EI_EXPOSE_REP2"/>
+      <Bug pattern="EI_EXPOSE_STATIC_REP2"/>
+      <Bug pattern="MS_CANNOT_BE_FINAL"/>
+      <Bug pattern="MS_EXPOSE_REP"/>
+      <Bug pattern="MS_PKGPROTECT"/>
+    </Or>
+  </Match>
+  
+  <Match>
+    <!-- Seralization is irrelevant for this project -->
+    <Bug pattern="SE_BAD_FIELD"/>
+    <Or>
+      <Class name="dev.roanh.kps.config.PanelType"/>
+      <Class name="dev.roanh.kps.panels.AvgPanel"/>
+      <Class name="dev.roanh.kps.panels.GraphPanel"/>
+      <Class name="dev.roanh.kps.panels.KeyPanel"/>
+      <Class name="dev.roanh.kps.panels.LastPanel"/>
+      <Class name="dev.roanh.kps.ui.component.ColorPicker"/>
+      <Class name="dev.roanh.kps.ui.dialog.KeysDialog"/>
+      <Class name="dev.roanh.kps.ui.dialog.MainDialog"/>
+      <Class name="dev.roanh.kps.ui.model.DynamicInteger"/>
+      <Class name="dev.roanh.kps.ui.model.SpecialNumberModel"/>
+    </Or>
+  </Match>
+  
+  <Match>
+    <!-- We assume Graphics2D to be used -->
+    <Bug pattern="BC_UNCONFIRMED_CAST"/>
+    <Or>
+      <Method name="paintMenuItem"/>
+      <Method name="paintComponent"/>
+    </Or>
+    <Or>
+      <Class name="dev.roanh.kps.Menu$MenuItemUI"/>
+      <Class name="dev.roanh.kps.Menu$MenuUI"/>
+      <Class name="dev.roanh.kps.layout.GridPanel"/>
+      <Class name="dev.roanh.kps.panels.BasePanel"/>
+      <Class name="dev.roanh.kps.panels.GraphPanel"/>
+    </Or>
+  </Match>
+  
+  <Match>
+    <!-- This is not a real bug since JNativeHook holds a reference to this logger -->
+    <Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE"/>
+    <Class name="dev.roanh.kps.event.source.NativeHookInputSource"/>
+  </Match>
+  
+  <Match>
+    <!-- By assumption this is fine, if not I have much larger issues -->
+    <Bug pattern="BC_UNCONFIRMED_CAST"/>
+    <Method name="add"/>
+    <Class name="dev.roanh.kps.layout.Layout"/>
+  </Match>
+  
+  <Match>
+    <!-- This is fine -->
+    <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
+    <Or>
+      <Class name="dev.roanh.kps.ui.component.ColorPicker"/>
+      <Class name="dev.roanh.kps.ui.model.SpecialNumberModelEditor"/>
+      <Class name="dev.roanh.kps.panels.BasePanel"/>
+    </Or>
+  </Match>
+  
+  <Match>
+    <!-- Technical debt -->
+    <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
+    <Or>
+      <Method name="keyPressed"/>
+      <Method name="onKeyPress"/>
+      <Method name="onKeyRelease"/>
+    </Or>
+    <Or>
+      <Class name="dev.roanh.kps.CommandKeys"/>
+      <Class name="dev.roanh.kps.Key"/>
+    </Or>
+  </Match>
+  
+  <Match>
+    <!-- Technical debt -->
+    <Bug pattern="MS_MUTABLE_COLLECTION_PKGPROTECT"/>
+    <Or>
+      <Field name="graphs"/>
+      <Field name="keys"/>
+    </Or>
+    <Class name="dev.roanh.kps.Main"/>
+  </Match>
+
+</FindBugsFilter>

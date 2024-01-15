@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps.ui.model;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -46,12 +47,26 @@ public class DynamicInteger extends Number implements Comparable<Integer>{
 	public DynamicInteger(Supplier<Integer> bound){
 		this.bound = bound;
 	}
-
+	
 	@Override
 	public int compareTo(Integer o){
 		return bound.get().compareTo(o);
 	}
-
+	
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof Number){
+			return bound.get() == ((Number)obj).intValue();
+		}else{
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode(){
+		return Objects.hash(bound.get());
+	}
+	
 	@Override
 	public int intValue(){
 		return bound.get();

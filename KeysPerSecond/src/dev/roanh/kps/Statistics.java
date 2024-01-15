@@ -61,11 +61,11 @@ public class Statistics{
 	/**
 	 * Statistics save future
 	 */
-	protected static ScheduledFuture<?> statsFuture = null;
+	private static volatile ScheduledFuture<?> statsFuture = null;
 	/**
 	 * Periodic statistics save scheduler
 	 */
-	protected static ScheduledExecutorService statsScheduler = Executors.newSingleThreadScheduledExecutor();
+	private static final ScheduledExecutorService statsScheduler = Executors.newSingleThreadScheduledExecutor();
 
 	/**
 	 * Saves the statistics so to the configured
@@ -107,7 +107,7 @@ public class Statistics{
 				Files.createDirectories(target);
 				target.resolve(DateTimeFormatter.ofPattern(config.getAutoSaveFormat()).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
 				saveStats(target);
-			}catch(Exception e){
+			}catch(Throwable e){
 				//Main priority here is to not interrupt whatever the user is doing
 				e.printStackTrace();
 			}
@@ -188,7 +188,7 @@ public class Statistics{
 		try{
 			loadStats(file);
 			Dialog.showMessageDialog("Statistics succesfully loaded");
-		}catch(Exception e){
+		}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
 			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to load the statistics!\nCause: " + e.getMessage());
 		}
@@ -197,9 +197,11 @@ public class Statistics{
 	/**
 	 * Loads the statistics from a file
 	 * @param file The file to load from.
-	 * @throws Exception When an Exception occurs.
+	 * @throws IOException When an Exception occurs.
+	 * @throws IllegalArgumentException When there is a format error reading the file.
+	 * @throws UnsupportedOperationException When the file is in an unsupported legacy format.
 	 */
-	public static void loadStats(Path file) throws Exception{
+	public static void loadStats(Path file) throws IOException, IllegalArgumentException, UnsupportedOperationException{
 		try(BufferedReader in = Files.newBufferedReader(file)){
 			String line;
 			while((line = in.readLine()) != null){
@@ -266,8 +268,6 @@ public class Statistics{
 			in.close();
 		}catch(MalformedInputException e){
 			throw new UnsupportedOperationException("Loading legacy statistics files is unsupported in this version.", e);
-		}catch(Exception e){
-			throw e;
 		}
 
 		Main.frame.repaint();

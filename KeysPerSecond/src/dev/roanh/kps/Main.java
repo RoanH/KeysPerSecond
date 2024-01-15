@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -111,7 +112,7 @@ public class Main{
 	 * The number of keys pressed in the
 	 * ongoing second
 	 */
-	protected static AtomicInteger tmp = new AtomicInteger(0);
+	protected static final AtomicInteger tmp = new AtomicInteger(0);
 	/**
 	 * The average keys per second
 	 */
@@ -138,7 +139,7 @@ public class Main{
 	 * virtual codes<br>Used to increment the count for the
 	 * keys
 	 */
-	public static Map<Integer, Key> keys = new HashMap<Integer, Key>();
+	public static final Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
@@ -147,11 +148,11 @@ public class Main{
 	/**
 	 * Graph panel.
 	 */
-	protected static List<GraphPanel> graphs = new ArrayList<GraphPanel>();
+	protected static final List<GraphPanel> graphs = new ArrayList<GraphPanel>();
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
-	private static LinkedList<Integer> timepoints = new LinkedList<Integer>();
+	private static final LinkedList<Integer> timepoints = new LinkedList<Integer>();
 	/**
 	 * The program's main frame
 	 */
@@ -167,15 +168,15 @@ public class Main{
 	/**
 	 * The loop timer
 	 */
-	protected static ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
+	private static final ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 	/**
 	 * The loop timer task
 	 */
-	protected static ScheduledFuture<?> future = null;
+	private static volatile ScheduledFuture<?> future = null;
 	/**
 	 * The layout for the main panel of the program
 	 */
-	public static Layout layout;
+	private static Layout layout;
 	/**
 	 * Small icon for the program
 	 */
@@ -187,7 +188,7 @@ public class Main{
 	/**
 	 * Dummy key for getOrDefault operations
 	 */
-	protected static final Key DUMMY_KEY;
+	private static final Key DUMMY_KEY;
 	/**
 	 * Best text rendering hints.
 	 */
@@ -195,7 +196,7 @@ public class Main{
 	/**
 	 * Event manager responsible for forwarding input events.
 	 */
-	public static EventManager eventManager = new EventManager();
+	public static final EventManager eventManager = new EventManager();
 	
 	/**
 	 * Main method
@@ -224,6 +225,7 @@ public class Main{
 		content = new GridPanel();
 		frame = new JFrame("KeysPerSecond");
 		layout = new Layout(content);
+		content.setLayout(layout);
 		
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
@@ -235,7 +237,7 @@ public class Main{
 			eventManager.registerInputSource(new NativeHookInputSource(eventManager));
 		}catch(NativeHookException ex){
 			System.err.println("There was a problem registering the native hook.");
-			System.err.println(ex.getMessage());
+			ex.printStackTrace();
 			Dialog.showErrorDialog("There was a problem registering the native hook: " + ex.getMessage());
 			System.exit(1);
 		}
@@ -310,7 +312,7 @@ public class Main{
 				Path dir = Paths.get(config.substring(0, index));
 				final String name = config.substring(index + 1);
 				Filter<Path> filter = p->{
-					String other = p.getFileName().toString();
+					String other = Objects.toString(p.getFileName());
 					for(int i = 0; i < name.length(); i++){
 						char ch = name.charAt(i);
 						if(ch == '?'){
@@ -550,7 +552,7 @@ public class Main{
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
-		new Listener(frame);
+		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
 	}

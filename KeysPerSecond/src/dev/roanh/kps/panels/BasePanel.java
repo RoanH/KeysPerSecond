@@ -70,7 +70,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 	 * or properties changed and that thus
 	 * the render cache should be invalidated
 	 */
-	public void sizeChanged(){
+	public final void sizeChanged(){
 		cache.init(config.getRenderingMode());
 		this.repaint();
 	}

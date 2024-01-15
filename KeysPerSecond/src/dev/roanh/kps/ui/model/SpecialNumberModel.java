@@ -80,7 +80,7 @@ public class SpecialNumberModel extends AbstractSpinnerModel{
 
 	@Override
 	public void setValue(Object value){
-		this.value = ((String)value).equals(special) ? -1 : Integer.valueOf((String)value);
+		this.value = ((String)value).equals(special) ? -1 : Integer.parseInt((String)value);
 		listener.valueChanged(this.value);
 		fireStateChanged();
 	}

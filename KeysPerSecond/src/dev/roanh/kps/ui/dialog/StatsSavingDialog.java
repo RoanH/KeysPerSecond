@@ -128,7 +128,7 @@ public class StatsSavingDialog extends JPanel{
 		
 		JPanel periodicPanel = new JPanel(new BorderLayout());
 		periodicPanel.setBorder(BorderFactory.createTitledBorder("Periodic saving"));
-		JCheckBox enabled = new JCheckBox("Periodically save the statistics so far to a file", config.isAutoSaveEnabled());
+		enabled = new JCheckBox("Periodically save the statistics so far to a file", config.isAutoSaveEnabled());
 		
 		BorderLayout layout = new BorderLayout();
 		layout.setHgap(2);

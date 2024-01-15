@@ -18,6 +18,7 @@
  */
 package dev.roanh.kps.config;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -414,7 +415,7 @@ public class Configuration{
 			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc))){
 				write(new IndentWriter(out), savepos);
 				Dialog.showMessageDialog("Configuration saved succesfully.");
-			}catch(Exception e1){
+			}catch(IOException e1){
 				e1.printStackTrace();
 				Dialog.showErrorDialog("Failed to save the configuration!");
 			}
