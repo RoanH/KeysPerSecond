@@ -43,6 +43,7 @@ import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
+import dev.roanh.kps.config.group.LastPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.PositionSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
@@ -613,6 +614,15 @@ public class ConfigParserTest{
 		assertEquals(2, totSettings.getLayoutHeight());
 		assertEquals(RenderingMode.VALUE_ONLY, totSettings.getRenderingMode());
 		assertEquals("Total Panel", totSettings.getName());
+		
+		LastPanelSettings lastSettings = assertInstanceOf(LastPanelSettings.class, panels.next());
+//		assertEquals(1, totSettings.getLayoutX());
+//		assertEquals(1, totSettings.getLayoutY());
+//		assertEquals(5, totSettings.getLayoutWidth());
+//		assertEquals(2, totSettings.getLayoutHeight());
+//		assertEquals(RenderingMode.VALUE_ONLY, totSettings.getRenderingMode());
+//		assertEquals("Total Panel", totSettings.getName());
+		//TODO specific settings
 		
 		assertFalse(panels.hasNext());
 		

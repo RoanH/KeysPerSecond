@@ -20,11 +20,11 @@ package dev.roanh.kps.config.group;
 
 import java.util.Map;
 
+import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.panels.LastPanel;
-import dev.roanh.kps.ui.editor.DataPanelEditor;
 import dev.roanh.kps.ui.editor.Editor;
 import dev.roanh.kps.ui.editor.LastPanelEditor;
 
@@ -54,8 +54,14 @@ public class LastPanelSettings extends SpecialPanelSettings{
 	
 	@Override
 	public boolean parse(Map<String, String> data){
-		// TODO Auto-generated method stub
-		return super.parse(data);
+		return super.parse(data) | findAndParse(data, units, millis);
+	}
+	
+	@Override
+	public void writeItems(IndentWriter out){
+		super.writeItems(out);
+		units.write(out);
+		millis.write(out);
 	}
 
 	@Override
