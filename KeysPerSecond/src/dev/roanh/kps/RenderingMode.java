@@ -687,6 +687,9 @@ public enum RenderingMode{
 			invalidateValueCache();
 		}
 		
+		/**
+		 * Resets the panel value rendering cache.
+		 */
 		public final void invalidateValueCache(){
 			valuePos = null;
 			valueFont = null;

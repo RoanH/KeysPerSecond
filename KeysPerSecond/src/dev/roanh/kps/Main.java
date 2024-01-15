@@ -129,6 +129,9 @@ public class Main{
 	 * used for displaying the current keys per second value
 	 */
 	public static int prev;
+	/**
+	 * Nanosecond time of the last tracked input.
+	 */
 	public static long lastHitTime = -1;
 	/**
 	 * HashMap containing all the tracked keys and their
