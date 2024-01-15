@@ -54,16 +54,21 @@ public class Listener implements MouseMotionListener, MouseListener, ActionListe
 	private EditorProvider editor;
 	
 	/**
-	 * Constructs a new movement listener
-	 * for the given frame
-	 * @param frame The frame to create
-	 *        the listener for
+	 * Constructs a new movement and menu listener.
 	 */
-	protected Listener(JFrame frame){
-		frame.addMouseMotionListener(this);
-		frame.addMouseListener(this);
+	private Listener(){
 		editSelected.setUI(new MenuItemUI());
-		editSelected.addActionListener(this);
+	}
+	
+	/**
+	 * Constructs a new movement and menu listener for the given frame.
+	 * @param frame The frame to create the listener for.
+	 */
+	public static void configureListener(JFrame frame){
+		Listener listener = new Listener();
+		frame.addMouseMotionListener(listener);
+		frame.addMouseListener(listener);
+		listener.editSelected.addActionListener(listener);
 	}
 
 	@Override

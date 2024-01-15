@@ -60,6 +60,13 @@
   </Match>
   
   <Match>
+    <!-- This is fine -->
+    <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR"/>
+    <Class name="dev.roan.kps.ui.component.ColorPicker"/>
+    <Class name="dev.roan.kps.ui.model.SpecialNumberModelEditor"/>
+  </Match>
+  
+  <Match>
     <!-- Technical debt -->
     <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
     <Or>

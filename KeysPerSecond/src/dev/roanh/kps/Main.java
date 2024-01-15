@@ -225,6 +225,7 @@ public class Main{
 		content = new GridPanel();
 		frame = new JFrame("KeysPerSecond");
 		layout = new Layout(content);
+		content.setLayout(layout);
 		
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
@@ -551,7 +552,7 @@ public class Main{
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
-		new Listener(frame);
+		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
 	}

@@ -67,7 +67,6 @@ public class Layout implements LayoutManager2{
 	 */
 	public Layout(Container parent){
 		this.parent = parent;
-		parent.setLayout(this);
 	}
 
 	/**
