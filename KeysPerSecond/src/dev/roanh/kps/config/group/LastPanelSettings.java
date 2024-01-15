@@ -45,6 +45,9 @@ public class LastPanelSettings extends SpecialPanelSettings{
 	 */
 	private BooleanSetting millis = new BooleanSetting("showMillis", false);
 
+	/**
+	 * Constructs new last panel settings.
+	 */
 	public LastPanelSettings(){
 		super(PanelType.LAST, "LST");
 	}
