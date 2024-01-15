@@ -86,6 +86,15 @@ public class Version implements Comparable<Version>{
 	}
 	
 	/**
+	 * Checks if the given string interpreted as a version equals this version.
+	 * @param other The version string to compare against.
+	 * @return True if the given string represents the same version.
+	 */
+	public boolean equals(String other){
+		return Version.parse(other).equals(this);
+	}
+	
+	/**
 	 * Reads the current KeysPerSecond version from the JAR.
 	 * @return The current KeysPerSecond version.
 	 */

@@ -87,7 +87,7 @@ public class MainDialog extends JPanel{
 		links.add(git);
 		
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
-		info.add(Util.getVersionLabel("KeysPerSecond", Main.VERSION));
+		info.add(Util.getVersionLabel("KeysPerSecond", Main.VERSION.toString()));
 		info.add(links);
 		return info;
 	}

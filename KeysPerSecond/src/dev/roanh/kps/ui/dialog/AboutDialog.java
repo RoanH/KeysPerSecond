@@ -101,7 +101,7 @@ public class AboutDialog extends JPanel{
 		add(line, gc);
 		
 		Util.checkVersion("RoanH", "KeysPerSecond", result->result.ifPresent(version->{
-			versionLabel.setText(version.equals(Main.VERSION) ? version : (version + "  (update available)"));
+			versionLabel.setText(Main.VERSION.equals(version) ? version : (version + "  (update available)"));
 		}));
 		
 		//contact

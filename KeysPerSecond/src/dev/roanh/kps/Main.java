@@ -56,6 +56,7 @@ import dev.roanh.kps.config.ConfigParser;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
+import dev.roanh.kps.config.Version;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
@@ -100,7 +101,7 @@ public class Main{
 	/**
 	 * String holding the version of the program.
 	 */
-	public static final String VERSION = "v8.7";//XXX the version number  - don't forget build.gradle
+	public static final Version VERSION = Version.readVersion();
 	/**
 	 * The number of seconds the average has
 	 * been calculated for
@@ -138,7 +139,7 @@ public class Main{
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
-	public static final GridPanel content = new GridPanel();
+	public static GridPanel content;
 	/**
 	 * Graph panel.
 	 */
@@ -150,7 +151,7 @@ public class Main{
 	/**
 	 * The program's main frame
 	 */
-	public static final JFrame frame = new JFrame("KeysPerSecond");
+	public static JFrame frame;
 	/**
 	 * Whether or not the counter is paused
 	 */
@@ -170,7 +171,7 @@ public class Main{
 	/**
 	 * The layout for the main panel of the program
 	 */
-	public static final Layout layout = new Layout(content);
+	public static Layout layout;
 	/**
 	 * Small icon for the program
 	 */
@@ -214,6 +215,11 @@ public class Main{
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		System.out.println("Ctrl + R: Reloads the configuration");
 		Util.installUI();
+		
+		//set UI components
+		content = new GridPanel();
+		frame = new JFrame("KeysPerSecond");
+		layout = new Layout(content);
 		
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
