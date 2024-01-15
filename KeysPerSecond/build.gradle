@@ -2,6 +2,7 @@ plugins{
 	id 'eclipse'
 	id 'java'
 	id 'application'
+	id 'maven-publish'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
 	id 'edu.sc.seis.launch4j' version '2.5.1'
 	id 'jacoco'
@@ -52,6 +53,8 @@ eclipse.classpath.downloadJavadoc = true
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = 1.8
 javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
+group = 'dev.roanh.kps'
+ext.artifact = 'keyspersecond'
 shadowJar.archiveName = 'KeysPerSecond-v' + version + '.jar'
 application.mainClassName = 'dev.roanh.kps.Main'
 
@@ -61,6 +64,48 @@ test{
 
 	testLogging{
 		events "passed", "skipped", "failed"
+	}
+}
+
+publishing{
+	publications{
+		mavenJava(MavenPublication){
+			from components.java
+			artifactId = project.artifact
+
+			pom{
+				name = project.eclipse.project.name
+				description = 'Program to measure the keys pressed per second'
+				url = 'https://github.com/RoanH/KeysPerSecond'
+				licenses{
+					license{
+						name = 'GNU General Public License v3.0'
+						url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
+					}
+				}
+				developers{
+					developer{
+						id = 'RoanH'
+						name = 'Roan Hofland'
+						email = 'roan@roanh.dev'
+					}
+				}
+				scm{
+					connection = 'scm:git:git@github.com:RoanH/KeysPerSecond.git'
+					developerConnection = 'scm:git:git@git.roanh.dev:roan/KeysPerSecond.git'
+					url = 'https://github.com/RoanH/KeysPerSecond'
+				}
+			}
+		}
+	}
+}
+
+shadowJar{
+	into("META-INF/maven/$project.group/$project.artifact"){
+		from{
+			generatePomFileForMavenJavaPublication
+		}
+		rename ".*", "pom.xml"
 	}
 }
 
