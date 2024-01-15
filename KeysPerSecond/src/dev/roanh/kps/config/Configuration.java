@@ -33,7 +33,6 @@ import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
-import dev.roanh.kps.config.group.LastPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
 import dev.roanh.kps.config.group.PositionSettings;
@@ -120,7 +119,6 @@ public class Configuration{
 		panels.add(new MaxPanelSettings());
 		panels.add(new AveragePanelSettings());
 		panels.add(new CurrentPanelSettings());
-		panels.add(new LastPanelSettings());
 	}
 	
 	/**
