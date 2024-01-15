@@ -29,6 +29,7 @@ import dev.roanh.kps.RenderingMode.RenderCache;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.DataPanelSettings;
 import dev.roanh.kps.layout.LayoutPosition;
+import dev.roanh.kps.ui.editor.EditorProvider;
 
 /**
  * Abstract base class for the 
@@ -37,7 +38,7 @@ import dev.roanh.kps.layout.LayoutPosition;
  * keys per second
  * @author Roan
  */
-public abstract class BasePanel extends JPanel implements LayoutPosition{
+public abstract class BasePanel extends JPanel implements LayoutPosition, EditorProvider{
 	/**
 	 * Serial ID
 	 */
@@ -146,5 +147,10 @@ public abstract class BasePanel extends JPanel implements LayoutPosition{
 	@Override
 	public int getLayoutHeight(){
 		return config.getLayoutHeight();
+	}
+	
+	@Override
+	public void showEditor(boolean live){
+		config.showEditor(live);
 	}
 }

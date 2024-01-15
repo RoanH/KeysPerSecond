@@ -22,24 +22,37 @@ import java.awt.Component;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.JMenuItem;
+
+import dev.roanh.kps.ui.editor.EditorProvider;
+import dev.roanh.kps.Menu.MenuItemUI;
 
 /**
  * Listener for dragging the dialog
  * @author Roan
  */
-public class Listener implements MouseMotionListener, MouseListener{
+public class Listener implements MouseMotionListener, MouseListener, ActionListener{
 	/**
 	 * Previous location of the mouse on the screen
 	 */
 	private Point from = null;
-
+	/**
+	 * Optional right click menu item to edit the clicked panel.
+	 */
+	private JMenuItem editSelected = new JMenuItem("Edit panel");
+	/**
+	 * The editor for the panel last right clicked, if any.
+	 */
+	private EditorProvider editor;
+	
 	/**
 	 * Constructs a new movement listener
 	 * for the given frame
@@ -49,6 +62,8 @@ public class Listener implements MouseMotionListener, MouseListener{
 	protected Listener(JFrame frame){
 		frame.addMouseMotionListener(this);
 		frame.addMouseListener(this);
+		editSelected.setUI(new MenuItemUI());
+		editSelected.addActionListener(this);
 	}
 
 	@Override
@@ -58,6 +73,7 @@ public class Listener implements MouseMotionListener, MouseListener{
 			from = to;
 			return;
 		}
+		
 		Point at = e.getComponent().getLocation();
 		int x = at.x + (to.x - from.x);
 		int y = at.y + (to.y - from.y);
@@ -79,16 +95,16 @@ public class Listener implements MouseMotionListener, MouseListener{
 
 	@Override
 	public void mouseReleased(MouseEvent e){
-		if(e.getComponent() == Main.frame){
-			Component c = Main.content.getComponentAt(e.getX(), e.getY());
-			System.out.println(c);
-		}
-		
-		
 		if(e.getButton() == MouseEvent.BUTTON3){
-			SwingUtilities.invokeLater(()->{
-				Menu.menu.show(e.getComponent(), e.getX(), e.getY());
-			});
+			Component comp = Main.content.getComponentAt(e.getX(), e.getY());
+			if(comp instanceof EditorProvider){
+				editor = (EditorProvider)comp;
+				Menu.menu.insert(editSelected, 0);
+			}else{
+				Menu.menu.remove(editSelected);
+			}
+
+			Menu.menu.show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
 
@@ -100,11 +116,17 @@ public class Listener implements MouseMotionListener, MouseListener{
 	public void mouseExited(MouseEvent e){
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e){
+		if(editor != null){
+			editor.showEditor(true);
+		}
+	}
+
 	static{
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher(){
 			/**
-			 * To prevent new heap allocations
-			 * on each event
+			 * To prevent new heap allocations on each event.
 			 */
 			private Point tmp = new Point();
 
