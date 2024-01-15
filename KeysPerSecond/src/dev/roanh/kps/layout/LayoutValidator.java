@@ -109,6 +109,12 @@ public class LayoutValidator{
 		 * The model this listener is listening on
 		 */
 		private SpecialNumberModel model;
+		
+		/**
+		 * Prevent outside initialisation
+		 */
+		private FieldListener(){
+		}
 
 		/**
 		 * Checks to see if it is valid for
