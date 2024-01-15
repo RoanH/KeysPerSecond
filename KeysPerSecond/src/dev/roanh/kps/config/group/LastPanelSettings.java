@@ -26,6 +26,7 @@ import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.panels.LastPanel;
 import dev.roanh.kps.ui.editor.DataPanelEditor;
 import dev.roanh.kps.ui.editor.Editor;
+import dev.roanh.kps.ui.editor.LastPanelEditor;
 
 public class LastPanelSettings extends SpecialPanelSettings{
 	private IntSetting units = new IntSetting("units", 1, 4, 1);
@@ -36,11 +37,19 @@ public class LastPanelSettings extends SpecialPanelSettings{
 	}
 	
 	public boolean showMillis(){
-		return true;//millis.getValue();
+		return millis.getValue();
 	}
 	
 	public int getUnitCount(){
-		return 4;//units.getValue();
+		return units.getValue();
+	}
+	
+	public void setUnitCount(int units){
+		this.units.update(units);
+	}
+	
+	public void setShowMillis(boolean shown){
+		millis.update(shown);
 	}
 	
 	@Override
@@ -51,7 +60,7 @@ public class LastPanelSettings extends SpecialPanelSettings{
 
 	@Override
 	public void showEditor(boolean live){
-		Editor.showEditor(new DataPanelEditor(this, live));
+		Editor.showEditor(new LastPanelEditor(this, live));
 	}
 
 	@Override

@@ -43,14 +43,14 @@ public class LastPanel extends BasePanel{
 		}
 		
 		String value = "";
-		long diff = (System.nanoTime() - Main.lastHitTime) / 10000;//00;
+		long diff = (System.nanoTime() - Main.lastHitTime) / 1000000;
 		for(int i = 0; i < magnitudes.length; i++){
 			if(diff >= magnitudes[i].millis){
 				System.out.println("best res: " + magnitudes[i]);
-				for(int j = Math.min(magnitudes.length - 1, i + config.getUnitCount()); j > i; j--){
+				for(int j = magnitudes.length - 1; j > i; j--){
 					Resolution res = magnitudes[j];
 					System.out.println("append: " + res + " diff " + diff);
-					if(res != Resolution.MILLIS || config.showMillis()){
+					if(j - i < config.getUnitCount() && (res != Resolution.MILLIS || config.showMillis())){
 						value = " " + (diff % res.factor) + res.suffix + value;
 					}
 					diff /= res.factor;
