@@ -1,3 +1,21 @@
+/*
+ * KeysPerSecond: An open source input statistics displayer.
+ * Copyright (C) 2017  Roan Hofland (roan@roanh.dev).  All rights reserved.
+ * GitHub Repository: https://github.com/RoanH/KeysPerSecond
+ *
+ * KeysPerSecond is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * KeysPerSecond is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package dev.roanh.kps.layout;
 
 import java.awt.Component;
@@ -67,7 +85,7 @@ public class Layout implements LayoutManager2{
 	 * @return The width in pixels of this layout
 	 */
 	public int getWidth(){
-		return Main.config.cellSize * (maxw + extraWidth);
+		return Main.config.getCellSize() * (maxw + extraWidth);
 	}
 
 	/**
@@ -75,7 +93,7 @@ public class Layout implements LayoutManager2{
 	 * @return The height in pixels of this layout
 	 */
 	public int getHeight(){
-		return Main.config.cellSize * (maxh + extraHeight);
+		return Main.config.getCellSize() * (maxh + extraHeight);
 	}
 
 	/**
@@ -84,16 +102,19 @@ public class Layout implements LayoutManager2{
 	 */
 	public void add(Component comp){
 		LayoutPosition lp = (LayoutPosition)comp;
+		
 		if(lp.getLayoutX() != -1){
 			maxw = Math.max(maxw, lp.getLayoutX() + lp.getLayoutWidth());
 		}else{
 			extraWidth += lp.getLayoutWidth();
 		}
+		
 		if(lp.getLayoutY() != -1){
 			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		}else{
 			extraHeight += lp.getLayoutHeight();
 		}
+		
 		if(comp.getParent() == null){
 			parent.add(comp);
 		}
@@ -112,7 +133,7 @@ public class Layout implements LayoutManager2{
 			maxh = Math.max(maxh, lp.getLayoutY() + lp.getLayoutHeight());
 		}
 	}
-
+	
 	@Override
 	public String toString(){
 		return "Layout[components=" + parent.getComponentCount() + ",maxw=" + maxw + ",maxh=" + maxh + "]";
@@ -167,38 +188,45 @@ public class Layout implements LayoutManager2{
 		if(!(maxw == 0 && extraWidth == 0) && !(maxh == 0 && extraHeight == 0)){
 			double dx = parent.getWidth() / (maxw + extraWidth);
 			double dy = parent.getHeight() / (maxh + extraHeight);
-			LayoutPosition lp;
 			int width = maxw;
 			int height = maxh;
 			for(Component component : parent.getComponents()){
-				lp = (LayoutPosition)component;
+				LayoutPosition lp = (LayoutPosition)component;
 				if(lp.getLayoutX() == -1){
 					if(lp.getLayoutY() == -1){
-						component.setBounds((int)Math.floor(dx * width), 
-						                    (int)Math.floor(dy * height), 
-						                    (int)Math.ceil(dx * lp.getLayoutWidth()), 
-						                    (int)Math.ceil(dy * lp.getLayoutHeight()));
+						component.setBounds(
+							(int)Math.floor(dx * width), 
+							(int)Math.floor(dy * height), 
+							(int)Math.ceil(dx * lp.getLayoutWidth()), 
+							(int)Math.ceil(dy * lp.getLayoutHeight())
+						);
 						width += lp.getLayoutWidth();
 						height += lp.getLayoutHeight();
 					}else{
-						component.setBounds((int)Math.floor(dx * width), 
-						                    (int)Math.floor((lp.getLayoutHeight() == -1 ? 0 : dy) * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
-						                    (int)Math.ceil(dx * lp.getLayoutWidth()), 
-						                    (int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? (maxh + extraHeight) : lp.getLayoutHeight())));
+						component.setBounds(
+							(int)Math.floor(dx * width), 
+							(int)Math.floor((lp.getLayoutHeight() == -1 ? 0 : dy) * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
+							(int)Math.ceil(dx * lp.getLayoutWidth()), 
+							(int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? (maxh + extraHeight) : lp.getLayoutHeight()))
+						);
 						width += lp.getLayoutWidth();
 					}
 				}else{
 					if(lp.getLayoutY() == -1){
-						component.setBounds((int)Math.floor((lp.getLayoutWidth() == -1 ? 0 : dx) * lp.getLayoutX()), 
-						                    (int)Math.floor(dy * height), 
-						                    (int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? (maxw + extraWidth) : lp.getLayoutWidth())), 
-						                    (int)Math.ceil(dy * lp.getLayoutHeight()));
+						component.setBounds(
+							(int)Math.floor((lp.getLayoutWidth() == -1 ? 0 : dx) * lp.getLayoutX()), 
+							(int)Math.floor(dy * height), 
+							(int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? (maxw + extraWidth) : lp.getLayoutWidth())), 
+							(int)Math.ceil(dy * lp.getLayoutHeight())
+						);
 						height += lp.getLayoutHeight();
 					}else{
-						component.setBounds((int)Math.floor((lp.getLayoutWidth() == -1 ? 0 : dx) * lp.getLayoutX()), 
-						                    (int)Math.floor((lp.getLayoutHeight() == -1 ? 0 : dy) * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
-						                    (int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? (maxw + extraWidth) : lp.getLayoutWidth())), 
-						                    (int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? (maxh + extraHeight) : lp.getLayoutHeight())));
+						component.setBounds(
+							(int)Math.floor((lp.getLayoutWidth() == -1 ? 0 : dx) * lp.getLayoutX()), 
+							(int)Math.floor((lp.getLayoutHeight() == -1 ? 0 : dy) * (maxh - lp.getLayoutY() - lp.getLayoutHeight())), 
+							(int)Math.ceil(dx * (lp.getLayoutWidth() == -1 ? (maxw + extraWidth) : lp.getLayoutWidth())), 
+							(int)Math.ceil(dy * (lp.getLayoutHeight() == -1 ? (maxh + extraHeight) : lp.getLayoutHeight()))
+						);
 					}
 				}
 			}

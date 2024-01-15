@@ -1,60 +1,79 @@
 plugins{
+	id 'eclipse'
 	id 'java'
 	id 'application'
-	id 'eclipse'
-	id 'com.github.johnrengelman.shadow' version '5.1.0'
-	id 'edu.sc.seis.launch4j' version '2.4.6'
+	id 'com.github.johnrengelman.shadow' version '7.1.2'
+	id 'edu.sc.seis.launch4j' version '2.5.1'
+	id 'jacoco'
 }
 
 sourceSets{
 	main{
-		java{
-			srcDirs = ['src']
-		}
-		resources{
-			srcDirs = ['src']
-		}
+		java.srcDirs = ['src']
+		resources.srcDirs = ['resources']
+	}
+
+	test{
+		java.srcDirs = ['test']
+		resources.srcDirs = ['test']
 	}
 }
 
-javadoc{
-	options.memberLevel = JavadocMemberLevel.PRIVATE
+dependencies{
+	//Util
+	implementation 'dev.roanh.util:util:2.5'
+	
+	//JNativeHook
+	implementation 'com.github.kwhat:jnativehook:2.2.2'
+	
+	//Testing
+	testImplementation(platform('org.junit:junit-bom:5.10.0'))
+	testImplementation('org.junit.jupiter:junit-jupiter')
 }
-
-compileJava.options.encoding = 'UTF-8'
-sourceCompatibility = 1.8
-version = 'v8.4'//Don't forget Main.java
-shadowJar.archiveName = 'KeysPerSecond-' + project.version + '.jar'
 
 repositories{
 	//Local cache
 	if(project.hasProperty("nexusPublic")){
 		maven{
+			allowInsecureProtocol = true
 			url "$nexusPublic"
 		}
 	}
-	mavenCentral();
-	maven{
-		url "https://oss.sonatype.org/content/repositories/snapshots"
+	mavenCentral()
+}
+
+version = findProperty("refName") ?: 'SNAPSHOT'
+if(version.matches("v\\d+\\.\\d+")){
+	version = version.substring(1)
+}
+
+eclipse.classpath.downloadSources = true
+eclipse.classpath.downloadJavadoc = true
+compileJava.options.encoding = 'UTF-8'
+sourceCompatibility = 1.8
+javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
+shadowJar.archiveName = 'KeysPerSecond-v' + version + '.jar'
+application.mainClassName = 'dev.roanh.kps.Main'
+
+test{
+	useJUnitPlatform()
+	dependsOn 'cleanTest'
+
+	testLogging{
+		events "passed", "skipped", "failed"
 	}
 }
 
-dependencies{
-	implementation 'dev.roanh.util:util:2.0'
-	implementation 'com.github.kwhat:jnativehook:2.2-20210915.222335-44'
-}
-
-application{
-	mainClassName = 'dev.roanh.kps.Main'
-}
-
 launch4j{
+	jarTask = project.tasks.shadowJar
 	mainClassName = application.mainClassName
 	icon = "${projectDir}/kps.ico"
 	jreMinVersion = project.sourceCompatibility
-	outfile = project.name + '-' + project.version + '.exe'
-	fileDescription = project.name
-	version = project.version.substring(1)
-	textVersion = project.version.substring(1)
+	bundledJrePath = "%JAVA_HOME%"
+	outfile = rootProject.name + '-v' + project.version + '.exe'
+	fileDescription = "KeysPerSecond"
+	productName = rootProject.name
+	version = project.version
+	textVersion = project.version
 	copyright = "Roan Hofland"
 }

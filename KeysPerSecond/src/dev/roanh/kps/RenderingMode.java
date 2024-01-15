@@ -1,3 +1,21 @@
+/*
+ * KeysPerSecond: An open source input statistics displayer.
+ * Copyright (C) 2017  Roan Hofland (roan@roanh.dev).  All rights reserved.
+ * GitHub Repository: https://github.com/RoanH/KeysPerSecond
+ *
+ * KeysPerSecond is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * KeysPerSecond is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package dev.roanh.kps;
 
 import java.awt.Font;
@@ -21,12 +39,18 @@ public enum RenderingMode{
 	HORIZONTAL_TN("Text - value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + 1,
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2
+			);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(panel.getWidth() - Main.config.borderOffset - insideOffset - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(
+				panel.getWidth() - Main.config.getBorderOffset() - insideOffset - 1 - metrics.stringWidth(value),
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2
+			);
 		}
 
 		@Override
@@ -56,12 +80,18 @@ public enum RenderingMode{
 	HORIZONTAL_NT("Value - text"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(panel.getWidth() - Main.config.borderOffset - insideOffset - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(
+				panel.getWidth() - Main.config.getBorderOffset() - insideOffset - 1 - metrics.stringWidth(title),
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2
+			);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + 1,
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2
+			);
 		}
 
 		@Override
@@ -91,12 +121,18 @@ public enum RenderingMode{
 	DIAGONAL1("Text diagonally right above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title),
+				Main.config.getBorderOffset() + insideOffset + 1 + getHeight(g, font)
+			);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + 1,
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideHeight(panel) - 1
+			);
 		}
 
 		@Override
@@ -126,12 +162,18 @@ public enum RenderingMode{
 	DIAGONAL2("Text diagonally left under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + 1,
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideHeight(panel) - 1
+			);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value),
+				Main.config.getBorderOffset() + insideOffset + 1 + getHeight(g, font)
+			);
 		}
 
 		@Override
@@ -161,12 +203,18 @@ public enum RenderingMode{
 	DIAGONAL3("Text diagonally left above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + 1,
+				Main.config.getBorderOffset() + insideOffset + 1 + getHeight(g, font)
+			);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value), Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(value),
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideHeight(panel) - 1
+			);
 		}
 
 		@Override
@@ -196,12 +244,18 @@ public enum RenderingMode{
 	DIAGONAL4("Text diagonally right under value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(Main.config.borderOffset + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title), Main.config.borderOffset + insideOffset + getPanelInsideHeight(panel) - 1);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideWidth(panel) - 1 - metrics.stringWidth(title),
+				Main.config.getBorderOffset() + insideOffset + getPanelInsideHeight(panel) - 1
+			);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(Main.config.borderOffset + insideOffset + 1, Main.config.borderOffset + insideOffset + 1 + getHeight(g, font));
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + 1,
+				Main.config.getBorderOffset() + insideOffset + 1 + getHeight(g, font)
+			);
 		}
 
 		@Override
@@ -231,12 +285,18 @@ public enum RenderingMode{
 	VERTICAL("Text above value"){
 		@Override
 		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
-			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D),
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) * 3) / 8 + 1
+			);
 		}
 
 		@Override
 		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
-			point.move(Main.config.borderOffset + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D), Main.config.borderOffset + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1);
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D),
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) * 7) / 8 + 1
+			);
 		}
 
 		@Override
@@ -258,13 +318,97 @@ public enum RenderingMode{
 		protected int getEffectiveValueWidth(BasePanel panel){
 			return getPanelInsideWidth(panel);
 		}
+	},
+	/**
+	 * Rendering mode where only the panel title
+	 * is displayed in the center.
+	 */
+	TEXT_ONLY("Text only", true, false){
+
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(title)) / 2.0D),
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2
+			);
+		}
+
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) - 4;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 4;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return 0;
+		}
+	},
+	/**
+	 * Rendering mode where only the panel value
+	 * is displayed in the center.
+	 */
+	VALUE_ONLY("Value only", false, true){
+
+		@Override
+		protected void setTitleDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String title){
+		}
+
+		@Override
+		protected void setValueDrawPositionImpl(FontMetrics metrics, Graphics2D g, Font font, BasePanel panel, String value){
+			point.move(
+				Main.config.getBorderOffset() + insideOffset + (int)Math.round((getPanelInsideWidth(panel) - metrics.stringWidth(value)) / 2.0D),
+				Main.config.getBorderOffset() + insideOffset + (getPanelInsideHeight(panel) + getHeight(g, font)) / 2
+			);
+		}
+
+		@Override
+		protected int getEffectiveTitleHeight(BasePanel panel){
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveTitleWidth(BasePanel panel){
+			return 0;
+		}
+
+		@Override
+		protected int getEffectiveValueHeight(BasePanel panel){
+			return getPanelInsideHeight(panel) - 4;
+		}
+
+		@Override
+		protected int getEffectiveValueWidth(BasePanel panel){
+			return getPanelInsideWidth(panel) - 4;
+		}
 	};
 
 	/**
 	 * The display name of the
 	 * enum constant, used in dialogs
 	 */
-	private String name;
+	private final String name;
+	/**
+	 * Whether this rendering mode renders a panel title.
+	 */
+	private final boolean text;
+	/**
+	 * Whether this rendering mode renders a panel value.
+	 */
+	private final boolean value;
 	/**
 	 * Cache point that is constantly being reused and
 	 * returned by the methods from this enum. This prevents
@@ -280,17 +424,30 @@ public enum RenderingMode{
 	private static final char[] ref = new char[]{'R'};
 	/**
 	 * Offset from the panel border offset to the inside
-	 * of the panel (inside the image)
+	 * of the panel (inside the image).
 	 */
 	public static final int insideOffset = 3;
+	
+	/**
+	 * Constructs a new RenderingMode
+	 * with the given name.
+	 * @param name The display name of the mode.
+	 */
+	private RenderingMode(String name){
+		this(name, true, true);
+	}
 
 	/**
 	 * Constructs a new RenderingMode
-	 * with the given name
-	 * @param n The display name of the mode
+	 * with the given name and display settings.
+	 * @param name The display name of the mode.
+	 * @param text Whether to render a panel title or not.
+	 * @param value Whether to render a panel value or not.
 	 */
-	private RenderingMode(String n){
-		name = n;
+	private RenderingMode(String name, boolean text, boolean value){
+		this.name = name;
+		this.text = text;
+		this.value = value;
 	}
 
 	/**
@@ -346,11 +503,11 @@ public enum RenderingMode{
 	 * Points returned by this class are dynamic and change on a call
 	 * to either {@link #getTitleDrawPosition(Graphics2D, BasePanel, String, Font)}
 	 * or {@link #getValueDrawPosition(Graphics2D, BasePanel, String, Font)}.
-	 * @param g The graphics used to draw the title
-	 * @param panel The panel the title will be drawn on
-	 * @param title The title that is going to be drawn
-	 * @param font The font with which the title is going to be drawn
-	 * @return The location at which the title should be drawn
+	 * @param g The graphics used to draw the title.
+	 * @param panel The panel the title will be drawn on.
+	 * @param title The title that is going to be drawn.
+	 * @param font The font with which the title is going to be drawn.
+	 * @return The location at which the title should be drawn.
 	 */
 	protected Point getTitleDrawPosition(Graphics2D g, BasePanel panel, String title, Font font){
 		setTitleDrawPositionImpl(g.getFontMetrics(font), g, font, panel, title);
@@ -362,11 +519,11 @@ public enum RenderingMode{
 	 * Points returned by this class are dynamic and change on a call
 	 * to either {@link #getTitleDrawPosition(Graphics2D, BasePanel, String, Font)}
 	 * or {@link #getValueDrawPosition(Graphics2D, BasePanel, String, Font)}.
-	 * @param g The graphics used to draw the value
-	 * @param panel The panel the value will be drawn on
-	 * @param value The value that is going to be drawn
-	 * @param font The font with which the value is going to be drawn
-	 * @return The location at which the value should be drawn
+	 * @param g The graphics used to draw the value.
+	 * @param panel The panel the value will be drawn on.
+	 * @param value The value that is going to be drawn.
+	 * @param font The font with which the value is going to be drawn.
+	 * @return The location at which the value should be drawn.
 	 */
 	protected Point getValueDrawPosition(Graphics2D g, BasePanel panel, String value, Font font){
 		setValueDrawPositionImpl(g.getFontMetrics(font), g, font, panel, value);
@@ -407,7 +564,7 @@ public enum RenderingMode{
 	 * @return The inside height of the panel
 	 */
 	private static final int getPanelInsideHeight(BasePanel panel){
-		return panel.getHeight() - (Main.config.borderOffset + insideOffset) * 2;
+		return panel.getHeight() - (Main.config.getBorderOffset() + insideOffset) * 2;
 	}
 
 	/**
@@ -418,7 +575,7 @@ public enum RenderingMode{
 	 * @return The inside width of the panel
 	 */
 	private static final int getPanelInsideWidth(BasePanel panel){
-		return panel.getWidth() - (Main.config.borderOffset + insideOffset) * 2;
+		return panel.getWidth() - (Main.config.getBorderOffset() + insideOffset) * 2;
 	}
 
 	/**
@@ -448,7 +605,7 @@ public enum RenderingMode{
 			font = new Font("Dialog", properties, size);
 			fm = g.getFontMetrics(font);
 			size--;
-		}while(!(getHeight(g, font) <= maxHeight && stringWidth(text, fm) <= maxWidth));
+		}while(!(getHeight(g, font) <= maxHeight && stringWidth(text, fm) <= maxWidth) && size >= 0);
 
 		return font;
 	}
@@ -540,14 +697,16 @@ public enum RenderingMode{
 		 * @param panel The panel to draw this title on
 		 */
 		public final void renderTitle(String title, Graphics2D g, BasePanel panel){
-			if(titleLen != title.length()){
-				titleLen = title.length();
-				titleFont = mode.getTitleFont(title, g, panel, titleFont);
-				titlePos = mode.getTitleDrawPosition(g, panel, title, titleFont).getLocation();
-			}
+			if(mode.text){
+				if(titleLen != title.length()){
+					titleLen = title.length();
+					titleFont = mode.getTitleFont(title, g, panel, titleFont);
+					titlePos = mode.getTitleDrawPosition(g, panel, title, titleFont).getLocation();
+				}
 
-			g.setFont(titleFont);
-			g.drawString(title, titlePos.x, titlePos.y);
+				g.setFont(titleFont);
+				g.drawString(title, titlePos.x, titlePos.y);
+			}
 		}
 
 		/**
@@ -558,14 +717,16 @@ public enum RenderingMode{
 		 * @param panel The panel to draw this value on
 		 */
 		public final void renderValue(String value, Graphics2D g, BasePanel panel){
-			if(valueLen != value.length()){
-				valueLen = value.length();
-				valueFont = mode.getValueFont(value, g, panel, valueFont);
-				valuePos = mode.getValueDrawPosition(g, panel, value, valueFont).getLocation();
-			}
+			if(mode.value){
+				if(valueLen != value.length()){
+					valueLen = value.length();
+					valueFont = mode.getValueFont(value, g, panel, valueFont);
+					valuePos = mode.getValueDrawPosition(g, panel, value, valueFont).getLocation();
+				}
 
-			g.setFont(valueFont);
-			g.drawString(value, valuePos.x, valuePos.y);
+				g.setFont(valueFont);
+				g.drawString(value, valuePos.x, valuePos.y);
+			}
 		}
 	}
 }
