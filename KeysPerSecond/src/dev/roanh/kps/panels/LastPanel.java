@@ -46,10 +46,8 @@ public class LastPanel extends BasePanel{
 		long diff = (System.nanoTime() - Main.lastHitTime) / 1000000;
 		for(int i = 0; i < magnitudes.length; i++){
 			if(diff >= magnitudes[i].millis){
-				System.out.println("best res: " + magnitudes[i]);
 				for(int j = magnitudes.length - 1; j > i; j--){
 					Resolution res = magnitudes[j];
-					System.out.println("append: " + res + " diff " + diff);
 					if(j - i < config.getUnitCount() && (res != Resolution.MILLIS || config.showMillis())){
 						value = " " + (diff % res.factor) + res.suffix + value;
 					}
@@ -65,81 +63,8 @@ public class LastPanel extends BasePanel{
 			}
 		}
 		
-		return null;
-		
-		
-		
-//		
-//		
-//		for(Resolution res : Resolution.values()){
-//			if(diff >= res.millis){
-//				while(units > 0){
-//					
-//					
-//					units--;
-//				}
-//				
-//				return value;
-//			}
-//		}
-//		
-		
-		
-		
-		
-		
-		
-		
-		
-//		
-//		
-//		
-//		
-//		if(diff < 1000 && config.showMillis()){
-//			lastResolution = 1;
-//		}
-//		
-//		
-//		
-		
-		
-		
-//		
-//		if(diff < 1000){
-//			lastResolution = 1;
-//			return diff + "ms";
-//		}
-//		
-//		long rem = diff % 1000;
-//		diff /= 1000;
-//		if(diff < 60){
-//			if(lastResolution < 2){
-//				lastResolution = 2;
-//				cache.invalidateValueCache();
-//			}
-//			
-//			return config.showTwoUnits() ? (diff + "s " + rem + "ms") : (diff + "s");
-//		}
-//		
-//		rem = diff % 60;
-//		diff /= 60;
-//		if(diff < 60){
-//			if(lastResolution < 3){
-//				lastResolution = 3;
-//				cache.invalidateValueCache();
-//			}
-//			
-//			return config.showTwoUnits() ? (diff + "m " + rem + "s") : (diff + "m");
-//		}
-//
-//		if(lastResolution < 3){
-//			lastResolution = 3;
-//			cache.invalidateValueCache();
-//		}
-//		
-//		rem = diff % 60;
-//		diff /= 60;
-//		return config.showTwoUnits() ? (diff + "h " + rem + "m") : (diff + "h");
+		//this is impossible unless the time difference somehow goes negative
+		return "?";
 	}
 	
 	private static enum Resolution{
