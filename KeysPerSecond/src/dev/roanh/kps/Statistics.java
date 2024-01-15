@@ -125,7 +125,7 @@ public class Statistics{
 			try{
 				saveStats(file);
 				Dialog.showMessageDialog("Statistics succesfully saved");
-			}catch(Exception e){
+			}catch(IOException e){
 				e.printStackTrace();
 				Dialog.showErrorDialog("Failed to save the statistics!\nCause: " + e.getMessage());
 			}
