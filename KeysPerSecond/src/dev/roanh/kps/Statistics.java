@@ -61,11 +61,11 @@ public class Statistics{
 	/**
 	 * Statistics save future
 	 */
-	protected static ScheduledFuture<?> statsFuture = null;
+	private static volatile ScheduledFuture<?> statsFuture = null;
 	/**
 	 * Periodic statistics save scheduler
 	 */
-	protected static ScheduledExecutorService statsScheduler = Executors.newSingleThreadScheduledExecutor();
+	private static final ScheduledExecutorService statsScheduler = Executors.newSingleThreadScheduledExecutor();
 
 	/**
 	 * Saves the statistics so to the configured

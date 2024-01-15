@@ -12,5 +12,21 @@
       <Bug pattern="MS_PKGPROTECT"/>
     </Or>
   </Match>
+  
+  <Match>
+    <!-- Seralization is irrelevant for this project -->
+    <Bug pattern="SE_BAD_FIELD"/>
+    <Or>
+      <Class name="dev.roanh.kps.config.PanelType"/>
+      <Class name="dev.roanh.kps.panels.AvgType"/>
+      <Class name="dev.roanh.kps.panels.GraphType"/>
+      <Class name="dev.roanh.kps.panels.KeyType"/>
+      <Class name="dev.roanh.kps.ui.component.ColorPicker"/>
+      <Class name="dev.roanh.kps.dialog.KeysDialog"/>
+      <Class name="dev.roanh.kps.dialog.MainDialog"/>
+      <Class name="dev.roanh.kps.model.DynamicInteger"/>
+      <Class name="dev.roanh.kps.model.SpecialNumberModel"/>
+    </Or>
+  </Match>
 
 </FindBugsFilter>

@@ -111,7 +111,7 @@ public class Main{
 	 * The number of keys pressed in the
 	 * ongoing second
 	 */
-	protected static AtomicInteger tmp = new AtomicInteger(0);
+	protected static final AtomicInteger tmp = new AtomicInteger(0);
 	/**
 	 * The average keys per second
 	 */
@@ -138,7 +138,7 @@ public class Main{
 	 * virtual codes<br>Used to increment the count for the
 	 * keys
 	 */
-	public static Map<Integer, Key> keys = new HashMap<Integer, Key>();
+	public static final Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
@@ -147,11 +147,11 @@ public class Main{
 	/**
 	 * Graph panel.
 	 */
-	protected static List<GraphPanel> graphs = new ArrayList<GraphPanel>();
+	protected static final List<GraphPanel> graphs = new ArrayList<GraphPanel>();
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
-	private static LinkedList<Integer> timepoints = new LinkedList<Integer>();
+	private static final LinkedList<Integer> timepoints = new LinkedList<Integer>();
 	/**
 	 * The program's main frame
 	 */
@@ -167,15 +167,15 @@ public class Main{
 	/**
 	 * The loop timer
 	 */
-	protected static ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
+	private static final ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 	/**
 	 * The loop timer task
 	 */
-	protected static ScheduledFuture<?> future = null;
+	private static volatile ScheduledFuture<?> future = null;
 	/**
 	 * The layout for the main panel of the program
 	 */
-	public static Layout layout;
+	private static Layout layout;
 	/**
 	 * Small icon for the program
 	 */
@@ -187,7 +187,7 @@ public class Main{
 	/**
 	 * Dummy key for getOrDefault operations
 	 */
-	protected static final Key DUMMY_KEY;
+	private static final Key DUMMY_KEY;
 	/**
 	 * Best text rendering hints.
 	 */
@@ -195,7 +195,7 @@ public class Main{
 	/**
 	 * Event manager responsible for forwarding input events.
 	 */
-	public static EventManager eventManager = new EventManager();
+	public static final EventManager eventManager = new EventManager();
 	
 	/**
 	 * Main method
