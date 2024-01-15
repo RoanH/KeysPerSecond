@@ -72,6 +72,15 @@ panels:
     width: 5
     height: 2
     mode: VALUE_ONLY
+  - type: last
+    name: Last
+    x: 66
+    y: 77
+    width: 3
+    height: 6
+    mode: DIAGONAL1
+    units: 2
+    showMillis: true
 
 keys:
   - keycode: 1048606

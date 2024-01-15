@@ -50,7 +50,7 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 	/**
 	 * RenderCache for this panel
 	 */
-	private RenderCache cache = new RenderCache();
+	protected RenderCache cache = new RenderCache();
 	/**
 	 * Settings for this panel.
 	 */

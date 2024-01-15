@@ -130,6 +130,10 @@ public class Main{
 	 */
 	public static int prev;
 	/**
+	 * Nanosecond time of the last tracked input.
+	 */
+	public static long lastHitTime = -1;
+	/**
 	 * HashMap containing all the tracked keys and their
 	 * virtual codes<br>Used to increment the count for the
 	 * keys
@@ -647,6 +651,7 @@ public class Main{
 		max = 0;
 		hits = 0;
 		tmp.set(0);
+		lastHitTime = -1;
 		graphs.forEach(GraphPanel::reset);
 		frame.repaint();
 	}
