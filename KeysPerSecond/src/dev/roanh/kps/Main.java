@@ -139,7 +139,7 @@ public class Main{
 	 * Main panel used for showing all the sub panels that
 	 * display all the information
 	 */
-	public static final GridPanel content = new GridPanel();
+	public static GridPanel content;
 	/**
 	 * Graph panel.
 	 */
@@ -151,7 +151,7 @@ public class Main{
 	/**
 	 * The program's main frame
 	 */
-	public static final JFrame frame = new JFrame("KeysPerSecond");
+	public static JFrame frame;
 	/**
 	 * Whether or not the counter is paused
 	 */
@@ -215,6 +215,10 @@ public class Main{
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		System.out.println("Ctrl + R: Reloads the configuration");
 		Util.installUI();
+		
+		//set UI components
+		content = new GridPanel();
+		frame = new JFrame("KeysPerSecond");
 		
 		//Set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
