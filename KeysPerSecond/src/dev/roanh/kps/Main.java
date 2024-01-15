@@ -479,8 +479,10 @@ public class Main{
 		}else if(commands.getCommandResetTotals().matches(code)){
 			resetTotals();
 		}else if(commands.getCommandHide().matches(code)){
-			if(frame.getContentPane().getComponentCount() != 0){
-				frame.setVisible(!frame.isVisible());
+			if(frame.isVisible()){
+				Menu.minimizeToSystemTray();
+			}else{
+				Menu.restoreFromSystemTray();
 			}
 		}else if(commands.getCommandPause().matches(code)){
 			suspended = !suspended;
