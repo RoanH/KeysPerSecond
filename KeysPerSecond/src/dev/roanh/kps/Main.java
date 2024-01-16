@@ -21,6 +21,7 @@ package dev.roanh.kps;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -551,7 +552,7 @@ public class Main{
 		frame.setResizable(false);
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(true);
+		frame.setUndecorated(false);//TODO toggle
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
@@ -614,8 +615,6 @@ public class Main{
 			all.add(content, BorderLayout.CENTER);
 			all.setOpaque(opaque);
 			
-			frame.setAlwaysOnTop(config.isOverlayMode());
-			frame.setSize(layout.getWidth(), layout.getHeight());
 			if(background.getAlpha() != 1.0F){
 				frame.setBackground(ColorManager.transparent);
 				content.setOpaque(false);
@@ -624,7 +623,12 @@ public class Main{
 				content.setOpaque(true);
 				content.setBackground(background.getColor());
 			}
+			
 			frame.add(all);
+			frame.pack();
+			Insets insets = frame.getInsets();
+			frame.setSize(layout.getWidth() + insets.left + insets.right, layout.getHeight() + insets.top + insets.bottom);
+			frame.setAlwaysOnTop(config.isOverlayMode());
 			frame.setVisible(true);
 		});
 		
