@@ -203,6 +203,10 @@ public class MainDialog extends JPanel{
 		 * Whether key-modifier tracking is enabled.
 		 */
 		private final JCheckBox modifiers = new JCheckBox();
+		/**
+		 * Whether windowed mode is enabled.
+		 */
+		private final JCheckBox windowed = new JCheckBox();
 		
 		/**
 		 * Constructs a new check box panel.
@@ -211,24 +215,27 @@ public class MainDialog extends JPanel{
 			super(new BorderLayout());
 			setBorder(BorderFactory.createTitledBorder("Options"));
 			
-			JPanel labels = new JPanel(new GridLayout(4, 0));
+			JPanel labels = new JPanel(new GridLayout(5, 1));
 			labels.add(new JLabel("Overlay mode: "));
 			labels.add(new JLabel("Track all keys: "));
 			labels.add(new JLabel("Track all buttons: "));
 			labels.add(new JLabel("Key-modifier tracking: "));
+			labels.add(new JLabel("Windowed mode:"));
 			add(labels, BorderLayout.CENTER);
 			
-			JPanel boxes = new JPanel(new GridLayout(4, 0));
+			JPanel boxes = new JPanel(new GridLayout(5, 1));
 			boxes.add(overlay);
 			boxes.add(allKeys);
 			boxes.add(allButtons);
 			boxes.add(modifiers);
+			boxes.add(windowed);
 			add(boxes, BorderLayout.LINE_END);
 			
 			overlay.addActionListener(e->config.setOverlayMode(overlay.isSelected()));
 			allKeys.addActionListener(e->config.setTrackAllKeys(allKeys.isSelected()));
 			allButtons.addActionListener(e->config.setTrackAllButtons(allButtons.isSelected()));
 			modifiers.addActionListener(e->config.setKeyModifierTrackingEnabled(modifiers.isSelected()));
+			windowed.addActionListener(e->config.setWindowedMode(windowed.isSelected()));
 			
 			syncBoxes();
 		}
@@ -241,6 +248,7 @@ public class MainDialog extends JPanel{
 			allKeys.setSelected(config.isTrackAllKeys());
 			allButtons.setSelected(config.isTrackAllButtons());
 			modifiers.setSelected(config.isKeyModifierTrackingEnabled());
+			windowed.setSelected(config.isWindowedMode());
 		}
 	}
 	

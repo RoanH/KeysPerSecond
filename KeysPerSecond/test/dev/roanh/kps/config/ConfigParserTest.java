@@ -69,6 +69,7 @@ public class ConfigParserTest{
 		assertFalse(config.isTrackAllButtons());
 		assertEquals(100, config.getUpdateRateMs());
 		assertFalse(config.isKeyModifierTrackingEnabled());
+		assertFalse(config.isWindowedMode());
 		
 		//position
 		PositionSettings pos = config.getFramePosition();
@@ -257,6 +258,7 @@ public class ConfigParserTest{
 		assertFalse(config.isTrackAllButtons());
 		assertEquals(100, config.getUpdateRateMs());
 		assertFalse(config.isKeyModifierTrackingEnabled());
+		assertFalse(config.isWindowedMode());
 		
 		//position
 		PositionSettings pos = config.getFramePosition();
@@ -406,6 +408,7 @@ public class ConfigParserTest{
 		assertTrue(config.isTrackAllButtons());
 		assertEquals(250, config.getUpdateRateMs());
 		assertTrue(config.isKeyModifierTrackingEnabled());
+		assertFalse(config.isWindowedMode());
 		
 		//position
 		assertFalse(config.getFramePosition().hasPosition());
@@ -510,6 +513,7 @@ public class ConfigParserTest{
 		assertTrue(config.isTrackAllButtons());
 		assertEquals(250, config.getUpdateRateMs());
 		assertTrue(config.isKeyModifierTrackingEnabled());
+		assertTrue(config.isWindowedMode());
 		
 		//position
 		assertFalse(config.getFramePosition().hasPosition());

@@ -138,6 +138,7 @@ public class Menu{
 		JCheckBoxMenuItem tAllButtons = new JCheckBoxMenuItem("Track all buttons");
 		JCheckBoxMenuItem overlay = new JCheckBoxMenuItem("Overlay mode");
 		JCheckBoxMenuItem modifiers = new JCheckBoxMenuItem("Key-modifier tracking");
+		JCheckBoxMenuItem windowed = new JCheckBoxMenuItem("Windowed mode");
 		JMenuItem save = new JMenuItem("Save config");
 		JMenuItem load = new JMenuItem("Load config");
 		JMenuItem saveStats = new JMenuItem("Save stats");
@@ -166,6 +167,7 @@ public class Menu{
 		components.add(overlay);
 		components.add(commandkeys);
 		components.add(modifiers);
+		components.add(windowed);
 		configure.setUI(new MenuUI());
 		general.setUI(new MenuUI());
 		rate.setUI(new MenuUI());
@@ -242,10 +244,18 @@ public class Menu{
 		modifiers.addActionListener((e)->{
 			Main.config.setKeyModifierTrackingEnabled(modifiers.isSelected());
 		});
+		windowed.setSelected(Main.config.isWindowedMode());
+		windowed.addActionListener(e->{
+			Main.config.setWindowedMode(windowed.isSelected());
+			Main.frame.setVisible(false);
+			Main.frame.dispose();
+			Main.frame.setUndecorated(!Main.config.isWindowedMode());
+			Main.reconfigure();
+		});
 		layout.addActionListener((e)->{
 			LayoutDialog.configureLayout(true);
 		});
-
+		
 		List<JCheckBoxMenuItem> rates = new ArrayList<JCheckBoxMenuItem>();
 		for(UpdateRate val : UpdateRate.values()){
 			JCheckBoxMenuItem item = new JCheckBoxMenuItem(val.toString(), Main.config.getUpdateRate() == val);
@@ -291,6 +301,7 @@ public class Menu{
 		general.add(tAllKeys);
 		general.add(tAllButtons);
 		general.add(modifiers);
+		general.add(windowed);
 
 		configure.add(general);
 		configure.add(configkeys);
