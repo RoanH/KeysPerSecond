@@ -128,7 +128,7 @@ public class MainDialog extends JPanel{
 	 */
 	private JPanel buildRightPanel(){
 		//configuration
-		JPanel configuration = new JPanel(new GridLayout(2, 1));
+		JPanel configuration = new JPanel(new GridLayout(3, 1));
 		configuration.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		
 		JButton load = new JButton("Load config");
@@ -142,6 +142,10 @@ public class MainDialog extends JPanel{
 		JButton save = new JButton("Save config");
 		configuration.add(save);
 		save.addActionListener(e->config.saveConfig(false));
+		
+		JButton defConf = new JButton("Default config");
+		configuration.add(defConf);
+		defConf.addActionListener(e->DefaultConfigDialog.showDefaultConfigDialog());
 		
 		//settings
 		JPanel settings = new JPanel(new GridLayout(4, 1));

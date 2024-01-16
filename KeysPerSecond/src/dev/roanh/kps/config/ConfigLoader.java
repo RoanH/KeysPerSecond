@@ -110,13 +110,20 @@ public class ConfigLoader{
 		}
 	}
 	
-	private static final Path getDefaultConfig(){
+	//null or none
+	public static final Path getDefaultConfig(){
 		String path = prefs.get("defaultConfig", null);
 		return path == null ? null : Paths.get(path);
 	}
 	
+	//null to unset
 	public static final void setDefaultConfig(Path config) throws BackingStoreException{
-		prefs.put("defaultConfig", config.toAbsolutePath().toString());
+		if(config == null){
+			prefs.remove("defaultConfig");
+		}else{
+			prefs.put("defaultConfig", config.toAbsolutePath().toString());
+		}
+		
 		prefs.flush();
 	}
 	
