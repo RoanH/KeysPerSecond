@@ -81,6 +81,7 @@ public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider
 	public final void reset(){
 		values.clear();
 		maxval = 1;
+		repaint();
 	}
 
 	@Override
