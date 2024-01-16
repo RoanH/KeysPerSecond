@@ -37,6 +37,10 @@ import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
 import dev.roanh.util.FileSelector.FileExtension;
 
+/**
+ * Utility class for loading and locating configuration files.
+ * @author Roan
+ */
 public class ConfigLoader{
 	/**
 	 * Extension filter for all KeysPerSecond configuration files.
@@ -46,6 +50,9 @@ public class ConfigLoader{
 	 * Extension filter for legacy KeysPerSecond configuration file formats.
 	 */
 	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
+	/**
+	 * Preferences store for persistent settings.
+	 */
 	private static final Preferences prefs = Preferences.userRoot().node("dev.roanh.kps");
 	
 	/**
@@ -110,13 +117,21 @@ public class ConfigLoader{
 		}
 	}
 	
-	//null or none
+	/**
+	 * Gets the path of the configured default config if any.
+	 * @return The default config or null if none is set.
+	 */
 	public static final Path getDefaultConfig(){
 		String path = prefs.get("defaultConfig", null);
 		return path == null ? null : Paths.get(path);
 	}
 	
-	//null to unset
+	/**
+	 * Sets the default config to open on launch.
+	 * @param config The default config to open on launch or
+	 *        null to unset the current config if any.
+	 * @throws BackingStoreException When saving the setting fails.
+	 */
 	public static final void setDefaultConfig(Path config) throws BackingStoreException{
 		if(config == null){
 			prefs.remove("defaultConfig");
@@ -127,6 +142,15 @@ public class ConfigLoader{
 		prefs.flush();
 	}
 	
+	/**
+	 * Attempts to load a preset configuration for the program if any. This
+	 * will first try to load the given CLI passed config. If this config is
+	 * not set (null) then the configured default config will be loaded if set.
+	 * If neither are set or if loading either config fails then this method
+	 * will do nothing. In case of an IO error the user will be informed.
+	 * @param cliConfig The passed command line config path or null for none.
+	 * @return True if any configuration was loaded successfully.
+	 */
 	public static final boolean quickLoadConfiguration(String cliConfig){
 		try{
 			//prefer the CLI config if one was given

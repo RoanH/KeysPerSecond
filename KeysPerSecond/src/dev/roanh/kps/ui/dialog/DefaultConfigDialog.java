@@ -36,14 +36,24 @@ import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.ui.model.FilePathFormatterFactory;
 import dev.roanh.util.Dialog;
 
+/**
+ * Dialog used to configure the default configuration.
+ * @author Roan
+ */
 public class DefaultConfigDialog extends JPanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 7089667269158157654L;
+	/**
+	 * The text field holding the default config.
+	 */
 	private JTextField selectedFile = new JFormattedTextField(new FilePathFormatterFactory(), Objects.toString(ConfigLoader.getDefaultConfig(), ""));
 
-	public DefaultConfigDialog(){
+	/**
+	 * Constructs a new default config dialog.
+	 */
+	private DefaultConfigDialog(){
 		super(new BorderLayout(0, 5));
 		
 		add(new JLabel("You can configure a default configuration to be opened automatically on launch."), BorderLayout.PAGE_START);
@@ -60,6 +70,9 @@ public class DefaultConfigDialog extends JPanel{
 		});
 	}
 	
+	/**
+	 * Shows a dialog to configure the default configuration file to use.
+	 */
 	public static final void showDefaultConfigDialog(){
 		DefaultConfigDialog dialog = new DefaultConfigDialog();
 		try{
