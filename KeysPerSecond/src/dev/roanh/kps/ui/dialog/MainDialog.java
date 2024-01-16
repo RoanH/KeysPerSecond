@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.config.ConfigParser;
+import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.ui.listener.CloseListener;
 import dev.roanh.util.ClickableLink;
@@ -134,7 +134,7 @@ public class MainDialog extends JPanel{
 		JButton load = new JButton("Load config");
 		configuration.add(load);
 		load.addActionListener(e->{
-			if(ConfigParser.loadConfiguration()){
+			if(ConfigLoader.loadConfiguration()){
 				options.syncBoxes();
 			}
 		});

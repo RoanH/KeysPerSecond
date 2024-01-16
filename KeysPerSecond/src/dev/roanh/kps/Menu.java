@@ -52,7 +52,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
-import dev.roanh.kps.config.ConfigParser;
+import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.panels.GraphPanel;
@@ -276,7 +276,7 @@ public class Menu{
 			Main.config.saveConfig(true);
 		});
 		load.addActionListener((e)->{
-			if(ConfigParser.loadConfiguration()){
+			if(ConfigLoader.loadConfiguration()){
 				resetData();
 			}
 		});
