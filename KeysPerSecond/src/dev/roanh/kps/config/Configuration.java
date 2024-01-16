@@ -48,12 +48,18 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.UpdateRateSetting;
 import dev.roanh.kps.layout.LayoutPosition;
 import dev.roanh.util.Dialog;
+import dev.roanh.util.FileSelector;
+import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * This class contains all the configurable properties for the program.
  * @author Roan
  */
 public class Configuration{
+	/**
+	 * Extension filter for the current KeysPerSecond configuration file format.
+	 */
+	public static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps");
 	/**
 	 * The original configuration file path or null
 	 * if this configuration was not loaded from a file.
@@ -430,7 +436,7 @@ public class Configuration{
 	 */
 	public final void saveConfig(boolean pos){
 		boolean savepos = (!pos) ? false : (Dialog.showConfirmDialog("Do you want to save the onscreen position of the program?"));
-		Path saveloc = Dialog.showFileSaveDialog(ConfigParser.KPS_NEW_EXT, "config");
+		Path saveloc = Dialog.showFileSaveDialog(KPS_NEW_EXT, "config");
 		if(saveloc != null){
 			try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(saveloc))){
 				write(new IndentWriter(out), savepos);

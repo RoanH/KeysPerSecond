@@ -22,19 +22,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import dev.roanh.kps.Main;
-import dev.roanh.kps.Statistics;
-import dev.roanh.util.Dialog;
-import dev.roanh.util.FileSelector;
-import dev.roanh.util.FileSelector.FileExtension;
 
 /**
  * Class used to parse configuration files.
@@ -42,18 +34,6 @@ import dev.roanh.util.FileSelector.FileExtension;
  * @see Configuration
  */
 public class ConfigParser{
-	/**
-	 * Extension filter for the current KeysPerSecond configuration file format.
-	 */
-	public static final FileExtension KPS_NEW_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps");
-	/**
-	 * Extension filter for all KeysPerSecond configuration files.
-	 */
-	private static final FileExtension KPS_ALL_EXT = FileSelector.registerFileExtension("KeysPerSecond config", "kps", "kpsconf", "kpsconf2", "kpsconf3");
-	/**
-	 * Extension filter for legacy KeysPerSecond configuration file formats.
-	 */
-	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
 	/**
 	 * The read ahead limit mark used when parsing.
 	 */
@@ -101,54 +81,6 @@ public class ConfigParser{
 	 */
 	private ConfigParser(Path path){
 		config = new Configuration(path);
-	}
-	
-	/**
-	 * Loads a configuration file (with GUI).
-	 * @return Whether or not the config was loaded successfully.
-	 */
-	public static final boolean loadConfiguration(){
-		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, KPS_NEW_EXT, KPS_LEGACY_EXT);
-		if(saveloc == null){
-			return false;
-		}else if(Objects.toString(saveloc.getFileName()).endsWith("kpsconf") || Objects.toString(saveloc.getFileName()).endsWith("kpsconf2")){
-			Dialog.showMessageDialog(
-				"You are trying to load a legacy configuration file.\n"
-				+ "This is no longer possible with this version of the program.\n"
-				+ "You should convert your configuration file first using version 8.4."
-			);
-			return false;
-		}
-		
-		try{
-			ConfigParser parser = ConfigParser.parse(saveloc);
-			Main.config = parser.getConfig();
-
-			if(parser.wasDefaultUsed()){
-				Dialog.showMessageDialog("Configuration loaded succesfully but some default values were used.");
-			}else{
-				Dialog.showMessageDialog("Configuration loaded succesfully.");
-			}
-			
-			if(Main.config.getFramePosition().hasPosition()){
-				Main.frame.setLocation(Main.config.getFramePosition().getLocation());
-			}
-			
-			if(Main.config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
-				try{
-					Statistics.loadStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
-				}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
-					e.printStackTrace();
-					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
-				}
-			}
-			
-			return true;
-		}catch(IOException e){
-			e.printStackTrace();
-			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
-			return false;
-		}
 	}
 	
 	/**

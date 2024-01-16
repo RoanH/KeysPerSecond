@@ -52,13 +52,14 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
-import dev.roanh.kps.config.ConfigParser;
+import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.ui.dialog.AboutDialog;
 import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
+import dev.roanh.kps.ui.dialog.DefaultConfigDialog;
 import dev.roanh.kps.ui.dialog.KeysDialog;
 import dev.roanh.kps.ui.dialog.LayoutDialog;
 import dev.roanh.kps.ui.dialog.StatsSavingDialog;
@@ -141,6 +142,7 @@ public class Menu{
 		JCheckBoxMenuItem windowed = new JCheckBoxMenuItem("Windowed mode");
 		JMenuItem save = new JMenuItem("Save config");
 		JMenuItem load = new JMenuItem("Load config");
+		JMenuItem defConf = new JMenuItem("Default config");
 		JMenuItem saveStats = new JMenuItem("Save stats");
 		JMenuItem loadStats = new JMenuItem("Load stats");
 		components.add(saveStats);
@@ -151,6 +153,7 @@ public class Menu{
 		components.add(about);
 		components.add(minimizeButton);
 		components.add(save);
+		components.add(defConf);
 		components.add(snap);
 		components.add(exit);
 		components.add(pause);
@@ -275,8 +278,11 @@ public class Menu{
 		save.addActionListener((e)->{
 			Main.config.saveConfig(true);
 		});
+		defConf.addActionListener(e->{
+			DefaultConfigDialog.showDefaultConfigDialog();
+		});
 		load.addActionListener((e)->{
-			if(ConfigParser.loadConfiguration()){
+			if(ConfigLoader.loadConfiguration()){
 				resetData();
 			}
 		});
@@ -313,6 +319,7 @@ public class Menu{
 
 		saveLoad.add(load);
 		saveLoad.add(save);
+		saveLoad.add(defConf);
 		saveLoad.add(loadStats);
 		saveLoad.add(saveStats);
 

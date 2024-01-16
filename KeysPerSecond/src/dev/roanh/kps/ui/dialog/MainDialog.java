@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.config.ConfigParser;
+import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.ui.listener.CloseListener;
 import dev.roanh.util.ClickableLink;
@@ -128,13 +128,13 @@ public class MainDialog extends JPanel{
 	 */
 	private JPanel buildRightPanel(){
 		//configuration
-		JPanel configuration = new JPanel(new GridLayout(2, 1));
+		JPanel configuration = new JPanel(new GridLayout(3, 1));
 		configuration.setBorder(BorderFactory.createTitledBorder("Configuration"));
 		
 		JButton load = new JButton("Load config");
 		configuration.add(load);
 		load.addActionListener(e->{
-			if(ConfigParser.loadConfiguration()){
+			if(ConfigLoader.loadConfiguration()){
 				options.syncBoxes();
 			}
 		});
@@ -142,6 +142,10 @@ public class MainDialog extends JPanel{
 		JButton save = new JButton("Save config");
 		configuration.add(save);
 		save.addActionListener(e->config.saveConfig(false));
+		
+		JButton defConf = new JButton("Default config");
+		configuration.add(defConf);
+		defConf.addActionListener(e->DefaultConfigDialog.showDefaultConfigDialog());
 		
 		//settings
 		JPanel settings = new JPanel(new GridLayout(4, 1));
