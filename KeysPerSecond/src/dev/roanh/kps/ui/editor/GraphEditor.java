@@ -50,20 +50,20 @@ public class GraphEditor extends Editor{
 		backlog.addChangeListener(e->config.setBacklog((int)backlog.getValue()));
 		fields.add(backlog);
 		
-		labels.add(new JLabel("Show average: "));
-		JCheckBox avg = new JCheckBox("", config.isAverageVisible());
-		fields.add(avg);
-		avg.addActionListener(e->{
-			config.setAverageVisible(avg.isSelected());
-			Main.frame.repaint();
-		});
-		
 		labels.add(new JLabel("Maximum (Y cap): "));
 		JSpinner max = new JSpinner(new SpinnerNumberModel(config.getMaxValue(), 1, Integer.MAX_VALUE, 1));
 		fields.add(max);
 		max.addChangeListener(e->{
 			config.setMaxValue((int)max.getValue());
 			Main.resetGraphs();
+		});
+		
+		labels.add(new JLabel("Show average: "));
+		JCheckBox avg = new JCheckBox("", config.isAverageVisible());
+		fields.add(avg);
+		avg.addActionListener(e->{
+			config.setAverageVisible(avg.isSelected());
+			Main.frame.repaint();
 		});
 	}
 }
