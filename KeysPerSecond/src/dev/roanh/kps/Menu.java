@@ -214,7 +214,7 @@ public class Menu{
 			Main.hits = 0;
 		});
 		sresetgraph.addActionListener((e)->{
-			Main.graphs.forEach(GraphPanel::reset);
+			Main.resetGraphs();
 		});
 		commandkeys.addActionListener((e)->{
 			CommandKeysDialog.configureCommandKeys(Main.config.getCommands());

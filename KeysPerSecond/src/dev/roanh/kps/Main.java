@@ -140,7 +140,7 @@ public class Main{
 	/**
 	 * Graph panel.
 	 */
-	protected static final List<GraphPanel> graphs = new ArrayList<GraphPanel>();
+	private static final List<GraphPanel> graphs = new ArrayList<GraphPanel>();
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
@@ -487,6 +487,10 @@ public class Main{
 				((BasePanel)component).sizeChanged();
 			}
 		}
+	}
+	
+	public static final void resetGraphs(){
+		Main.graphs.forEach(GraphPanel::reset);
 	}
 
 	/**

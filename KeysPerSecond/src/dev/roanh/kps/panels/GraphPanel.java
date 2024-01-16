@@ -124,7 +124,7 @@ public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider
 		//average line
 		ThemeColor foreground = Main.config.getTheme().getForeground();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
-		if(config.isAverageVisible()){
+		if(config.isAverageVisible() && Main.avg <= config.getMaxValue()){
 			int y = (int)(oy + 1 - ((insideHeight * Main.avg) / maxval));
 			g.setColor(foreground.getColor().darker());
 			g.setStroke(avgstroke);
@@ -154,6 +154,8 @@ public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider
 	 * @param value The new point to add.
 	 */
 	public void addPoint(int value){
+		value = Math.min(value, config.getMaxValue());
+		
 		if(value > maxval){
 			maxval = value;
 		}

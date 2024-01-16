@@ -46,12 +46,21 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 	 * Number of points the graph consists of.
 	 */
 	private final IntSetting backlog = new IntSetting("backlog", 2, Short.MAX_VALUE, 30);
+	private final IntSetting max = new IntSetting("max", 1, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
 	/**
 	 * Creates new graph settings.
 	 */
 	public GraphSettings(){
 		super("graphs", 0, -1, -1, 3, "KPS");
+	}
+	
+	public void setMaxValue(int max){
+		this.max.update(max);
+	}
+	
+	public int getMaxValue(){
+		return max.getValue();
 	}
 	
 	/**

@@ -57,5 +57,13 @@ public class GraphEditor extends Editor{
 			config.setAverageVisible(avg.isSelected());
 			Main.frame.repaint();
 		});
+		
+		labels.add(new JLabel("Maximum (Y cap): "));
+		JSpinner max = new JSpinner(new SpinnerNumberModel(config.getMaxValue(), 1, Integer.MAX_VALUE, 1));
+		fields.add(max);
+		max.addChangeListener(e->{
+			config.setMaxValue((int)max.getValue());
+			Main.resetGraphs();
+		});
 	}
 }
