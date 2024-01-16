@@ -6,6 +6,7 @@ trackAllKeys: false
 trackAllButtons: false
 updateRate: 100
 enableKeyModifierCombinations: false
+windowed: false
 
 frame:
   x: 100

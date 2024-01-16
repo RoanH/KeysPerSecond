@@ -6,6 +6,7 @@ trackAllKeys: true
 trackAllButtons: true
 updateRate: 250
 enableKeyModifierCombinations: true
+windowed: true
 
 theme:
   customColors: true
