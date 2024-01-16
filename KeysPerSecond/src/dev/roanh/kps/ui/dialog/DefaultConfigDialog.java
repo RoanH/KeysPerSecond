@@ -88,6 +88,7 @@ public class DefaultConfigDialog extends JPanel{
 				break;
 			}
 		}catch(BackingStoreException | InvalidPathException e){
+			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to save default config, cause: " + e.getMessage());
 		}
 	}
