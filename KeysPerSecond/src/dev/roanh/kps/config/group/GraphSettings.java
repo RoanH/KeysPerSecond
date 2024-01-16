@@ -113,7 +113,7 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 
 	@Override
 	public boolean parse(Map<String, String> data){
-		return super.parse(data) | findAndParse(data, showAvg, backlog);
+		return super.parse(data) | findAndParse(data, showAvg, backlog, max);
 	}
 	
 	@Override
@@ -121,6 +121,7 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 		super.writeItems(out);
 		showAvg.write(out);
 		backlog.write(out);
+		max.write(out);
 	}
 	
 	@Override
