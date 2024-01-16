@@ -46,6 +46,7 @@ graphs:
     height: 8
     showAvg: false
     backlog: 45
+    max: 2147483647
 
 panels:
   - type: max
