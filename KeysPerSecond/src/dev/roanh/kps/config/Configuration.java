@@ -62,55 +62,59 @@ public class Configuration{
 	/**
 	 * Whether or not the frame forces itself to be the top window.
 	 */
-	private BooleanSetting overlay = new BooleanSetting("overlay", false);
+	private final BooleanSetting overlay = new BooleanSetting("overlay", false);
 	/**
 	 * The number of milliseconds a single time frame takes.
 	 */
-	private UpdateRateSetting updateRate = new UpdateRateSetting("updateRate", UpdateRate.MS_100);
+	private final UpdateRateSetting updateRate = new UpdateRateSetting("updateRate", UpdateRate.MS_100);
 	/**
 	 * Whether or not the enable tracking key-modifier combinations.
 	 */
-	private BooleanSetting enableModifiers = new BooleanSetting("enableKeyModifierCombinations", false);
+	private final BooleanSetting enableModifiers = new BooleanSetting("enableKeyModifierCombinations", false);
 	/**
 	 * Whether or not to track all key presses.
 	 */
-	private BooleanSetting trackAllKeys = new BooleanSetting("trackAllKeys", false);
+	private final BooleanSetting trackAllKeys = new BooleanSetting("trackAllKeys", false);
 	/**
 	 * Whether or not to track all mouse button presses.
 	 */
-	private BooleanSetting trackAllButtons = new BooleanSetting("trackAllButtons", false);
+	private final BooleanSetting trackAllButtons = new BooleanSetting("trackAllButtons", false);
+	/**
+	 * Whether or not the frame is in windowed mode.
+	 */
+	private final BooleanSetting windowed = new BooleanSetting("windowed", false);
 	/**
 	 * The saved on screen position of the main frame (if previously saved).
 	 */
-	private PositionSettings position = new PositionSettings();
+	private final PositionSettings position = new PositionSettings();
 	/**
 	 * Default colour scheme settings.
 	 */
-	private ThemeSettings theme = new ThemeSettings();
+	private final ThemeSettings theme = new ThemeSettings();
 	/**
 	 * Command key configuration.
 	 */
-	private CommandSettings commands = new CommandSettings();
+	private final CommandSettings commands = new CommandSettings();
 	/**
 	 * General layout settings.
 	 */
-	private LayoutSettings layout = new LayoutSettings();
+	private final LayoutSettings layout = new LayoutSettings();
 	/**
 	 * Automatic statistics saving settings.
 	 */
-	private StatsSavingSettings statsSaving = new StatsSavingSettings();
+	private final StatsSavingSettings statsSaving = new StatsSavingSettings();
 	/**
 	 * Graph settings.
 	 */
-	private SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
+	private final SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
 	/**
 	 * Special panel settings.
 	 */
-	private SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
+	private final SettingList<SpecialPanelSettings> panels = new SettingList<SpecialPanelSettings>("panels", PanelType::construct);
 	/**
 	 * Key panel configuration.
 	 */
-	private SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
+	private final SettingList<KeyPanelSettings> keys = new SettingList<KeyPanelSettings>("keys", new LegacyCompatibleKeyConstructor());
 	
 	/**
 	 * Constructs a new configuration with default settings.
@@ -188,7 +192,7 @@ public class Configuration{
 	 * @return All settings in this configuration.
 	 */
 	protected List<Setting<?>> getSettings(){
-		return Arrays.asList(overlay, trackAllKeys, trackAllButtons, updateRate, enableModifiers);
+		return Arrays.asList(overlay, trackAllKeys, trackAllButtons, updateRate, enableModifiers, windowed);
 	}
 	
 	/**
@@ -393,6 +397,22 @@ public class Configuration{
 	 */
 	public boolean isOverlayMode(){
 		return overlay.getValue();
+	}
+	
+	/**
+	 * Checks if windowed mode is enabled.
+	 * @return True if windowed mode is enabled.
+	 */
+	public boolean isWindowedMode(){
+		return windowed.getValue();
+	}
+	
+	/**
+	 * Enables or disables windowed mode.
+	 * @param windowed True to enable windowed mode.
+	 */
+	public void setWindowedMode(boolean windowed){
+		this.windowed.update(windowed);
 	}
 	
 	/**

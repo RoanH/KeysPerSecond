@@ -552,7 +552,7 @@ public class Main{
 		frame.setResizable(false);
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(false);//TODO toggle
+		frame.setUndecorated(!config.isWindowedMode());
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
