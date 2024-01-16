@@ -615,7 +615,7 @@ public class Main{
 			all.add(content, BorderLayout.CENTER);
 			all.setOpaque(opaque);
 			
-			if(background.getAlpha() != 1.0F){
+			if(background.getAlpha() != 1.0F && frame.isUndecorated()){
 				frame.setBackground(ColorManager.transparent);
 				content.setOpaque(false);
 				content.setBackground(ColorManager.transparent);
