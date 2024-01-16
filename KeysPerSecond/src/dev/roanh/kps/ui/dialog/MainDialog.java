@@ -203,6 +203,9 @@ public class MainDialog extends JPanel{
 		 * Whether key-modifier tracking is enabled.
 		 */
 		private final JCheckBox modifiers = new JCheckBox();
+		/**
+		 * Whether windowed mode is enabled.
+		 */
 		private final JCheckBox windowed = new JCheckBox();
 		
 		/**
