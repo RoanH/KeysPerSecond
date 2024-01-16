@@ -18,10 +18,15 @@
  */
 package dev.roanh.kps.config;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Locale;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -42,11 +47,6 @@ public class ConfigLoader{
 	 */
 	private static final FileExtension KPS_LEGACY_EXT = FileSelector.registerFileExtension("Legacy KeysPerSecond config", "kpsconf", "kpsconf2", "kpsconf3");
 	private static final Preferences prefs = Preferences.userRoot().node("dev.roanh.kps");
-	
-	
-	
-	
-	
 	
 	/**
 	 * Loads a configuration file (with GUI).
@@ -96,7 +96,21 @@ public class ConfigLoader{
 		}
 	}
 	
-	public static final Path getDefaultConfig(){
+	/**
+	 * Reloads the current configuration from file.
+	 */
+	public static void reloadConfig(){
+		if(Main.config.getPath() != null){
+			try{
+				Main.config = ConfigParser.read(Main.config.getPath());
+			}catch(IOException e){
+				e.printStackTrace();
+				Dialog.showErrorDialog("Failed to reload the configuration, cause: " + e.getMessage());
+			}
+		}
+	}
+	
+	private static final Path getDefaultConfig(){
 		String path = prefs.get("defaultConfig", null);
 		return path == null ? null : Paths.get(path);
 	}
@@ -104,5 +118,86 @@ public class ConfigLoader{
 	public static final void setDefaultConfig(Path config) throws BackingStoreException{
 		prefs.put("defaultConfig", config.toAbsolutePath().toString());
 		prefs.flush();
+	}
+	
+	public static final boolean quickLoadConfiguration(String cliConfig){
+		try{
+			//prefer the CLI config if one was given
+			if(cliConfig != null){
+				Configuration config = parseConfiguration(cliConfig);
+				if(config != null){
+					Main.config = config;
+					System.out.println("Loaded config file: " + config.getPath().toString());
+					return true;
+				}else{
+					//if the user explicitly requested a config via CLI we do not attempt to load the default config
+					Dialog.showErrorDialog("Failed to load the requested configuration file.");
+					return false;
+				}
+			}
+			
+			//see if a default config is set
+			Path defaultConfig = getDefaultConfig();
+			if(defaultConfig != null && Files.exists(defaultConfig)){
+				Configuration config = ConfigParser.read(defaultConfig);
+				if(config != null){
+					Main.config = config;
+					System.out.println("Loaded config file: " + config.getPath().toString());
+					return true;
+				}
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+			Dialog.showErrorDialog("Failed to load the requested configuration file.\nCause: " + e.getMessage());
+		}
+
+		//no usable configuration found
+		return false;
+	}
+	
+	/**
+	 * Parses the given command line argument configuration file by
+	 * loading the file from disk while treating unknown characters
+	 * as wildcards to deal with Windows argument encoding issues.
+	 * @param config The configuration file path.
+	 * @return The loaded configuration file or <code>null</code>
+	 *         if the file was not found.
+	 * @throws IOException When an IOException occurs.
+	 */
+	private static final Configuration parseConfiguration(String config) throws IOException{
+		try{
+			Path path = Paths.get(config);
+			return Files.exists(path) ? ConfigParser.read(path) : null;
+		}catch(InvalidPathException e){
+			int index = config.lastIndexOf(File.separatorChar);
+			try{
+				Path dir = Paths.get(config.substring(0, index));
+				final String name = config.substring(index + 1);
+				Filter<Path> filter = p->{
+					String other = Objects.toString(p.getFileName());
+					for(int i = 0; i < name.length(); i++){
+						char ch = name.charAt(i);
+						if(ch == '?'){
+							continue;
+						}
+						if(i >= other.length() || ch != other.charAt(i)){
+							return false;
+						}
+					}
+					return true;
+				};
+				
+				try(DirectoryStream<Path> files = Files.newDirectoryStream(dir, filter)){
+					Iterator<Path> iter = files.iterator();
+					if(iter.hasNext()){
+						return ConfigParser.read(iter.next());
+					}
+				}
+				
+				return null;
+			}catch(InvalidPathException e2){
+				return null;
+			}
+		}
 	}
 }

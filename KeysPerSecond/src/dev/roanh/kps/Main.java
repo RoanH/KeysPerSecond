@@ -25,22 +25,13 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.DirectoryStream.Filter;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -54,7 +45,7 @@ import javax.swing.SwingUtilities;
 
 import com.github.kwhat.jnativehook.NativeHookException;
 
-import dev.roanh.kps.config.ConfigParser;
+import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
@@ -204,15 +195,17 @@ public class Main{
 	 * @param args - configuration file path
 	 */
 	public static void main(String[] args){
-		//Work around for a JDK bug
+		//work around for a JDK bug
 		ExclamationMarkPath.check(args);
 		
-		//Basic setup and info
+		//check for a passed config
 		String config = null;
 		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){
 			config = args[0];
 			System.out.println("Attempting to load config: " + config);
 		}
+		
+		//info print
 		System.out.println("Control keys:");
 		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
 		System.out.println("Ctrl + U: Terminates the program");
@@ -220,15 +213,15 @@ public class Main{
 		System.out.println("Ctrl + Y: Hides/shows the GUI");
 		System.out.println("Ctrl + T: Pauses/resumes the counter");
 		System.out.println("Ctrl + R: Reloads the configuration");
-		Util.installUI();
 		
 		//set UI components
+		Util.installUI();
 		content = new GridPanel();
 		frame = new JFrame("KeysPerSecond");
 		layout = new Layout(content);
 		content.setLayout(layout);
 		
-		//Set dialog defaults
+		//set dialog defaults
 		Dialog.setDialogIcon(iconSmall);
 		Dialog.setParentFrame(frame);
 		Dialog.setDialogTitle("KeysPerSecond");
@@ -248,40 +241,14 @@ public class Main{
 		eventManager.registerKeyPressListener(listener);
 		eventManager.registerKeyReleaseListener(listener);
 		
-		//Set configuration for the keys
-		if(config != null){
-			try{
-				Configuration toLoad = parseConfiguration(config);
-				if(toLoad != null){
-					Main.config = toLoad;
-					System.out.println("Loaded config file: " + toLoad.getPath().toString());
-				}else{
-					System.out.println("The provided config file does not exist.");
-				}
-			}catch(IOException e){
-				e.printStackTrace();
-				Dialog.showErrorDialog("Failed to load the given configuration file\nCause: " + e.getMessage());
-			}
-		}else{
-			try{
-				MainDialog.configure(Main.config);
-			}catch(Exception e){
-				e.printStackTrace();
-				try{
-					Dialog.showErrorDialog("Failed to load the configuration menu, however you can use the live menu instead");
-				}catch(Throwable t){
-					t.printStackTrace();
-				}
-				System.err.println("Failed to load the configuration menu, however you can use the live menu instead");
-			}
+		//load any given configurations
+		if(!ConfigLoader.quickLoadConfiguration(config)){
+			//if no (valid) ones were found let the user create a new config
+			MainDialog.configure(Main.config);
 		}
 
-		//Build GUI
-		try{
-			buildGUI();
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+		//build GUI
+		buildGUI();
 		
 		//register default event handlers
 		eventManager.registerButtonPressListener(Main::pressEventButton);
@@ -290,54 +257,8 @@ public class Main{
 		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
 		eventManager.registerKeyPressListener(Main::triggerCommandKeys);
 		
-		//Enter the main loop
+		//enter the main loop
 		mainLoop();
-	}
-	
-	/**
-	 * Parses the given command line argument configuration file by
-	 * loading the file from disk while treating unknown characters
-	 * as wildcards to deal with Windows argument encoding issues.
-	 * @param config The configuration file path.
-	 * @return The loaded configuration file or <code>null</code>
-	 *         if the file was not found.
-	 * @throws IOException When an IOException occurs.
-	 */
-	private static final Configuration parseConfiguration(String config) throws IOException{
-		try{
-			Path path = Paths.get(config);
-			return Files.exists(path) ? ConfigParser.read(path) : null;
-		}catch(InvalidPathException e){
-			int index = config.lastIndexOf(File.separatorChar);
-			try{
-				Path dir = Paths.get(config.substring(0, index));
-				final String name = config.substring(index + 1);
-				Filter<Path> filter = p->{
-					String other = Objects.toString(p.getFileName());
-					for(int i = 0; i < name.length(); i++){
-						char ch = name.charAt(i);
-						if(ch == '?'){
-							continue;
-						}
-						if(i >= other.length() || ch != other.charAt(i)){
-							return false;
-						}
-					}
-					return true;
-				};
-				
-				try(DirectoryStream<Path> files = Files.newDirectoryStream(dir, filter)){
-					Iterator<Path> iter = files.iterator();
-					if(iter.hasNext()){
-						return ConfigParser.read(iter.next());
-					}
-				}
-				
-				return null;
-			}catch(InvalidPathException e2){
-				return null;
-			}
-		}
 	}
 
 	/**
@@ -501,7 +422,7 @@ public class Main{
 			suspended = !suspended;
 			Menu.pause.setSelected(suspended);
 		}else if(commands.getCommandReload().matches(code)){
-			reloadConfig();
+			ConfigLoader.reloadConfig();
 			Menu.resetData();
 		}
 	}
@@ -543,11 +464,9 @@ public class Main{
 	}
 
 	/**
-	 * Builds the main GUI of the program
-	 * @throws IOException When an IO Exception occurs, this can be thrown
-	 *         when the program fails to load its resources
+	 * Builds the main GUI of the program.
 	 */
-	protected static final void buildGUI() throws IOException{
+	private static final void buildGUI(){
 		Menu.createMenu();
 		frame.setResizable(false);
 		frame.setIconImage(icon);
@@ -681,20 +600,6 @@ public class Main{
 	 */
 	public static void removeKey(int keycode){
 		keys.remove(keycode);
-	}
-	
-	/**
-	 * Reloads the current configuration from file.
-	 */
-	public static void reloadConfig(){
-		if(config.getPath() != null){
-			try{
-				config = ConfigParser.read(config.getPath());
-			}catch(IOException e){
-				e.printStackTrace();
-				Dialog.showErrorDialog("Failed to reload the configuration, cause: " + e.getMessage());
-			}
-		}
 	}
 	
 	static{
