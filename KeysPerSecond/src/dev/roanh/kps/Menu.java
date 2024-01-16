@@ -55,7 +55,6 @@ import javax.swing.plaf.basic.BasicMenuUI;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
-import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.ui.dialog.AboutDialog;
 import dev.roanh.kps.ui.dialog.ColorDialog;
 import dev.roanh.kps.ui.dialog.CommandKeysDialog;
@@ -214,7 +213,7 @@ public class Menu{
 			Main.hits = 0;
 		});
 		sresetgraph.addActionListener((e)->{
-			Main.graphs.forEach(GraphPanel::reset);
+			Main.resetGraphs();
 		});
 		commandkeys.addActionListener((e)->{
 			CommandKeysDialog.configureCommandKeys(Main.config.getCommands());

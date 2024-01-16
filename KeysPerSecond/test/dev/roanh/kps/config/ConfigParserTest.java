@@ -140,6 +140,7 @@ public class ConfigParserTest{
 		assertEquals(7, graph.getLayoutHeight());
 		assertTrue(graph.isAverageVisible());
 		assertEquals(1800, graph.getBacklog());
+		assertEquals(Integer.MAX_VALUE, graph.getMaxValue());
 		
 		//special panels
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
@@ -330,6 +331,7 @@ public class ConfigParserTest{
 		assertEquals(8, graph.getLayoutHeight());
 		assertFalse(graph.isAverageVisible());
 		assertEquals(45, graph.getBacklog());
+		assertEquals(Integer.MAX_VALUE, graph.getMaxValue());
 		
 		//special panels
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
@@ -582,6 +584,7 @@ public class ConfigParserTest{
 		assertEquals(8, graph.getLayoutHeight());
 		assertFalse(graph.isAverageVisible());
 		assertEquals(45, graph.getBacklog());
+		assertEquals(20, graph.getMaxValue());
 		
 		//special panels
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
