@@ -46,6 +46,9 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 	 * Number of points the graph consists of.
 	 */
 	private final IntSetting backlog = new IntSetting("backlog", 2, Short.MAX_VALUE, 30);
+	/**
+	 * Maximum graph y value that will be displayed. Any higher values are capped at this value.
+	 */
 	private final IntSetting max = new IntSetting("max", 1, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
 	/**
@@ -55,10 +58,18 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 		super("graphs", 0, -1, -1, 3, "KPS");
 	}
 	
+	/**
+	 * Sets the new maximum value to be displayed by this graph.
+	 * @param max The new graph maximum.
+	 */
 	public void setMaxValue(int max){
 		this.max.update(max);
 	}
 	
+	/**
+	 * Gets the maximum y value for this graph.
+	 * @return The maximum y value.
+	 */
 	public int getMaxValue(){
 		return max.getValue();
 	}
