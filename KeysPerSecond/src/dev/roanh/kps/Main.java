@@ -493,7 +493,7 @@ public class Main{
 	 * Clears the data for all active graphs.
 	 */
 	public static final void resetGraphs(){
-		Main.graphs.forEach(GraphPanel::reset);
+		graphs.forEach(GraphPanel::reset);
 	}
 
 	/**
