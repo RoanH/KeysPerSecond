@@ -247,7 +247,7 @@ public class Configuration{
 	 * @return All layout panels in this configuration.
 	 */
 	public List<LayoutPosition> getLayoutComponents(){
-		return Stream.concat(panels.stream(), Stream.concat(keys.stream(), graphs.stream())).collect(Collectors.toList());
+		return Stream.concat(panels.stream(), Stream.concat(keys.stream(), graphs.stream())).collect(Collectors.toCollection(ArrayList::new));
 	}
 	
 	/**

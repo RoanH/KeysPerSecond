@@ -56,7 +56,7 @@ public abstract interface LayoutPosition{
 	 *         in the layout
 	 */
 	public abstract int getLayoutHeight();
-
+	
 	/**
 	 * Gets the position and size given by
 	 * this LayoutPosition as a string
