@@ -16,10 +16,8 @@ There is also a right click menu to configure all the settings:
 For each configured key the program will show how many times it was pressed. By default it will also show the maximum, average and current number of keys pressed per second.
 When enabled it can also show a graph of the number of keys pressed per second over time, the total number of keys pressed, and the time since the last input.
 
-Everything shown in the pictures above can be toggled on or off and all the panels can be arranged in a lot of different ways.      
+Everything shown in the pictures above can be toggled on or off and all the panels can be rearranged freely.      
 ![Config](https://media.roanh.dev/keyspersecond/cmain88.png)    
-![Key config](https://media.roanh.dev/keyspersecond/ckeys88.png)    
-![Layout](https://media.roanh.dev/keyspersecond/clayout88.png)    
 
 There are also some commands that can be sent to the program:    
 **Ctrl + P**: Causes the program to reset the average and maximum value.    
