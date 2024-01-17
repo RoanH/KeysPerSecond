@@ -1,6 +1,44 @@
 # Updates
 All releases can be found on the [releases page](https://github.com/RoanH/KeysPerSecond/releases).
 
+## [v8.8] 17th of January, 2024: Major Improvements
+It's been a while, but the next release is finally done! This release also lays the foundations for some larger and more exciting features planned for future releases.
+
+- Input handling was completely rewritten:
+  - The key/button add dialog now shows in real time which key you're about to add.
+  - Similarly, the command keys dialog now also shows which key combination you're setting.
+  - Fixed that commands were active before the main window was visible ([66](https://github.com/RoanH/KeysPerSecond/issues/66)).
+- The configuration system was completely rewritten:
+  - New (backwards compatible) configuration format primarily intended to support planned features.
+  - You can now have multiple statistic panels and multiple graphs (more panel specific settings are planned).
+  - Support for a detached graph was **removed**.
+  - The `show keys` setting was **removed** (though you can still hide individual keys).
+  - You can now change the display name of any panel, including those of special panels like AVG ([32](https://github.com/RoanH/KeysPerSecond/issues/32)).
+  - The default update rate was changed from 1000ms to 100ms.
+  - File paths used for automatic stats saving are now validated.
+- General interface changes:
+  - Most dialogs were redesigned to support the more powerful configuration format.
+  - Panels now have a set of panel specific settings that can be edited.
+  - The right click menu now directly allows you to edit the settings of the panel that was right clicked.
+  - When using the right click menu all settings now show their changes to the live GUI in real time.
+  - The hide command key is now also available from the right click menu.
+- Thanks to DeSu0556 the hide command key now adds the program to the system tray if supported ([89](https://github.com/RoanH/KeysPerSecond/issues/89) and [91](https://github.com/RoanH/KeysPerSecond/pull/91)).
+- It is now possible to set a default configuration that will be loaded automatically when starting KeysPerSecond ([20](https://github.com/RoanH/KeysPerSecond/issues/20) and [89](https://github.com/RoanH/KeysPerSecond/issues/89))
+- Implement a new `last` panel type that shows the elapsed time since the last input.
+- Make it possible to run the program in windowed mode ([77](https://github.com/RoanH/KeysPerSecond/issues/77)).
+- The default display name of the CUR (current) panel was changed to KPS.
+- A warning is now shown when the initial configuration contains no panels to display.
+- Fix that the total panel was showing up as AVG in the layout settings ([87](https://github.com/RoanH/KeysPerSecond/issues/87))
+- Fixed a bug that caused the program to freeze at extremely small GUI sizes.
+- Improved graph rendering and resolved a graph flickering issue at extremely high update rates.
+- Fixed that newly added panels sometimes get added behind existing panels in complex layouts.
+- Fixed a bug with the track all keys setting if key-modifier tracking is enabled.
+- Fixed that the layout dialog crashes under Linux ([59](https://github.com/RoanH/KeysPerSecond/issues/59) and [88](https://github.com/RoanH/KeysPerSecond/issues/88))
+- Fixed a critical rendering failure under Linux ([76](https://github.com/RoanH/KeysPerSecond/issues/76))
+- Major code quality improvements.
+- Update dependencies.
+- Add some limited (unit) testing.
+
 ## [v8.7] 26th of August, 2022: Some Fixes
 - Fix a file open dialog being shown on Mac and Linux when trying to save a configuration ([#61](https://github.com/RoanH/KeysPerSecond/issues/61) and [#67](https://github.com/RoanH/KeysPerSecond/issues/67))
 - Fix loading mouse buttons from a configuration not working ([#63](https://github.com/RoanH/KeysPerSecond/issues/63))

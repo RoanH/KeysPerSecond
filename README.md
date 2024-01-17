@@ -46,8 +46,8 @@ And if you find any bugs feel free to report them. If you have any features you'
 ## Downloads
 _Requires Java 8 or higher_    
 _Tested operating systems: Mac 10.11.6 & M1, Ubuntu Linux 16.04 LTS, Windows 7 & 8 & 10 & 11_    
-- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.7/KeysPerSecond-v8.7.exe)    
-- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.7/KeysPerSecond-v8.7.jar)
+- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.8/KeysPerSecond-v8.8.exe)    
+- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.8/KeysPerSecond-v8.8.jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
