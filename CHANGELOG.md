@@ -23,18 +23,19 @@ It's been a while, but the next release is finally done! This release also lays 
   - When using the right click menu all settings now show their changes to the live GUI in real time.
   - The hide command key is now also available from the right click menu.
 - Thanks to DeSu0556 the hide command key now adds the program to the system tray if supported ([89](https://github.com/RoanH/KeysPerSecond/issues/89) and [91](https://github.com/RoanH/KeysPerSecond/pull/91)).
-- It is now possible to set a default configuration that will be loaded automatically when starting KeysPerSecond ([20](https://github.com/RoanH/KeysPerSecond/issues/20) and [89](https://github.com/RoanH/KeysPerSecond/issues/89))
+- It is now possible to set a default configuration that will be loaded automatically when starting KeysPerSecond ([20](https://github.com/RoanH/KeysPerSecond/issues/20) and [89](https://github.com/RoanH/KeysPerSecond/issues/89)).
 - Implement a new `last` panel type that shows the elapsed time since the last input.
 - Make it possible to run the program in windowed mode ([77](https://github.com/RoanH/KeysPerSecond/issues/77)).
 - The default display name of the CUR (current) panel was changed to KPS.
+- Make it possible to set a maximum display value for graphs ([90](https://github.com/RoanH/KeysPerSecond/issues/90)).
 - A warning is now shown when the initial configuration contains no panels to display.
-- Fix that the total panel was showing up as AVG in the layout settings ([87](https://github.com/RoanH/KeysPerSecond/issues/87))
+- Fix that the total panel was showing up as AVG in the layout settings ([87](https://github.com/RoanH/KeysPerSecond/issues/87)).
 - Fixed a bug that caused the program to freeze at extremely small GUI sizes.
 - Improved graph rendering and resolved a graph flickering issue at extremely high update rates.
 - Fixed that newly added panels sometimes get added behind existing panels in complex layouts.
 - Fixed a bug with the track all keys setting if key-modifier tracking is enabled.
-- Fixed that the layout dialog crashes under Linux ([59](https://github.com/RoanH/KeysPerSecond/issues/59) and [88](https://github.com/RoanH/KeysPerSecond/issues/88))
-- Fixed a critical rendering failure under Linux ([76](https://github.com/RoanH/KeysPerSecond/issues/76))
+- Fixed that the layout dialog crashes under Linux ([59](https://github.com/RoanH/KeysPerSecond/issues/59) and [88](https://github.com/RoanH/KeysPerSecond/issues/88)).
+- Fixed a critical rendering failure under Linux ([76](https://github.com/RoanH/KeysPerSecond/issues/76)).
 - Major code quality improvements.
 - Update dependencies.
 - Add some limited (unit) testing.
