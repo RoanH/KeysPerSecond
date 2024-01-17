@@ -94,7 +94,7 @@ public class Main{
 	/**
 	 * String holding the version of the program.
 	 */
-	public static final Version VERSION = Version.readVersion();
+	public static final Version VERSION = new Version(8, 8);//Version.readVersion();
 	/**
 	 * The number of seconds the average has
 	 * been calculated for

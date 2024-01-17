@@ -25,6 +25,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Dialog.ModalityType;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -219,26 +220,46 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * @return A location where the requested panel can be placed without overlap.
 	 */
 	private Point placePanel(Configuration config, int width, int height){
-		//determine a valid stretch of rows not blocked by max width panels
 		List<LayoutPosition> components = config.getLayoutComponents();
-		boolean[] hconf = new boolean[components.stream().filter(lp->lp.getLayoutY() != -1).mapToInt(lp->lp.getLayoutY() + lp.getLayoutHeight()).max().orElse(0)];
 		
-		for(LayoutPosition lp : components){
-			if(lp.getLayoutY() != -1){
+		//filter data and find max Y
+		int maxY = 0;
+		Iterator<LayoutPosition> iter = components.iterator();
+		while(iter.hasNext()){
+			LayoutPosition lp = iter.next();
+			if(lp.getLayoutWidth() == -1 && lp.getLayoutHeight() == -1){
+				//this panel blocks the entire grid so considering it is pointless
+				iter.remove();
+			}else if(lp.getLayoutX() == -1 || lp.getLayoutY() == -1){
+				//panels after the active area never interfere
+				iter.remove();
+			}else if(lp.getLayoutHeight() != -1){
+				maxY = Math.max(maxY, lp.getLayoutY() + lp.getLayoutHeight());
+			}
+		}
+		
+		//determine a valid stretch of rows not blocked by max width panels
+		boolean[] hconf = new boolean[maxY];
+		iter = components.iterator();
+		int maxX = 0;
+		while(iter.hasNext()){
+			LayoutPosition lp = iter.next();
+			if(lp.getLayoutWidth() == -1){
 				for(int i = 0; i < lp.getLayoutHeight(); i++){
-					hconf[lp.getLayoutY() + i] = lp.getLayoutWidth() == -1;
+					hconf[lp.getLayoutY() + i] = true;
 				}
+				iter.remove();
+			}else{
+				maxX = Math.max(maxX, lp.getLayoutX() + lp.getLayoutWidth());
 			}
 		}
 		
 		int row = findRange(hconf, height);
 		
 		//determine a valid stretch of columns
-		int maxw = components.stream().filter(lp->lp.getLayoutX() != -1).mapToInt(lp->lp.getLayoutX() + lp.getLayoutWidth()).max().orElse(0);
-		boolean[] conflicts = new boolean[maxw];
-		
+		boolean[] conflicts = new boolean[maxX];
 		for(LayoutPosition lp : components){
-			if(row <= lp.getLayoutY() && lp.getLayoutY() < row + height && lp.getLayoutX() != -1){
+			if(lp.getLayoutHeight() == -1 || (row < lp.getLayoutY() + lp.getLayoutHeight() && lp.getLayoutY() < row + height)){
 				for(int i = 0; i < lp.getLayoutWidth(); i++){
 					conflicts[lp.getLayoutX() + i] = true;
 				}
