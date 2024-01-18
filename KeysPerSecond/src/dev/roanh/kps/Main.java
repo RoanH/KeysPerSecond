@@ -472,6 +472,7 @@ public class Main{
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(!config.isWindowedMode());
+		frame.setLocationRelativeTo(null);
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
