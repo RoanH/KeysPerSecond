@@ -137,7 +137,11 @@ public class Statistics{
 	 * @throws IOException When an IOException occurs.
 	 */
 	private static void saveStats(Path dest) throws IOException{
-		Files.createDirectories(dest.getParent());
+		Path parent = dest.getParent();
+		if(parent != null){
+			Files.createDirectories(parent);
+		}
+		
 		try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(dest))){
 			out.print("version: ");
 			out.println(Main.VERSION);
