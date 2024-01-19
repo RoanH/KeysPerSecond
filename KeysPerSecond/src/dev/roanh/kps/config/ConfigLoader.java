@@ -57,24 +57,23 @@ public class ConfigLoader{
 	
 	/**
 	 * Loads a configuration file (with GUI).
-	 * @return Whether or not the config was loaded successfully.
+	 * @return The loaded configuration or null if loading failed or was not possible.
 	 */
-	public static final boolean loadConfiguration(){
+	public static final Configuration loadConfiguration(){
 		Path saveloc = Dialog.showFileOpenDialog(KPS_ALL_EXT, Configuration.KPS_NEW_EXT, KPS_LEGACY_EXT);
 		if(saveloc == null){
-			return false;
+			return null;
 		}else if(Objects.toString(saveloc.getFileName()).endsWith("kpsconf") || Objects.toString(saveloc.getFileName()).endsWith("kpsconf2")){
 			Dialog.showMessageDialog(
 				"You are trying to load a legacy configuration file.\n"
 				+ "This is no longer possible with this version of the program.\n"
 				+ "You should convert your configuration file first using version 8.4."
 			);
-			return false;
+			return null;
 		}
 		
 		try{
 			ConfigParser parser = ConfigParser.parse(saveloc);
-			Main.config = parser.getConfig();
 
 			if(parser.wasDefaultUsed()){
 				Dialog.showMessageDialog("Configuration loaded succesfully but some default values were used.");
@@ -95,11 +94,11 @@ public class ConfigLoader{
 				}
 			}
 			
-			return true;
+			return parser.getConfig();
 		}catch(IOException e){
 			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
-			return false;
+			return null;
 		}
 	}
 	
@@ -151,21 +150,19 @@ public class ConfigLoader{
 	 * If neither are set or if loading either config fails then this method
 	 * will do nothing. In case of an IO error the user will be informed.
 	 * @param cliConfig The passed command line config path or null for none.
-	 * @return True if any configuration was loaded successfully.
+	 * @return The loaded configuration or null if loading failed, was not possible, or no config configured.
 	 */
-	public static final boolean quickLoadConfiguration(String cliConfig){
+	public static final Configuration quickLoadConfiguration(String cliConfig){
 		try{
 			//prefer the CLI config if one was given
 			if(cliConfig != null){
 				Configuration config = parseConfiguration(cliConfig);
 				if(config != null){
-					Main.config = config;
-					System.out.println("Loaded config file: " + config.getPath().toString());
-					return true;
+					return config;
 				}else{
 					//if the user explicitly requested a config via CLI we do not attempt to load the default config
 					Dialog.showErrorDialog("Failed to load the requested configuration file.");
-					return false;
+					return null;
 				}
 			}
 			
@@ -174,9 +171,7 @@ public class ConfigLoader{
 			if(defaultConfig != null && Files.exists(defaultConfig)){
 				Configuration config = ConfigParser.read(defaultConfig);
 				if(config != null){
-					Main.config = config;
-					System.out.println("Loaded config file: " + config.getPath().toString());
-					return true;
+					return config;
 				}
 			}
 		}catch(IOException e){
@@ -185,7 +180,7 @@ public class ConfigLoader{
 		}
 
 		//no usable configuration found
-		return false;
+		return null;
 	}
 	
 	/**

@@ -53,6 +53,7 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
 import dev.roanh.kps.config.ConfigLoader;
+import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.ui.dialog.AboutDialog;
@@ -281,7 +282,9 @@ public class Menu{
 			DefaultConfigDialog.showDefaultConfigDialog();
 		});
 		load.addActionListener((e)->{
-			if(ConfigLoader.loadConfiguration()){
+			Configuration toLoad = ConfigLoader.loadConfiguration();
+			if(toLoad != null){
+				Main.config = toLoad;
 				resetData();
 			}
 		});

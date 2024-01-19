@@ -199,10 +199,10 @@ public class Main{
 		ExclamationMarkPath.check(args);
 		
 		//check for a passed config
-		String config = null;
+		String configPath = null;
 		if(args.length >= 1 && !args[0].equalsIgnoreCase("-relaunch")){
-			config = args[0];
-			System.out.println("Attempting to load config: " + config);
+			configPath = args[0];
+			System.out.println("Attempting to load config: " + configPath);
 		}
 		
 		//info print
@@ -242,9 +242,13 @@ public class Main{
 		eventManager.registerKeyReleaseListener(listener);
 		
 		//load any given configurations
-		if(!ConfigLoader.quickLoadConfiguration(config)){
+		Configuration quickLoad = ConfigLoader.quickLoadConfiguration(configPath);
+		if(quickLoad == null){
 			//if no (valid) ones were found let the user create a new config
 			MainDialog.configure(Main.config);
+		}else{
+			Main.config = quickLoad;
+			System.out.println("Loaded config file: " + quickLoad.getPath().toString());
 		}
 
 		//build GUI
