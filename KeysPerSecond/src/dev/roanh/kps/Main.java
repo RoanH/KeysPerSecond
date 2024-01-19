@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -257,6 +258,7 @@ public class Main{
 		eventManager.registerKeyPressListener(Main::pressEventKey);
 		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
 		eventManager.registerKeyPressListener(Main::triggerCommandKeys);
+		eventManager.registerMouseMoveListener(Main::moveEventMouse);
 		
 		//enter the main loop
 		mainLoop();
@@ -290,9 +292,9 @@ public class Main{
 					System.out.println("Current keys per second: " + totaltmp);
 				}
 				
+				mgp.addPoint(mouseLoc.x, mouseLoc.y);
 				for(GraphPanel graph : graphs){
 					graph.addPoint(totaltmp);
-					graph.repaint();
 				}
 				
 				content.repaint();
@@ -303,6 +305,11 @@ public class Main{
 				}
 			}
 		}, 0, config.getUpdateRateMs(), TimeUnit.MILLISECONDS);
+	}
+	
+	public static final Point mouseLoc = new Point();
+	public static final void moveEventMouse(int x, int y){
+		mouseLoc.move(x, y);
 	}
 
 	/**

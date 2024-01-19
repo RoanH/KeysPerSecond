@@ -51,7 +51,8 @@ public class MouseGraphPanel extends JPanel implements MouseMoveListener, Layout
 		}
 	}
 	
-	private void addPoint(int x, int y){
+	//TODO private
+	public void addPoint(int x, int y){
 		long time = System.currentTimeMillis();//TODO sys time may not be accurate, but it is fast
 		path.addFirst(new TimePoint(x, y, time));
 		while(time - path.getLast().time > 1000){//todo config
@@ -81,7 +82,7 @@ public class MouseGraphPanel extends JPanel implements MouseMoveListener, Layout
 
 	@Override
 	public void onMouseMove(int x, int y){
-		addPoint(x, y);
+//		addPoint(x, y);
 	}
 
 	@Override
