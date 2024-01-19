@@ -60,6 +60,7 @@ import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.GraphPanel;
+import dev.roanh.kps.panels.MouseGraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
 import dev.roanh.kps.ui.listener.CloseListener;
 import dev.roanh.util.Dialog;
@@ -475,6 +476,9 @@ public class Main{
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
+		
+		//TODO
+		eventManager.registerMouseMoveListener(mgp);
 	}
 	
 	/**
@@ -495,6 +499,8 @@ public class Main{
 	public static final void resetGraphs(){
 		graphs.forEach(GraphPanel::reset);
 	}
+	
+	private static MouseGraphPanel mgp = new MouseGraphPanel();
 
 	/**
 	 * Reconfigures the layout of the program
@@ -535,6 +541,9 @@ public class Main{
 				content.add(graph);
 				graphs.add(graph);
 			}
+			
+			//TODO
+			content.add(mgp);
 			
 			//frame configuration
 			JPanel all = new JPanel(new BorderLayout());

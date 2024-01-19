@@ -26,12 +26,16 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-public class MouseGraphPanel extends JPanel{
+import dev.roanh.kps.event.listener.MouseMoveListener;
+import dev.roanh.kps.layout.LayoutPosition;
+
+public class MouseGraphPanel extends JPanel implements MouseMoveListener, LayoutPosition{
 	/**
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = -2604642433575841219L;
 	public static final LinkedList<TimePoint> path = new LinkedList<TimePoint>();
+	private volatile long lastPaint;
 
 	@Override
 	public void paintComponent(Graphics g){
@@ -44,6 +48,19 @@ public class MouseGraphPanel extends JPanel{
 			g.drawLine(path.get(i).x / 10, path.get(i).y / 10, path.get(i + 1).x / 10, path.get(i + 1).y / 10);
 			
 			//TODO that div 10 is a nope
+		}
+	}
+	
+	private void addPoint(int x, int y){
+		long time = System.currentTimeMillis();//TODO sys time may not be accurate, but it is fast
+		path.addFirst(new TimePoint(x, y, time));
+		while(time - path.getLast().time > 1000){//todo config
+			path.removeLast();
+		}
+		
+		if(time - lastPaint > 20){
+			lastPaint = time;
+			this.repaint();//TODO
 		}
 	}
 	
@@ -60,5 +77,34 @@ public class MouseGraphPanel extends JPanel{
 			this.y = y;
 			this.time = time;
 		}
+	}
+
+	@Override
+	public void onMouseMove(int x, int y){
+		addPoint(x, y);
+	}
+
+	@Override
+	public int getLayoutX(){
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getLayoutY(){
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
+	@Override
+	public int getLayoutWidth(){
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
+	@Override
+	public int getLayoutHeight(){
+		// TODO Auto-generated method stub
+		return 5;
 	}
 }
