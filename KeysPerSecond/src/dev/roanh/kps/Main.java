@@ -18,12 +18,9 @@
  */
 package dev.roanh.kps;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -472,7 +469,17 @@ public class Main{
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(!config.isWindowedMode());
-		frame.setLocationRelativeTo(null);
+		//Get the length and width after window has been created
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+				int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+				int posX = (screenWidth / 2) - (frame.getWidth() / 2);
+				int posY = (screenHeight / 2) - (frame.getHeight() / 2);
+				frame.setLocation(posX, posY);
+			}
+		});
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
