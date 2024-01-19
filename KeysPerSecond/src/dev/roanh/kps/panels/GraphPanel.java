@@ -175,10 +175,10 @@ public class GraphPanel extends BasePanel{
 
 		//graph computation
 		Polygon poly = new Polygon();
-		final int oy = this.getHeight() - borderOffset - RenderingMode.insideOffset - 1;
-		final int ox = this.getWidth() - borderOffset - RenderingMode.insideOffset - 2;
+		final int oy = this.getHeight() - borderOffset - RenderingMode.insideOffset;
+		final int ox = this.getWidth() - borderOffset - RenderingMode.insideOffset - 1;
 		final double insideHeight = this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2;
-		final double insideWidth = (this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 2);
+		final double insideWidth = this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 1;
 		final double segment = insideWidth / (config.getBacklog() - 1);
 
 		double px = ox;
@@ -193,7 +193,7 @@ public class GraphPanel extends BasePanel{
 		ThemeColor foreground = Main.config.getTheme().getForeground();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
 		if(config.isAverageVisible() && Main.avg <= config.getMaxValue()){
-			int y = (int)(oy + 1 - ((insideHeight * Main.avg) / maxval));
+			int y = (int)(oy + 0 - ((insideHeight * Main.avg) / maxval));
 			g.setColor(foreground.getColor().darker());
 			g.setStroke(avgstroke);
 			g.drawLine(borderOffset + RenderingMode.insideOffset, y, ox, y);
