@@ -27,6 +27,9 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
 import com.github.kwhat.jnativehook.mouse.NativeMouseListener;
+import com.github.kwhat.jnativehook.mouse.NativeMouseMotionListener;
+import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
+import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
 
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.InputSource;
@@ -35,7 +38,7 @@ import dev.roanh.kps.event.InputSource;
  * Input source of key and mouse event as reported by JNativeHook.
  * @author Roan
  */
-public class NativeHookInputSource extends InputSource implements NativeKeyListener, NativeMouseListener{
+public class NativeHookInputSource extends InputSource implements NativeKeyListener, NativeMouseListener, NativeMouseMotionListener, NativeMouseWheelListener{
 
 	/**
 	 * Constructs a new JNativeHook input source.
@@ -57,6 +60,9 @@ public class NativeHookInputSource extends InputSource implements NativeKeyListe
 		
 		GlobalScreen.addNativeKeyListener(this);
 		GlobalScreen.addNativeMouseListener(this);
+		
+		
+		
 	}
 	
 	/**
@@ -96,5 +102,20 @@ public class NativeHookInputSource extends InputSource implements NativeKeyListe
 	@Override
 	public void nativeMouseReleased(NativeMouseEvent event){
 		manager.fireButtonReleaseEvent(event.getButton());
+	}
+	
+	@Override
+	public void nativeMouseMoved(NativeMouseEvent nativeEvent){
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void nativeMouseDragged(NativeMouseEvent nativeEvent){
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeEvent){
+		// TODO Auto-generated method stub
 	}
 }
