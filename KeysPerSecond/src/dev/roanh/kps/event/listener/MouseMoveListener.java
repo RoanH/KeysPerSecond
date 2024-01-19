@@ -18,19 +18,8 @@
  */
 package dev.roanh.kps.event.listener;
 
-import dev.roanh.kps.event.EventManager;
-
-/**
- * Listener called when a key was released.
- * @author Roan
- * @see EventManager
- */
 @FunctionalInterface
-public abstract interface KeyReleaseListener{
+public abstract interface MouseMoveListener{
 
-	/**
-	 * Called when a key was released.
-	 * @param code The key code of the key that was released.
-	 */
-	public abstract void onKeyRelease(int code);
+	public abstract void onMouseMove(int x, int y);
 }

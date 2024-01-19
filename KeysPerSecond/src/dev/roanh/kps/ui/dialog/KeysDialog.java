@@ -199,7 +199,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		KeysDialog dialog = new KeysDialog(config, live);
 		Main.eventManager.registerKeyPressListener(dialog);
 		Dialog.showMessageDialog(dialog, true, ModalityType.APPLICATION_MODAL);
-		Main.eventManager.unregisterKeyPressListener(dialog);
+		Main.eventManager.deregisterKeyPressListener(dialog);
 	}
 	
 	/**

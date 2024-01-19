@@ -60,9 +60,7 @@ public class NativeHookInputSource extends InputSource implements NativeKeyListe
 		
 		GlobalScreen.addNativeKeyListener(this);
 		GlobalScreen.addNativeMouseListener(this);
-		
-		
-		
+		GlobalScreen.addNativeMouseMotionListener(this);
 	}
 	
 	/**
@@ -105,17 +103,18 @@ public class NativeHookInputSource extends InputSource implements NativeKeyListe
 	}
 	
 	@Override
-	public void nativeMouseMoved(NativeMouseEvent nativeEvent){
-		// TODO Auto-generated method stub
+	public void nativeMouseMoved(NativeMouseEvent event){
+		manager.fireMouseMoveEvent(event.getX(), event.getY());
 	}
 	
 	@Override
-	public void nativeMouseDragged(NativeMouseEvent nativeEvent){
-		// TODO Auto-generated method stub
+	public void nativeMouseDragged(NativeMouseEvent event){
+		manager.fireMouseMoveEvent(event.getX(), event.getY());
 	}
 	
 	@Override
-	public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeEvent){
+	public void nativeMouseWheelMoved(NativeMouseWheelEvent event){
 		// TODO Auto-generated method stub
+		event.get
 	}
 }
