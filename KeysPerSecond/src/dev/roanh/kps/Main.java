@@ -469,17 +469,8 @@ public class Main{
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(!config.isWindowedMode());
-		//Get the length and width after window has been created
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowOpened(WindowEvent e) {
-				int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-				int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-				int posX = (screenWidth / 2) - (frame.getWidth() / 2);
-				int posY = (screenHeight / 2) - (frame.getHeight() / 2);
-				frame.setLocation(posX, posY);
-			}
-		});
+		frame.setLocationRelativeTo(null);
+		if (config.getFramePosition().getLocation().x + config.getFramePosition().getLocation().y != 0) frame.setLocation(config.getFramePosition().getLocation().x, config.getFramePosition().getLocation().y);
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
