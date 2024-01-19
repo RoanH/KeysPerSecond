@@ -21,6 +21,7 @@ package dev.roanh.kps.config.group;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.panels.BasePanel;
+import dev.roanh.kps.panels.DataPanel;
 
 /**
  * Settings for special panels that display some sort
@@ -48,7 +49,7 @@ public abstract class SpecialPanelSettings extends DataPanelSettings{
 	 * Creates a new panel based on these settings.
 	 * @return The newly created panel.
 	 */
-	public abstract BasePanel createPanel();
+	public abstract DataPanel createPanel();
 	
 	/**
 	 * Gets the type of the panel.

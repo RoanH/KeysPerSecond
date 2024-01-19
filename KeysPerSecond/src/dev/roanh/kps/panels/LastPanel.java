@@ -25,7 +25,7 @@ import dev.roanh.kps.config.group.LastPanelSettings;
  * Panel showing the time since the last input.
  * @author Roan
  */
-public class LastPanel extends BasePanel{
+public class LastPanel extends DataPanel{
 	/**
 	 * Serial ID.
 	 */

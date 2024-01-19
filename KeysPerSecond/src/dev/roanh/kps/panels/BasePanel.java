@@ -21,6 +21,8 @@ package dev.roanh.kps.panels;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+
 import javax.swing.JPanel;
 
 import dev.roanh.kps.ColorManager;
@@ -28,6 +30,7 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode.RenderCache;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.DataPanelSettings;
+import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 import dev.roanh.kps.ui.editor.EditorProvider;
 
@@ -47,47 +50,33 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 	 * Smallest size of graph images
 	 */
 	public static final int imageSize = 4;
-	/**
-	 * RenderCache for this panel
-	 */
-	protected RenderCache cache = new RenderCache();
-	/**
-	 * Settings for this panel.
-	 */
-	private DataPanelSettings config;
+	protected final ThemeColor background;
+	protected final ThemeColor foreground;
+	protected final int borderOffset;
+	private PanelSettings config;
 	
-	/**
-	 * Constructs a new base panel with the given settings.
-	 * @param config The panel settings.
-	 */
-	public BasePanel(DataPanelSettings config){
+	protected BasePanel(PanelSettings config){
 		this.config = config;
-		sizeChanged();
-	}
-
-	/**
-	 * Signals this panel that its size
-	 * or properties changed and that thus
-	 * the render cache should be invalidated
-	 */
-	public final void sizeChanged(){
-		cache.init(config.getRenderingMode());
-		this.repaint();
+		background = Main.config.getTheme().getBackground();
+		foreground = Main.config.getTheme().getForeground();
+		borderOffset = Main.config.getLayout().getBorderOffset();
 	}
 
 	@Override
 	public void paintComponent(Graphics g1){
 		Graphics2D g = (Graphics2D)g1;
 
-		ThemeColor background = Main.config.getTheme().getBackground();
-		ThemeColor foreground = Main.config.getTheme().getForeground();
+		//background
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, background.getAlpha()));
 		g.setColor(background.getColor());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.addRenderingHints(Main.desktopHints);
+		
+		render(g);
 
-		int borderOffset = Main.config.getBorderOffset();
+		//panel border
 		g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + imageSize, borderOffset + imageSize, 0, 0, 4, 4, this);
 		g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - imageSize, borderOffset + imageSize, this.getHeight() - borderOffset, 0, 0, 4, 4, this);
 		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - borderOffset - imageSize, borderOffset, this.getWidth() - borderOffset, borderOffset + imageSize, 0, 0, 4, 4, this);
@@ -96,38 +85,9 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 		g.drawImage(ColorManager.graph_upper_middle, borderOffset + imageSize, borderOffset, this.getWidth() - borderOffset - imageSize, borderOffset + imageSize, 0, 0, 46, 4, this);
 		g.drawImage(ColorManager.graph_lower_middle, borderOffset + imageSize, this.getHeight() - borderOffset - imageSize, this.getWidth() - borderOffset - imageSize, this.getHeight() - borderOffset, 0, 0, 46, 4, this);
 		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - borderOffset - imageSize, borderOffset + imageSize, this.getWidth() - borderOffset, this.getHeight() - borderOffset - imageSize, 0, 0, 4, 56, this);
-		
-		if(isActive()){
-			g.setColor(ColorManager.activeColor);
-			g.fillRect(
-				borderOffset + (imageSize / 4) * 3,
-				borderOffset + (imageSize / 4) * 2,
-				this.getWidth() - 2 * borderOffset - (imageSize / 4) * 6,
-				this.getHeight() - 2 * borderOffset - (imageSize / 4) * 4
-			);
-			g.setColor(background.getColor());
-		}else{
-			g.setColor(foreground.getColor());
-		}
-
-		cache.renderTitle(config.getName(), g, this);
-
-		cache.renderValue(getValue(), g, this);
 	}
-
-	/**
-	 * Gets whether or not this panel should be highlighted.
-	 * @return Whether the panel is "active" or not.
-	 */
-	protected boolean isActive(){
-		return false;
-	}
-
-	/**
-	 * Gets the value for this panel.
-	 * @return The value for this panel.
-	 */
-	protected abstract String getValue();
+	
+	protected abstract void render(Graphics2D g);
 
 	@Override
 	public int getLayoutX(){

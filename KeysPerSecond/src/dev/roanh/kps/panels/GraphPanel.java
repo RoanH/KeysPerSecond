@@ -41,7 +41,7 @@ import dev.roanh.kps.ui.editor.EditorProvider;
  * Panel to draw continuous graphs.
  * @author Roan
  */
-public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider{
+public class GraphPanel extends BasePanel{
 	/**
 	 * Serial ID.
 	 */
@@ -72,6 +72,7 @@ public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider
 	 * @param config The configuration for this panel.
 	 */
 	public GraphPanel(GraphSettings config){
+		super(config);
 		this.config = config;
 	}
 
@@ -84,6 +85,7 @@ public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider
 		repaint();
 	}
 
+	/*
 	@Override
 	public void paintComponent(Graphics g1){
 		Graphics2D g = (Graphics2D)g1;
@@ -149,7 +151,62 @@ public class GraphPanel extends JPanel implements LayoutPosition, EditorProvider
 		g.drawImage(ColorManager.graph_lower_middle, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 46, 4, this);
 		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
 	}
+	*/
 
+	@Override
+	protected void render(Graphics2D g){
+//		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
+//		int borderOffset = Main.config.getBorderOffset();
+//
+//		//background
+//		ThemeColor background = Main.config.getTheme().getBackground();
+//		if(ColorManager.transparency){
+//			g.setColor(ColorManager.transparent);
+//			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
+//			g.setColor(background.getColor());
+//			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
+//		}else{
+//			g.setColor(background.getColor());
+//			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
+//		}
+
+		//graph computation
+		Polygon poly = new Polygon();
+		final int oy = this.getHeight() - borderOffset - RenderingMode.insideOffset - 1;
+		final int ox = this.getWidth() - borderOffset - RenderingMode.insideOffset - 2;
+		final double insideHeight = this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2;
+		final double insideWidth = (this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 2);
+		final double segment = insideWidth / (config.getBacklog() - 1);
+
+		double px = ox;
+		poly.addPoint(ox, oy);
+		for(int val : values){
+			poly.addPoint((int)px, (int)(oy - ((insideHeight * val) / maxval)));
+			px -= segment;
+		}
+		poly.addPoint((int)Math.min(ox, px + segment), oy);
+
+		//average line
+		ThemeColor foreground = Main.config.getTheme().getForeground();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
+		if(config.isAverageVisible() && Main.avg <= config.getMaxValue()){
+			int y = (int)(oy + 1 - ((insideHeight * Main.avg) / maxval));
+			g.setColor(foreground.getColor().darker());
+			g.setStroke(avgstroke);
+			g.drawLine(borderOffset + RenderingMode.insideOffset, y, ox, y);
+		}
+
+		//graph drawing
+		g.setStroke(line);
+		g.setColor(ColorManager.alphaAqua);
+		g.fillPolygon(poly);
+		g.setColor(foreground.getColor());
+		g.drawPolygon(poly);
+	}
+	
 	/**
 	 * Adds a new point to the end of this graph.
 	 * @param value The new point to add.

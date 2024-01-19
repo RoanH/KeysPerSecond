@@ -60,6 +60,7 @@ import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.BasePanel;
+import dev.roanh.kps.panels.DataPanel;
 import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.panels.MouseGraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
@@ -494,8 +495,8 @@ public class Main{
 	 */
 	public static final void resetPanels(){
 		for(Component component : content.getComponents()){
-			if(component instanceof BasePanel){
-				((BasePanel)component).sizeChanged();
+			if(component instanceof DataPanel){
+				((DataPanel)component).sizeChanged();
 			}
 		}
 	}
@@ -507,7 +508,7 @@ public class Main{
 		graphs.forEach(GraphPanel::reset);
 	}
 	
-	private static MouseGraphPanel mgp = new MouseGraphPanel();
+	private static MouseGraphPanel mgp = new MouseGraphPanel(null);
 
 	/**
 	 * Reconfigures the layout of the program

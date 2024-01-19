@@ -26,7 +26,7 @@ import dev.roanh.kps.config.group.TotalPanelSettings;
  * total number of keys pressed
  * @author Roan
  */
-public final class TotPanel extends BasePanel{
+public final class TotPanel extends DataPanel{
 	/**
 	 * Serial ID
 	 */

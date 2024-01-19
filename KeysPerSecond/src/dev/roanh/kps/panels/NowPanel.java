@@ -28,7 +28,7 @@ import dev.roanh.kps.config.group.CurrentPanelSettings;
  * previous second.
  * @author Roan
  */
-public final class NowPanel extends BasePanel{
+public final class NowPanel extends DataPanel{
 	/**
 	 * Serial ID
 	 */

@@ -26,10 +26,17 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
+import dev.roanh.kps.config.group.MouseGraphSettings;
+import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.event.listener.MouseMoveListener;
 import dev.roanh.kps.layout.LayoutPosition;
 
-public class MouseGraphPanel extends JPanel implements MouseMoveListener, LayoutPosition{
+public class MouseGraphPanel extends BasePanel implements MouseMoveListener{//TODO remove listener
+	public MouseGraphPanel(MouseGraphSettings config){
+		super(config);
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * Serial ID
 	 */
@@ -45,6 +52,7 @@ public class MouseGraphPanel extends JPanel implements MouseMoveListener, Layout
 		g.setColor(Color.CYAN);
 		System.out.println("repaint");
 		for(int i = 0; i < path.size() - 2; i++){
+			//TODO use path2d
 			g.drawLine(path.get(i).x / 10, path.get(i).y / 10, path.get(i + 1).x / 10, path.get(i + 1).y / 10);
 			
 			//TODO that div 10 is a nope
@@ -80,7 +88,7 @@ public class MouseGraphPanel extends JPanel implements MouseMoveListener, Layout
 		}
 	}
 
-	@Override
+//	@Override
 	public void onMouseMove(int x, int y){
 //		addPoint(x, y);
 	}
@@ -107,5 +115,11 @@ public class MouseGraphPanel extends JPanel implements MouseMoveListener, Layout
 	public int getLayoutHeight(){
 		// TODO Auto-generated method stub
 		return 5;
+	}
+
+	@Override
+	protected void render(Graphics2D g){
+		// TODO Auto-generated method stub
+		
 	}
 }
