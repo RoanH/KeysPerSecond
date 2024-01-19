@@ -114,6 +114,8 @@ public class ConfigLoader{
 				e.printStackTrace();
 				Dialog.showErrorDialog("Failed to reload the configuration, cause: " + e.getMessage());
 			}
+		}else{
+			Dialog.showMessageDialog("Cannot reload a configuration that was not loaded from a file.");
 		}
 	}
 	
