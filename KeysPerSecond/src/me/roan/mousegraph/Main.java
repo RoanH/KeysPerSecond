@@ -16,13 +16,15 @@ import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
 import com.github.kwhat.jnativehook.mouse.NativeMouseInputListener;
 
+import dev.roanh.kps.panels.MouseGraphPanel;
+import dev.roanh.kps.panels.MouseGraphPanel.TimePoint;
+
 public class Main {
 	
-	protected static final LinkedList<TimePoint> path = new LinkedList<TimePoint>();
 	private static ScheduledExecutorService timer;
 	private static Future<?> future;
 	private static final JFrame frame = new JFrame("Mouse Graph");
-	private static final Graph graph = new Graph();
+	private static final MouseGraphPanel graph = new MouseGraphPanel();
 
 	public static void main(String[] args){
 		
@@ -48,11 +50,11 @@ public class Main {
 		}
 		future = timer.scheduleAtFixedRate(()->{
 			if(true){
-				System.out.println("loop: " + path.size());
+				System.out.println("loop: " + MouseGraphPanel.path.size());
 				long time = System.currentTimeMillis();
 				while(true){
-					if(path.size() > 0 && time - path.getLast().time > 1000){
-						path.removeLast();
+					if(MouseGraphPanel.path.size() > 0 && time - MouseGraphPanel.path.getLast().time > 1000){
+						MouseGraphPanel.path.removeLast();
 						System.out.println("remove");
 					}else{
 						System.out.println("keep");
@@ -91,12 +93,12 @@ public class Main {
 
 			@Override
 			public void nativeMouseDragged(NativeMouseEvent arg0) {
-				path.addFirst(new TimePoint(arg0.getX(), arg0.getY(), System.currentTimeMillis()));
+				MouseGraphPanel.path.addFirst(new TimePoint(arg0.getX(), arg0.getY(), System.currentTimeMillis()));//TODO sys time may not be accurate, but it is fast
 			}
 
 			@Override
 			public void nativeMouseMoved(NativeMouseEvent arg0) {
-				path.addFirst(new TimePoint(arg0.getX(), arg0.getY(), System.currentTimeMillis()));
+				MouseGraphPanel.path.addFirst(new TimePoint(arg0.getX(), arg0.getY(), System.currentTimeMillis()));
 			}
 
 			@Override
