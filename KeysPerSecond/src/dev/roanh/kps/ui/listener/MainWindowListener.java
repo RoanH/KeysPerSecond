@@ -18,30 +18,21 @@
  */
 package dev.roanh.kps.ui.listener;
 
-import java.awt.*;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import dev.roanh.kps.Main;
 
-import static dev.roanh.kps.Main.config;
-
 /**
- * Listener to be registered to all frames so
- * that they properly clean up resources when closed.
+ * Listener for the main window so cleanup and exit tasks run properly.
  * @author Roan
  */
-public class MainWindowListener implements java.awt.event.WindowListener {
+public class MainWindowListener implements WindowListener{
 
 	@Override
 	public void windowOpened(WindowEvent e){
-		if (config.getFramePosition().hasPosition()) {
-			e.getWindow().setLocation(config.getFramePosition().getLocation().x, config.getFramePosition().getLocation().y);
-		} else {
-			int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-			int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-			int posX = (screenWidth / 2) - (e.getWindow().getWidth() / 2);
-			int posY = (screenHeight / 2) - (e.getWindow().getHeight() / 2);
-			e.getWindow().setLocation(posX, posY);
+		if(!Main.config.getFramePosition().hasPosition()){
+			e.getWindow().setLocationRelativeTo(null);
 		}
 	}
 

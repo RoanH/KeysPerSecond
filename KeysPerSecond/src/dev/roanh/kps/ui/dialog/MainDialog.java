@@ -289,6 +289,7 @@ public class MainDialog extends JPanel{
 		conf.add(dialog);
 		conf.pack();
 		conf.setResizable(false);
+		conf.setLocationRelativeTo(null);
 		conf.setIconImages(Arrays.asList(Main.icon, Main.iconSmall));
 		conf.setVisible(true);
 		
