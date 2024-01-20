@@ -68,6 +68,10 @@ public class MouseGraphPanel extends BasePanel implements MouseMoveListener{//TO
 	
 	//TODO private
 	public void addPoint(int x, int y){
+		if(!display.contains(x, y)){
+			return;
+		}
+		
 		long time = System.currentTimeMillis();//TODO sys time may not be accurate, but it is fast
 		path.addFirst(new TimePoint(x, y, time));
 		while(time - path.getLast().time > 1000){//todo config
@@ -83,7 +87,7 @@ public class MouseGraphPanel extends BasePanel implements MouseMoveListener{//TO
 	@Override
 	protected void render(Graphics2D g){
 //		System.out.println("repaint");
-		display = display3;
+		display = display1;
 
 		
 		//TODO clip account for out of bounds or just exclude these points on add later probably just clip them inside maybe?
@@ -99,6 +103,7 @@ public class MouseGraphPanel extends BasePanel implements MouseMoveListener{//TO
 		g.drawLine(10, top, 10, bottom);
 		g.drawRect(left, top, right - left, bottom - top);
 		
+		g.setClip(left, top, right - left + 1, bottom - top + 1);
 		g.translate(left, top);
 		
 		
