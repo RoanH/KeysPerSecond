@@ -34,7 +34,7 @@ import javax.swing.SwingConstants;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
-import dev.roanh.kps.ui.listener.CloseListener;
+import dev.roanh.kps.ui.listener.MainWindowListener;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -287,9 +287,8 @@ public class MainDialog extends JPanel{
 		conf.add(dialog);
 		conf.pack();
 		conf.setResizable(false);
-		conf.setLocationRelativeTo(null);
 		conf.setIconImages(Arrays.asList(Main.icon, Main.iconSmall));
-		conf.addWindowListener(new CloseListener());
+		conf.addWindowListener(new MainWindowListener());
 		conf.setVisible(true);
 		
 		try{
