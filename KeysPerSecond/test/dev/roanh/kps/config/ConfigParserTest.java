@@ -503,9 +503,9 @@ public class ConfigParserTest{
 	
 	@Test
 	public void fullTest4() throws IOException{
-		ConfigParser parser = ConfigParser.parse(Paths.get("test/config88nodefault.kps"));
+		ConfigParser parser = ConfigParser.parse(Paths.get("test/latestnodefault.kps"));
 		assertFalse(parser.wasDefaultUsed());
-		assertEquals(new Version(8, 8), parser.getVersion());
+		assertEquals(new Version(8, 9), parser.getVersion());
 		
 		Configuration config = parser.getConfig();
 		
@@ -586,6 +586,8 @@ public class ConfigParserTest{
 		assertEquals(45, graph.getBacklog());
 		assertEquals(20, graph.getMaxValue());
 		
+		//TODO add cursor graph
+		
 		//special panels
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
 		
@@ -661,15 +663,15 @@ public class ConfigParserTest{
 	
 	@Test
 	public void readWriteTest() throws IOException{
-		ConfigParser parser = ConfigParser.parse(Paths.get("test/config88nodefault.kps"));
+		ConfigParser parser = ConfigParser.parse(Paths.get("test/latestnodefault.kps"));
 		assertFalse(parser.wasDefaultUsed());
-		assertEquals(new Version(8, 8), parser.getVersion());
+		assertEquals(new Version(8, 9), parser.getVersion());
 		
 		Configuration config = parser.getConfig();
 		StringWriter buf = new StringWriter();
 		config.write(new IndentWriter(new PrintWriter(buf)), false);
 		
-		String original = new String(Files.readAllBytes(Paths.get("test/config88nodefault.kps")), StandardCharsets.UTF_8);
+		String original = new String(Files.readAllBytes(Paths.get("test/latestnodefault.kps")), StandardCharsets.UTF_8);
 		assertEquals("version: " + Main.VERSION + original.substring(13), buf.toString());
 	}
 }

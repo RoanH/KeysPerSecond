@@ -1,4 +1,4 @@
-version: v8.8
+version: v8.9
 
 # General
 overlay: true
@@ -35,7 +35,8 @@ statsSaving:
   saveFile: C:\Users\RoanH\alsotest
 
 graphs:
-  - name: KPS
+  - type: line
+    name: Line
     x: 1
     y: 2
     width: 5

@@ -12,7 +12,7 @@ public class CursorGraphSettings extends GraphPanelSettings{
 	private final StringSetting display = new StringSetting("display", GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getIDstring());
 
 	public CursorGraphSettings(){
-		super(GraphType.CURSOR, 0, -1, -1, 3, "Cursor");
+		super(GraphType.CURSOR, 0, -1, -1, 6, "Cursor");
 	}
 	
 	public GraphicsDevice getDisplay(){
