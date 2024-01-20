@@ -27,18 +27,13 @@ import javax.swing.JPanel;
 
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
-import dev.roanh.kps.RenderingMode.RenderCache;
 import dev.roanh.kps.config.ThemeColor;
-import dev.roanh.kps.config.group.DataPanelSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.layout.LayoutPosition;
 import dev.roanh.kps.ui.editor.EditorProvider;
 
 /**
- * Abstract base class for the 
- * panels that display the
- * average, maximum and current
- * keys per second
+ * Abstract base class for displayed panels.
  * @author Roan
  */
 public abstract class BasePanel extends JPanel implements LayoutPosition, EditorProvider{
@@ -55,12 +50,18 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 	protected final int borderOffset;
 	private PanelSettings config;
 	
+	/**
+	 * Constructs a new base panel with the given settings.
+	 * @param config The panel settings.
+	 */
 	protected BasePanel(PanelSettings config){
 		this.config = config;
 		background = Main.config.getTheme().getBackground();
 		foreground = Main.config.getTheme().getForeground();
 		borderOffset = Main.config.getLayout().getBorderOffset();
 	}
+	
+	protected abstract void render(Graphics2D g);
 
 	@Override
 	public void paintComponent(Graphics g1){
@@ -87,8 +88,6 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - borderOffset - imageSize, borderOffset + imageSize, this.getWidth() - borderOffset, this.getHeight() - borderOffset - imageSize, 0, 0, 4, 56, this);
 	}
 	
-	protected abstract void render(Graphics2D g);
-
 	@Override
 	public int getLayoutX(){
 		return config.getLayoutX();

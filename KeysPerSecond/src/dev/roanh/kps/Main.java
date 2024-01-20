@@ -277,6 +277,9 @@ public class Main{
 		}
 		
 		future = timer.scheduleAtFixedRate(()->{
+			//TODO remove
+			content.repaint();
+			
 			if(!suspended){
 				int currentTmp = tmp.getAndSet(0);
 				int totaltmp = currentTmp;

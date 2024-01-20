@@ -20,22 +20,16 @@ package dev.roanh.kps.panels;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.concurrent.ConcurrentLinkedDeque;
-
-import javax.swing.JPanel;
 
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.GraphSettings;
-import dev.roanh.kps.layout.LayoutPosition;
-import dev.roanh.kps.ui.editor.EditorProvider;
 
 /**
  * Panel to draw continuous graphs.
@@ -85,94 +79,8 @@ public class GraphPanel extends BasePanel{
 		repaint();
 	}
 
-	/*
-	@Override
-	public void paintComponent(Graphics g1){
-		Graphics2D g = (Graphics2D)g1;
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-		int borderOffset = Main.config.getBorderOffset();
-
-		//background
-		ThemeColor background = Main.config.getTheme().getBackground();
-		if(ColorManager.transparency){
-			g.setColor(ColorManager.transparent);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
-			g.setColor(background.getColor());
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
-		}else{
-			g.setColor(background.getColor());
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
-		}
-
-		//graph computation
-		Polygon poly = new Polygon();
-		final int oy = this.getHeight() - borderOffset - RenderingMode.insideOffset - 1;
-		final int ox = this.getWidth() - borderOffset - RenderingMode.insideOffset - 2;
-		final double insideHeight = this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2;
-		final double insideWidth = (this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 2);
-		final double segment = insideWidth / (config.getBacklog() - 1);
-
-		double px = ox;
-		poly.addPoint(ox, oy);
-		for(int val : values){
-			poly.addPoint((int)px, (int)(oy - ((insideHeight * val) / maxval)));
-			px -= segment;
-		}
-		poly.addPoint((int)Math.min(ox, px + segment), oy);
-
-		//average line
-		ThemeColor foreground = Main.config.getTheme().getForeground();
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
-		if(config.isAverageVisible() && Main.avg <= config.getMaxValue()){
-			int y = (int)(oy + 1 - ((insideHeight * Main.avg) / maxval));
-			g.setColor(foreground.getColor().darker());
-			g.setStroke(avgstroke);
-			g.drawLine(borderOffset + RenderingMode.insideOffset, y, ox, y);
-		}
-
-		//graph drawing
-		g.setStroke(line);
-		g.setColor(ColorManager.alphaAqua);
-		g.fillPolygon(poly);
-		g.setColor(foreground.getColor());
-		g.drawPolygon(poly);
-
-		//border
-		g.drawImage(ColorManager.graph_upper_left,   borderOffset, borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_left,   borderOffset, this.getHeight() - borderOffset - 1 - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_upper_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset, this.getWidth() - borderOffset - 1, borderOffset + BasePanel.imageSize, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_lower_right,  this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset, 0, 0, 4, 4, this);
-		g.drawImage(ColorManager.graph_side_left,    borderOffset, borderOffset + BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
-		g.drawImage(ColorManager.graph_upper_middle, borderOffset + BasePanel.imageSize, borderOffset, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_lower_middle, borderOffset + BasePanel.imageSize, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, this.getWidth() - 1 - borderOffset - BasePanel.imageSize, this.getHeight() - 1 - borderOffset, 0, 0, 46, 4, this);
-		g.drawImage(ColorManager.graph_side_right,   this.getWidth() - 1 - borderOffset - BasePanel.imageSize, borderOffset + BasePanel.imageSize, this.getWidth() - 1 - borderOffset, this.getHeight() - 1 - borderOffset - BasePanel.imageSize, 0, 0, 4, 56, this);
-	}
-	*/
-
 	@Override
 	protected void render(Graphics2D g){
-//		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC));
-//		int borderOffset = Main.config.getBorderOffset();
-//
-//		//background
-//		ThemeColor background = Main.config.getTheme().getBackground();
-//		if(ColorManager.transparency){
-//			g.setColor(ColorManager.transparent);
-//			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
-//			g.setColor(background.getColor());
-//			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, background.getAlpha()));
-//		}else{
-//			g.setColor(background.getColor());
-//			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-//			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0F));
-//		}
-
 		//graph computation
 		Polygon poly = new Polygon();
 		final int oy = this.getHeight() - borderOffset - RenderingMode.insideOffset;
@@ -193,7 +101,7 @@ public class GraphPanel extends BasePanel{
 		ThemeColor foreground = Main.config.getTheme().getForeground();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
 		if(config.isAverageVisible() && Main.avg <= config.getMaxValue()){
-			int y = (int)(oy + 0 - ((insideHeight * Main.avg) / maxval));
+			int y = (int)(oy - ((insideHeight * Main.avg) / maxval));
 			g.setColor(foreground.getColor().darker());
 			g.setStroke(avgstroke);
 			g.drawLine(borderOffset + RenderingMode.insideOffset, y, ox, y);

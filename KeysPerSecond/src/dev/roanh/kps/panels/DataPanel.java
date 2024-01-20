@@ -24,6 +24,10 @@ import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.RenderingMode.RenderCache;
 import dev.roanh.kps.config.group.DataPanelSettings;
 
+/**
+ * Abstract base class for panels that display a title and a value.
+ * @author Roan
+ */
 public abstract class DataPanel extends BasePanel{
 	/**
 	 * Serial ID.
