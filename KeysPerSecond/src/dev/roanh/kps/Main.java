@@ -246,7 +246,7 @@ public class Main{
 		Configuration quickLoad = ConfigLoader.quickLoadConfiguration(configPath);
 		if(quickLoad == null){
 			//if no (valid) ones were found let the user create a new config
-			MainDialog.configure(Main.config);
+			applyConfig(MainDialog.configure(), false);
 		}else{
 			applyConfig(quickLoad, false);
 		}
