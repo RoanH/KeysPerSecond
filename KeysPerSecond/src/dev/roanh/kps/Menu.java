@@ -250,9 +250,6 @@ public class Menu{
 		windowed.setSelected(Main.config.isWindowedMode());
 		windowed.addActionListener(e->{
 			Main.config.setWindowedMode(windowed.isSelected());
-			Main.frame.setVisible(false);
-			Main.frame.dispose();
-			Main.frame.setUndecorated(!Main.config.isWindowedMode());
 			Main.reconfigure();
 		});
 		layout.addActionListener((e)->{
@@ -284,8 +281,7 @@ public class Menu{
 		load.addActionListener((e)->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
 			if(toLoad != null){
-				Main.config = toLoad;
-				resetData();
+				Main.applyConfig(toLoad);
 			}
 		});
 		saveStats.addActionListener((e)->{

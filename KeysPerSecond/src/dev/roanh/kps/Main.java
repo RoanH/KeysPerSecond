@@ -26,6 +26,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -247,8 +248,7 @@ public class Main{
 			//if no (valid) ones were found let the user create a new config
 			MainDialog.configure(Main.config);
 		}else{
-			Main.config = quickLoad;
-			System.out.println("Loaded config file: " + quickLoad.getPath().toString());
+			applyConfig(quickLoad);
 		}
 
 		//build GUI
@@ -263,6 +263,26 @@ public class Main{
 		
 		//enter the main loop
 		mainLoop();
+	}
+	
+	public static final void applyConfig(Configuration config){
+		Menu.resetData();
+		Main.config = config;
+		
+		if(Main.config.getFramePosition().hasPosition()){
+			Main.frame.setLocation(Main.config.getFramePosition().getLocation());
+		}
+
+		if(Main.config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
+			try{
+				Statistics.loadStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
+			}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
+				e.printStackTrace();
+				Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
+			}
+		}
+		
+		System.out.println("Loaded config file: " + config.getPath().toString());
 	}
 
 	/**
@@ -475,36 +495,22 @@ public class Main{
 		frame.setResizable(false);
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(!config.isWindowedMode());
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
 	}
 	
 	/**
-	 * Signals to all panels that size related information has changed
-	 * and that all rendering caches should be invalidated.
-	 */
-	public static final void resetPanels(){
-		for(Component component : content.getComponents()){
-			if(component instanceof BasePanel){
-				((BasePanel)component).sizeChanged();
-			}
-		}
-	}
-	
-	/**
-	 * Clears the data for all active graphs.
-	 */
-	public static final void resetGraphs(){
-		graphs.forEach(GraphPanel::reset);
-	}
-
-	/**
 	 * Reconfigures the layout of the program
 	 */
 	public static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
+			if(config.isWindowedMode() == frame.isUndecorated()){
+				frame.setVisible(false);
+				frame.dispose();
+				frame.setUndecorated(!Main.config.isWindowedMode());
+			}
+			
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			
@@ -567,6 +573,25 @@ public class Main{
 		if(config.getStatsSavingSettings().isAutoSaveEnabled()){
 			Statistics.saveStatsTask();
 		}
+	}
+	
+	/**
+	 * Signals to all panels that size related information has changed
+	 * and that all rendering caches should be invalidated.
+	 */
+	public static final void resetPanels(){
+		for(Component component : content.getComponents()){
+			if(component instanceof BasePanel){
+				((BasePanel)component).sizeChanged();
+			}
+		}
+	}
+	
+	/**
+	 * Clears the data for all active graphs.
+	 */
+	public static final void resetGraphs(){
+		graphs.forEach(GraphPanel::reset);
 	}
 
 	/**
