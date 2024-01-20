@@ -25,7 +25,6 @@ import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -138,7 +137,12 @@ public class Statistics{
 	 * @throws IOException When an IOException occurs.
 	 */
 	private static void saveStats(Path dest) throws IOException{
-		try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(dest, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING))){
+		Path parent = dest.getParent();
+		if(parent != null){
+			Files.createDirectories(parent);
+		}
+		
+		try(PrintWriter out = new PrintWriter(Files.newBufferedWriter(dest))){
 			out.print("version: ");
 			out.println(Main.VERSION);
 			out.println();
