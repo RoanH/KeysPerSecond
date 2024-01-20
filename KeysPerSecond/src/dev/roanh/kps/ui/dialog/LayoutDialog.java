@@ -34,9 +34,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 
 import dev.roanh.kps.Main;
+import dev.roanh.kps.config.GraphType;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
-import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.panels.BasePanel;
@@ -110,17 +110,21 @@ public class LayoutDialog{
 
 		//graph configuration
 		TablePanel graphView = new TablePanel("Graph", true, live);
-		graphView.addGraphs(Main.config.getGraphSettings());
+		graphView.addPanels(Main.config.getGraphSettings());
 		
 		JScrollPane graphPane = new JScrollPane(graphView);
 		graphPane.setBorder(BorderFactory.createEmptyBorder());
 		graphPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		graphPane.setPreferredSize(new Dimension(600, 100));
 		
+		JPanel graphButtons = new JPanel(new GridLayout(1, 0, 2, 0));
+		graphButtons.add(createAddButton(graphView, "Add Line Graph", Main.config.getGraphSettings(), GraphType.LINE::newSettings));
+		graphButtons.add(createAddButton(graphView, "Add Cursor Graph", Main.config.getGraphSettings(), GraphType.CURSOR::newSettings));
+		
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
 		graphPanel.add(graphPane, BorderLayout.CENTER);
-		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), LineGraphSettings::new), BorderLayout.PAGE_END);
+		graphPanel.add(graphButtons, BorderLayout.PAGE_END);
 		form.add(graphPanel, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);

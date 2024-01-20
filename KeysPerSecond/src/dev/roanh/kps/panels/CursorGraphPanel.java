@@ -63,6 +63,9 @@ public class CursorGraphPanel extends BasePanel implements MouseMoveListener{//T
 		display1 = screens[0].getDefaultConfiguration().getBounds();
 		display2 = screens[1].getDefaultConfiguration().getBounds();
 		display3 = screens[2].getDefaultConfiguration().getBounds();
+		
+		
+		display = config.getDisplay().getDefaultConfiguration().getBounds();
 	}
 	
 	//TODO private

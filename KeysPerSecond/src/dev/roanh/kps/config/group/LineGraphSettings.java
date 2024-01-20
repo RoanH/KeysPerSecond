@@ -21,6 +21,7 @@ package dev.roanh.kps.config.group;
 import java.util.List;
 import java.util.Map;
 
+import dev.roanh.kps.config.GraphType;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.legacy.LegacyGraphSetting;
@@ -35,9 +36,9 @@ import dev.roanh.kps.ui.editor.GraphEditor;
 /**
  * Configuration for graph panels.
  * @author Roan
- * @see GraphPanel
+ * @see LineGraphPanel
  */
-public class LineGraphSettings extends PanelSettings implements LegacyProxyStore{
+public class LineGraphSettings extends GraphPanelSettings implements LegacyProxyStore{
 	/**
 	 * Whether to draw the horizontal average line or not.
 	 */
@@ -55,7 +56,7 @@ public class LineGraphSettings extends PanelSettings implements LegacyProxyStore
 	 * Creates new graph settings.
 	 */
 	public LineGraphSettings(){
-		super("graphs", 0, -1, -1, 3, "KPS");
+		super(GraphType.LINE, 0, -1, -1, 3, "Line");
 	}
 	
 	/**
@@ -109,11 +110,8 @@ public class LineGraphSettings extends PanelSettings implements LegacyProxyStore
 		this.backlog.update(backlog);
 	}
 	
-	/**
-	 * Creates a new graph panel with this configuration.
-	 * @return The newly created graph panel.
-	 */
-	public LineGraphPanel createPanel(){
+	@Override
+	public LineGraphPanel createGraph(){
 		return new LineGraphPanel(this);
 	}
 	

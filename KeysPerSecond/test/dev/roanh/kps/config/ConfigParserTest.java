@@ -133,7 +133,7 @@ public class ConfigParserTest{
 		
 		//graph
 		assertEquals(1, config.getGraphSettings().size());
-		LineGraphSettings graph = config.getGraphSettings().get(0);
+		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphSettings().get(0));
 		assertEquals(0, graph.getLayoutX());
 		assertEquals(-1, graph.getLayoutY());
 		assertEquals(40, graph.getLayoutWidth());
@@ -324,7 +324,7 @@ public class ConfigParserTest{
 		
 		//graphs
 		assertEquals(1, config.getGraphSettings().size());
-		LineGraphSettings graph = config.getGraphSettings().get(0);
+		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphSettings().get(0));
 		assertEquals(1, graph.getLayoutX());
 		assertEquals(2, graph.getLayoutY());
 		assertEquals(5, graph.getLayoutWidth());
@@ -577,7 +577,7 @@ public class ConfigParserTest{
 		
 		//graphs
 		assertEquals(1, config.getGraphSettings().size());
-		LineGraphSettings graph = config.getGraphSettings().get(0);
+		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphSettings().get(0));
 		assertEquals(1, graph.getLayoutX());
 		assertEquals(2, graph.getLayoutY());
 		assertEquals(5, graph.getLayoutWidth());

@@ -3,13 +3,16 @@ package dev.roanh.kps.config.group;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
+import dev.roanh.kps.config.GraphType;
 import dev.roanh.kps.config.setting.StringSetting;
+import dev.roanh.kps.panels.BasePanel;
+import dev.roanh.kps.panels.CursorGraphPanel;
 
-public class CursorGraphSettings extends PanelSettings{
+public class CursorGraphSettings extends GraphPanelSettings{
 	private final StringSetting display = new StringSetting("display", GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getIDstring());
 
 	public CursorGraphSettings(){
-		super("graphs", 0, -1, -1, 3, "Cursor");
+		super(GraphType.CURSOR, 0, -1, -1, 3, "Cursor");
 	}
 	
 	public GraphicsDevice getDisplay(){
@@ -22,9 +25,16 @@ public class CursorGraphSettings extends PanelSettings{
 		return null;
 	}
 
+	//TODO unit tests
+	
 	@Override
 	public void showEditor(boolean live){
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public BasePanel createGraph(){
+		return new CursorGraphPanel(this);
 	}
 }

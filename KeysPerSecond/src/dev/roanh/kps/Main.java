@@ -52,6 +52,7 @@ import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.Version;
 import dev.roanh.kps.config.group.CommandSettings;
+import dev.roanh.kps.config.group.GraphPanelSettings;
 import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
@@ -143,7 +144,7 @@ public class Main{
 	/**
 	 * Graph panel.
 	 */
-	private static final List<LineGraphPanel> graphs = new ArrayList<LineGraphPanel>();
+	private static final List<BasePanel> graphs = new ArrayList<BasePanel>();
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
@@ -296,9 +297,12 @@ public class Main{
 					System.out.println("Current keys per second: " + totaltmp);
 				}
 				
-				mgp.addPoint(mouseLoc.x, mouseLoc.y);
-				for(LineGraphPanel graph : graphs){
-					graph.addPoint(totaltmp);
+				for(BasePanel graph : graphs){
+					if(graph instanceof LineGraphPanel){//TODO yeah no casts please
+						((LineGraphPanel)graph).addPoint(totaltmp);
+					}else if(graph instanceof CursorGraphPanel){
+						((CursorGraphPanel)graph).addPoint(mouseLoc.x, mouseLoc.y);
+					}
 				}
 				
 				content.repaint();
@@ -487,9 +491,6 @@ public class Main{
 		Listener.configureListener(frame);
 		frame.addWindowListener(new CloseListener());
 		reconfigure();
-		
-		//TODO
-		eventManager.registerMouseMoveListener(mgp);
 	}
 	
 	/**
@@ -508,11 +509,9 @@ public class Main{
 	 * Clears the data for all active graphs.
 	 */
 	public static final void resetGraphs(){
-		graphs.forEach(LineGraphPanel::reset);
+//		graphs.forEach(LineGraphPanel::reset);//TODO probably something for the base class
 	}
 	
-	private static CursorGraphPanel mgp = new CursorGraphPanel(null);
-
 	/**
 	 * Reconfigures the layout of the program
 	 */
@@ -547,14 +546,11 @@ public class Main{
 			
 			//graph panels
 			graphs.clear();
-			for(LineGraphSettings info : config.getGraphSettings()){
-				LineGraphPanel graph = info.createPanel();
+			for(GraphPanelSettings info : config.getGraphSettings()){
+				BasePanel graph = info.createGraph();
 				content.add(graph);
 				graphs.add(graph);
 			}
-			
-			//TODO
-			content.add(mgp);
 			
 			//frame configuration
 			JPanel all = new JPanel(new BorderLayout());
@@ -604,7 +600,7 @@ public class Main{
 		hits = 0;
 		tmp.set(0);
 		lastHitTime = -1;
-		graphs.forEach(LineGraphPanel::reset);
+		resetGraphs();
 		frame.repaint();
 	}
 

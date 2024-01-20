@@ -32,6 +32,7 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
+import dev.roanh.kps.config.group.GraphPanelSettings;
 import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
@@ -112,7 +113,7 @@ public class Configuration{
 	/**
 	 * Graph settings.
 	 */
-	private final SettingList<LineGraphSettings> graphs = new SettingList<LineGraphSettings>("graphs", ListItemConstructor.constructThenParse(LineGraphSettings::new));
+	private final SettingList<GraphPanelSettings> graphs = new SettingList<GraphPanelSettings>("graphs", GraphType::construct);
 	/**
 	 * Special panel settings.
 	 */
@@ -297,7 +298,7 @@ public class Configuration{
 	 * Gets a list of all graphs and their settings.
 	 * @return All graph settings.
 	 */
-	public SettingList<LineGraphSettings> getGraphSettings(){
+	public SettingList<GraphPanelSettings> getGraphSettings(){
 		return graphs;
 	}
 	

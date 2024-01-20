@@ -27,7 +27,6 @@ import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
 import dev.roanh.kps.config.group.LastPanelSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
-import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.config.group.TotalPanelSettings;
 
@@ -69,11 +68,10 @@ public enum PanelType{
 	
 	/**
 	 * Constructs a new panel type.
-	 * @param <T> The panel settings type.
 	 * @param key The panel type identifier.
 	 * @param ctor A supplier of new panel settings.
 	 */
-	private <T extends PanelSettings> PanelType(String key, Supplier<SpecialPanelSettings> ctor){
+	private PanelType(String key, Supplier<SpecialPanelSettings> ctor){
 		this.key = key;
 		this.ctor = ctor;
 	}

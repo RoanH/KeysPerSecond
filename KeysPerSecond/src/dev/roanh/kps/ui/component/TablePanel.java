@@ -114,16 +114,6 @@ public class TablePanel extends JPanel{
 	}
 	
 	/**
-	 * Adds a list of graph rows to this table.
-	 * @param graphs The graph settings to create rows for.
-	 */
-	public void addGraphs(SettingList<LineGraphSettings> graphs){
-		for(LineGraphSettings graph : graphs){
-			addPanelRow(graphs, graph);
-		}
-	}
-	
-	/**
 	 * Adds a list of panel rows to this table.
 	 * @param panels The panel settings to create rows for.
 	 */
