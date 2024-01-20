@@ -61,8 +61,8 @@ import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.DataPanel;
-import dev.roanh.kps.panels.GraphPanel;
-import dev.roanh.kps.panels.MouseGraphPanel;
+import dev.roanh.kps.panels.LineGraphPanel;
+import dev.roanh.kps.panels.CursorGraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
 import dev.roanh.kps.ui.listener.CloseListener;
 import dev.roanh.util.Dialog;
@@ -143,7 +143,7 @@ public class Main{
 	/**
 	 * Graph panel.
 	 */
-	private static final List<GraphPanel> graphs = new ArrayList<GraphPanel>();
+	private static final List<LineGraphPanel> graphs = new ArrayList<LineGraphPanel>();
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
@@ -297,7 +297,7 @@ public class Main{
 				}
 				
 				mgp.addPoint(mouseLoc.x, mouseLoc.y);
-				for(GraphPanel graph : graphs){
+				for(LineGraphPanel graph : graphs){
 					graph.addPoint(totaltmp);
 				}
 				
@@ -508,10 +508,10 @@ public class Main{
 	 * Clears the data for all active graphs.
 	 */
 	public static final void resetGraphs(){
-		graphs.forEach(GraphPanel::reset);
+		graphs.forEach(LineGraphPanel::reset);
 	}
 	
-	private static MouseGraphPanel mgp = new MouseGraphPanel(null);
+	private static CursorGraphPanel mgp = new CursorGraphPanel(null);
 
 	/**
 	 * Reconfigures the layout of the program
@@ -548,7 +548,7 @@ public class Main{
 			//graph panels
 			graphs.clear();
 			for(GraphSettings info : config.getGraphSettings()){
-				GraphPanel graph = info.createPanel();
+				LineGraphPanel graph = info.createPanel();
 				content.add(graph);
 				graphs.add(graph);
 			}
@@ -604,7 +604,7 @@ public class Main{
 		hits = 0;
 		tmp.set(0);
 		lastHitTime = -1;
-		graphs.forEach(GraphPanel::reset);
+		graphs.forEach(LineGraphPanel::reset);
 		frame.repaint();
 	}
 

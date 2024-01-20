@@ -28,7 +28,7 @@ import dev.roanh.kps.config.legacy.LegacyProxyStore;
 import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
-import dev.roanh.kps.panels.GraphPanel;
+import dev.roanh.kps.panels.LineGraphPanel;
 import dev.roanh.kps.ui.editor.Editor;
 import dev.roanh.kps.ui.editor.GraphEditor;
 
@@ -113,8 +113,8 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 	 * Creates a new graph panel with this configuration.
 	 * @return The newly created graph panel.
 	 */
-	public GraphPanel createPanel(){
-		return new GraphPanel(this);
+	public LineGraphPanel createPanel(){
+		return new LineGraphPanel(this);
 	}
 	
 	@Override

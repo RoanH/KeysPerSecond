@@ -19,22 +19,19 @@
 package dev.roanh.kps.panels;
 
 import java.awt.Color;
-import java.awt.DisplayMode;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.geom.Path2D;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.config.group.MouseGraphSettings;
+import dev.roanh.kps.config.group.CursorGraphSettings;
 import dev.roanh.kps.event.listener.MouseMoveListener;
 
-public class MouseGraphPanel extends BasePanel implements MouseMoveListener{//TODO remove listener
+public class CursorGraphPanel extends BasePanel implements MouseMoveListener{//TODO remove listener
 	/**
 	 * Serial ID
 	 */
@@ -44,11 +41,13 @@ public class MouseGraphPanel extends BasePanel implements MouseMoveListener{//TO
 	private volatile long lastPaint;
 	
 	private Rectangle display;
+	
+	//TODO remove
 	private Rectangle display1;
 	private Rectangle display2;
 	private Rectangle display3;
 
-	public MouseGraphPanel(MouseGraphSettings config){
+	public CursorGraphPanel(CursorGraphSettings config){
 		super(config);
 		// TODO Auto-generated constructor stub
 		
@@ -86,9 +85,15 @@ public class MouseGraphPanel extends BasePanel implements MouseMoveListener{//TO
 	
 	@Override
 	protected void render(Graphics2D g){
+		if(display == null){
+			//configured display was not found
+			return;
+		}
+		
 //		System.out.println("repaint");
 		display = display1;
 
+		
 		
 		//TODO clip account for out of bounds or just exclude these points on add later probably just clip them inside maybe?
 		

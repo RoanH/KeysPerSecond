@@ -20,7 +20,6 @@ package dev.roanh.kps.config.group;
 
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.PanelType;
-import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.DataPanel;
 
 /**

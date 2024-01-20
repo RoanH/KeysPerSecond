@@ -34,7 +34,7 @@ import dev.roanh.kps.config.group.GraphSettings;
  * Panel to draw continuous graphs.
  * @author Roan
  */
-public class GraphPanel extends BasePanel{
+public class LineGraphPanel extends BasePanel{
 	/**
 	 * Serial ID.
 	 */
@@ -64,7 +64,7 @@ public class GraphPanel extends BasePanel{
 	 * Constructs a new graph panel with the given configuration.
 	 * @param config The configuration for this panel.
 	 */
-	public GraphPanel(GraphSettings config){
+	public LineGraphPanel(GraphSettings config){
 		super(config);
 		this.config = config;
 	}
