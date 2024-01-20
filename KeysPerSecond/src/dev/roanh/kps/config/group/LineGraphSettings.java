@@ -31,7 +31,7 @@ import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
 import dev.roanh.kps.panels.LineGraphPanel;
 import dev.roanh.kps.ui.editor.Editor;
-import dev.roanh.kps.ui.editor.GraphEditor;
+import dev.roanh.kps.ui.editor.LineGraphEditor;
 
 /**
  * Configuration for graph panels.
@@ -117,7 +117,7 @@ public class LineGraphSettings extends GraphPanelSettings implements LegacyProxy
 	
 	@Override
 	public void showEditor(boolean live){
-		Editor.showEditor(new GraphEditor(this, live));
+		Editor.showEditor(new LineGraphEditor(this, live));
 	}
 
 	@Override

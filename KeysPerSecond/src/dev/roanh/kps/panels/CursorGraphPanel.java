@@ -37,6 +37,7 @@ public class CursorGraphPanel extends BasePanel{
 	 */
 	private static final long serialVersionUID = -2604642433575841219L;
 	private ConcurrentLinkedDeque<TimePoint> path = new ConcurrentLinkedDeque<TimePoint>();
+	private CursorGraphSettings config;
 
 	private volatile long lastPaint;
 	
@@ -49,6 +50,7 @@ public class CursorGraphPanel extends BasePanel{
 
 	public CursorGraphPanel(CursorGraphSettings config){
 		super(config);
+		this.config = config;
 		// TODO Auto-generated constructor stub
 		
 		
@@ -76,7 +78,7 @@ public class CursorGraphPanel extends BasePanel{
 		
 		long time = System.currentTimeMillis();//TODO sys time may not be accurate, but it is fast
 		path.addFirst(new TimePoint(x, y, time));
-		while(time - path.getLast().time > 1000){//todo config
+		while(time - path.getLast().time > config.getBacklog()){//todo config
 			path.removeLast();
 		}
 		
@@ -94,7 +96,7 @@ public class CursorGraphPanel extends BasePanel{
 		}
 		
 //		System.out.println("repaint");
-		display = display1;
+//		display = display1;
 
 		
 		

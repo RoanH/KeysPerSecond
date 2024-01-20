@@ -27,11 +27,11 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.LineGraphSettings;
 
 /**
- * Editor for graph settings.
+ * Editor for line graph settings.
  * @author Roan
  * @see LineGraphSettings
  */
-public class GraphEditor extends Editor{
+public class LineGraphEditor extends Editor{
 	/**
 	 * Serial ID.
 	 */
@@ -42,7 +42,7 @@ public class GraphEditor extends Editor{
 	 * @param config The configuration to update.
 	 * @param live If updates should be reflected in real time.
 	 */
-	public GraphEditor(LineGraphSettings config, boolean live){
+	public LineGraphEditor(LineGraphSettings config, boolean live){
 		super("Graph Settings");
 
 		labels.add(new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): "));

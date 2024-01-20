@@ -48,7 +48,7 @@ public abstract class Editor extends JPanel{
 	 * Constructs a new editor with the given title.
 	 * @param title The UI title to show.
 	 */
-	public Editor(String title){
+	protected Editor(String title){
 		super(new BorderLayout());
 		this.setBorder(BorderFactory.createTitledBorder(title));
 		this.add(labels, BorderLayout.LINE_START);
