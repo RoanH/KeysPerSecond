@@ -134,7 +134,10 @@ public class MainDialog extends JPanel{
 		JButton load = new JButton("Load config");
 		configuration.add(load);
 		load.addActionListener(e->{
-			if(ConfigLoader.loadConfiguration()){
+			Configuration toLoad = ConfigLoader.loadConfiguration();
+			if(toLoad != null){
+				config = toLoad;
+				Main.config = toLoad;
 				options.syncBoxes();
 			}
 		});
