@@ -31,7 +31,7 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.CursorGraphSettings;
 import dev.roanh.kps.event.listener.MouseMoveListener;
 
-public class CursorGraphPanel extends BasePanel implements MouseMoveListener{//TODO remove listener
+public class CursorGraphPanel extends BasePanel{
 	/**
 	 * Serial ID
 	 */
@@ -80,10 +80,10 @@ public class CursorGraphPanel extends BasePanel implements MouseMoveListener{//T
 			path.removeLast();
 		}
 		
-		if(time - lastPaint > 20){
-			lastPaint = time;
-			this.repaint();//TODO
-		}
+//		if(time - lastPaint > 20){
+//			lastPaint = time;
+//			this.repaint();//TODO
+//		}
 	}
 	
 	@Override
@@ -98,7 +98,6 @@ public class CursorGraphPanel extends BasePanel implements MouseMoveListener{//T
 
 		
 		
-		//TODO clip account for out of bounds or just exclude these points on add later probably just clip them inside maybe?
 		
 		
 		int left = RenderingMode.insideOffset + borderOffset;
@@ -132,14 +131,11 @@ public class CursorGraphPanel extends BasePanel implements MouseMoveListener{//T
 		
 		
 		
-		
+		//TODO remove
 		g.setColor(Color.GREEN);
 		g.drawRect(0, 0, (int)(display.width * f), (int)(display.height * f));
 		
-//		g.translate(10, 10);
-		
-		
-//		g.setClip(display);
+		//draw the cursor path
 		Iterator<TimePoint> iter = path.iterator();
 		if(iter.hasNext()){
 			Path2D line = new Path2D.Double();
@@ -155,44 +151,6 @@ public class CursorGraphPanel extends BasePanel implements MouseMoveListener{//T
 			g.setColor(foreground.getColor());
 			g.draw(line);
 		}
-		
-		
-		
-//		for(int i = 0; i < path.size() - 2; i++){
-//			//TODO use path2d
-//			g.drawLine(path.get(i).x / 10, path.get(i).y / 10, path.get(i + 1).x / 10, path.get(i + 1).y / 10);
-//			
-//			//TODO that div 10 is a nope
-//		}
-	}
-
-//	@Override
-	public void onMouseMove(int x, int y){
-//		addPoint(x, y);
-	}
-
-	@Override
-	public int getLayoutX(){
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getLayoutY(){
-		// TODO Auto-generated method stub
-		return -1;
-	}
-
-	@Override
-	public int getLayoutWidth(){
-		// TODO Auto-generated method stub
-		return -1;
-	}
-
-	@Override
-	public int getLayoutHeight(){
-		// TODO Auto-generated method stub
-		return 5;
 	}
 
 	//TODO private?

@@ -60,6 +60,7 @@ public enum GraphType{
 			}
 		}
 		
-		return null;
+		//for legacy reasons the fallback type is the line graph
+		return ListItemConstructor.constructThenParse(LINE.ctor, info);
 	}
 }
