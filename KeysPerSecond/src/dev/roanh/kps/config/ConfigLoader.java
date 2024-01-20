@@ -94,7 +94,7 @@ public class ConfigLoader{
 	public static void reloadConfig(){
 		if(Main.config.getPath() != null){
 			try{
-				Main.applyConfig(ConfigParser.read(Main.config.getPath()));
+				Main.applyConfig(ConfigParser.read(Main.config.getPath()), true);
 			}catch(IOException e){
 				e.printStackTrace();
 				Dialog.showErrorDialog("Failed to reload the configuration, cause: " + e.getMessage());

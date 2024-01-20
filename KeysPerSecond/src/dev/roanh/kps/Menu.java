@@ -281,7 +281,7 @@ public class Menu{
 		load.addActionListener((e)->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
 			if(toLoad != null){
-				Main.applyConfig(toLoad);
+				Main.applyConfig(toLoad, true);
 			}
 		});
 		saveStats.addActionListener((e)->{

@@ -248,7 +248,7 @@ public class Main{
 			//if no (valid) ones were found let the user create a new config
 			MainDialog.configure(Main.config);
 		}else{
-			applyConfig(quickLoad);
+			applyConfig(quickLoad, false);
 		}
 
 		//build GUI
@@ -268,10 +268,11 @@ public class Main{
 	/**
 	 * Applies a new configuration to the program.
 	 * @param config The new configuration to load.
+	 * @param live True if the main GUI is already visible.
 	 */
-	public static final void applyConfig(Configuration config){
-		Menu.resetData();
+	public static final void applyConfig(Configuration config, boolean live){
 		Main.config = config;
+		Menu.resetData();
 		
 		if(Main.config.getFramePosition().hasPosition()){
 			Main.frame.setLocation(Main.config.getFramePosition().getLocation());
@@ -284,6 +285,10 @@ public class Main{
 				e.printStackTrace();
 				Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
 			}
+		}
+		
+		if(live){
+			reconfigure();
 		}
 		
 		System.out.println("Loaded config file: " + config.getPath().toString());

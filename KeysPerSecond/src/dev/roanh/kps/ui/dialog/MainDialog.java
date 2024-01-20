@@ -137,7 +137,7 @@ public class MainDialog extends JPanel{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
 			if(toLoad != null){
 				config = toLoad;
-				Main.applyConfig(toLoad);
+				Main.applyConfig(toLoad, false);
 				options.syncBoxes();
 			}
 		});
