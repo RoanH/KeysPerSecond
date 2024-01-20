@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.group.GraphSettings;
 
 /**
@@ -98,7 +97,6 @@ public class GraphPanel extends BasePanel{
 		poly.addPoint((int)Math.min(ox, px + segment), oy);
 
 		//average line
-		ThemeColor foreground = Main.config.getTheme().getForeground();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
 		if(config.isAverageVisible() && Main.avg <= config.getMaxValue()){
 			int y = (int)(oy - ((insideHeight * Main.avg) / maxval));
