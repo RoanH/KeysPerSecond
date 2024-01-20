@@ -104,7 +104,7 @@ public class Statistics{
 			try{
 				Path target = Paths.get(config.getAutoSaveDestination());
 				Files.createDirectories(target);
-				target.resolve(DateTimeFormatter.ofPattern(config.getAutoSaveFormat()).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
+				target = target.resolve(DateTimeFormatter.ofPattern(config.getAutoSaveFormat()).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault()).format(Instant.now(Clock.systemDefaultZone())));
 				saveStats(target);
 			}catch(Throwable e){
 				//Main priority here is to not interrupt whatever the user is doing
