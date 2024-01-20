@@ -34,7 +34,6 @@ import javax.swing.SwingConstants;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
-import dev.roanh.kps.ui.listener.MainWindowListener;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -279,7 +278,7 @@ public class MainDialog extends JPanel{
 		
 		JButton exit = new JButton("Exit");
 		bottomButtons.add(exit);
-		exit.addActionListener(e->Main.exit());
+		exit.addActionListener(e->System.exit(0));
 		
 		JPanel dialog = new JPanel(new BorderLayout());
 		dialog.add(new MainDialog(config), BorderLayout.CENTER);
@@ -291,7 +290,6 @@ public class MainDialog extends JPanel{
 		conf.pack();
 		conf.setResizable(false);
 		conf.setIconImages(Arrays.asList(Main.icon, Main.iconSmall));
-		conf.addWindowListener(new MainWindowListener());
 		conf.setVisible(true);
 		
 		try{
