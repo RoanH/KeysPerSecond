@@ -31,7 +31,6 @@ import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.SettingList;
-import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
@@ -45,8 +44,6 @@ import dev.roanh.kps.ui.model.SpecialNumberModelEditor;
  * Table like view for displaying panels.
  * @author Roan
  * @see PanelSettings
- * @see KeyPanelSettings
- * @see LineGraphSettings
  */
 public class TablePanel extends JPanel{
 	/**
