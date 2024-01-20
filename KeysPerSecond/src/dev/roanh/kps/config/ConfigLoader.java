@@ -88,7 +88,7 @@ public class ConfigLoader{
 			
 			if(config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
 				try{
-					Statistics.loadStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
+					Statistics.loadStats(Paths.get(config.getStatsSavingSettings().getSaveFile()));
 				}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
 					e.printStackTrace();
 					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
