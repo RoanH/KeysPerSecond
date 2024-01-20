@@ -74,6 +74,7 @@ public class ConfigLoader{
 		
 		try{
 			ConfigParser parser = ConfigParser.parse(saveloc);
+			Configuration config = parser.getConfig();
 
 			if(parser.wasDefaultUsed()){
 				Dialog.showMessageDialog("Configuration loaded succesfully but some default values were used.");
@@ -81,11 +82,11 @@ public class ConfigLoader{
 				Dialog.showMessageDialog("Configuration loaded succesfully.");
 			}
 			
-			if(Main.config.getFramePosition().hasPosition()){
-				Main.frame.setLocation(Main.config.getFramePosition().getLocation());
+			if(config.getFramePosition().hasPosition()){
+				Main.frame.setLocation(config.getFramePosition().getLocation());
 			}
 			
-			if(Main.config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
+			if(config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
 				try{
 					Statistics.loadStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
 				}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
@@ -94,7 +95,7 @@ public class ConfigLoader{
 				}
 			}
 			
-			return parser.getConfig();
+			return config;
 		}catch(IOException e){
 			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
