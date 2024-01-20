@@ -265,6 +265,10 @@ public class Main{
 		mainLoop();
 	}
 	
+	/**
+	 * Applies a new configuration to the program.
+	 * @param config The new configuration to load.
+	 */
 	public static final void applyConfig(Configuration config){
 		Menu.resetData();
 		Main.config = config;
