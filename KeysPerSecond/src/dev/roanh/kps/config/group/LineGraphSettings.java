@@ -37,7 +37,7 @@ import dev.roanh.kps.ui.editor.GraphEditor;
  * @author Roan
  * @see GraphPanel
  */
-public class GraphSettings extends PanelSettings implements LegacyProxyStore{
+public class LineGraphSettings extends PanelSettings implements LegacyProxyStore{
 	/**
 	 * Whether to draw the horizontal average line or not.
 	 */
@@ -54,7 +54,7 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 	/**
 	 * Creates new graph settings.
 	 */
-	public GraphSettings(){
+	public LineGraphSettings(){
 		super("graphs", 0, -1, -1, 3, "KPS");
 	}
 	

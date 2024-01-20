@@ -52,7 +52,7 @@ import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.Version;
 import dev.roanh.kps.config.group.CommandSettings;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.event.EventManager;
@@ -547,7 +547,7 @@ public class Main{
 			
 			//graph panels
 			graphs.clear();
-			for(GraphSettings info : config.getGraphSettings()){
+			for(LineGraphSettings info : config.getGraphSettings()){
 				LineGraphPanel graph = info.createPanel();
 				content.add(graph);
 				graphs.add(graph);

@@ -36,7 +36,7 @@ import javax.swing.SpinnerNumberModel;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.panels.BasePanel;
@@ -120,7 +120,7 @@ public class LayoutDialog{
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
 		graphPanel.add(graphPane, BorderLayout.CENTER);
-		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), GraphSettings::new), BorderLayout.PAGE_END);
+		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), LineGraphSettings::new), BorderLayout.PAGE_END);
 		form.add(graphPanel, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);

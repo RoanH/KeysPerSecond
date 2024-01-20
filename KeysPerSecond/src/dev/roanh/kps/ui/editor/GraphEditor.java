@@ -24,12 +24,12 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
 
 /**
  * Editor for graph settings.
  * @author Roan
- * @see GraphSettings
+ * @see LineGraphSettings
  */
 public class GraphEditor extends Editor{
 	/**
@@ -42,7 +42,7 @@ public class GraphEditor extends Editor{
 	 * @param config The configuration to update.
 	 * @param live If updates should be reflected in real time.
 	 */
-	public GraphEditor(GraphSettings config, boolean live){
+	public GraphEditor(LineGraphSettings config, boolean live){
 		super("Graph Settings");
 
 		labels.add(new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): "));

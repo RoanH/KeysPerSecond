@@ -32,7 +32,7 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.MaxPanelSettings;
@@ -112,7 +112,7 @@ public class Configuration{
 	/**
 	 * Graph settings.
 	 */
-	private final SettingList<GraphSettings> graphs = new SettingList<GraphSettings>("graphs", ListItemConstructor.constructThenParse(GraphSettings::new));
+	private final SettingList<LineGraphSettings> graphs = new SettingList<LineGraphSettings>("graphs", ListItemConstructor.constructThenParse(LineGraphSettings::new));
 	/**
 	 * Special panel settings.
 	 */
@@ -162,7 +162,7 @@ public class Configuration{
 			theme.collectLegacyProxies(settings);
 			position.collectLegacyProxies(settings);
 			
-			GraphSettings graph = new GraphSettings();
+			LineGraphSettings graph = new LineGraphSettings();
 			graph.collectLegacyProxies(settings);
 			graphs.add(graph);
 			
@@ -297,7 +297,7 @@ public class Configuration{
 	 * Gets a list of all graphs and their settings.
 	 * @return All graph settings.
 	 */
-	public SettingList<GraphSettings> getGraphSettings(){
+	public SettingList<LineGraphSettings> getGraphSettings(){
 		return graphs;
 	}
 	

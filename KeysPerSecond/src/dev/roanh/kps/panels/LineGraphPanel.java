@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import dev.roanh.kps.ColorManager;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
 
 /**
  * Panel to draw continuous graphs.
@@ -58,13 +58,13 @@ public class LineGraphPanel extends BasePanel{
 	/**
 	 * The configuration for this graph panel.
 	 */
-	private GraphSettings config;
+	private LineGraphSettings config;
 	
 	/**
 	 * Constructs a new graph panel with the given configuration.
 	 * @param config The configuration for this panel.
 	 */
-	public LineGraphPanel(GraphSettings config){
+	public LineGraphPanel(LineGraphSettings config){
 		super(config);
 		this.config = config;
 	}
