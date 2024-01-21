@@ -62,7 +62,7 @@ import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
-import dev.roanh.kps.ui.listener.CloseListener;
+import dev.roanh.kps.ui.listener.MainWindowListener;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.ExclamationMarkPath;
 import dev.roanh.util.Util;
@@ -496,7 +496,7 @@ public class Main{
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Listener.configureListener(frame);
-		frame.addWindowListener(new CloseListener());
+		frame.addWindowListener(new MainWindowListener());
 		reconfigure();
 	}
 	
