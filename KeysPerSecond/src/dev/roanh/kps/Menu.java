@@ -245,7 +245,7 @@ public class Menu{
 			Main.reconfigure();
 		});
 		configkeys.addActionListener((e)->{
-			KeysDialog.configureKeys(Main.config.getKeySettings(), true);
+			KeysDialog.configureKeys(Main.config, true);
 		});
 		colorcustom.addActionListener((e)->{
 			ColorDialog.configureColors(Main.config.getTheme(), true);
@@ -260,7 +260,7 @@ public class Menu{
 			Main.reconfigure();
 		});
 		layout.addActionListener((e)->{
-			LayoutDialog.configureLayout(true);
+			LayoutDialog.configureLayout(Main.config, true);
 		});
 		
 		List<JCheckBoxMenuItem> rates = new ArrayList<JCheckBoxMenuItem>();
