@@ -70,6 +70,12 @@
   </Match>
   
   <Match>
+    <!-- This exit is intentional -->
+    <Bug pattern="DM_EXIT"/>
+    <Class name="dev.roanh.kps.ui.dialog.MainDialog"/>
+  </Match>
+  
+  <Match>
     <!-- Technical debt -->
     <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
     <Or>
