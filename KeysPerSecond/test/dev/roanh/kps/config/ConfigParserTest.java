@@ -141,7 +141,7 @@ public class ConfigParserTest{
 		assertEquals(40, graph.getLayoutWidth());
 		assertEquals(7, graph.getLayoutHeight());
 		assertTrue(graph.isAverageVisible());
-		assertEquals(1800, graph.getBacklog());
+		assertEquals(180000, graph.getBacklog());
 		assertEquals(Integer.MAX_VALUE, graph.getMaxValue());
 		
 		//special panels
@@ -332,7 +332,7 @@ public class ConfigParserTest{
 		assertEquals(5, graph.getLayoutWidth());
 		assertEquals(8, graph.getLayoutHeight());
 		assertFalse(graph.isAverageVisible());
-		assertEquals(45, graph.getBacklog());
+		assertEquals(4500, graph.getBacklog());
 		assertEquals(Integer.MAX_VALUE, graph.getMaxValue());
 		
 		//special panels

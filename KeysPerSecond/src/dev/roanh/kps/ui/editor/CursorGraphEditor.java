@@ -70,7 +70,7 @@ public class CursorGraphEditor extends Editor{
 		});
 		
 		labels.add(new JLabel("Backlog (milliseconds): "));
-		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 0, Short.MAX_VALUE, 100));
+		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 0, Integer.MAX_VALUE, 100));
 		backlog.addChangeListener(e->config.setBacklog((int)backlog.getValue()));
 		fields.add(backlog);
 	}

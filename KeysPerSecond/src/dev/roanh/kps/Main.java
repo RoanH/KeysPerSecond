@@ -493,6 +493,7 @@ public class Main{
 		n *= (double)config.getUpdateRateMs() / (double)newRate.getRate();
 		tmp.set(0);
 		timepoints.clear();
+		resetGraphs();
 		config.setUpdateRate(newRate);
 		mainLoop();
 	}
@@ -600,7 +601,7 @@ public class Main{
 	 * Clears the data for all active graphs.
 	 */
 	public static final void resetGraphs(){
-//		graphs.forEach(LineGraphPanel::reset);//TODO probably something for the base class
+		graphs.forEach(GraphPanel::reset);
 	}
 
 	/**

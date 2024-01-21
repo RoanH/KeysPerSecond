@@ -32,7 +32,7 @@ import dev.roanh.kps.ui.editor.Editor;
 
 public class CursorGraphSettings extends GraphPanelSettings{
 	private final StringSetting display = new StringSetting("display", getDefaultScreenId());
-	private final IntSetting backlog = new IntSetting("backlog", 0, Short.MAX_VALUE, 1000);
+	private final IntSetting backlog = new IntSetting("backlog", 0, Integer.MAX_VALUE, 1000);
 
 	public CursorGraphSettings(){
 		super(GraphType.CURSOR, 0, -1, -1, 6, "Cursor");

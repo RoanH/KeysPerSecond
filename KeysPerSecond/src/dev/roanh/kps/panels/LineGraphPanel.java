@@ -84,16 +84,27 @@ public class LineGraphPanel extends GraphPanel{
 		final int ox = this.getWidth() - borderOffset - RenderingMode.insideOffset - 1;
 		final double insideHeight = this.getHeight() - (borderOffset + RenderingMode.insideOffset) * 2;
 		final double insideWidth = this.getWidth() - (borderOffset + RenderingMode.insideOffset) * 2 - 1;
-		final double segment = insideWidth / (config.getBacklog() - 1);
+		final int frames = (config.getBacklog() / Main.config.getUpdateRateMs()) - 1;
+		
+		//graph drawing
+		if(frames > 0){
+			final double segment = insideWidth / frames;
 
-		double px = ox;
-		poly.addPoint(ox, oy);
-		for(int val : values){
-			poly.addPoint((int)px, (int)(oy - ((insideHeight * val) / maxval)));
-			px -= segment;
+			double px = ox;
+			poly.addPoint(ox, oy);
+			for(int val : values){
+				poly.addPoint((int)px, (int)(oy - ((insideHeight * val) / maxval)));
+				px -= segment;
+			}
+			poly.addPoint((int)Math.min(ox, px + segment), oy);
+
+			g.setStroke(line);
+			g.setColor(ColorManager.alphaAqua);
+			g.fillPolygon(poly);
+			g.setColor(foreground.getColor());
+			g.drawPolygon(poly);
 		}
-		poly.addPoint((int)Math.min(ox, px + segment), oy);
-
+		
 		//average line
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, foreground.getAlpha()));
 		if(config.isAverageVisible() && Main.avg <= config.getMaxValue()){
@@ -102,13 +113,6 @@ public class LineGraphPanel extends GraphPanel{
 			g.setStroke(avgstroke);
 			g.drawLine(borderOffset + RenderingMode.insideOffset, y, ox, y);
 		}
-
-		//graph drawing
-		g.setStroke(line);
-		g.setColor(ColorManager.alphaAqua);
-		g.fillPolygon(poly);
-		g.setColor(foreground.getColor());
-		g.drawPolygon(poly);
 	}
 	
 	@Override
@@ -128,7 +132,7 @@ public class LineGraphPanel extends GraphPanel{
 		}
 
 		values.addFirst(value);
-		while(values.size() > config.getBacklog()){
+		while(values.size() > config.getBacklog() / Main.config.getUpdateRateMs()){
 			values.removeLast();
 		}
 	}

@@ -46,7 +46,7 @@ public class LineGraphSettings extends GraphPanelSettings implements LegacyProxy
 	/**
 	 * Number of points the graph consists of.
 	 */
-	private final IntSetting backlog = new IntSetting("backlog", 2, Short.MAX_VALUE, 30);
+	private final IntSetting backlog = new IntSetting("backlog", 2, Integer.MAX_VALUE, 30);
 	/**
 	 * Maximum graph y value that will be displayed. Any higher values are capped at this value.
 	 */
