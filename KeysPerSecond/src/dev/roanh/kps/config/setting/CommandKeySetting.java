@@ -49,6 +49,14 @@ public class CommandKeySetting extends IntSetting{
 	}
 	
 	/**
+	 * Constructs a new initially unbound command key setting.
+	 * @param key The setting key.
+	 */
+	public CommandKeySetting(String key){
+		super(key, Integer.MIN_VALUE, Integer.MAX_VALUE, null);
+	}
+	
+	/**
 	 * Tests if the given key activates this setting at the moment.
 	 * Note that the result of this subroutine depends both on the
 	 * provided key and whether ctrl and alt are currently pressed.

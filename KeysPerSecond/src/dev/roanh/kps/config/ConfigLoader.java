@@ -32,7 +32,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.Statistics;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
 import dev.roanh.util.FileSelector.FileExtension;
@@ -74,7 +73,6 @@ public class ConfigLoader{
 		
 		try{
 			ConfigParser parser = ConfigParser.parse(saveloc);
-			Configuration config = parser.getConfig();
 
 			if(parser.wasDefaultUsed()){
 				Dialog.showMessageDialog("Configuration loaded succesfully but some default values were used.");
@@ -82,20 +80,7 @@ public class ConfigLoader{
 				Dialog.showMessageDialog("Configuration loaded succesfully.");
 			}
 			
-			if(config.getFramePosition().hasPosition()){
-				Main.frame.setLocation(config.getFramePosition().getLocation());
-			}
-			
-			if(config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
-				try{
-					Statistics.loadStats(Paths.get(config.getStatsSavingSettings().getSaveFile()));
-				}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
-					e.printStackTrace();
-					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
-				}
-			}
-			
-			return config;
+			return parser.getConfig();
 		}catch(IOException e){
 			e.printStackTrace();
 			Dialog.showErrorDialog("Failed to read the requested configuration, cause: " + e.getMessage());
@@ -109,7 +94,7 @@ public class ConfigLoader{
 	public static void reloadConfig(){
 		if(Main.config.getPath() != null){
 			try{
-				Main.config = ConfigParser.read(Main.config.getPath());
+				Main.applyConfig(ConfigParser.read(Main.config.getPath()), true);
 			}catch(IOException e){
 				e.printStackTrace();
 				Dialog.showErrorDialog("Failed to reload the configuration, cause: " + e.getMessage());
