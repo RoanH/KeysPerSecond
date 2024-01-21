@@ -272,12 +272,19 @@ public class Main{
 	 */
 	public static final void applyConfig(Configuration config, boolean live){
 		Main.config = config;
-		Menu.resetData();
 		
+		//rebuild the menu
+		Menu.createMenu();
+		
+		//reset stats and keys
+		resetData();
+		
+		//apply a frame position if set
 		if(Main.config.getFramePosition().hasPosition()){
 			Main.frame.setLocation(Main.config.getFramePosition().getLocation());
 		}
 
+		//load initial stats
 		if(Main.config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
 			try{
 				Statistics.loadStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
@@ -287,11 +294,16 @@ public class Main{
 			}
 		}
 		
-		if(live){
-			reconfigure();
+		//print loaded config
+		if(config.getPath() != null){
+			System.out.println("Loaded config file: " + config.getPath().toString());
 		}
 		
-		System.out.println("Loaded config file: " + config.getPath().toString());
+		//update the running state
+		if(live){
+			reconfigure();
+			mainLoop();
+		}
 	}
 
 	/**
@@ -456,7 +468,6 @@ public class Main{
 			Menu.pause.setSelected(suspended);
 		}else if(commands.getCommandReload().matches(code)){
 			ConfigLoader.reloadConfig();
-			Menu.resetData();
 		}
 	}
 
@@ -500,7 +511,6 @@ public class Main{
 	 * Builds the main GUI of the program.
 	 */
 	private static final void buildGUI(){
-		Menu.createMenu();
 		frame.setResizable(false);
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -609,6 +619,14 @@ public class Main{
 	public static final void exit(){
 		Statistics.saveStatsOnExit();
 		System.exit(0);
+	}
+	
+	/**
+	 * Applies all statistics and keys.
+	 */
+	protected static final void resetData(){
+		keys.clear();
+		resetStats();
 	}
 
 	/**
