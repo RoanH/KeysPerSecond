@@ -30,14 +30,34 @@ import dev.roanh.kps.panels.CursorGraphPanel;
 import dev.roanh.kps.ui.editor.CursorGraphEditor;
 import dev.roanh.kps.ui.editor.Editor;
 
+/**
+ * Configuration for cursor graph panels.
+ * @author Roan
+ * @see CursorGraphPanel
+ */
 public class CursorGraphSettings extends GraphPanelSettings{
+	/**
+	 * The display being tracked by this panel.
+	 */
 	private final StringSetting display = new StringSetting("display", getDefaultScreenId());
+	/**
+	 * The backlog for how much of the cursor move history to show in milliseconds.
+	 */
 	private final IntSetting backlog = new IntSetting("backlog", 0, Integer.MAX_VALUE, 1000);
 
+	/**
+	 * Constructs new cursor graph settings.
+	 */
 	public CursorGraphSettings(){
 		super(GraphType.CURSOR, 0, -1, -1, 6, "Cursor");
 	}
 	
+	/**
+	 * Gets the display being tracked by this panel.
+	 * @return The display tracked by this panel or
+	 *         null if the configured display could
+	 *         not be found on the system.
+	 */
 	public GraphicsDevice getDisplay(){
 		for(GraphicsDevice screen : getScreens()){
 			if(screen.getIDstring().equals(getDisplayId())){
@@ -48,18 +68,34 @@ public class CursorGraphSettings extends GraphPanelSettings{
 		return null;
 	}
 	
+	/**
+	 * Gets the ID of the display being tracked by this panel.
+	 * @return The ID of the tracked display.
+	 */
 	public String getDisplayId(){
 		return display.getValue();
 	}
 	
+	/**
+	 * Gets the backlog size in milliseconds for the graph.
+	 * @return The cursor trail tracking backlog in milliseconds.
+	 */
 	public int getBacklog(){
 		return backlog.getValue();
 	}
 	
+	/**
+	 * Updates the size of the backlog.
+	 * @param backlog The new backlog size in milliseconds.
+	 */
 	public void setBacklog(int backlog){
 		this.backlog.update(backlog);
 	}
 	
+	/**
+	 * Sets the ID of the display tracked by this panel.
+	 * @param idString The ID of the display being tracked.
+	 */
 	public void setDisplay(String idString){
 		display.update(idString);
 	}
@@ -86,11 +122,20 @@ public class CursorGraphSettings extends GraphPanelSettings{
 		backlog.write(out);
 	}
 	
+	/**
+	 * Lists all screens available on the current system.
+	 * @return All screens on the current system.
+	 */
 	public static final GraphicsDevice[] getScreens(){
 		return GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 	}
 	
+	/**
+	 * Computes the default screen to use.
+	 * @return The identifier of the default screen to use or null for none.
+	 */
 	private static final String getDefaultScreenId(){
+		//this check is primarily to ensure unit tests can run headless
 		return GraphicsEnvironment.isHeadless() ? null : getScreens()[0].getIDstring();
 	}
 }

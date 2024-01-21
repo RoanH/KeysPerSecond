@@ -34,7 +34,7 @@ import dev.roanh.kps.ui.editor.Editor;
 import dev.roanh.kps.ui.editor.LineGraphEditor;
 
 /**
- * Configuration for graph panels.
+ * Configuration for line graph panels.
  * @author Roan
  * @see LineGraphPanel
  */
