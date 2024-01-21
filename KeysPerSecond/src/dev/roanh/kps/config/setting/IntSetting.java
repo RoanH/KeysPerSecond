@@ -42,7 +42,7 @@ public class IntSetting extends Setting<Integer>{
 	 * @param max The maximum allowed value.
 	 * @param defaultValue The default value for this setting.
 	 */
-	public IntSetting(String key, int min, int max, int defaultValue){
+	public IntSetting(String key, int min, int max, Integer defaultValue){
 		super(key, defaultValue);
 		this.min = min;
 		this.max = max;

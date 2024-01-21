@@ -19,13 +19,13 @@ When enabled it can also show a graph of the number of keys pressed per second o
 Everything shown in the pictures above can be toggled on or off and all the panels can be rearranged freely.      
 ![Config](https://media.roanh.dev/keyspersecond/cmain88.png)    
 
-There are also some commands that can be sent to the program:    
-**Ctrl + P**: Causes the program to reset the average and maximum value.    
+There are also some commands that can be sent to the program (some unbound by default):    
 **Ctrl + U**: Terminates the program.    
-**Ctrl + I**: Causes the program to reset the key press statistics.    
 **Ctrl + Y**: Shows the GUI or hides it to the system tray.    
 **Ctrl + T**: Pauses or resumes the input tracking and panel updates.    
-**Ctrl + R**: Reloads the current configuration file.
+**Unbound**: Causes the program to reset the key press statistics.    
+**Unbound**: Causes the program to reset the average and maximum value.    
+**Unbound**: Reloads the current configuration file.
 
 You can also move the program using the arrow keys or snap it to the edges of your screen.
 

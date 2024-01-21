@@ -119,6 +119,13 @@ public class Menu{
 	 * Creates the popup menu
 	 */
 	protected static final void createMenu(){
+		menu.removeAll();
+		configure.removeAll();
+		general.removeAll();
+		rate.removeAll();
+		reset.removeAll();
+		saveLoad.removeAll();
+		
 		List<JMenuItem> components = new ArrayList<JMenuItem>();
 		JMenuItem snap = new JMenuItem("Snap to edges");
 		JMenuItem exit = new JMenuItem("Exit");
@@ -250,9 +257,6 @@ public class Menu{
 		windowed.setSelected(Main.config.isWindowedMode());
 		windowed.addActionListener(e->{
 			Main.config.setWindowedMode(windowed.isSelected());
-			Main.frame.setVisible(false);
-			Main.frame.dispose();
-			Main.frame.setUndecorated(!Main.config.isWindowedMode());
 			Main.reconfigure();
 		});
 		layout.addActionListener((e)->{
@@ -284,8 +288,7 @@ public class Menu{
 		load.addActionListener((e)->{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
 			if(toLoad != null){
-				Main.config = toLoad;
-				resetData();
+				Main.applyConfig(toLoad, true);
 			}
 		});
 		saveStats.addActionListener((e)->{
@@ -396,24 +399,6 @@ public class Menu{
 		if(SystemTray.isSupported()){
 			SystemTray.getSystemTray().remove(trayIcon);
 		}
-	}
-
-	/**
-	 * Applies a new configuration to the program
-	 */
-	protected static final void resetData(){
-		menu.removeAll();
-		configure.removeAll();
-		general.removeAll();
-		rate.removeAll();
-		reset.removeAll();
-		saveLoad.removeAll();
-		createMenu();
-		Main.keys.clear();
-		Main.resetStats();
-		Main.hits = 0;
-		Main.reconfigure();
-		Main.mainLoop();
 	}
 
 	/**
