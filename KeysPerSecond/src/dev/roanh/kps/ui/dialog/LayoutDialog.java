@@ -34,6 +34,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 
 import dev.roanh.kps.Main;
+import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
 import dev.roanh.kps.config.group.GraphSettings;
@@ -52,15 +53,16 @@ public class LayoutDialog{
 
 	/**
 	 * Shows the layout configuration dialog.
+	 * @param config The config to update.
 	 * @param live Whether or not changes should be
 	 *        applied in real time.
 	 */
-	public static final void configureLayout(boolean live){
+	public static final void configureLayout(Configuration config, boolean live){
 		Main.content.showGrid();
 		JPanel form = new JPanel(new BorderLayout());
 
 		//general layout settings
-		LayoutSettings layout = Main.config.getLayout();
+		LayoutSettings layout = config.getLayout();
 		JPanel gridSize = new JPanel(new GridLayout(2, 2, 0, 5));
 		gridSize.setBorder(BorderFactory.createTitledBorder("Size"));
 		gridSize.add(new JLabel("Cell size: "));
@@ -87,8 +89,8 @@ public class LayoutDialog{
 		
 		//panel configuration
 		TablePanel panelView = new TablePanel("Panel", true, live);
-		panelView.addPanels(Main.config.getKeySettings());
-		panelView.addPanels(Main.config.getPanels());
+		panelView.addPanels(config.getKeySettings());
+		panelView.addPanels(config.getPanels());
 		
 		JScrollPane pane = new JScrollPane(panelView);
 		pane.setBorder(BorderFactory.createEmptyBorder());
@@ -96,11 +98,11 @@ public class LayoutDialog{
 		pane.setPreferredSize(new Dimension(600, 200));
 		
 		JPanel buttons = new JPanel(new GridLayout(1, 0, 2, 0));
-		buttons.add(createAddButton(panelView, "Add Maximum", Main.config.getPanels(), PanelType.MAX::newSettings));
-		buttons.add(createAddButton(panelView, "Add Average", Main.config.getPanels(), PanelType.AVG::newSettings));
-		buttons.add(createAddButton(panelView, "Add KPS", Main.config.getPanels(), PanelType.CURRENT::newSettings));
-		buttons.add(createAddButton(panelView, "Add Total", Main.config.getPanels(), PanelType.TOTAL::newSettings));
-		buttons.add(createAddButton(panelView, "Add Last", Main.config.getPanels(), PanelType.LAST::newSettings));
+		buttons.add(createAddButton(panelView, "Add Maximum", config.getPanels(), PanelType.MAX::newSettings));
+		buttons.add(createAddButton(panelView, "Add Average", config.getPanels(), PanelType.AVG::newSettings));
+		buttons.add(createAddButton(panelView, "Add KPS", config.getPanels(), PanelType.CURRENT::newSettings));
+		buttons.add(createAddButton(panelView, "Add Total", config.getPanels(), PanelType.TOTAL::newSettings));
+		buttons.add(createAddButton(panelView, "Add Last", config.getPanels(), PanelType.LAST::newSettings));
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createTitledBorder("Panels"));
@@ -110,7 +112,7 @@ public class LayoutDialog{
 
 		//graph configuration
 		TablePanel graphView = new TablePanel("Graph", true, live);
-		graphView.addGraphs(Main.config.getGraphSettings());
+		graphView.addGraphs(config.getGraphSettings());
 		
 		JScrollPane graphPane = new JScrollPane(graphView);
 		graphPane.setBorder(BorderFactory.createEmptyBorder());
@@ -120,7 +122,7 @@ public class LayoutDialog{
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
 		graphPanel.add(graphPane, BorderLayout.CENTER);
-		graphPanel.add(createAddButton(graphView, "Add KPS Graph", Main.config.getGraphSettings(), GraphSettings::new), BorderLayout.PAGE_END);
+		graphPanel.add(createAddButton(graphView, "Add KPS Graph", config.getGraphSettings(), GraphSettings::new), BorderLayout.PAGE_END);
 		form.add(graphPanel, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);

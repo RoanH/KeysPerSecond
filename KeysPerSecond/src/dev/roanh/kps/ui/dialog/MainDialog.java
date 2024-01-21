@@ -105,11 +105,11 @@ public class MainDialog extends JPanel{
 
 		JButton keys = new JButton("Configure keys & buttons");
 		main.add(keys);
-		keys.addActionListener(e->KeysDialog.configureKeys(config.getKeySettings(), false));
+		keys.addActionListener(e->KeysDialog.configureKeys(config, false));
 		
 		JButton layout = new JButton("Configure layout, graphs & panels");
 		main.add(layout);
-		layout.addActionListener(e->LayoutDialog.configureLayout(false));
+		layout.addActionListener(e->LayoutDialog.configureLayout(config, false));
 
 		//left panel
 		JPanel left = new JPanel(new BorderLayout());
@@ -152,7 +152,7 @@ public class MainDialog extends JPanel{
 		
 		JButton updaterate = new JButton("Update rate");
 		settings.add(updaterate);
-		updaterate.addActionListener(e->UpdateRateDialog.configureUpdateRate());
+		updaterate.addActionListener(e->UpdateRateDialog.configureUpdateRate(config));
 		
 		JButton color = new JButton("Colours");
 		settings.add(color);
@@ -160,7 +160,7 @@ public class MainDialog extends JPanel{
 		
 		JButton autoSave = new JButton("Stats saving");
 		settings.add(autoSave);
-		autoSave.addActionListener(e->StatsSavingDialog.configureStatsSaving(Main.config.getStatsSavingSettings(), false));
+		autoSave.addActionListener(e->StatsSavingDialog.configureStatsSaving(config.getStatsSavingSettings(), false));
 		
 		JButton cmdkeys = new JButton("Commands");
 		settings.add(cmdkeys);
