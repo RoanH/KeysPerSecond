@@ -1,4 +1,4 @@
-version: v8.8
+version: v8.9
 
 # General
 overlay: true
@@ -35,7 +35,8 @@ statsSaving:
   saveFile: C:\Users\RoanH\alsotest
 
 graphs:
-  - name: KPS
+  - type: line
+    name: Line Graph
     x: 1
     y: 2
     width: 5
@@ -43,6 +44,14 @@ graphs:
     showAvg: false
     backlog: 45
     max: 20
+  - type: cursor
+    name: Cursor Graph
+    x: 5
+    y: 4
+    width: 8
+    height: 7
+    display: \Display1
+    backlog: 1234
 
 panels:
   - type: max

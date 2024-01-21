@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -52,14 +53,14 @@ import dev.roanh.kps.config.ThemeColor;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.Version;
 import dev.roanh.kps.config.group.CommandSettings;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.GraphPanelSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
-import dev.roanh.kps.panels.BasePanel;
+import dev.roanh.kps.panels.DataPanel;
 import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
 import dev.roanh.kps.ui.listener.MainWindowListener;
@@ -113,9 +114,12 @@ public class Main{
 	 */
 	public static long lastHitTime = -1;
 	/**
-	 * HashMap containing all the tracked keys and their
-	 * virtual codes<br>Used to increment the count for the
-	 * keys
+	 * Last known cursor location.
+	 */
+	public static final Point mouseLoc = new Point();
+	/**
+	 * HashMap containing all the tracked keys and their virtual
+	 * codes. Used to increment the count for the keys.
 	 */
 	public static final Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
@@ -239,6 +243,7 @@ public class Main{
 		eventManager.registerKeyPressListener(Main::pressEventKey);
 		eventManager.registerKeyReleaseListener(Main::releaseEventKey);
 		eventManager.registerKeyPressListener(Main::triggerCommandKeys);
+		eventManager.registerMouseMoveListener(Main::moveEventMouse);
 		
 		//enter the main loop
 		mainLoop();
@@ -309,6 +314,7 @@ public class Main{
 					max = totaltmp;
 				}
 				
+				prev = totaltmp;
 				if(totaltmp != 0){
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
@@ -316,18 +322,25 @@ public class Main{
 				}
 				
 				for(GraphPanel graph : graphs){
-					graph.addPoint(totaltmp);
-					graph.repaint();
+					graph.update();
 				}
 				
 				content.repaint();
-				prev = totaltmp;
 				timepoints.addFirst(currentTmp);
 				if(timepoints.size() >= 1000 / config.getUpdateRateMs()){
 					timepoints.removeLast();
 				}
 			}
 		}, 0, config.getUpdateRateMs(), TimeUnit.MILLISECONDS);
+	}
+	
+	/**
+	 * Handles cursor movement.
+	 * @param x The new cursor x coordinate.
+	 * @param y The new cursor y coordinate.
+	 */
+	public static final void moveEventMouse(int x, int y){
+		mouseLoc.move(x, y);
 	}
 
 	/**
@@ -484,6 +497,7 @@ public class Main{
 		n *= (double)config.getUpdateRateMs() / (double)newRate.getRate();
 		tmp.set(0);
 		timepoints.clear();
+		resetGraphs();
 		config.setUpdateRate(newRate);
 		mainLoop();
 	}
@@ -526,7 +540,7 @@ public class Main{
 			}
 			
 			//key panels
-			for(KeyPanelSettings info : config.getKeySettings()){
+			for(KeyPanelSettings info : config.getKeys()){
 				Key key = keys.computeIfAbsent(info.getKeyCode(), code->new Key(info));
 				if(info.isVisible()){
 					content.add(info.createPanel(key));
@@ -540,8 +554,8 @@ public class Main{
 			
 			//graph panels
 			graphs.clear();
-			for(GraphSettings info : config.getGraphSettings()){
-				GraphPanel graph = info.createPanel();
+			for(GraphPanelSettings info : config.getGraphs()){
+				GraphPanel graph = info.createGraph();
 				content.add(graph);
 				graphs.add(graph);
 			}
@@ -581,8 +595,8 @@ public class Main{
 	 */
 	public static final void resetPanels(){
 		for(Component component : content.getComponents()){
-			if(component instanceof BasePanel){
-				((BasePanel)component).sizeChanged();
+			if(component instanceof DataPanel){
+				((DataPanel)component).sizeChanged();
 			}
 		}
 	}
@@ -621,7 +635,7 @@ public class Main{
 		hits = 0;
 		tmp.set(0);
 		lastHitTime = -1;
-		graphs.forEach(GraphPanel::reset);
+		resetGraphs();
 		frame.repaint();
 	}
 

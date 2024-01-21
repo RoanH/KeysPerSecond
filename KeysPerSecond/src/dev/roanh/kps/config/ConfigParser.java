@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.roanh.kps.config.group.GraphPanelSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
+
 /**
  * Class used to parse configuration files.
  * @author Roan
@@ -142,6 +145,24 @@ public class ConfigParser{
 			//read data
 			prepareMaps(version);
 			readData(in);
+			
+			//legacy
+			runLegacyConversions();
+		}
+	}
+	
+	/**
+	 * Subroutine to run post processing legacy setting conversions.
+	 */
+	private void runLegacyConversions(){
+		if(version.isBefore(8, 9)){
+			//line graph backlog used to be in update rate frames, now it is directly in milliseconds
+			for(GraphPanelSettings graph : config.getGraphs()){
+				if(graph instanceof LineGraphSettings){
+					LineGraphSettings settings = (LineGraphSettings)graph;
+					settings.setBacklog(settings.getBacklog() * config.getUpdateRateMs());
+				}
+			}
 		}
 	}
 	

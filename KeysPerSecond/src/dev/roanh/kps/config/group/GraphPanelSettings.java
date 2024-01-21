@@ -18,46 +18,41 @@
  */
 package dev.roanh.kps.config.group;
 
+import dev.roanh.kps.config.GraphType;
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.config.PanelType;
-import dev.roanh.kps.panels.DataPanel;
+import dev.roanh.kps.panels.GraphPanel;
 
 /**
- * Settings for special panels that display some sort
- * of derived statistic.
+ * Settings for graph panels.
  * @author Roan
- * @see PanelType
+ * @see GraphType
  */
-public abstract class SpecialPanelSettings extends DataPanelSettings{
+public abstract class GraphPanelSettings extends PanelSettings{
 	/**
-	 * The type of this panel, indicative of the metric displayed.
+	 * The type of this graph.
 	 */
-	private final PanelType type;
-	
-	/**
-	 * Constructs new special panel settings.
-	 * @param type The type of the special panel.
-	 * @param defaultName The display name of the panel.
-	 */
-	protected SpecialPanelSettings(PanelType type, String defaultName){
-		super("panels", defaultName);
-		this.type = type;
-	}
+	private final GraphType type;
 
 	/**
-	 * Creates a new panel based on these settings.
-	 * @return The newly created panel.
+	 * Constructs new graph panel settings.
+	 * @param type The type of the graph panel.
+	 * @param x The x position of the panel.
+	 * @param y The y position of the panel.
+	 * @param width The width of the panel.
+	 * @param height The height of the panel.
+	 * @param defaultName The display name of the panel.
 	 */
-	public abstract DataPanel createPanel();
-	
-	/**
-	 * Gets the type of the panel.
-	 * @return The type of the panel.
-	 */
-	public PanelType getType(){
-		return type;
+	protected GraphPanelSettings(GraphType type, int x, int y, int width, int height, String defaultName){
+		super("graphs", x, y, width, height, defaultName);
+		this.type = type;
 	}
 	
+	/**
+	 * Creates a new graph panel with this configuration.
+	 * @return The newly created graph panel.
+	 */
+	public abstract GraphPanel createGraph();
+
 	@Override
 	public void writeItems(IndentWriter out){
 		out.println("type: " + type.getKey());

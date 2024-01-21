@@ -31,7 +31,6 @@ import javax.swing.SwingConstants;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.SettingList;
-import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LocationSettings;
 import dev.roanh.kps.config.group.PanelSettings;
@@ -45,8 +44,6 @@ import dev.roanh.kps.ui.model.SpecialNumberModelEditor;
  * Table like view for displaying panels.
  * @author Roan
  * @see PanelSettings
- * @see KeyPanelSettings
- * @see GraphSettings
  */
 public class TablePanel extends JPanel{
 	/**
@@ -111,16 +108,6 @@ public class TablePanel extends JPanel{
 	 */
 	public boolean isLive(){
 		return live;
-	}
-	
-	/**
-	 * Adds a list of graph rows to this table.
-	 * @param graphs The graph settings to create rows for.
-	 */
-	public void addGraphs(SettingList<GraphSettings> graphs){
-		for(GraphSettings graph : graphs){
-			addPanelRow(graphs, graph);
-		}
 	}
 	
 	/**

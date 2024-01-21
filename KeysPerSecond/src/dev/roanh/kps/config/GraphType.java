@@ -23,70 +23,55 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import dev.roanh.kps.config.ListItemConstructor.ParsedItem;
-import dev.roanh.kps.config.group.AveragePanelSettings;
-import dev.roanh.kps.config.group.CurrentPanelSettings;
-import dev.roanh.kps.config.group.LastPanelSettings;
-import dev.roanh.kps.config.group.MaxPanelSettings;
-import dev.roanh.kps.config.group.SpecialPanelSettings;
-import dev.roanh.kps.config.group.TotalPanelSettings;
+import dev.roanh.kps.config.group.CursorGraphSettings;
+import dev.roanh.kps.config.group.GraphPanelSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
 
 /**
- * Enum of special panel types that exist.
+ * Enum of graph types that exist.
  * @author Roan
- * @see SpecialPanelSettings
+ * @see GraphPanelSettings
  */
-public enum PanelType{
+public enum GraphType{
 	/**
-	 * Maximum panel that shows the highest recorded KPS.
+	 * Line graph showing the average and current KPS.
 	 */
-	MAX("max", MaxPanelSettings::new),
+	LINE("line", LineGraphSettings::new),
 	/**
-	 * Average panel that shows the average KPS.
+	 * Cursor graph showing the cursor trail.
 	 */
-	AVG("avg", AveragePanelSettings::new),
-	/**
-	 * Current panel that shows the current KPS.
-	 */
-	CURRENT("current", CurrentPanelSettings::new),
-	/**
-	 * Total panel that shows the total number of hits.
-	 */
-	TOTAL("total", TotalPanelSettings::new),
-	/**
-	 * Last panel that shows the time since the last tracked input.
-	 */
-	LAST("last", LastPanelSettings::new);
+	CURSOR("cursor", CursorGraphSettings::new);
 	
 	/**
-	 * The panel type identifier.
+	 * The graph type identifier.
 	 */
 	private final String key;
 	/**
-	 * A constructor to create a new configuration for a panel type.
+	 * A constructor to create a new configuration for a graph panel.
 	 */
-	private final Supplier<SpecialPanelSettings> ctor;
+	private final Supplier<GraphPanelSettings> ctor;
 	
 	/**
-	 * Constructs a new panel type.
-	 * @param key The panel type identifier.
-	 * @param ctor A supplier of new panel settings.
+	 * Constructs a new graph type.
+	 * @param key The graph type identifier.
+	 * @param ctor A supplier of new graph settings.
 	 */
-	private PanelType(String key, Supplier<SpecialPanelSettings> ctor){
+	private GraphType(String key, Supplier<GraphPanelSettings> ctor){
 		this.key = key;
 		this.ctor = ctor;
 	}
 	
 	/**
-	 * Creates new settings for this panel type.
+	 * Creates new settings for this graph type.
 	 * @return The newly created settings.
 	 */
-	public SpecialPanelSettings newSettings(){
+	public GraphPanelSettings newSettings(){
 		return ctor.get();
 	}
 	
 	/**
-	 * Gets the identifier key for this panel type.
-	 * @return The identifier for this panel type.
+	 * Gets the identifier key for this graph type.
+	 * @return The identifier for this graph type.
 	 */
 	public String getKey(){
 		return key;
@@ -99,19 +84,20 @@ public enum PanelType{
 	 *         did not encoded valid panel settings.
 	 * @see ListItemConstructor
 	 */
-	public static ParsedItem<SpecialPanelSettings> construct(List<String> data){
+	public static ParsedItem<GraphPanelSettings> construct(List<String> data){
 		Map<String, String> info = ListItemConstructor.buildMap(data);
 		if(info == null){
 			return null;
 		}
 		
 		String key = info.get("type");
-		for(PanelType type : values()){
+		for(GraphType type : values()){
 			if(type.key.equals(key)){
 				return ListItemConstructor.constructThenParse(type.ctor, info);
 			}
 		}
 		
-		return null;
+		//for legacy reasons the fallback type is the line graph
+		return ListItemConstructor.constructThenParse(LINE.ctor, info);
 	}
 }

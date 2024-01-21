@@ -16,34 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dev.roanh.kps.panels;
+package dev.roanh.kps.event.listener;
 
-import dev.roanh.kps.Main;
-import dev.roanh.kps.config.group.CurrentPanelSettings;
+import dev.roanh.kps.event.EventManager;
 
 /**
- * Panel used to display the current keys pressed per second.
- * Note that since the actual 'current' time frame is still on
- * going this actually displays the keys per second from the
- * previous second.
+ * Listener called when the mouse was moved.
  * @author Roan
+ * @see EventManager
  */
-public final class NowPanel extends DataPanel{
-	/**
-	 * Serial ID
-	 */
-	private static final long serialVersionUID = 8816524158873355997L;
+@FunctionalInterface
+public abstract interface MouseMoveListener{
 
 	/**
-	 * Constructs a new current panel
-	 * @param settings The panel configuration.
+	 * Called when the cursor was moved.
+	 * @param x The x coordinate the cursor moved to.
+	 * @param y The y coordinate the cursor moved to.
 	 */
-	public NowPanel(CurrentPanelSettings settings){
-		super(settings);
-	}
-
-	@Override
-	protected String getValue(){
-		return String.valueOf(Main.prev);
-	}
+	public abstract void onMouseMove(int x, int y);
 }

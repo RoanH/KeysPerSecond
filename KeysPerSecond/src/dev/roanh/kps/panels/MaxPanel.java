@@ -25,7 +25,7 @@ import dev.roanh.kps.config.group.MaxPanelSettings;
  * Panel used to display the maximum keys pressed per second.
  * @author Roan
  */
-public final class MaxPanel extends BasePanel{
+public final class MaxPanel extends DataPanel{
 	/**
 	 * Serial ID
 	 */

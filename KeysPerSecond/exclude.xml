@@ -19,7 +19,8 @@
     <Or>
       <Class name="dev.roanh.kps.config.PanelType"/>
       <Class name="dev.roanh.kps.panels.AvgPanel"/>
-      <Class name="dev.roanh.kps.panels.GraphPanel"/>
+      <Class name="dev.roanh.kps.panels.LineGraphPanel"/>
+      <Class name="dev.roanh.kps.panels.CursorGraphPanel"/>
       <Class name="dev.roanh.kps.panels.KeyPanel"/>
       <Class name="dev.roanh.kps.panels.LastPanel"/>
       <Class name="dev.roanh.kps.ui.component.ColorPicker"/>
@@ -65,7 +66,7 @@
     <Or>
       <Class name="dev.roanh.kps.ui.component.ColorPicker"/>
       <Class name="dev.roanh.kps.ui.model.SpecialNumberModelEditor"/>
-      <Class name="dev.roanh.kps.panels.BasePanel"/>
+      <Class name="dev.roanh.kps.panels.DataPanel"/>
     </Or>
   </Match>
   

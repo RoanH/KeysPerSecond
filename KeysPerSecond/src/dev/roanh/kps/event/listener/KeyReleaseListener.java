@@ -26,7 +26,7 @@ import dev.roanh.kps.event.EventManager;
  * @see EventManager
  */
 @FunctionalInterface
-public interface KeyReleaseListener{
+public abstract interface KeyReleaseListener{
 
 	/**
 	 * Called when a key was released.

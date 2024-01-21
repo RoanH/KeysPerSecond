@@ -21,6 +21,7 @@ package dev.roanh.kps.config.group;
 import java.util.List;
 import java.util.Map;
 
+import dev.roanh.kps.config.GraphType;
 import dev.roanh.kps.config.IndentWriter;
 import dev.roanh.kps.config.Setting;
 import dev.roanh.kps.config.legacy.LegacyGraphSetting;
@@ -28,16 +29,16 @@ import dev.roanh.kps.config.legacy.LegacyProxyStore;
 import dev.roanh.kps.config.legacy.ProxySetting;
 import dev.roanh.kps.config.setting.BooleanSetting;
 import dev.roanh.kps.config.setting.IntSetting;
-import dev.roanh.kps.panels.GraphPanel;
+import dev.roanh.kps.panels.LineGraphPanel;
 import dev.roanh.kps.ui.editor.Editor;
-import dev.roanh.kps.ui.editor.GraphEditor;
+import dev.roanh.kps.ui.editor.LineGraphEditor;
 
 /**
- * Configuration for graph panels.
+ * Configuration for line graph panels.
  * @author Roan
- * @see GraphPanel
+ * @see LineGraphPanel
  */
-public class GraphSettings extends PanelSettings implements LegacyProxyStore{
+public class LineGraphSettings extends GraphPanelSettings implements LegacyProxyStore{
 	/**
 	 * Whether to draw the horizontal average line or not.
 	 */
@@ -45,7 +46,7 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 	/**
 	 * Number of points the graph consists of.
 	 */
-	private final IntSetting backlog = new IntSetting("backlog", 2, Short.MAX_VALUE, 30);
+	private final IntSetting backlog = new IntSetting("backlog", 2, Integer.MAX_VALUE, 3000);
 	/**
 	 * Maximum graph y value that will be displayed. Any higher values are capped at this value.
 	 */
@@ -54,8 +55,8 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 	/**
 	 * Creates new graph settings.
 	 */
-	public GraphSettings(){
-		super("graphs", 0, -1, -1, 3, "KPS");
+	public LineGraphSettings(){
+		super(GraphType.LINE, 0, -1, -1, 3, "Line");
 	}
 	
 	/**
@@ -109,17 +110,14 @@ public class GraphSettings extends PanelSettings implements LegacyProxyStore{
 		this.backlog.update(backlog);
 	}
 	
-	/**
-	 * Creates a new graph panel with this configuration.
-	 * @return The newly created graph panel.
-	 */
-	public GraphPanel createPanel(){
-		return new GraphPanel(this);
+	@Override
+	public LineGraphPanel createGraph(){
+		return new LineGraphPanel(this);
 	}
 	
 	@Override
 	public void showEditor(boolean live){
-		Editor.showEditor(new GraphEditor(this, live));
+		Editor.showEditor(new LineGraphEditor(this, live));
 	}
 
 	@Override

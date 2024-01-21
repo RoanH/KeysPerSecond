@@ -24,14 +24,14 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.config.group.GraphSettings;
+import dev.roanh.kps.config.group.LineGraphSettings;
 
 /**
- * Editor for graph settings.
+ * Editor for line graph settings.
  * @author Roan
- * @see GraphSettings
+ * @see LineGraphSettings
  */
-public class GraphEditor extends Editor{
+public class LineGraphEditor extends Editor{
 	/**
 	 * Serial ID.
 	 */
@@ -42,11 +42,11 @@ public class GraphEditor extends Editor{
 	 * @param config The configuration to update.
 	 * @param live If updates should be reflected in real time.
 	 */
-	public GraphEditor(GraphSettings config, boolean live){
+	public LineGraphEditor(LineGraphSettings config, boolean live){
 		super("Graph Settings");
 
-		labels.add(new JLabel("Backlog (seconds / " + (1000 / Main.config.getUpdateRateMs()) + "): "));
-		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 2, Short.MAX_VALUE, 1));
+		labels.add(new JLabel("Backlog (milliseconds): "));
+		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 2, Integer.MAX_VALUE, 100));
 		backlog.addChangeListener(e->config.setBacklog((int)backlog.getValue()));
 		fields.add(backlog);
 		

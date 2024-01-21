@@ -100,7 +100,7 @@ public class CommandKeysDialog extends JPanel implements KeyPressListener{
 		CommandKeysDialog dialog = new CommandKeysDialog(config);
 		Main.eventManager.registerKeyPressListener(dialog);
 		Dialog.showMessageDialog(dialog);
-		Main.eventManager.unregisterKeyPressListener(dialog);
+		Main.eventManager.deregisterKeyPressListener(dialog);
 	}
 	
 	/**

@@ -35,9 +35,9 @@ import javax.swing.SpinnerNumberModel;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.Configuration;
+import dev.roanh.kps.config.GraphType;
 import dev.roanh.kps.config.PanelType;
 import dev.roanh.kps.config.SettingList;
-import dev.roanh.kps.config.group.GraphSettings;
 import dev.roanh.kps.config.group.LayoutSettings;
 import dev.roanh.kps.config.group.PanelSettings;
 import dev.roanh.kps.panels.BasePanel;
@@ -89,7 +89,7 @@ public class LayoutDialog{
 		
 		//panel configuration
 		TablePanel panelView = new TablePanel("Panel", true, live);
-		panelView.addPanels(config.getKeySettings());
+		panelView.addPanels(config.getKeys());
 		panelView.addPanels(config.getPanels());
 		
 		JScrollPane pane = new JScrollPane(panelView);
@@ -112,17 +112,21 @@ public class LayoutDialog{
 
 		//graph configuration
 		TablePanel graphView = new TablePanel("Graph", true, live);
-		graphView.addGraphs(config.getGraphSettings());
+		graphView.addPanels(config.getGraphs());
 		
 		JScrollPane graphPane = new JScrollPane(graphView);
 		graphPane.setBorder(BorderFactory.createEmptyBorder());
 		graphPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		graphPane.setPreferredSize(new Dimension(600, 100));
 		
+		JPanel graphButtons = new JPanel(new GridLayout(1, 0, 2, 0));
+		graphButtons.add(createAddButton(graphView, "Add Line Graph", config.getGraphs(), GraphType.LINE::newSettings));
+		graphButtons.add(createAddButton(graphView, "Add Cursor Graph", config.getGraphs(), GraphType.CURSOR::newSettings));
+		
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
 		graphPanel.add(graphPane, BorderLayout.CENTER);
-		graphPanel.add(createAddButton(graphView, "Add KPS Graph", config.getGraphSettings(), GraphSettings::new), BorderLayout.PAGE_END);
+		graphPanel.add(graphButtons, BorderLayout.PAGE_END);
 		form.add(graphPanel, BorderLayout.PAGE_END);
 		
 		Dialog.showMessageDialog(form, true, ModalityType.APPLICATION_MODAL);

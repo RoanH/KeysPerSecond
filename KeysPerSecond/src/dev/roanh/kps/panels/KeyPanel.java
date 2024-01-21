@@ -27,7 +27,7 @@ import dev.roanh.kps.config.group.KeyPanelSettings;
  * been pressed
  * @author Roan
  */
-public final class KeyPanel extends BasePanel{
+public final class KeyPanel extends DataPanel{
 	/**
 	 * Serial ID
 	 */
