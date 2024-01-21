@@ -27,26 +27,63 @@ import dev.roanh.kps.config.group.CursorGraphSettings;
 import dev.roanh.kps.config.group.GraphPanelSettings;
 import dev.roanh.kps.config.group.LineGraphSettings;
 
+/**
+ * Enum of graph types that exist.
+ * @author Roan
+ * @see GraphPanelSettings
+ */
 public enum GraphType{
+	/**
+	 * Line graph showing the average and current KPS.
+	 */
 	LINE("line", LineGraphSettings::new),
+	/**
+	 * Cursor graph showing the cursor trail.
+	 */
 	CURSOR("cursor", CursorGraphSettings::new);
 	
+	/**
+	 * The graph type identifier.
+	 */
 	private final String key;
+	/**
+	 * A constructor to create a new configuration for a graph panel.
+	 */
 	private final Supplier<GraphPanelSettings> ctor;
 	
+	/**
+	 * Constructs a new graph type.
+	 * @param key The graph type identifier.
+	 * @param ctor A supplier of new graph settings.
+	 */
 	private GraphType(String key, Supplier<GraphPanelSettings> ctor){
 		this.key = key;
 		this.ctor = ctor;
 	}
 	
+	/**
+	 * Creates new settings for this graph type.
+	 * @return The newly created settings.
+	 */
 	public GraphPanelSettings newSettings(){
 		return ctor.get();
 	}
 	
+	/**
+	 * Gets the identifier key for this graph type.
+	 * @return The identifier for this graph type.
+	 */
 	public String getKey(){
 		return key;
 	}
 	
+	/**
+	 * Constructs new panel settings based on the given list of configuration data.
+	 * @param data The panel configuration data.
+	 * @return The parsed panel settings or null if the data
+	 *         did not encoded valid panel settings.
+	 * @see ListItemConstructor
+	 */
 	public static ParsedItem<GraphPanelSettings> construct(List<String> data){
 		Map<String, String> info = ListItemConstructor.buildMap(data);
 		if(info == null){

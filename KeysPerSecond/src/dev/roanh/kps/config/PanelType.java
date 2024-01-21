@@ -93,8 +93,7 @@ public enum PanelType{
 	}
 	
 	/**
-	 * Constructs new panel settings based on the given list
-	 * of configuration data.
+	 * Constructs new panel settings based on the given list of configuration data.
 	 * @param data The panel configuration data.
 	 * @return The parsed panel settings or null if the data
 	 *         did not encoded valid panel settings.
