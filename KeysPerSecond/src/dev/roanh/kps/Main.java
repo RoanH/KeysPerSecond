@@ -138,7 +138,7 @@ public class Main{
 	/**
 	 * Whether or not the counter is paused
 	 */
-	protected static boolean suspended = false;
+	protected static volatile boolean suspended = false;
 	/**
 	 * The configuration
 	 */
@@ -603,7 +603,7 @@ public class Main{
 	}
 	
 	/**
-	 * Applies all statistics and keys.
+	 * Resets all statistics and keys.
 	 */
 	protected static final void resetData(){
 		keys.clear();
