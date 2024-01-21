@@ -49,6 +49,9 @@ public class EventManager{
 	 * List of registered mouse button release listeners.
 	 */
 	private List<ButtonReleaseListener> buttonReleaseListeners = new CopyOnWriteArrayList<ButtonReleaseListener>();
+	/**
+	 * List of registered mouse move listeners.
+	 */
 	private List<MouseMoveListener> mouseMoveListeners = new CopyOnWriteArrayList<MouseMoveListener>();
 	/**
 	 * List of input sources providing input to this event manager.
@@ -87,6 +90,10 @@ public class EventManager{
 		buttonReleaseListeners.add(listener);
 	}
 	
+	/**
+	 * Registers a new mouse move listener to this manager.
+	 * @param listener The listener to register.
+	 */
 	public void registerMouseMoveListener(MouseMoveListener listener){
 		mouseMoveListeners.add(listener);
 	}
@@ -131,6 +138,11 @@ public class EventManager{
 		}
 	}
 	
+	/**
+	 * Fires a new mouse move event for the given target coordinate.
+	 * @param x The x coordinate the cursor moved to.
+	 * @param y The y coordinate the cursor moved to.
+	 */
 	public void fireMouseMoveEvent(int x, int y){
 		for(MouseMoveListener listener : mouseMoveListeners){
 			listener.onMouseMove(x, y);
@@ -139,44 +151,48 @@ public class EventManager{
 
 	/**
 	 * Registers a new input source to this event manager.
-	 * @param source The input soruce to register.
+	 * @param source The input source to register.
 	 */
 	public void registerInputSource(InputSource source){
 		sources.add(source);
 	}
 
 	/**
-	 * Unregisters a key press listener from this manager.
-	 * @param listener The listener to unregister.
+	 * Deregisters a key press listener from this manager.
+	 * @param listener The listener to deregister.
 	 */
 	public void deregisterKeyPressListener(KeyPressListener listener){
 		keyPressListeners.remove(listener);
 	}
 
 	/**
-	 * Unregisters a button press listener from this manager.
-	 * @param listener The listener to unregister.
+	 * Deregisters a button press listener from this manager.
+	 * @param listener The listener to deregister.
 	 */
 	public void deregisterButtonPressListener(ButtonPressListener listener){
 		buttonPressListeners.remove(listener);
 	}
 
 	/**
-	 * Unregisters a key release listener from this manager.
-	 * @param listener The listener to unregister.
+	 * Deregisters a key release listener from this manager.
+	 * @param listener The listener to deregister.
 	 */
 	public void deregisterKeyReleaseListener(KeyReleaseListener listener){
 		keyReleaseListeners.remove(listener);
 	}
 
 	/**
-	 * Unregisters a button release listener from this manager.
-	 * @param listener The listener to unregister.
+	 * Deregisters a button release listener from this manager.
+	 * @param listener The listener to deregister.
 	 */
 	public void deregisterButtonReleaseListener(ButtonReleaseListener listener){
 		buttonReleaseListeners.remove(listener);
 	}
 	
+	/**
+	 * Deregisters a mouse move listener from this manager.
+	 * @param listener The listener to deregister.
+	 */
 	public void deregisterMouseMoveListener(MouseMoveListener listener){
 		mouseMoveListeners.remove(listener);
 	}

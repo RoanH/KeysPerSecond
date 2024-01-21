@@ -18,8 +18,20 @@
  */
 package dev.roanh.kps.event.listener;
 
+import dev.roanh.kps.event.EventManager;
+
+/**
+ * Listener called when the mouse was moved.
+ * @author Roan
+ * @see EventManager
+ */
 @FunctionalInterface
 public abstract interface MouseMoveListener{
 
+	/**
+	 * Called when the cursor was moved.
+	 * @param x The x coordinate the cursor moved to.
+	 * @param y The y coordinate the cursor moved to.
+	 */
 	public abstract void onMouseMove(int x, int y);
 }
