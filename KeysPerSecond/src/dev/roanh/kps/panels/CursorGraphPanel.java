@@ -19,7 +19,10 @@
 package dev.roanh.kps.panels;
 
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -40,7 +43,11 @@ public class CursorGraphPanel extends GraphPanel{
 	public CursorGraphPanel(CursorGraphSettings config){
 		super(config);
 		this.config = config;
-		display = config.getDisplay().getDefaultConfiguration().getBounds();
+		
+		GraphicsDevice device = config.getDisplay();
+		if(device != null){
+			display = device.getDefaultConfiguration().getBounds();
+		}
 	}
 	
 	private void addPoint(int x, int y, long time){
@@ -50,14 +57,14 @@ public class CursorGraphPanel extends GraphPanel{
 	}
 	
 	private void removeExpired(long time){
-		while(time - path.getLast().time > config.getBacklog()){//todo config
+		while(!path.isEmpty() && time - path.peekLast().time > config.getBacklog()){
 			path.removeLast();
 		}
 	}
 	
 	@Override
 	public void update(){
-		long time = System.currentTimeMillis();//TODO sys time may not be accurate, but it is fast
+		long time = System.nanoTime() / 1000000;
 		addPoint(Main.mouseLoc.x, Main.mouseLoc.y, time);
 		removeExpired(time);
 	}
@@ -80,6 +87,7 @@ public class CursorGraphPanel extends GraphPanel{
 		int top = RenderingMode.insideOffset + borderOffset;
 		int bottom = this.getHeight() - RenderingMode.insideOffset - borderOffset;
 		
+		AffineTransform transform = g.getTransform();
 		g.setClip(left, top, right - left + 1, bottom - top + 1);
 		g.translate(left, top);
 		
@@ -116,6 +124,10 @@ public class CursorGraphPanel extends GraphPanel{
 			g.setColor(foreground.getColor());
 			g.draw(line);
 		}
+		
+		//restore original state
+		g.setClip(null);
+		g.setTransform(transform);
 	}
 	
 	private static class TimePoint {
