@@ -39,6 +39,11 @@ public class CursorGraphEditor extends Editor{
 	 */
 	private static final long serialVersionUID = 2126285185766458287L;
 
+	/**
+	 * Constructs a new editor.
+	 * @param config The configuration to update.
+	 * @param live If updates should be reflected in real time.
+	 */
 	public CursorGraphEditor(CursorGraphSettings config, boolean live){
 		super("Graph Settings");
 		
