@@ -46,7 +46,7 @@ public class LineGraphEditor extends Editor{
 		super("Graph Settings");
 
 		labels.add(new JLabel("Backlog (milliseconds): "));
-		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 2, Integer.MAX_VALUE, 1));
+		JSpinner backlog = new JSpinner(new SpinnerNumberModel(config.getBacklog(), 2, Integer.MAX_VALUE, 100));
 		backlog.addChangeListener(e->config.setBacklog((int)backlog.getValue()));
 		fields.add(backlog);
 		
