@@ -591,7 +591,7 @@ public class Main{
 	 */
 	public static final void resetPanels(){
 		for(Component component : content.getComponents()){
-			if(component instanceof BasePanel){
+			if(component instanceof DataPanel){
 				((DataPanel)component).sizeChanged();
 			}
 		}
