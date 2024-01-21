@@ -70,24 +70,29 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	/**
 	 * The configuration being updated.
 	 */
-	private SettingList<KeyPanelSettings> config;
+	private Configuration config;
+	/**
+	 * The key settings being updated.
+	 */
+	private SettingList<KeyPanelSettings> keySettings;
 	
 	/**
 	 * Constructs a new KeysDialog.
 	 * @param config The configuration to update.
 	 * @param live If the setting live and changes should be reflected in real time.
-	 * @see #configureKeys(SettingList, boolean)
+	 * @see #configureKeys(Configuration, boolean)
 	 */
-	private KeysDialog(SettingList<KeyPanelSettings> config, boolean live){
+	private KeysDialog(Configuration config, boolean live){
 		super(new BorderLayout());
 		this.config = config;
+		keySettings = config.getKeySettings();
 		
 		//left panel showing added keys
 		JPanel left = new JPanel(new BorderLayout());
 		left.setBorder(BorderFactory.createTitledBorder("Currently added keys"));
 
 		keys = new TablePanel("Key", false, live);
-		keys.addPanels(config);
+		keys.addPanels(keySettings);
 		JScrollPane pane = new JScrollPane(keys);
 		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setPreferredSize(new Dimension(300, 200));
@@ -144,11 +149,11 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		JButton button = new JButton(text);
 		button.addActionListener(e->{
 			KeyPanelSettings info = new KeyPanelSettings(placePanel(), Main.getExtendedButtonCode(code));
-			if(config.contains(info)){
+			if(keySettings.contains(info)){
 				Dialog.showMessageDialog("The M" + code + " button was already added before.\nIt was not added again.");
 			}else{
-				config.add(info);
-				keys.addPanelRow(config, info);
+				keySettings.add(info);
+				keys.addPanelRow(keySettings, info);
 				keys.revalidate();
 				if(keys.isLive()){
 					Main.reconfigure();
@@ -171,11 +176,11 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 		}
 		
 		KeyPanelSettings info = new KeyPanelSettings(placePanel(), lastKey);
-		if(config.contains(info)){
+		if(keySettings.contains(info)){
 			Dialog.showMessageDialog("That key was already added before.\nIt was not added again.");
 		}else{
-			config.add(info);
-			keys.addPanelRow(config, info);
+			keySettings.add(info);
+			keys.addPanelRow(keySettings, info);
 			keys.revalidate();
 			if(keys.isLive()){
 				Main.reconfigure();
@@ -195,7 +200,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * @param config The configuration to update.
 	 * @param live If the setting live and changes should be reflected in real time.
 	 */
-	public static final void configureKeys(SettingList<KeyPanelSettings> config, boolean live){
+	public static final void configureKeys(Configuration config, boolean live){
 		KeysDialog dialog = new KeysDialog(config, live);
 		Main.eventManager.registerKeyPressListener(dialog);
 		Dialog.showMessageDialog(dialog, true, ModalityType.APPLICATION_MODAL);
@@ -208,7 +213,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	 * @return A location where a panel can be placed without overlap.
 	 */
 	private Point placePanel(){
-		return placePanel(Main.config, 2, 3);
+		return placePanel(config, 2, 3);
 	}
 	
 	/**

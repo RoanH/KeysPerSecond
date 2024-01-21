@@ -29,7 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import dev.roanh.kps.Main;
+import dev.roanh.kps.config.Configuration;
 import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.util.Dialog;
 
@@ -49,15 +49,16 @@ public class UpdateRateDialog extends JPanel{
 	
 	/**
 	 * Constructs a new update rate configuration dialog.
+	 * @param config The config to update.
 	 */
-	private UpdateRateDialog(){
+	private UpdateRateDialog(Configuration config){
 		super(new BorderLayout(0, 5));
 		
 		JPanel info = new JPanel(new GridLayout(2, 1, 0, 0));
 		info.add(new JLabel("Here you can change the rate at which"));
 		info.add(new JLabel("most panels are updated."));
 		
-		update.setSelectedItem(Main.config.getUpdateRate());
+		update.setSelectedItem(config.getUpdateRate());
 		update.setRenderer(new RateCellRenderer());
 		
 		add(info, BorderLayout.PAGE_START);
@@ -67,11 +68,12 @@ public class UpdateRateDialog extends JPanel{
 
 	/**
 	 * Shows a dialog to configure the update rate.
+	 * @param config The config to update.
 	 */
-	public static final void configureUpdateRate(){
-		UpdateRateDialog pconfig = new UpdateRateDialog();
+	public static final void configureUpdateRate(Configuration config){
+		UpdateRateDialog pconfig = new UpdateRateDialog(config);
 		if(Dialog.showSaveDialog(pconfig)){
-			Main.config.setUpdateRate((UpdateRate)pconfig.update.getSelectedItem());
+			config.setUpdateRate((UpdateRate)pconfig.update.getSelectedItem());
 		}
 	}
 	

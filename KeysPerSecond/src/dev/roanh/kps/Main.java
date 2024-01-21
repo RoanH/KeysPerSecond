@@ -27,6 +27,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -65,34 +66,19 @@ import dev.roanh.kps.panels.DataPanel;
 import dev.roanh.kps.panels.LineGraphPanel;
 import dev.roanh.kps.panels.CursorGraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
-import dev.roanh.kps.ui.listener.CloseListener;
+import dev.roanh.kps.ui.listener.MainWindowListener;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.ExclamationMarkPath;
 import dev.roanh.util.Util;
 
 /**
- * This program can be used to display
- * information about how many times
- * certain keys are pressed and what the
- * average, maximum and current
- * number of keys pressed per second is.
- * <p>
- * Besides the tracking of the assigned keys
- * this program responds to 6 key events these are:
- * <ol><li><b>Ctrl + P</b>: Causes the program to reset the average and maximum value
- * And to print the statistics to standard output
- * </li><li><b>Ctrl + O</b>: Terminates the program
- * </li><li><b>Ctrl + I</b>: Causes the program to reset the amount of times a key is pressed
- * And to print the statistics to standard output
- * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI
- * </li><li><b>Ctrl + T</b>: Pauses/resumes the counter
- * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol>
- * The program also constantly prints the current keys per second to
- * the standard output.<br>
- * A key is only counted as being pressed if the key has been released before
- * this deals with the issue of holding a key firing multiple key press events<br>
- * This program also has support for saving and loading configurations
+ * This program can be used to display information about how many times
+ * certain keys are pressed and what certain derivative statistics like
+ * the average, maximum and current number of keys pressed per second are.
+ * In addition various graphs can also be shown and the entire program can
+ * be customised. Custom configurations for the program can also be saved.
  * @author Roan Hofland (<a href="mailto:roan@roanh.dev">roan@roanh.dev</a>)
+ * @see <a href="https://github.com/RoanH/KeysPerSecond">GitHub Repository</a>
  */
 public class Main{
 	/**
@@ -156,7 +142,7 @@ public class Main{
 	/**
 	 * Whether or not the counter is paused
 	 */
-	protected static boolean suspended = false;
+	protected static volatile boolean suspended = false;
 	/**
 	 * The configuration
 	 */
@@ -195,12 +181,15 @@ public class Main{
 	public static final EventManager eventManager = new EventManager();
 	
 	/**
-	 * Main method
-	 * @param args - configuration file path
+	 * Main method.
+	 * @param args The configuration file path.
 	 */
 	public static void main(String[] args){
 		//work around for a JDK bug
 		ExclamationMarkPath.check(args);
+
+		//simple hello print
+		System.out.println("KeysPerSecond " + VERSION);
 		
 		//check for a passed config
 		String configPath = null;
@@ -208,15 +197,6 @@ public class Main{
 			configPath = args[0];
 			System.out.println("Attempting to load config: " + configPath);
 		}
-		
-		//info print
-		System.out.println("Control keys:");
-		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
-		System.out.println("Ctrl + U: Terminates the program");
-		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
-		System.out.println("Ctrl + Y: Hides/shows the GUI");
-		System.out.println("Ctrl + T: Pauses/resumes the counter");
-		System.out.println("Ctrl + R: Reloads the configuration");
 		
 		//set UI components
 		Util.installUI();
@@ -249,10 +229,9 @@ public class Main{
 		Configuration quickLoad = ConfigLoader.quickLoadConfiguration(configPath);
 		if(quickLoad == null){
 			//if no (valid) ones were found let the user create a new config
-			MainDialog.configure(Main.config);
+			applyConfig(MainDialog.configure(), false);
 		}else{
-			Main.config = quickLoad;
-			System.out.println("Loaded config file: " + quickLoad.getPath().toString());
+			applyConfig(quickLoad, false);
 		}
 
 		//build GUI
@@ -268,6 +247,47 @@ public class Main{
 		
 		//enter the main loop
 		mainLoop();
+	}
+	
+	/**
+	 * Applies a new configuration to the program.
+	 * @param config The new configuration to load.
+	 * @param live True if the main GUI is already visible.
+	 */
+	public static final void applyConfig(Configuration config, boolean live){
+		Main.config = config;
+		
+		//rebuild the menu
+		Menu.createMenu();
+		
+		//reset stats and keys
+		resetData();
+		
+		//apply a frame position if set
+		if(config.getFramePosition().hasPosition()){
+			frame.setLocation(config.getFramePosition().getLocation());
+		}
+
+		//load initial stats
+		if(config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
+			try{
+				Statistics.loadStats(Paths.get(config.getStatsSavingSettings().getSaveFile()));
+			}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
+				e.printStackTrace();
+				Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
+			}
+		}
+		
+		//print loaded config
+		if(config.getPath() != null){
+			System.out.println("Loaded config file: " + config.getPath().toString());
+		}
+		
+		//update the running state
+		if(live){
+			reconfigure();
+			mainLoop();
+		}
 	}
 
 	/**
@@ -288,17 +308,19 @@ public class Main{
 			if(!suspended){
 				int currentTmp = tmp.getAndSet(0);
 				int totaltmp = currentTmp;
+				
 				for(int i : timepoints){
 					totaltmp += i;
 				}
+				
 				if(totaltmp > max){
 					max = totaltmp;
 				}
+				
 				if(totaltmp != 0){
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					hits += currentTmp;
-					System.out.println("Current keys per second: " + totaltmp);
 				}
 				
 				for(BasePanel graph : graphs){
@@ -443,7 +465,6 @@ public class Main{
 			Menu.pause.setSelected(suspended);
 		}else if(commands.getCommandReload().matches(code)){
 			ConfigLoader.reloadConfig();
-			Menu.resetData();
 		}
 	}
 
@@ -487,33 +508,12 @@ public class Main{
 	 * Builds the main GUI of the program.
 	 */
 	private static final void buildGUI(){
-		Menu.createMenu();
 		frame.setResizable(false);
 		frame.setIconImage(icon);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(!config.isWindowedMode());
 		Listener.configureListener(frame);
-		frame.addWindowListener(new CloseListener());
+		frame.addWindowListener(new MainWindowListener());
 		reconfigure();
-	}
-	
-	/**
-	 * Signals to all panels that size related information has changed
-	 * and that all rendering caches should be invalidated.
-	 */
-	public static final void resetPanels(){
-		for(Component component : content.getComponents()){
-			if(component instanceof DataPanel){
-				((DataPanel)component).sizeChanged();
-			}
-		}
-	}
-	
-	/**
-	 * Clears the data for all active graphs.
-	 */
-	public static final void resetGraphs(){
-//		graphs.forEach(LineGraphPanel::reset);//TODO probably something for the base class
 	}
 	
 	/**
@@ -521,6 +521,12 @@ public class Main{
 	 */
 	public static final void reconfigure(){
 		SwingUtilities.invokeLater(()->{
+			if(config.isWindowedMode() == frame.isUndecorated()){
+				frame.setVisible(false);
+				frame.dispose();
+				frame.setUndecorated(!Main.config.isWindowedMode());
+			}
+			
 			frame.getContentPane().removeAll();
 			layout.removeAll();
 			
@@ -584,6 +590,25 @@ public class Main{
 			Statistics.saveStatsTask();
 		}
 	}
+	
+	/**
+	 * Signals to all panels that size related information has changed
+	 * and that all rendering caches should be invalidated.
+	 */
+	public static final void resetPanels(){
+		for(Component component : content.getComponents()){
+			if(component instanceof BasePanel){
+				((DataPanel)component).sizeChanged();
+			}
+		}
+	}
+	
+	/**
+	 * Clears the data for all active graphs.
+	 */
+	public static final void resetGraphs(){
+//		graphs.forEach(LineGraphPanel::reset);//TODO probably something for the base class
+	}
 
 	/**
 	 * Shuts down the program
@@ -591,6 +616,14 @@ public class Main{
 	public static final void exit(){
 		Statistics.saveStatsOnExit();
 		System.exit(0);
+	}
+	
+	/**
+	 * Resets all statistics and keys.
+	 */
+	protected static final void resetData(){
+		keys.clear();
+		resetStats();
 	}
 
 	/**

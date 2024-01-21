@@ -24,14 +24,16 @@ import java.awt.event.WindowListener;
 import dev.roanh.kps.Main;
 
 /**
- * Listener to be registered to all frames so
- * that they properly clean up resources when closed.
+ * Listener for the main window so cleanup and exit tasks run properly.
  * @author Roan
  */
-public class CloseListener implements WindowListener{
+public class MainWindowListener implements WindowListener{
 
 	@Override
 	public void windowOpened(WindowEvent e){
+		if(!Main.config.getFramePosition().hasPosition()){
+			e.getWindow().setLocationRelativeTo(null);
+		}
 	}
 
 	@Override

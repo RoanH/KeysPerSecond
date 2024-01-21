@@ -32,7 +32,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import dev.roanh.kps.Main;
-import dev.roanh.kps.Statistics;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.FileSelector;
 import dev.roanh.util.FileSelector.FileExtension;
@@ -81,19 +80,6 @@ public class ConfigLoader{
 				Dialog.showMessageDialog("Configuration loaded succesfully.");
 			}
 			
-			if(Main.config.getFramePosition().hasPosition()){
-				Main.frame.setLocation(Main.config.getFramePosition().getLocation());
-			}
-			
-			if(Main.config.getStatsSavingSettings().isLoadOnLaunchEnabled()){
-				try{
-					Statistics.loadStats(Paths.get(Main.config.getStatsSavingSettings().getSaveFile()));
-				}catch(IOException | UnsupportedOperationException | IllegalArgumentException e){
-					e.printStackTrace();
-					Dialog.showMessageDialog("Failed to load statistics on launch.\nCause: " + e.getMessage());
-				}
-			}
-			
 			return parser.getConfig();
 		}catch(IOException e){
 			e.printStackTrace();
@@ -108,7 +94,7 @@ public class ConfigLoader{
 	public static void reloadConfig(){
 		if(Main.config.getPath() != null){
 			try{
-				Main.config = ConfigParser.read(Main.config.getPath());
+				Main.applyConfig(ConfigParser.read(Main.config.getPath()), true);
 			}catch(IOException e){
 				e.printStackTrace();
 				Dialog.showErrorDialog("Failed to reload the configuration, cause: " + e.getMessage());

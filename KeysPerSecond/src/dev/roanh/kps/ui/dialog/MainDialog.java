@@ -34,7 +34,6 @@ import javax.swing.SwingConstants;
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ConfigLoader;
 import dev.roanh.kps.config.Configuration;
-import dev.roanh.kps.ui.listener.CloseListener;
 import dev.roanh.util.ClickableLink;
 import dev.roanh.util.Dialog;
 import dev.roanh.util.Util;
@@ -49,22 +48,20 @@ public class MainDialog extends JPanel{
 	 */
 	private static final long serialVersionUID = -2620857098469751291L;
 	/**
-	 * The configuration to update.
+	 * The configuration being created.
 	 */
-	private Configuration config;
+	private Configuration config = new Configuration();
 	/**
 	 * Panel with check box options.
 	 */
-	private CheckBoxPanel options;
+	private CheckBoxPanel options = new CheckBoxPanel();
 	
 	/**
 	 * Constructs a new main dialog.
-	 * @param config The configuration to update.
 	 */
-	public MainDialog(Configuration config){
+	public MainDialog(){
 		super(new BorderLayout());
-		this.config = config;
-		options = new CheckBoxPanel();
+		options.syncBoxes();
 		
 		add(buildLeftPanel(), BorderLayout.CENTER);
 		add(buildRightPanel(), BorderLayout.LINE_END);
@@ -108,11 +105,11 @@ public class MainDialog extends JPanel{
 
 		JButton keys = new JButton("Configure keys & buttons");
 		main.add(keys);
-		keys.addActionListener(e->KeysDialog.configureKeys(config.getKeySettings(), false));
+		keys.addActionListener(e->KeysDialog.configureKeys(config, false));
 		
 		JButton layout = new JButton("Configure layout, graphs & panels");
 		main.add(layout);
-		layout.addActionListener(e->LayoutDialog.configureLayout(false));
+		layout.addActionListener(e->LayoutDialog.configureLayout(config, false));
 
 		//left panel
 		JPanel left = new JPanel(new BorderLayout());
@@ -137,7 +134,6 @@ public class MainDialog extends JPanel{
 			Configuration toLoad = ConfigLoader.loadConfiguration();
 			if(toLoad != null){
 				config = toLoad;
-				Main.config = toLoad;
 				options.syncBoxes();
 			}
 		});
@@ -156,7 +152,7 @@ public class MainDialog extends JPanel{
 		
 		JButton updaterate = new JButton("Update rate");
 		settings.add(updaterate);
-		updaterate.addActionListener(e->UpdateRateDialog.configureUpdateRate());
+		updaterate.addActionListener(e->UpdateRateDialog.configureUpdateRate(config));
 		
 		JButton color = new JButton("Colours");
 		settings.add(color);
@@ -164,7 +160,7 @@ public class MainDialog extends JPanel{
 		
 		JButton autoSave = new JButton("Stats saving");
 		settings.add(autoSave);
-		autoSave.addActionListener(e->StatsSavingDialog.configureStatsSaving(Main.config.getStatsSavingSettings(), false));
+		autoSave.addActionListener(e->StatsSavingDialog.configureStatsSaving(config.getStatsSavingSettings(), false));
 		
 		JButton cmdkeys = new JButton("Commands");
 		settings.add(cmdkeys);
@@ -243,8 +239,6 @@ public class MainDialog extends JPanel{
 			allButtons.addActionListener(e->config.setTrackAllButtons(allButtons.isSelected()));
 			modifiers.addActionListener(e->config.setKeyModifierTrackingEnabled(modifiers.isSelected()));
 			windowed.addActionListener(e->config.setWindowedMode(windowed.isSelected()));
-			
-			syncBoxes();
 		}
 		
 		/**
@@ -261,16 +255,17 @@ public class MainDialog extends JPanel{
 	
 	/**
 	 * Shows the initial configuration dialog for the program.
-	 * @param config The configuration to configure.
+	 * @return The configuration created by the user.
 	 */
-	public static final void configure(Configuration config){
+	public static final Configuration configure(){
 		CountDownLatch latch = new CountDownLatch(1);
+		MainDialog content = new MainDialog();
 		JPanel bottomButtons = new JPanel();
 
 		JButton ok = new JButton("OK");
 		bottomButtons.add(ok);
 		ok.addActionListener(e->{
-			if(config.isValid()){
+			if(content.config.isValid()){
 				latch.countDown();
 			}else{
 				Dialog.showMessageDialog("Please make sure your layout has at least one panel to display.");
@@ -279,10 +274,10 @@ public class MainDialog extends JPanel{
 		
 		JButton exit = new JButton("Exit");
 		bottomButtons.add(exit);
-		exit.addActionListener(e->Main.exit());
+		exit.addActionListener(e->System.exit(0));
 		
 		JPanel dialog = new JPanel(new BorderLayout());
-		dialog.add(new MainDialog(config), BorderLayout.CENTER);
+		dialog.add(content, BorderLayout.CENTER);
 		dialog.add(bottomButtons, BorderLayout.PAGE_END);
 		dialog.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
@@ -292,7 +287,6 @@ public class MainDialog extends JPanel{
 		conf.setResizable(false);
 		conf.setLocationRelativeTo(null);
 		conf.setIconImages(Arrays.asList(Main.icon, Main.iconSmall));
-		conf.addWindowListener(new CloseListener());
 		conf.setVisible(true);
 		
 		try{
@@ -302,5 +296,6 @@ public class MainDialog extends JPanel{
 		
 		conf.setVisible(false);
 		conf.dispose();
+		return content.config;
 	}
 }

@@ -38,7 +38,7 @@ public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Reset stats command key.
 	 */
-	private final CommandKeySetting resetStats = new CommandKeySetting("resetStats", NativeKeyEvent.VC_P, false, true);
+	private final CommandKeySetting resetStats = new CommandKeySetting("resetStats");
 	/**
 	 * Exit command key.
 	 */
@@ -46,7 +46,7 @@ public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Reset totals command key.
 	 */
-	private final CommandKeySetting resetTotals = new CommandKeySetting("resetTotals", NativeKeyEvent.VC_I, false, true);
+	private final CommandKeySetting resetTotals = new CommandKeySetting("resetTotals");
 	/**
 	 * Hide/show command key.
 	 */
@@ -58,7 +58,7 @@ public class CommandSettings extends SettingGroup implements LegacyProxyStore{
 	/**
 	 * Reload configuration command key.
 	 */
-	private final CommandKeySetting reload = new CommandKeySetting("reload", NativeKeyEvent.VC_R, false, true);
+	private final CommandKeySetting reload = new CommandKeySetting("reload");
 
 	/**
 	 * Constructs new command key settings.
