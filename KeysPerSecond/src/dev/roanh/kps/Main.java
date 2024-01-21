@@ -68,28 +68,17 @@ import dev.roanh.util.ExclamationMarkPath;
 import dev.roanh.util.Util;
 
 /**
- * This program can be used to display
- * information about how many times
- * certain keys are pressed and what the
- * average, maximum and current
- * number of keys pressed per second is.
- * <p>
- * Besides the tracking of the assigned keys
- * this program responds to 6 key events these are:
- * <ol><li><b>Ctrl + P</b>: Causes the program to reset the average and maximum value
- * And to print the statistics to standard output
- * </li><li><b>Ctrl + O</b>: Terminates the program
- * </li><li><b>Ctrl + I</b>: Causes the program to reset the amount of times a key is pressed
- * And to print the statistics to standard output
- * </li><li><b>Ctrl + Y</b>: Hides/shows the GUI
- * </li><li><b>Ctrl + T</b>: Pauses/resumes the counter
- * </li><li><b>Ctrl + R</b>: Reloads the configuration</li></ol>
- * The program also constantly prints the current keys per second to
- * the standard output.<br>
- * A key is only counted as being pressed if the key has been released before
- * this deals with the issue of holding a key firing multiple key press events<br>
- * This program also has support for saving and loading configurations
+ * This program can be used to display information about how many times
+ * certain keys are pressed and what the certain derivative statistics
+ * like the average, maximum and current number of keys pressed per second
+ * are. In addition various graphs can also be shown and the entire program
+ * can be customised. The program also constantly prints the current keys
+ * per second to the standard output. A key is only counted as being pressed
+ * if the key has been released before this deals with the issue of holding a
+ * key firing multiple key press events. This program also has support
+ * for saving and loading configurations.
  * @author Roan Hofland (<a href="mailto:roan@roanh.dev">roan@roanh.dev</a>)
+ * @see <a href="https://github.com/RoanH/KeysPerSecond">GitHub Repository</a>
  */
 public class Main{
 	/**
@@ -192,8 +181,8 @@ public class Main{
 	public static final EventManager eventManager = new EventManager();
 	
 	/**
-	 * Main method
-	 * @param args - configuration file path
+	 * Main method.
+	 * @param args The configuration file path.
 	 */
 	public static void main(String[] args){
 		//work around for a JDK bug
@@ -205,15 +194,6 @@ public class Main{
 			configPath = args[0];
 			System.out.println("Attempting to load config: " + configPath);
 		}
-		
-		//info print
-		System.out.println("Control keys:");
-		System.out.println("Ctrl + P: Causes the program to reset and print the average and maximum value");
-		System.out.println("Ctrl + U: Terminates the program");
-		System.out.println("Ctrl + I: Causes the program to reset and print the key press statistics");
-		System.out.println("Ctrl + Y: Hides/shows the GUI");
-		System.out.println("Ctrl + T: Pauses/resumes the counter");
-		System.out.println("Ctrl + R: Reloads the configuration");
 		
 		//set UI components
 		Util.installUI();
