@@ -37,7 +37,7 @@ import dev.roanh.kps.config.group.CursorGraphSettings;
  */
 public class CursorGraphPanel extends GraphPanel{
 	/**
-	 * Serial ID
+	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -2604642433575841219L;
 	/**
