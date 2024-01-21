@@ -30,15 +30,33 @@ import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.CursorGraphSettings;
 
+/**
+ * Graph showing the cursor movement.
+ * @author Roan
+ * @see CursorGraphSettings
+ */
 public class CursorGraphPanel extends GraphPanel{
 	/**
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = -2604642433575841219L;
-	private ConcurrentLinkedDeque<TimePoint> path = new ConcurrentLinkedDeque<TimePoint>();
-	private CursorGraphSettings config;
-	private Rectangle display;
+	/**
+	 * List of recorded cursor snapshots.
+	 */
+	private final ConcurrentLinkedDeque<TimePoint> path = new ConcurrentLinkedDeque<TimePoint>();
+	/**
+	 * The graph configuration.
+	 */
+	private final CursorGraphSettings config;
+	/**
+	 * Rectangle with the dimensions and location of the tracked display.
+	 */
+	private final Rectangle display;
 	
+	/**
+	 * Constructs a new cursor graph with the given settings.
+	 * @param config The graph configuration.
+	 */
 	public CursorGraphPanel(CursorGraphSettings config){
 		super(config);
 		this.config = config;
@@ -46,15 +64,27 @@ public class CursorGraphPanel extends GraphPanel{
 		GraphicsDevice device = config.getDisplay();
 		if(device != null){
 			display = device.getDefaultConfiguration().getBounds();
+		}else{
+			display = null;
 		}
 	}
 	
+	/**
+	 * Adds a new cursor snapshot to the graph.
+	 * @param x The cursor x coordinate.
+	 * @param y The cursor y coordinate.
+	 * @param time The snapshot time.
+	 */
 	private void addPoint(int x, int y, long time){
 		if(display.contains(x, y)){
 			path.addFirst(new TimePoint(x, y, time));
 		}
 	}
 	
+	/**
+	 * Removes all cursor snapshots older than the configured backlog size.
+	 * @param time The current time.
+	 */
 	private void removeExpired(long time){
 		while(!path.isEmpty() && time - path.peekLast().time > config.getBacklog()){
 			path.removeLast();
@@ -81,19 +111,20 @@ public class CursorGraphPanel extends GraphPanel{
 			return;
 		}
 
-		int left = RenderingMode.insideOffset + borderOffset;
-		int right = this.getWidth() - RenderingMode.insideOffset - borderOffset - 1;
-		int top = RenderingMode.insideOffset + borderOffset;
-		int bottom = this.getHeight() - RenderingMode.insideOffset - borderOffset;
+		//compute canvas dimensions
+		final int left = RenderingMode.insideOffset + borderOffset;
+		final int right = this.getWidth() - RenderingMode.insideOffset - borderOffset - 1;
+		final int top = RenderingMode.insideOffset + borderOffset;
+		final int bottom = this.getHeight() - RenderingMode.insideOffset - borderOffset;
 		
+		//prepare for drawing
 		AffineTransform transform = g.getTransform();
 		g.setClip(left, top, right - left + 1, bottom - top + 1);
 		g.translate(left, top);
 		
-		
+		//center the display on the canvas
 		double fx = (right - left) / display.getWidth();
 		double fy = (bottom - top) / display.getHeight();
-		
 		double f;
 		if(fx < fy){
 			f = fx;
@@ -102,10 +133,6 @@ public class CursorGraphPanel extends GraphPanel{
 			f = fy;
 			g.translate((right - left - display.getWidth() * f) / 2.0D, 0.0D);
 		}
-		
-		//TODO remove
-		g.setColor(foreground.getColor());
-		g.drawRect(0, 0, (int)Math.round(display.width * f), (int)Math.round(display.height * f));
 		
 		//draw the cursor path
 		Iterator<TimePoint> iter = path.iterator();
@@ -129,11 +156,30 @@ public class CursorGraphPanel extends GraphPanel{
 		g.setTransform(transform);
 	}
 	
-	private static class TimePoint {
+	/**
+	 * Captured time point with a cursor snapshot.
+	 * @author Roan
+	 */
+	private static class TimePoint{
+		/**
+		 * The cursor x coordinate.
+		 */
 		private final int x;
+		/**
+		 * The cursor y coordinate.
+		 */
 		private final int y;
+		/**
+		 * The time the snapshot was taken.
+		 */
 		private final long time;
 
+		/**
+		 * Constructs a new time point.
+		 * @param x The cursor x coordinate.
+		 * @param y The cursor y coordinate.
+		 * @param time The snapshot time.
+		 */
 		private TimePoint(int x, int y, long time){
 			this.x = x;
 			this.y = y;

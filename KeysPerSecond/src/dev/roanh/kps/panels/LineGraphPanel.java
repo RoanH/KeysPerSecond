@@ -31,8 +31,9 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.LineGraphSettings;
 
 /**
- * Panel to draw continuous graphs.
+ * Panel to draw a line graph.
  * @author Roan
+ * @see LineGraphSettings
  */
 public class LineGraphPanel extends GraphPanel{
 	/**
@@ -50,15 +51,15 @@ public class LineGraphPanel extends GraphPanel{
 	/**
 	 * Data points.
 	 */
-	private ConcurrentLinkedDeque<Integer> values = new ConcurrentLinkedDeque<Integer>();
+	private final ConcurrentLinkedDeque<Integer> values = new ConcurrentLinkedDeque<Integer>();
+	/**
+	 * The configuration for this graph panel.
+	 */
+	private final LineGraphSettings config;
 	/**
 	 * Highest encountered value used as the upper bound of the graph.
 	 */
 	private int maxval = 1;
-	/**
-	 * The configuration for this graph panel.
-	 */
-	private LineGraphSettings config;
 	
 	/**
 	 * Constructs a new graph panel with the given configuration.
