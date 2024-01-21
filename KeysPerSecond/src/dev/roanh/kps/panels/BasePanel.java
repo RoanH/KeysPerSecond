@@ -45,9 +45,21 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 	 * Smallest size of graph images
 	 */
 	public static final int imageSize = 4;
+	/**
+	 * Foreground color to use.
+	 */
 	protected final ThemeColor background;
+	/**
+	 * Background color to use.
+	 */
 	protected final ThemeColor foreground;
+	/**
+	 * Offset from the panel border to the content.
+	 */
 	protected final int borderOffset;
+	/**
+	 * The configuration for this panel.
+	 */
 	private PanelSettings config;
 	
 	/**
@@ -61,6 +73,11 @@ public abstract class BasePanel extends JPanel implements LayoutPosition, Editor
 		borderOffset = Main.config.getLayout().getBorderOffset();
 	}
 	
+	/**
+	 * Renders the content of this panel, the background
+	 * and panel border do no need to be rendered by this panel.
+	 * @param g The graphics instance to use.
+	 */
 	protected abstract void render(Graphics2D g);
 
 	@Override
