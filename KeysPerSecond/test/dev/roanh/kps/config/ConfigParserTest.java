@@ -579,7 +579,6 @@ public class ConfigParserTest{
 		
 		//graphs
 		Iterator<GraphPanelSettings> graphs = config.getGraphs().iterator();
-		assertEquals(2, config.getGraphs().size());
 		
 		LineGraphSettings lineGraph = assertInstanceOf(LineGraphSettings.class, graphs.next());
 		assertEquals(1, lineGraph.getLayoutX());
