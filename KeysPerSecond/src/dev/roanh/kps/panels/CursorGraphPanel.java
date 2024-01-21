@@ -62,11 +62,7 @@ public class CursorGraphPanel extends GraphPanel{
 		this.config = config;
 		
 		GraphicsDevice device = config.getDisplay();
-		if(device != null){
-			display = device.getDefaultConfiguration().getBounds();
-		}else{
-			display = null;
-		}
+		display = device == null ? null : device.getDefaultConfiguration().getBounds();
 	}
 	
 	/**
