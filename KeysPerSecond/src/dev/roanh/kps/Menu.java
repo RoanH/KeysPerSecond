@@ -232,12 +232,12 @@ public class Menu{
 		tAllKeys.setSelected(Main.config.isTrackAllKeys());
 		tAllKeys.addActionListener((e)->{
 			Main.config.setTrackAllKeys(tAllKeys.isSelected());
-			Main.keys.entrySet().removeIf(entry->!CommandKeys.isMouseButton(entry.getKey()) && !Main.config.getKeySettings().contains(entry.getKey(), KeyPanelSettings::getKeyCode));
+			Main.keys.entrySet().removeIf(entry->!CommandKeys.isMouseButton(entry.getKey()) && !Main.config.getKeys().contains(entry.getKey(), KeyPanelSettings::getKeyCode));
 		});
 		tAllButtons.setSelected(Main.config.isTrackAllButtons());
 		tAllButtons.addActionListener((e)->{
 			Main.config.setTrackAllButtons(tAllButtons.isSelected());
-			Main.keys.entrySet().removeIf(entry->CommandKeys.isMouseButton(entry.getKey()) && !Main.config.getKeySettings().contains(entry.getKey(), KeyPanelSettings::getKeyCode));
+			Main.keys.entrySet().removeIf(entry->CommandKeys.isMouseButton(entry.getKey()) && !Main.config.getKeys().contains(entry.getKey(), KeyPanelSettings::getKeyCode));
 		});
 		overlay.setSelected(Main.config.isOverlayMode());
 		overlay.addActionListener((e)->{

@@ -43,14 +43,13 @@ public class CursorGraphEditor extends Editor{
 		super("Graph Settings");
 		
 		labels.add(new JLabel("Display: "));
-		GraphicsDevice current = config.getDisplay();
 		GraphicsDevice[] screens = CursorGraphSettings.getScreens();
 		String[] screenNames = new String[screens.length];
 		int selectedIdx = 0;
 		for(int i = 0; i < screens.length; i++){
 			GraphicsDevice screen = screens[i];
 			screenNames[i] = screen.getIDstring() + " (" + screen.getDisplayMode().getWidth() + "x" + screen.getDisplayMode().getHeight() + ")";
-			if(screen.getIDstring().equals(current.getIDstring())){
+			if(screen.getIDstring().equals(config.getDisplayId())){
 				selectedIdx = i;
 			}
 		}

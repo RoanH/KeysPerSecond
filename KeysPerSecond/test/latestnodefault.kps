@@ -36,7 +36,7 @@ statsSaving:
 
 graphs:
   - type: line
-    name: Line
+    name: Line Graph
     x: 1
     y: 2
     width: 5
@@ -44,6 +44,14 @@ graphs:
     showAvg: false
     backlog: 45
     max: 20
+  - type: cursor
+    name: Cursor Graph
+    x: 5
+    y: 4
+    width: 8
+    height: 7
+    display: \Display1
+    backlog: 1234
 
 panels:
   - type: max

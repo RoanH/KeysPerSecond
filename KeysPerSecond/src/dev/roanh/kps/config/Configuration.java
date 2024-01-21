@@ -298,7 +298,7 @@ public class Configuration{
 	 * Gets a list of all graphs and their settings.
 	 * @return All graph settings.
 	 */
-	public SettingList<GraphPanelSettings> getGraphSettings(){
+	public SettingList<GraphPanelSettings> getGraphs(){
 		return graphs;
 	}
 	
@@ -314,7 +314,7 @@ public class Configuration{
 	 * Gets a list of all key panels and their settings.
 	 * @return All key panel settings.
 	 */
-	public SettingList<KeyPanelSettings> getKeySettings(){
+	public SettingList<KeyPanelSettings> getKeys(){
 		return keys;
 	}
 	

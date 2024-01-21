@@ -89,7 +89,7 @@ public class LayoutDialog{
 		
 		//panel configuration
 		TablePanel panelView = new TablePanel("Panel", true, live);
-		panelView.addPanels(config.getKeySettings());
+		panelView.addPanels(config.getKeys());
 		panelView.addPanels(config.getPanels());
 		
 		JScrollPane pane = new JScrollPane(panelView);
@@ -112,7 +112,7 @@ public class LayoutDialog{
 
 		//graph configuration
 		TablePanel graphView = new TablePanel("Graph", true, live);
-		graphView.addPanels(config.getGraphSettings());
+		graphView.addPanels(config.getGraphs());
 		
 		JScrollPane graphPane = new JScrollPane(graphView);
 		graphPane.setBorder(BorderFactory.createEmptyBorder());
@@ -120,8 +120,8 @@ public class LayoutDialog{
 		graphPane.setPreferredSize(new Dimension(600, 100));
 		
 		JPanel graphButtons = new JPanel(new GridLayout(1, 0, 2, 0));
-		graphButtons.add(createAddButton(graphView, "Add Line Graph", Main.config.getGraphSettings(), GraphType.LINE::newSettings));
-		graphButtons.add(createAddButton(graphView, "Add Cursor Graph", Main.config.getGraphSettings(), GraphType.CURSOR::newSettings));
+		graphButtons.add(createAddButton(graphView, "Add Line Graph", Main.config.getGraphs(), GraphType.LINE::newSettings));
+		graphButtons.add(createAddButton(graphView, "Add Cursor Graph", Main.config.getGraphs(), GraphType.CURSOR::newSettings));
 		
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));

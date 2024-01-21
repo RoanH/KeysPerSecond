@@ -542,7 +542,7 @@ public class Main{
 			}
 			
 			//key panels
-			for(KeyPanelSettings info : config.getKeySettings()){
+			for(KeyPanelSettings info : config.getKeys()){
 				Key key = keys.computeIfAbsent(info.getKeyCode(), code->new Key(info));
 				if(info.isVisible()){
 					content.add(info.createPanel(key));
@@ -556,7 +556,7 @@ public class Main{
 			
 			//graph panels
 			graphs.clear();
-			for(GraphPanelSettings info : config.getGraphSettings()){
+			for(GraphPanelSettings info : config.getGraphs()){
 				BasePanel graph = info.createGraph();
 				content.add(graph);
 				graphs.add(graph);

@@ -41,6 +41,8 @@ import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.AveragePanelSettings;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.CurrentPanelSettings;
+import dev.roanh.kps.config.group.CursorGraphSettings;
+import dev.roanh.kps.config.group.GraphPanelSettings;
 import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.LastPanelSettings;
@@ -132,8 +134,8 @@ public class ConfigParserTest{
 		assertFalse(stats.isLoadOnLaunchEnabled());
 		
 		//graph
-		assertEquals(1, config.getGraphSettings().size());
-		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphSettings().get(0));
+		assertEquals(1, config.getGraphs().size());
+		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphs().get(0));
 		assertEquals(0, graph.getLayoutX());
 		assertEquals(-1, graph.getLayoutY());
 		assertEquals(40, graph.getLayoutWidth());
@@ -181,7 +183,7 @@ public class ConfigParserTest{
 		assertFalse(panels.hasNext());
 		
 		//keys
-		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		SettingList<KeyPanelSettings> keys = config.getKeys();
 		assertEquals(6, keys.size());
 		
 		KeyPanelSettings key1 = keys.get(0);
@@ -323,8 +325,8 @@ public class ConfigParserTest{
 		assertEquals("C:\\Users\\RoanH\\stats.kpsstats", stats.getSaveFile());
 		
 		//graphs
-		assertEquals(1, config.getGraphSettings().size());
-		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphSettings().get(0));
+		assertEquals(1, config.getGraphs().size());
+		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphs().get(0));
 		assertEquals(1, graph.getLayoutX());
 		assertEquals(2, graph.getLayoutY());
 		assertEquals(5, graph.getLayoutWidth());
@@ -372,7 +374,7 @@ public class ConfigParserTest{
 		assertFalse(panels.hasNext());
 		
 		//keys
-		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		SettingList<KeyPanelSettings> keys = config.getKeys();
 		assertEquals(2, keys.size());
 		
 		KeyPanelSettings key1 = keys.get(0);
@@ -471,13 +473,13 @@ public class ConfigParserTest{
 		assertEquals("C:\\Users\\RoanH\\alsotest", stats.getSaveFile());
 		
 		//graphs
-		assertEquals(0, config.getGraphSettings().size());
+		assertEquals(0, config.getGraphs().size());
 		
 		//special panels
 		assertEquals(0, config.getPanels().size());
 		
 		//keys
-		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		SettingList<KeyPanelSettings> keys = config.getKeys();
 		assertEquals(2, keys.size());
 		
 		KeyPanelSettings key1 = keys.get(0);
@@ -576,17 +578,27 @@ public class ConfigParserTest{
 		assertEquals("C:\\Users\\RoanH\\alsotest", stats.getSaveFile());
 		
 		//graphs
-		assertEquals(1, config.getGraphSettings().size());
-		LineGraphSettings graph = assertInstanceOf(LineGraphSettings.class, config.getGraphSettings().get(0));
-		assertEquals(1, graph.getLayoutX());
-		assertEquals(2, graph.getLayoutY());
-		assertEquals(5, graph.getLayoutWidth());
-		assertEquals(8, graph.getLayoutHeight());
-		assertFalse(graph.isAverageVisible());
-		assertEquals(45, graph.getBacklog());
-		assertEquals(20, graph.getMaxValue());
+		Iterator<GraphPanelSettings> graphs = config.getGraphs().iterator();
+		assertEquals(2, config.getGraphs().size());
 		
-		//TODO add cursor graph
+		LineGraphSettings lineGraph = assertInstanceOf(LineGraphSettings.class, graphs.next());
+		assertEquals(1, lineGraph.getLayoutX());
+		assertEquals(2, lineGraph.getLayoutY());
+		assertEquals(5, lineGraph.getLayoutWidth());
+		assertEquals(8, lineGraph.getLayoutHeight());
+		assertFalse(lineGraph.isAverageVisible());
+		assertEquals(45, lineGraph.getBacklog());
+		assertEquals(20, lineGraph.getMaxValue());
+		
+		CursorGraphSettings cursorGraph = assertInstanceOf(CursorGraphSettings.class, graphs.next());
+		assertEquals(5, cursorGraph.getLayoutX());
+		assertEquals(4, cursorGraph.getLayoutY());
+		assertEquals(8, cursorGraph.getLayoutWidth());
+		assertEquals(7, cursorGraph.getLayoutHeight());
+		assertEquals("\\Display1", cursorGraph.getDisplayId());
+		assertEquals(1234, cursorGraph.getBacklog());
+		
+		assertFalse(graphs.hasNext());
 		
 		//special panels
 		Iterator<SpecialPanelSettings> panels = config.getPanels().iterator();
@@ -637,7 +649,7 @@ public class ConfigParserTest{
 		assertFalse(panels.hasNext());
 		
 		//keys
-		SettingList<KeyPanelSettings> keys = config.getKeySettings();
+		SettingList<KeyPanelSettings> keys = config.getKeys();
 		assertEquals(2, keys.size());
 		
 		KeyPanelSettings key1 = keys.get(0);

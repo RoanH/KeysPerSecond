@@ -85,7 +85,7 @@ public class KeysDialog extends JPanel implements KeyPressListener{
 	private KeysDialog(Configuration config, boolean live){
 		super(new BorderLayout());
 		this.config = config;
-		keySettings = config.getKeySettings();
+		keySettings = config.getKeys();
 		
 		//left panel showing added keys
 		JPanel left = new JPanel(new BorderLayout());
