@@ -69,14 +69,10 @@ import dev.roanh.util.Util;
 
 /**
  * This program can be used to display information about how many times
- * certain keys are pressed and what the certain derivative statistics
- * like the average, maximum and current number of keys pressed per second
- * are. In addition various graphs can also be shown and the entire program
- * can be customised. The program also constantly prints the current keys
- * per second to the standard output. A key is only counted as being pressed
- * if the key has been released before this deals with the issue of holding a
- * key firing multiple key press events. This program also has support
- * for saving and loading configurations.
+ * certain keys are pressed and what certain derivative statistics like
+ * the average, maximum and current number of keys pressed per second are.
+ * In addition various graphs can also be shown and the entire program can
+ * be customised. Custom configurations for the program can also be saved.
  * @author Roan Hofland (<a href="mailto:roan@roanh.dev">roan@roanh.dev</a>)
  * @see <a href="https://github.com/RoanH/KeysPerSecond">GitHub Repository</a>
  */
@@ -187,6 +183,9 @@ public class Main{
 	public static void main(String[] args){
 		//work around for a JDK bug
 		ExclamationMarkPath.check(args);
+
+		//simple hello print
+		System.out.println("KeysPerSecond " + VERSION);
 		
 		//check for a passed config
 		String configPath = null;
@@ -301,17 +300,19 @@ public class Main{
 			if(!suspended){
 				int currentTmp = tmp.getAndSet(0);
 				int totaltmp = currentTmp;
+				
 				for(int i : timepoints){
 					totaltmp += i;
 				}
+				
 				if(totaltmp > max){
 					max = totaltmp;
 				}
+				
 				if(totaltmp != 0){
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					hits += currentTmp;
-					System.out.println("Current keys per second: " + totaltmp);
 				}
 				
 				for(GraphPanel graph : graphs){
