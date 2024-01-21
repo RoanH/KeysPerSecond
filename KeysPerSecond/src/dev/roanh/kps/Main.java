@@ -60,7 +60,6 @@ import dev.roanh.kps.event.EventManager;
 import dev.roanh.kps.event.source.NativeHookInputSource;
 import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
-import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.DataPanel;
 import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
@@ -335,6 +334,11 @@ public class Main{
 		}, 0, config.getUpdateRateMs(), TimeUnit.MILLISECONDS);
 	}
 	
+	/**
+	 * Handles cursor movement.
+	 * @param x The new cursor x coordinate.
+	 * @param y The new cursor y coordinate.
+	 */
 	public static final void moveEventMouse(int x, int y){
 		mouseLoc.move(x, y);
 	}
