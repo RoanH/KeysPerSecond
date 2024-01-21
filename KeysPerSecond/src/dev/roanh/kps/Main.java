@@ -648,6 +648,7 @@ public class Main{
 			System.out.print(" " + CommandKeys.formatExtendedCode(key.getKey()) + ":" + key.getValue().getCount());
 			key.getValue().setCount(0);
 		}
+		System.out.println();
 		
 		frame.repaint();
 	}
