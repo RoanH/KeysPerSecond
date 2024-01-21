@@ -34,7 +34,7 @@ import dev.roanh.kps.config.group.LineGraphSettings;
  * Panel to draw continuous graphs.
  * @author Roan
  */
-public class LineGraphPanel extends BasePanel{
+public class LineGraphPanel extends GraphPanel{
 	/**
 	 * Serial ID.
 	 */
@@ -69,9 +69,7 @@ public class LineGraphPanel extends BasePanel{
 		this.config = config;
 	}
 
-	/**
-	 * Resets the graph data.
-	 */
+	@Override
 	public final void reset(){
 		values.clear();
 		maxval = 1;
@@ -113,11 +111,16 @@ public class LineGraphPanel extends BasePanel{
 		g.drawPolygon(poly);
 	}
 	
+	@Override
+	public void update(){
+		addPoint(Main.prev);
+	}
+	
 	/**
 	 * Adds a new point to the end of this graph.
 	 * @param value The new point to add.
 	 */
-	public void addPoint(int value){
+	private void addPoint(int value){
 		value = Math.min(value, config.getMaxValue());
 		
 		if(value > maxval){

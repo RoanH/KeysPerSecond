@@ -24,20 +24,17 @@ import java.awt.geom.Path2D;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import dev.roanh.kps.Main;
 import dev.roanh.kps.RenderingMode;
 import dev.roanh.kps.config.group.CursorGraphSettings;
-import dev.roanh.kps.event.listener.MouseMoveListener;
 
-public class CursorGraphPanel extends BasePanel{
+public class CursorGraphPanel extends GraphPanel{
 	/**
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = -2604642433575841219L;
 	private ConcurrentLinkedDeque<TimePoint> path = new ConcurrentLinkedDeque<TimePoint>();
 	private CursorGraphSettings config;
-
-	private volatile long lastPaint;
-	
 	private Rectangle display;
 	
 	public CursorGraphPanel(CursorGraphSettings config){
@@ -46,22 +43,29 @@ public class CursorGraphPanel extends BasePanel{
 		display = config.getDisplay().getDefaultConfiguration().getBounds();
 	}
 	
-	//TODO private
-	public void addPoint(int x, int y){
-		if(!display.contains(x, y)){
-			return;
+	private void addPoint(int x, int y, long time){
+		if(display.contains(x, y)){
+			path.addFirst(new TimePoint(x, y, time));
 		}
-		
-		long time = System.currentTimeMillis();//TODO sys time may not be accurate, but it is fast
-		path.addFirst(new TimePoint(x, y, time));
+	}
+	
+	private void removeExpired(long time){
 		while(time - path.getLast().time > config.getBacklog()){//todo config
 			path.removeLast();
 		}
-		
-//		if(time - lastPaint > 20){
-//			lastPaint = time;
-//			this.repaint();//TODO
-//		}
+	}
+	
+	@Override
+	public void update(){
+		long time = System.currentTimeMillis();//TODO sys time may not be accurate, but it is fast
+		addPoint(Main.mouseLoc.x, Main.mouseLoc.y, time);
+		removeExpired(time);
+	}
+	
+	@Override
+	public void reset(){
+		path.clear();
+		repaint();
 	}
 	
 	@Override
@@ -70,9 +74,7 @@ public class CursorGraphPanel extends BasePanel{
 			//configured display was not found
 			return;
 		}
-		
-		
-		
+
 		int left = RenderingMode.insideOffset + borderOffset;
 		int right = this.getWidth() - RenderingMode.insideOffset - borderOffset - 1;
 		int top = RenderingMode.insideOffset + borderOffset;
@@ -116,15 +118,12 @@ public class CursorGraphPanel extends BasePanel{
 		}
 	}
 	
-	//TODO private?
-	public static class TimePoint {
-		//TODO private
-		protected int x;
-		protected int y;
-		public long time;
+	private static class TimePoint {
+		private final int x;
+		private final int y;
+		private final long time;
 
-		//TODO private
-		public TimePoint(int x, int y, long time){
+		private TimePoint(int x, int y, long time){
 			this.x = x;
 			this.y = y;
 			this.time = time;

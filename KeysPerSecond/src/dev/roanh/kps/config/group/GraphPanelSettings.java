@@ -20,7 +20,7 @@ package dev.roanh.kps.config.group;
 
 import dev.roanh.kps.config.GraphType;
 import dev.roanh.kps.config.IndentWriter;
-import dev.roanh.kps.panels.BasePanel;
+import dev.roanh.kps.panels.GraphPanel;
 
 /**
  * Settings for graph panels.
@@ -51,7 +51,7 @@ public abstract class GraphPanelSettings extends PanelSettings{
 	 * Creates a new graph panel with this configuration.
 	 * @return The newly created graph panel.
 	 */
-	public abstract BasePanel createGraph();//TODO graph panel?
+	public abstract GraphPanel createGraph();
 
 	@Override
 	public void writeItems(IndentWriter out){

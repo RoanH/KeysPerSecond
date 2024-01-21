@@ -54,7 +54,6 @@ import dev.roanh.kps.config.UpdateRate;
 import dev.roanh.kps.config.Version;
 import dev.roanh.kps.config.group.CommandSettings;
 import dev.roanh.kps.config.group.GraphPanelSettings;
-import dev.roanh.kps.config.group.LineGraphSettings;
 import dev.roanh.kps.config.group.KeyPanelSettings;
 import dev.roanh.kps.config.group.SpecialPanelSettings;
 import dev.roanh.kps.event.EventManager;
@@ -63,8 +62,7 @@ import dev.roanh.kps.layout.GridPanel;
 import dev.roanh.kps.layout.Layout;
 import dev.roanh.kps.panels.BasePanel;
 import dev.roanh.kps.panels.DataPanel;
-import dev.roanh.kps.panels.LineGraphPanel;
-import dev.roanh.kps.panels.CursorGraphPanel;
+import dev.roanh.kps.panels.GraphPanel;
 import dev.roanh.kps.ui.dialog.MainDialog;
 import dev.roanh.kps.ui.listener.MainWindowListener;
 import dev.roanh.util.Dialog;
@@ -117,9 +115,12 @@ public class Main{
 	 */
 	public static long lastHitTime = -1;
 	/**
-	 * HashMap containing all the tracked keys and their
-	 * virtual codes<br>Used to increment the count for the
-	 * keys
+	 * Last known cursor location.
+	 */
+	public static final Point mouseLoc = new Point();
+	/**
+	 * HashMap containing all the tracked keys and their virtual
+	 * codes. Used to increment the count for the keys.
 	 */
 	public static final Map<Integer, Key> keys = new HashMap<Integer, Key>();
 	/**
@@ -130,7 +131,7 @@ public class Main{
 	/**
 	 * Graph panel.
 	 */
-	private static final List<BasePanel> graphs = new ArrayList<BasePanel>();
+	private static final List<GraphPanel> graphs = new ArrayList<GraphPanel>();
 	/**
 	 * Linked list containing all the past key counts per time frame
 	 */
@@ -302,9 +303,6 @@ public class Main{
 		}
 		
 		future = timer.scheduleAtFixedRate(()->{
-			//TODO remove
-			content.repaint();
-			
 			if(!suspended){
 				int currentTmp = tmp.getAndSet(0);
 				int totaltmp = currentTmp;
@@ -317,22 +315,18 @@ public class Main{
 					max = totaltmp;
 				}
 				
+				prev = totaltmp;
 				if(totaltmp != 0){
 					avg = (avg * n + totaltmp) / (n + 1.0D);
 					n++;
 					hits += currentTmp;
 				}
 				
-				for(BasePanel graph : graphs){
-					if(graph instanceof LineGraphPanel){//TODO yeah no casts please
-						((LineGraphPanel)graph).addPoint(totaltmp);
-					}else if(graph instanceof CursorGraphPanel){
-						((CursorGraphPanel)graph).addPoint(mouseLoc.x, mouseLoc.y);
-					}
+				for(GraphPanel graph : graphs){
+					graph.update();
 				}
 				
 				content.repaint();
-				prev = totaltmp;
 				timepoints.addFirst(currentTmp);
 				if(timepoints.size() >= 1000 / config.getUpdateRateMs()){
 					timepoints.removeLast();
@@ -341,7 +335,6 @@ public class Main{
 		}, 0, config.getUpdateRateMs(), TimeUnit.MILLISECONDS);
 	}
 	
-	public static final Point mouseLoc = new Point();
 	public static final void moveEventMouse(int x, int y){
 		mouseLoc.move(x, y);
 	}
@@ -557,7 +550,7 @@ public class Main{
 			//graph panels
 			graphs.clear();
 			for(GraphPanelSettings info : config.getGraphs()){
-				BasePanel graph = info.createGraph();
+				GraphPanel graph = info.createGraph();
 				content.add(graph);
 				graphs.add(graph);
 			}
