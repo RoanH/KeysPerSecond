@@ -151,6 +151,9 @@ public class ConfigParser{
 		}
 	}
 	
+	/**
+	 * Subroutine to run post processing legacy setting conversions.
+	 */
 	private void runLegacyConversions(){
 		if(version.isBefore(8, 9)){
 			//line graph backlog used to be in update rate frames, now it is directly in milliseconds
