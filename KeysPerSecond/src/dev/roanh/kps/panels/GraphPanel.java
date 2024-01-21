@@ -20,12 +20,20 @@ package dev.roanh.kps.panels;
 
 import dev.roanh.kps.config.group.GraphPanelSettings;
 
+/**
+ * Base class for graph implementations.
+ * @author Roan
+ */
 public abstract class GraphPanel extends BasePanel{
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = 393397627762727201L;
 
+	/**
+	 * Constructs a new graph panel.
+	 * @param config The graph settings.
+	 */
 	protected GraphPanel(GraphPanelSettings config){
 		super(config);
 	}
@@ -38,5 +46,8 @@ public abstract class GraphPanel extends BasePanel{
 	 */
 	public abstract void update();
 	
+	/**
+	 * Resets any data collected by this graph to defaults.
+	 */
 	public abstract void reset();
 }
