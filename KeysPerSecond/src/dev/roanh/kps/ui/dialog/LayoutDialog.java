@@ -120,8 +120,8 @@ public class LayoutDialog{
 		graphPane.setPreferredSize(new Dimension(600, 100));
 		
 		JPanel graphButtons = new JPanel(new GridLayout(1, 0, 2, 0));
-		graphButtons.add(createAddButton(graphView, "Add Line Graph", Main.config.getGraphs(), GraphType.LINE::newSettings));
-		graphButtons.add(createAddButton(graphView, "Add Cursor Graph", Main.config.getGraphs(), GraphType.CURSOR::newSettings));
+		graphButtons.add(createAddButton(graphView, "Add Line Graph", config.getGraphs(), GraphType.LINE::newSettings));
+		graphButtons.add(createAddButton(graphView, "Add Cursor Graph", config.getGraphs(), GraphType.CURSOR::newSettings));
 		
 		JPanel graphPanel = new JPanel(new BorderLayout());
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));

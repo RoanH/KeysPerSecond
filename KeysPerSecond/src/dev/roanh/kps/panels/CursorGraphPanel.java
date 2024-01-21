@@ -18,10 +18,7 @@
  */
 package dev.roanh.kps.panels;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.geom.Path2D;
 import java.util.Iterator;
@@ -43,30 +40,9 @@ public class CursorGraphPanel extends BasePanel{
 	
 	private Rectangle display;
 	
-	//TODO remove
-	private Rectangle display1;
-	private Rectangle display2;
-	private Rectangle display3;
-
 	public CursorGraphPanel(CursorGraphSettings config){
 		super(config);
 		this.config = config;
-		// TODO Auto-generated constructor stub
-		
-		
-		GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-		
-		
-		for(GraphicsDevice screen : screens){
-			System.out.println("screen: " + screen.getIDstring() + " | " + screen.getDisplayMode().getWidth() + "x" + screen.getDisplayMode().getHeight());
-		}
-		
-		
-		display1 = screens[0].getDefaultConfiguration().getBounds();
-		display2 = screens[1].getDefaultConfiguration().getBounds();
-		display3 = screens[2].getDefaultConfiguration().getBounds();
-		
-		
 		display = config.getDisplay().getDefaultConfiguration().getBounds();
 	}
 	
@@ -95,11 +71,6 @@ public class CursorGraphPanel extends BasePanel{
 			return;
 		}
 		
-//		System.out.println("repaint");
-//		display = display1;
-
-		
-		
 		
 		
 		int left = RenderingMode.insideOffset + borderOffset;
@@ -107,19 +78,12 @@ public class CursorGraphPanel extends BasePanel{
 		int top = RenderingMode.insideOffset + borderOffset;
 		int bottom = this.getHeight() - RenderingMode.insideOffset - borderOffset;
 		
-		g.setColor(Color.RED);
-		g.drawLine(left, 25, right, 25);
-		g.drawLine(10, top, 10, bottom);
-		g.drawRect(left, top, right - left, bottom - top);
-		
 		g.setClip(left, top, right - left + 1, bottom - top + 1);
 		g.translate(left, top);
 		
 		
 		double fx = (right - left) / display.getWidth();
 		double fy = (bottom - top) / display.getHeight();
-		
-//		System.out.println(fx + " and " + fy);
 		
 		double f;
 		if(fx < fy){
@@ -130,12 +94,9 @@ public class CursorGraphPanel extends BasePanel{
 			g.translate((right - left - display.getWidth() * f) / 2.0D, 0.0D);
 		}
 		
-		
-		
-		
 		//TODO remove
-		g.setColor(Color.GREEN);
-		g.drawRect(0, 0, (int)(display.width * f), (int)(display.height * f));
+		g.setColor(foreground.getColor());
+		g.drawRect(0, 0, (int)Math.round(display.width * f), (int)Math.round(display.height * f));
 		
 		//draw the cursor path
 		Iterator<TimePoint> iter = path.iterator();
@@ -154,7 +115,7 @@ public class CursorGraphPanel extends BasePanel{
 			g.draw(line);
 		}
 	}
-
+	
 	//TODO private?
 	public static class TimePoint {
 		//TODO private
