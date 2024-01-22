@@ -1,6 +1,22 @@
 # Updates
 All releases can be found on the [releases page](https://github.com/RoanH/KeysPerSecond/releases).
 
+## [v8.9] 22nd of January, 2024: Cursor Graph
+This is a small release that adds one new major feature and fixes a number of regressions in the previous release that were thankfully caught early by UlyssesZh.
+
+- Added a new graph type that tracks the movement path of the cursor as shown below. Note that a fast update rate is recommended when using this graph type to make it look smooth (50ms - 10ms).
+![cursor graph](https://media.roanh.dev/keyspersecond/cursorgraph.gif)
+- The backlog for the old graph type (line graph) is now specified in milliseconds instead of update frames.
+- The reset and reload command keys are now unbound by default since these are semi destructive and could be triggered by accident.
+- Fix that the graph was rendered 1 pixel smaller than it was supposed to be.
+- Show a warning when reloading a configuration file that cannot be reloaded (config not loaded from a file).
+- Fix a config desync when loading a configuration via the initial dialog.
+- Fix that certain settings are not being applied when loading a config via the default option or the command line ([92](https://github.com/RoanH/KeysPerSecond/issues/92)).
+- Fix that periodic stats saving saves to the base folder instead of a file inside that folder ([93](https://github.com/RoanH/KeysPerSecond/issues/93)).
+- Thanks to efojug fix that the application can initially be offscreen on some monitor layouts ([94](https://github.com/RoanH/KeysPerSecond/issues/94) and [95](https://github.com/RoanH/KeysPerSecond/pull/95)).
+- Fix that some settings do not get applied properly when reloading a configuration file.
+- Ensure that the directory stats are being saved to actually exists before saving.
+
 ## [v8.8] 17th of January, 2024: Major Improvements
 It's been a while, but the next release is finally done! This release also lays the foundations for some larger and more exciting features planned for future releases.
 

@@ -8,13 +8,13 @@ KeysPerSecond is a program that counts how many times certain keys and mouse but
 Originally I wanted to know how many keys I pressed per second in osu! and I had already seen programs like this on live streams.
 However, I could not find a program that worked well on my computer so I decided to write one myself.
 
-The program when active looks like this:    
-![Interface](https://media.roanh.dev/keyspersecond/kps1.png)  ![Preview](https://media.roanh.dev/keyspersecond/preview.gif)    
+The program when active looks like this (the rightmost graph shows cursor movement):    
+![Interface](https://media.roanh.dev/keyspersecond/kps1.png)  ![Preview](https://media.roanh.dev/keyspersecond/preview.gif)  ![Preview](https://media.roanh.dev/keyspersecond/cursorgraph.gif)    
 There is also a right click menu to configure all the settings:    
 ![Menu](https://media.roanh.dev/keyspersecond/rmenu88.png)    
 
 For each configured key the program will show how many times it was pressed. By default it will also show the maximum, average and current number of keys pressed per second.
-When enabled it can also show a graph of the number of keys pressed per second over time, the total number of keys pressed, and the time since the last input.
+When enabled it can also show a graph of the number of keys pressed per second over time, the total number of keys pressed, and the time since the last input. A graph showing cursor movement is also available and more graph types and panel types are planned.
 
 Everything shown in the pictures above can be toggled on or off and all the panels can be rearranged freely.      
 ![Config](https://media.roanh.dev/keyspersecond/cmain88.png)    
@@ -31,10 +31,11 @@ And if you find any bugs feel free to report them. If you have any features you'
 
 ## Notes
 - The horizontal line in the graph represents the average number of keys pressed per second.
+- The smoothness of the cursor graph is heavily dependent on the update rate.
 - You can add any number of keys or mouse buttons to the program.
 - To change a GUI colour in the colours menu, click on the current colour
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
-- You can configure a configuration to open on launch, see [this wiki page](https://github.com/RoanH/KeysPerSecond/wiki) for more details. Essentially, you can use the default config option, pass the path to the config file to load via the command line, use a shortcut, or set the program as the default program to open `.kps` files.
+- You can configure a configuration to open automatically on launch, see [this wiki page](https://github.com/RoanH/KeysPerSecond/wiki) for more details.
 - When resetting something it will also be printed to the console if this program is running using cmd/shell.
 - The overlay option is far from perfect, it just asks the OS to place the program on top. It'll not overlay most full screen games. [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
 - If you have an old configuration file (kpsconf1 or kpsconf2) then you need to convert it with [version 8.4](https://github.com/RoanH/KeysPerSecond/releases/tag/v8.4) to load it in more recent versions.
@@ -43,8 +44,8 @@ And if you find any bugs feel free to report them. If you have any features you'
 ## Downloads
 _Requires Java 8 or higher_    
 _Tested operating systems: Mac 10.11.6 & M1, Ubuntu Linux 16.04 LTS, Windows 7 & 8 & 10 & 11_    
-- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.8/KeysPerSecond-v8.8.exe)    
-- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.8/KeysPerSecond-v8.8.jar)
+- [Windows executable](https://github.com/RoanH/KeysPerSecond/releases/download/v8.9/KeysPerSecond-v8.9.exe)    
+- [Runnable Java Archive](https://github.com/RoanH/KeysPerSecond/releases/download/v8.9/KeysPerSecond-v8.9jar)
 
 All releases: [releases](https://github.com/RoanH/KeysPerSecond/releases)    
 GitHub repository: [here](https://github.com/RoanH/KeysPerSecond)    
