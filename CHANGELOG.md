@@ -4,7 +4,7 @@ All releases can be found on the [releases page](https://github.com/RoanH/KeysPe
 ## [v8.9] 22nd of January, 2024: Cursor Graph
 This is a small release that adds one new major feature and fixes a number of regressions in the previous release that were thankfully caught early by UlyssesZh.
 
-- Added a new graph type that tracks the movement path of the cursor as shown below. Note that a fast update rate is recommended when using this graph type to make it look smooth (50ms - 10ms).
+- Added a new graph type that tracks the movement path of the cursor as shown below. Note that a fast update rate is recommended when using this graph type to make it look smooth (50ms - 10ms).    
 ![cursor graph](https://media.roanh.dev/keyspersecond/cursorgraph.gif)
 - The backlog for the old graph type (line graph) is now specified in milliseconds instead of update frames.
 - The reset and reload command keys are now unbound by default since these are semi destructive and could be triggered by accident.
