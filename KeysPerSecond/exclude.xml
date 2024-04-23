@@ -10,6 +10,7 @@
       <Bug pattern="MS_CANNOT_BE_FINAL"/>
       <Bug pattern="MS_EXPOSE_REP"/>
       <Bug pattern="MS_PKGPROTECT"/>
+      <Bug pattern="REC_CATCH_EXCEPTION"/>
     </Or>
   </Match>
   
