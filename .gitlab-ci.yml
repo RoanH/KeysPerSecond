@@ -22,6 +22,17 @@ endings:
   script: curl ${SERVER}ci/lf.sh | bash
   stage: check
 
+sonar:
+  image: eclipse-temurin:17
+  variables:
+    GIT_DEPTH: "0"
+  allow_failure: true
+  script:
+    - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} :sonar
+  stage: check
+  only:
+    - master
+
 spotbugs:
   allow_failure: true
   script:
@@ -79,8 +90,8 @@ compile:
     name: KeysPerSecond-${SUFFIX}
     expire_in: 1 week
     paths:
-      - ${PROJECTNAME}-*.jar
-      - ${PROJECTNAME}-*.exe
+      - KeysPerSecond-*.jar
+      - KeysPerSecond-*.exe
 
 test:
   script:
