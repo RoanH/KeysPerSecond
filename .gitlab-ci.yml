@@ -23,15 +23,14 @@ endings:
   stage: check
 
 sonar:
-  image: eclipse-temurin:11
-  variables:
-    GIT_DEPTH: "0"
+  image: 
+    name: sonarsource/sonar-scanner-cli:5.0
+    entrypoint: [""]
   allow_failure: true
-  script:
-    - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} :sonar
+  script: sonar-scanner
   stage: check
-  only:
-    - master
+#  only:
+#    - master
 
 spotbugs:
   allow_failure: true

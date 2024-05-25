@@ -7,7 +7,6 @@ plugins{
 	id 'edu.sc.seis.launch4j' version '2.5.1'
 	id 'com.github.spotbugs' version '5.0.14'
 	id 'jacoco'
-	id 'org.sonarqube' version '4.4.1.3373'
 }
 
 sourceSets{
@@ -66,13 +65,6 @@ test{
 
 	testLogging{
 		events "passed", "skipped", "failed"
-	}
-}
-
-sonar{
-	properties{
-		property "sonar.projectKey", "roan_KeysPerSecond_e60d9328-42c1-47ff-a708-7d7ee7eda435"
-		property "sonar.projectName", "KeysPerSecond"
 	}
 }
 
