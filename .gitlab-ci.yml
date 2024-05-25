@@ -23,7 +23,7 @@ endings:
   stage: check
 
 sonar:
-  image: eclipse-temurin:17
+  image: eclipse-temurin:11
   variables:
     GIT_DEPTH: "0"
   allow_failure: true
