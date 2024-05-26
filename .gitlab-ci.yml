@@ -28,8 +28,8 @@ sonar:
     entrypoint: [""]
   script:
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} :classes
-  	 - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} :testClasses
- 	 - sonar-scanner
+    - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} :testClasses
+    - sonar-scanner
   allow_failure: true
   stage: check
   only:
