@@ -22,6 +22,19 @@ endings:
   script: curl ${SERVER}ci/lf.sh | bash
   stage: check
 
+sonar:
+  image:
+    name: sonarsource/sonar-scanner-cli:5.0
+    entrypoint: [""]
+  script:
+    - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} :classes
+    - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} :testClasses
+    - sonar-scanner
+  allow_failure: true
+  stage: check
+  only:
+    - master
+
 spotbugs:
   allow_failure: true
   script:
@@ -79,8 +92,8 @@ compile:
     name: KeysPerSecond-${SUFFIX}
     expire_in: 1 week
     paths:
-      - ${PROJECTNAME}-*.jar
-      - ${PROJECTNAME}-*.exe
+      - KeysPerSecond-*.jar
+      - KeysPerSecond-*.exe
 
 test:
   script:

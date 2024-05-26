@@ -119,6 +119,7 @@ publishing{
 }
 
 shadowJar{
+	mergeServiceFiles()
 	into("META-INF/maven/$project.group/$project.artifact"){
 		from{
 			generatePomFileForMavenJavaPublication
@@ -133,7 +134,7 @@ launch4j{
 	icon = "${projectDir}/kps.ico"
 	jreMinVersion = project.sourceCompatibility
 	bundledJrePath = "%JAVA_HOME%"
-	outfile = rootProject.name + '-v' + project.version + '.exe'
+	outfile = 'KeysPerSecond-v' + project.version + '.exe'
 	fileDescription = "KeysPerSecond"
 	productName = rootProject.name
 	version = project.version
