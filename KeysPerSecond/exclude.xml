@@ -11,6 +11,7 @@
       <Bug pattern="MS_EXPOSE_REP"/>
       <Bug pattern="MS_PKGPROTECT"/>
       <Bug pattern="REC_CATCH_EXCEPTION"/>
+      <Bug pattern="CI_CONFUSED_INHERITANCE"/>
     </Or>
   </Match>
   
