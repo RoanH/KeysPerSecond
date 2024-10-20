@@ -12,6 +12,7 @@
       <Bug pattern="MS_PKGPROTECT"/>
       <Bug pattern="REC_CATCH_EXCEPTION"/>
       <Bug pattern="CI_CONFUSED_INHERITANCE"/>
+      <Bug pattern="CT_CONSTRUCTOR_THROW"/>
     </Or>
   </Match>
   
