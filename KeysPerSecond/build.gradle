@@ -1,13 +1,15 @@
 plugins{
 	id 'eclipse'
-	id 'java'
 	id 'application'
 	id 'maven-publish'
-	id 'com.github.johnrengelman.shadow' version '7.1.2'
-	id 'edu.sc.seis.launch4j' version '2.5.1'
-	id 'com.github.spotbugs' version '5.0.14'
+	id 'com.gradleup.shadow' version '8.3.2'
+	id 'edu.sc.seis.launch4j' version '3.0.5'
+	id 'com.github.spotbugs' version '6.0.18'
 	id 'jacoco'
 }
+
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
 
 sourceSets{
 	main{
@@ -29,7 +31,7 @@ dependencies{
 	implementation 'com.github.kwhat:jnativehook:2.2.2'
 	
 	//Testing
-	testImplementation(platform('org.junit:junit-bom:5.10.0'))
+	testImplementation(platform('org.junit:junit-bom:5.11.1'))
 	testImplementation('org.junit.jupiter:junit-jupiter')
 }
 
@@ -52,12 +54,16 @@ if(version.matches("v\\d+\\.\\d+")){
 eclipse.classpath.downloadSources = true
 eclipse.classpath.downloadJavadoc = true
 compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+jacocoTestReport.reports.xml.required = true
 sourceCompatibility = 1.8
 javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
 group = 'dev.roanh.kps'
 ext.artifact = 'keyspersecond'
-shadowJar.archiveName = 'KeysPerSecond-v' + version + '.jar'
-application.mainClassName = 'dev.roanh.kps.Main'
+shadowJar.archiveBaseName = 'KeysPerSecond'
+shadowJar.archiveVersion = 'v' + version
+shadowJar.archiveClassifier = ''
+application.mainClass = 'dev.roanh.kps.Main'
 
 test{
 	useJUnitPlatform()
@@ -70,8 +76,8 @@ test{
 
 spotbugs{
 	showProgress = true
-	effort = 'max'
-	reportLevel = 'low'
+	effort = Effort.valueOf('MAX')
+	reportLevel = Confidence.valueOf('LOW')
 	excludeFilter = file("$rootDir/exclude.xml")
 }
 
@@ -130,9 +136,9 @@ shadowJar{
 
 launch4j{
 	jarTask = project.tasks.shadowJar
-	mainClassName = application.mainClassName
+	mainClassName = application.mainClass
 	icon = "${projectDir}/kps.ico"
-	jreMinVersion = project.sourceCompatibility
+	jreMinVersion = project.sourceCompatibility.toString()
 	bundledJrePath = "%JAVA_HOME%"
 	outfile = 'KeysPerSecond-v' + project.version + '.exe'
 	fileDescription = "KeysPerSecond"
