@@ -30,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 import dev.roanh.kps.Main;
 import dev.roanh.kps.config.ConfigLoader;
@@ -287,6 +288,7 @@ public class MainDialog extends JPanel{
 		conf.setResizable(false);
 		conf.setLocationRelativeTo(null);
 		conf.setIconImages(Arrays.asList(Main.icon, Main.iconSmall));
+		conf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		conf.setVisible(true);
 		
 		try{
