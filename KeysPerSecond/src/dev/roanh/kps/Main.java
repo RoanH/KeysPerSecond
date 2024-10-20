@@ -445,22 +445,33 @@ public class Main{
 	 */
 	private static void triggerCommandKeys(int code){
 		CommandSettings commands = Main.config.getCommands();
+		
 		if(commands.getCommandResetStats().matches(code)){
 			resetStats();
-		}else if(commands.getCommandExit().matches(code)){
+		}
+		
+		if(commands.getCommandExit().matches(code)){
 			exit();
-		}else if(commands.getCommandResetTotals().matches(code)){
+		}
+		
+		if(commands.getCommandResetTotals().matches(code)){
 			resetTotals();
-		}else if(commands.getCommandHide().matches(code)){
+		}
+		
+		if(commands.getCommandHide().matches(code)){
 			if(frame.isVisible()){
 				Menu.minimizeToSystemTray();
 			}else{
 				Menu.restoreFromSystemTray();
 			}
-		}else if(commands.getCommandPause().matches(code)){
+		}
+		
+		if(commands.getCommandPause().matches(code)){
 			suspended = !suspended;
 			Menu.pause.setSelected(suspended);
-		}else if(commands.getCommandReload().matches(code)){
+		}
+		
+		if(commands.getCommandReload().matches(code)){
 			ConfigLoader.reloadConfig();
 		}
 	}
