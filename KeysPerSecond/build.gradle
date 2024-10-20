@@ -6,6 +6,7 @@ plugins{
 	id 'edu.sc.seis.launch4j' version '3.0.5'
 	id 'com.github.spotbugs' version '6.0.18'
 	id 'jacoco'
+	id 'org.sonarqube' version '5.1.0.4882'	
 }
 
 import com.github.spotbugs.snom.Confidence
@@ -71,6 +72,13 @@ test{
 
 	testLogging{
 		events "passed", "skipped", "failed"
+	}
+}
+
+sonar{
+	properties{
+		property "sonar.projectKey", "roan_KeysPerSecond_e60d9328-42c1-47ff-a708-7d7ee7eda435"
+		property "sonar.projectName", "KeysPerSecond"
 	}
 }
 
