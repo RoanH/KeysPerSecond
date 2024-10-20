@@ -12,6 +12,7 @@
       <Bug pattern="MS_PKGPROTECT"/>
       <Bug pattern="REC_CATCH_EXCEPTION"/>
       <Bug pattern="CI_CONFUSED_INHERITANCE"/>
+      <Bug pattern="CT_CONSTRUCTOR_THROW"/>
     </Or>
   </Match>
   
@@ -100,6 +101,41 @@
       <Field name="keys"/>
     </Or>
     <Class name="dev.roanh.kps.Main"/>
+  </Match>
+  
+  <Match>
+	<!-- Technical debt -->
+	<Bug pattern="PA_PUBLIC_PRIMITIVE_ATTRIBUTE"/>
+	<Or>
+	  <Class name="dev.roanh.kps.ColorManager"/>
+	  <Class name="dev.roanh.kps.CommandKeys"/>
+	  <Class name="dev.roanh.kps.Main"/>
+	</Or>
+	<Or>
+	  <Field name="activeColor"/>
+	  <Field name="alphaAqua"/>
+	  <Field name="graph_lower_left"/>
+	  <Field name="graph_lower_middle"/>
+	  <Field name="graph_lower_right"/>
+	  <Field name="graph_side_left"/>
+	  <Field name="graph_side_right"/>
+	  <Field name="graph_upper_left"/>
+	  <Field name="graph_upper_middle"/>
+	  <Field name="graph_upper_right"/>
+	  <Field name="transparency"/>
+	  <Field name="isAltDown"/>
+	  <Field name="isCtrlDown"/>
+	  <Field name="isShiftDown"/>
+	  <Field name="avg"/>
+	  <Field name="config"/>
+	  <Field name="content"/>
+	  <Field name="desktopHints"/>
+	  <Field name="frame"/>
+	  <Field name="hits"/>
+	  <Field name="lastHitTime"/>
+	  <Field name="max"/>
+	  <Field name="prev"/>
+	</Or>
   </Match>
 
 </FindBugsFilter>
