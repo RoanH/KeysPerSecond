@@ -32,10 +32,11 @@ And if you find any bugs feel free to report them. If you have any features you'
 ## Notes
 - The horizontal line in the graph represents the average number of keys pressed per second.
 - The smoothness of the cursor graph is heavily dependent on the update rate.
+- If you want to see inputs for an application running with admin privileges (e.g., Genshin Impact), then KeysPerSecond should also be executed with admin privileges, see [issue #104](https://github.com/RoanH/KeysPerSecond/issues/104).
+- You can configure a configuration to open automatically on launch, see [this wiki page](https://github.com/RoanH/KeysPerSecond/wiki) for more details.
 - You can add any number of keys or mouse buttons to the program.
 - To change a GUI colour in the colours menu, click on the current colour
 - You can move the window with the arrow keys at 3 different speeds 1, 2 & 3 pixels at a time (2=Ctrl, 3=Shift).
-- You can configure a configuration to open automatically on launch, see [this wiki page](https://github.com/RoanH/KeysPerSecond/wiki) for more details.
 - When resetting something it will also be printed to the console if this program is running using cmd/shell.
 - The overlay option is far from perfect, it just asks the OS to place the program on top. It'll not overlay most full screen games. [For some people](https://youtu.be/E_WHAaI_-Zw) running the program in Windows 98 / ME compatibility mode makes it so it can overlay full screen osu! so if you're lucky this might work.
 - If you have an old configuration file (kpsconf1 or kpsconf2) then you need to convert it with [version 8.4](https://github.com/RoanH/KeysPerSecond/releases/tag/v8.4) to load it in more recent versions.
