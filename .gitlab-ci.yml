@@ -24,7 +24,7 @@ endings:
 
 sonar:
   image:
-    name: sonarsource/sonar-scanner-cli:5.0
+    name: sonarsource/sonar-scanner-cli:11.1
     entrypoint: [""]
   allow_failure: true
   script:
