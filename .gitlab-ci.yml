@@ -28,10 +28,12 @@ sonar:
     entrypoint: [""]
   allow_failure: true
   script:
-    - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} assemble
+    - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} classes
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} testClasses
     - sonar-scanner
   stage: check
+#  only:
+#    - master
 
 spotbugs:
   allow_failure: true
