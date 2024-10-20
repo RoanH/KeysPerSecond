@@ -57,6 +57,7 @@ compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 jacocoTestReport.reports.xml.required = true
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 javadoc.options.memberLevel = JavadocMemberLevel.PRIVATE
 group = 'dev.roanh.kps'
 ext.artifact = 'keyspersecond'
