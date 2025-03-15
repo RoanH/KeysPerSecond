@@ -24,7 +24,7 @@ endings:
 
 sonar:
   image:
-    name: sonarsource/sonar-scanner-cli:11.1
+    name: sonarsource/sonar-scanner-cli:11.2
     entrypoint: [""]
   before_script:
     - java -version
