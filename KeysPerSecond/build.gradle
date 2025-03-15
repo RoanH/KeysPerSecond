@@ -6,7 +6,7 @@ plugins{
 	id 'edu.sc.seis.launch4j' version '3.0.5'
 	id 'com.github.spotbugs' version '6.0.18'
 	id 'jacoco'
-	id 'org.sonarqube' version '6.0.1.5171'
+	id 'org.sonarqube' version '6.0.1.5171' apply false
 }
 
 import com.github.spotbugs.snom.Confidence
@@ -76,10 +76,18 @@ test{
 	}
 }
 
-sonar{
-	properties{
-		property "sonar.projectKey", "roan_KeysPerSecond_e60d9328-42c1-47ff-a708-7d7ee7eda435"
-		property "sonar.projectName", "KeysPerSecond"
+if(JavaVersion.current() >= JavaVersion.VERSION_11){
+	//plugins{
+	//	id 'org.sonarqube' version '6.0.1.5171'
+	//}
+	
+	apply plugin: 'org.sonarqube'
+	
+	sonar{
+		properties{
+			property "sonar.projectKey", "roan_KeysPerSecond_e60d9328-42c1-47ff-a708-7d7ee7eda435"
+			property "sonar.projectName", "KeysPerSecond"
+		}
 	}
 }
 
