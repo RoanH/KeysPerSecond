@@ -24,19 +24,16 @@ endings:
 
 sonar:
   image:
-    name: sonarsource/sonar-scanner-cli:11.2
+    name: sonarsource/sonar-scanner-cli:5.0
     entrypoint: [""]
-  before_script:
-    - java -version
-    - cd ${PROJECTNAME}
   allow_failure: true
   script:
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} assemble
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} test jacocoTestReport
     - sonar-scanner
   stage: check
-#  only:
-#    - master
+  only:
+    - master
 
 spotbugs:
   allow_failure: true
