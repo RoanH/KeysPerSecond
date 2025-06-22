@@ -28,7 +28,7 @@ sonar:
   script:
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} assemble
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} test jacocoTestReport
-    - ./gradlew -PsonarRun -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} sonar
+    - ./gradlew -b sonar.gradle -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} sonar
   stage: check
 
 spotbugs:

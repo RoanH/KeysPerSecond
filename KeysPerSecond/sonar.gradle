@@ -1,0 +1,10 @@
+plugins {
+    id "org.sonarqube" version "6.0.1.5171"
+}
+
+sonar{
+	properties{
+		property "sonar.projectKey", "roan_KeysPerSecond_e60d9328-42c1-47ff-a708-7d7ee7eda435"
+		property "sonar.projectName", "KeysPerSecond"
+	}
+}
