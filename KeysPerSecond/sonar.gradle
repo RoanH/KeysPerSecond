@@ -9,7 +9,7 @@ initscript{
 }
 
 allprojects{
-	apply plugin: "org.sonarqube"
+	pluginManager.apply(classLoader.loadClass("org.sonarqube.gradle.SonarQubePlugin"))
 	
 	sonar{
 		properties{
