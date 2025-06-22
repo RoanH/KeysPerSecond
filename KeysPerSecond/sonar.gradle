@@ -1,6 +1,6 @@
 initscript{
 	repositories{
-		mavenCentral()
+		gradlePluginPortal()
 	}
 	
 	dependencies{
