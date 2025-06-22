@@ -2,15 +2,15 @@ initscript{
 	repositories{
 		gradlePluginPortal()
 	}
-	
+
 	dependencies{
-		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:6.1.0.5360"
+classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:6.1.0.5360"
 	}
 }
 
 allprojects{
 	apply plugin: org.sonarqube.gradle.SonarQubePlugin
-	
+
 	sonar{
 		properties{
 			property "sonar.projectKey", "roan_KeysPerSecond_e60d9328-42c1-47ff-a708-7d7ee7eda435"
