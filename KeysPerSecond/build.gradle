@@ -23,6 +23,27 @@ sourceSets{
 	}
 }
 
+if (project.hasProperty('sonarRun')) {
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:6.0.1.5171"
+        }
+    }
+
+    apply plugin: "org.sonarqube"
+    
+    sonar{
+	properties{
+		property "sonar.projectKey", "roan_KeysPerSecond_e60d9328-42c1-47ff-a708-7d7ee7eda435"
+		property "sonar.projectName", "KeysPerSecond"
+	}
+}
+    
+}
+
 dependencies{
 	//Util
 	implementation 'dev.roanh.util:util:2.5'
