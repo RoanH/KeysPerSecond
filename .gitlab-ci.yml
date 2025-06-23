@@ -23,14 +23,12 @@ endings:
   stage: check
 
 sonar:
-  image:
-    name: sonarsource/sonar-scanner-cli:5.0
-    entrypoint: [""]
+  image: eclipse-temurin:17
   allow_failure: true
   script:
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} assemble
     - ./gradlew -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} test jacocoTestReport
-    - sonar-scanner
+    - ./gradlew -I sonar.gradle -PrefName=${CI_COMMIT_REF_NAME} -PnexusPublic=${NEXUS_PUBLIC} sonar
   stage: check
   only:
     - master
